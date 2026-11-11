@@ -105,6 +105,7 @@
   }
   function errorMessage(code) {
     const messages = {
+      storage_not_configured: t('Talebiniz kaydedilemedi. Bilgileriniz formda duruyor; talha.guler@ozu.edu.tr adresinden bize ulaşabilirsiniz.', 'Your request could not be saved. Your details are still in the form; contact talha.guler@ozu.edu.tr.'),
       file_required: t('Bir dosya seçin veya örnek senaryoyla devam edin.', 'Choose a file or continue with a sample scenario.'),
       invalid_file_size: t('Boş olmayan, en fazla 5 MB bir dosya seçin.', 'Choose a non-empty file up to 5 MB.'),
       request_too_large: t('Dosya en fazla 5 MB olabilir.', 'Files must be no larger than 5 MB.'),

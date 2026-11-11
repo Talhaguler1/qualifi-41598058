@@ -148,6 +148,7 @@
   let step = 0; let setupStarted = false;
   function errorText(error) {
     const errors = {
+      storage_not_configured: t('Talebiniz kaydedilemedi. Bilgileriniz formda duruyor; talha.guler@ozu.edu.tr adresinden bize ulaşabilirsiniz.', 'Your request could not be saved. Your details are still in the form; contact talha.guler@ozu.edu.tr.'),
       invalid_contract: t('PDF veya UTF-8 TXT biçiminde geçerli bir dosya seçin.', 'Choose a valid PDF or UTF-8 TXT file.'),
       invalid_pdf: t('Bu dosya geçerli bir PDF görünmüyor. Başka bir dosya seçin.', 'This file does not appear to be a PDF. Choose another file.'),
       invalid_text: t('TXT dosyası UTF-8 metin olmalı.', 'TXT files must contain UTF-8 text.'),
