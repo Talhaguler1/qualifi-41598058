@@ -2,7 +2,7 @@
 
 # Yol Gösterici Yıldız
 
-İşletmeler ve freelancerlar zamanında ödeme alır ve nakit akışlarını önceden görür
+KOBİ'lerin finans takımları rahat karar verir ve stratejiye odaklanır
 
 ## Ölçüt
 
