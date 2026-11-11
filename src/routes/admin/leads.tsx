@@ -7,6 +7,10 @@ export const Route = createFileRoute("/admin/leads")({
     meta: [
       { title: "Başvurular | QualiFi" },
       { name: "description", content: "QualiFi özel başvuru yönetimi." },
+      { property: "og:title", content: "Başvurular | QualiFi" },
+      { property: "og:description", content: "QualiFi özel başvuru yönetimi." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex, nofollow" },
     ],
     links: [{ rel: "stylesheet", href: adminCss }],

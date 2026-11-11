@@ -33,7 +33,7 @@
   const form = $('#campaign-form'); const dialog = $('#campaign-dialog');
   let requestId = uuid(); let started = false;
   function context() {
-    return { campaignId, segment, locale, analyticsConsent: consent === 'yes', visitorId,
+    return { pagePath: location.pathname.replace(/\/$/, '') || '/', campaignId, segment, locale, analyticsConsent: consent === 'yes', visitorId,
       ...first, ...Object.fromEntries(keys.map(key => [`last_${key}`, last[key] || ''])) };
   }
   async function post(url, data, keepalive = false) {
@@ -105,6 +105,7 @@
   }
   function errorMessage(code) {
     const messages = {
+      uploads_unavailable: t('Dosya yükleme henüz kullanılamıyor. Bilgileriniz korunuyor; örnek senaryo seçeneğini seçerek devam edin.', 'File uploads are not available yet. Your details are retained; select the sample scenario option to continue.'),
       storage_not_configured: t('Talebiniz kaydedilemedi. Bilgileriniz formda duruyor; talha.guler@ozu.edu.tr adresinden bize ulaşabilirsiniz.', 'Your request could not be saved. Your details are still in the form; contact talha.guler@ozu.edu.tr.'),
       file_required: t('Bir dosya seçin veya örnek senaryoyla devam edin.', 'Choose a file or continue with a sample scenario.'),
       invalid_file_size: t('Boş olmayan, en fazla 5 MB bir dosya seçin.', 'Choose a non-empty file up to 5 MB.'),
@@ -129,8 +130,8 @@
       const result = await post('/api/leads', payload);
       form.hidden = true;
       const success = $('#campaign-success'); success.replaceChildren(); success.hidden = false;
-      const title = document.createElement('strong'); title.textContent = t('İlginiz kaydedildi.', 'Your interest is saved.');
-      const text = document.createElement('p'); text.textContent = t('Bu çözüm için talebiniz alındı. Sonraki adımda 20 dakikalık bir demo üzerinden ihtiyacınızı değerlendirebiliriz. Henüz canlı ajan etkinleştirilmedi veya randevu oluşturulmadı.', 'Your request for this solution is saved. A later 20-minute demo can explore your needs. No live agent has been activated or appointment booked.');
+      const title = document.createElement('strong'); title.textContent = result.duplicate ? t('Mevcut talebiniz korunuyor.', 'Your existing request is retained.') : t('İlginiz kaydedildi.', 'Your interest is saved.');
+      const text = document.createElement('p'); text.textContent = result.duplicate ? t('Yeni bir kayıt oluşturulmadı. Yeni seçilen dosya tekrar kaydedilmedi.', 'No new record was created. A newly selected file was not saved again.') : t('Bu çözüm için talebiniz alındı. Sonraki adımda 20 dakikalık bir demo üzerinden ihtiyacınızı değerlendirebiliriz. Henüz canlı ajan etkinleştirilmedi veya randevu oluşturulmadı.', 'Your request for this solution is saved. A later 20-minute demo can explore your needs. No live agent has been activated or appointment booked.');
       const reference = document.createElement('small'); reference.className = 'success-reference'; reference.textContent = `${t('Kayıt', 'Reference')}: ${result.id.slice(0, 8)}`;
       success.append(title, text, reference);
       // Scheduling is a secondary, post-interest action only.

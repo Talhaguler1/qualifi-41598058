@@ -15,10 +15,10 @@ function request(body) {
 }
 
 describe("requests without a configured persistent store", () => {
-  it("never returns a saved lead or invented reference for a valid submission", async () => {
+  it("rejects incomplete submissions without inventing a reference", async () => {
     const response = await handleLeadRequest(request({ email: "test@example.invalid", consent: true }));
-    expect(response.status).toBe(503);
-    expect(await response.json()).toEqual({ error: "storage_not_configured" });
+    expect(response.status).toBe(400);
+    expect(await response.json()).toEqual({ error: "invalid_submission" });
     expect(response.headers.get("Cache-Control")).toBe("no-store");
   });
 
@@ -40,7 +40,7 @@ describe("requests without a configured persistent store", () => {
   });
 
   it("does not acknowledge an analytics event that was not stored", async () => {
-    const response = handleEventRequest();
+    const response = await handleEventRequest();
     expect(response.status).toBe(503);
     expect(await response.json()).toEqual({ error: "storage_not_configured" });
   });
@@ -59,7 +59,7 @@ describe("campaign form storage failure", () => {
       Object.defineProperty(win.crypto, "randomUUID", { value: randomUUID });
       win.HTMLDialogElement.prototype.showModal = function () { this.open = true; };
       win.HTMLDialogElement.prototype.close = function () { this.open = false; };
-      win.fetch = async () => handleLeadRequest(request({ email: "test@example.invalid", consent: true }));
+      win.fetch = async () => Response.json({error:'storage_not_configured'}, {status:503});
       win.eval(readFileSync(resolve("public/campaign.js"), "utf8"));
       (win.document.querySelector("#consent-decline")).click();
       (win.document.querySelector(".campaign-primary")).click();

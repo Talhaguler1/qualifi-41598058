@@ -40,7 +40,7 @@
   try { lastAttribution = JSON.parse(storage.get('qualifi.last-campaign', true) || '{}'); } catch {}
   if (Object.keys(attribution).length) { lastAttribution = attribution; storage.set('qualifi.last-campaign', JSON.stringify(lastAttribution), true); }
   function context() {
-    return { segment, locale: tr ? 'tr' : 'en', analyticsConsent: consentChoice === 'yes', visitorId,
+    return { pagePath: location.pathname.replace(/\/$/, '') || '/', segment, locale: tr ? 'tr' : 'en', analyticsConsent: consentChoice === 'yes', visitorId,
       entryOffer: offers.includes(query.get('offer')) ? query.get('offer') : null, ...firstAttribution,
       ...Object.fromEntries(utmKeys.map(key => [`last_${key}`, lastAttribution[key] || ''])) };
   }
@@ -148,6 +148,7 @@
   let step = 0; let setupStarted = false;
   function errorText(error) {
     const errors = {
+      uploads_unavailable: t('Dosya yükleme henüz kullanılamıyor. Bilgileriniz korunuyor; önceki adıma dönüp örnek senaryoyu seçerek devam edin.', 'File uploads are not available yet. Your details are retained; go back and choose the sample scenario to continue.'),
       storage_not_configured: t('Talebiniz kaydedilemedi. Bilgileriniz formda duruyor; talha.guler@ozu.edu.tr adresinden bize ulaşabilirsiniz.', 'Your request could not be saved. Your details are still in the form; contact talha.guler@ozu.edu.tr.'),
       invalid_contract: t('PDF veya UTF-8 TXT biçiminde geçerli bir dosya seçin.', 'Choose a valid PDF or UTF-8 TXT file.'),
       invalid_pdf: t('Bu dosya geçerli bir PDF görünmüyor. Başka bir dosya seçin.', 'This file does not appear to be a PDF. Choose another file.'),
@@ -224,8 +225,8 @@
       const success = $('.form-success', form.closest('dialog'));
       const title = { pilot: t('Pilot talebiniz alındı.', 'Your pilot request is saved.'), waitlist: t('Listedesiniz.', 'You’re on the list.'), meeting: t('Görüşme talebiniz alındı.', 'Your meeting request is saved.') }[kind];
       const detail = { pilot: t('Ekibimiz kapsamı değerlendirmek için bıraktığınız e-posta üzerinden iletişime geçebilir. Bu işlem canlı ajan etkinleştirmez.', 'Our team can contact you at the email you provided to discuss scope. This does not activate a live agent.'), waitlist: t('Pilot ve erken erişim gelişmelerini paylaşmak için e-posta adresiniz kaydedildi.', 'Your email has been saved for pilot and early-access updates.'), meeting: t('Bu bir görüşme talebidir; henüz gün ve saat rezervasyonu yapılmadı.', 'This is a conversation request; no date or time has been reserved yet.') }[kind];
-      const strong = document.createElement('strong'); strong.textContent = title;
-      const p = document.createElement('p'); p.textContent = detail;
+      const strong = document.createElement('strong'); strong.textContent = result.duplicate ? t('Mevcut talebiniz korunuyor.', 'Your existing request is retained.') : title;
+      const p = document.createElement('p'); p.textContent = result.duplicate ? t('Yeni bir kayıt oluşturulmadı. Yeni seçilen dosya tekrar kaydedilmedi.', 'No new record was created. A newly selected file was not saved again.') : detail;
       const reference = document.createElement('span'); reference.className = 'success-reference'; reference.textContent = `${t('Kayıt', 'Reference')}: ${result.id.slice(0, 8)}`;
       success.replaceChildren(strong, p, reference); success.hidden = false; form.hidden = true;
       const restart = document.createElement('button');

@@ -59,3 +59,9 @@ use the editor.
   changes, as the user requested. Source review is not a human comprehension test.
 - Run relevant tests and a production build before pushing functional changes.
   No force pushes, secret values, contact lists or request/document data in Git.
+
+## Persistent request architecture
+- Validate public submissions against a browser-safe page allowlist before invoking a service-role-only atomic persistence function; duplicate leads never create another operational or visitor outcome.
+- Keep admin authorization in both remote Auth verification and RLS backed by protected user_roles plus strict server-managed metadata; grant only contact-status updates.
+- Keep document uploads unavailable until private file persistence is implemented; never imply that sample mode stores a document.
+- Keep fixed-recipient owner notifications separate from persistence success; the private inbox remains the source of truth when email fails.

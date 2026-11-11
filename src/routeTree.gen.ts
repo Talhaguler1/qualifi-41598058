@@ -11,12 +11,14 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SplatRouteImport } from './routes/$'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AdminLeadsRouteImport } from './routes/admin/leads'
 import { Route as ApiConfigRouteImport } from './routes/api/config'
 import { Route as ApiEventsRouteImport } from './routes/api/events'
 import { Route as ApiLeadsRouteImport } from './routes/api/leads'
 import { Route as ApiAdminLeadsRouteImport } from './routes/api/admin/leads'
 import { Route as ApiAdminLeadsExportRouteImport } from './routes/api/admin/leads/export'
+import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -26,6 +28,11 @@ const IndexRoute = IndexRouteImport.update({
 const SplatRoute = SplatRouteImport.update({
   id: '/$',
   path: '/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminLeadsRoute = AdminLeadsRouteImport.update({
@@ -58,79 +65,99 @@ const ApiAdminLeadsExportRoute = ApiAdminLeadsExportRouteImport.update({
   path: '/export',
   getParentRoute: () => ApiAdminLeadsRoute,
 } as any)
+const LovableEmailTransactionalPreviewRoute =
+  LovableEmailTransactionalPreviewRouteImport.update({
+    id: '/lovable/email/transactional/preview',
+    path: '/lovable/email/transactional/preview',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/admin/leads': typeof AdminLeadsRoute
   '/api/config': typeof ApiConfigRoute
   '/api/events': typeof ApiEventsRoute
   '/api/leads': typeof ApiLeadsRoute
   '/api/admin/leads': typeof ApiAdminLeadsRouteWithChildren
   '/api/admin/leads/export': typeof ApiAdminLeadsExportRoute
+  '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/admin/leads': typeof AdminLeadsRoute
   '/api/config': typeof ApiConfigRoute
   '/api/events': typeof ApiEventsRoute
   '/api/leads': typeof ApiLeadsRoute
   '/api/admin/leads': typeof ApiAdminLeadsRouteWithChildren
   '/api/admin/leads/export': typeof ApiAdminLeadsExportRoute
+  '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/admin/leads': typeof AdminLeadsRoute
   '/api/config': typeof ApiConfigRoute
   '/api/events': typeof ApiEventsRoute
   '/api/leads': typeof ApiLeadsRoute
   '/api/admin/leads': typeof ApiAdminLeadsRouteWithChildren
   '/api/admin/leads/export': typeof ApiAdminLeadsExportRoute
+  '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/$'
+    | '/reset-password'
     | '/admin/leads'
     | '/api/config'
     | '/api/events'
     | '/api/leads'
     | '/api/admin/leads'
     | '/api/admin/leads/export'
+    | '/lovable/email/transactional/preview'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/$'
+    | '/reset-password'
     | '/admin/leads'
     | '/api/config'
     | '/api/events'
     | '/api/leads'
     | '/api/admin/leads'
     | '/api/admin/leads/export'
+    | '/lovable/email/transactional/preview'
   id:
     | '__root__'
     | '/'
     | '/$'
+    | '/reset-password'
     | '/admin/leads'
     | '/api/config'
     | '/api/events'
     | '/api/leads'
     | '/api/admin/leads'
     | '/api/admin/leads/export'
+    | '/lovable/email/transactional/preview'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SplatRoute: typeof SplatRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   AdminLeadsRoute: typeof AdminLeadsRoute
   ApiConfigRoute: typeof ApiConfigRoute
   ApiEventsRoute: typeof ApiEventsRoute
   ApiLeadsRoute: typeof ApiLeadsRoute
   ApiAdminLeadsRoute: typeof ApiAdminLeadsRouteWithChildren
+  LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -147,6 +174,13 @@ declare module '@tanstack/react-router' {
       path: '/$'
       fullPath: '/$'
       preLoaderRoute: typeof SplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/leads': {
@@ -191,6 +225,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAdminLeadsExportRouteImport
       parentRoute: typeof ApiAdminLeadsRoute
     }
+    '/lovable/email/transactional/preview': {
+      id: '/lovable/email/transactional/preview'
+      path: '/lovable/email/transactional/preview'
+      fullPath: '/lovable/email/transactional/preview'
+      preLoaderRoute: typeof LovableEmailTransactionalPreviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -209,11 +250,13 @@ const ApiAdminLeadsRouteWithChildren = ApiAdminLeadsRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   AdminLeadsRoute: AdminLeadsRoute,
   ApiConfigRoute: ApiConfigRoute,
   ApiEventsRoute: ApiEventsRoute,
   ApiLeadsRoute: ApiLeadsRoute,
   ApiAdminLeadsRoute: ApiAdminLeadsRouteWithChildren,
+  LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

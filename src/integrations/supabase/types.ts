@@ -14,13 +14,147 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      qualifi_events: {
+        Row: {
+          created_at: string
+          event: string
+          id: string
+          locale: string
+          page_id: string
+          properties: Json
+          visitor_id: string
+        }
+        Insert: {
+          created_at?: string
+          event: string
+          id: string
+          locale: string
+          page_id: string
+          properties?: Json
+          visitor_id: string
+        }
+        Update: {
+          created_at?: string
+          event?: string
+          id?: string
+          locale?: string
+          page_id?: string
+          properties?: Json
+          visitor_id?: string
+        }
+        Relationships: []
+      }
+      qualifi_leads: {
+        Row: {
+          analytics_consent: boolean
+          campaign_id: string | null
+          company: string | null
+          contact_status: string
+          created_at: string
+          email: string
+          file_mode: string
+          id: string
+          kind: string
+          locale: string
+          page_id: string
+          segment: string
+          solution: string
+          utm_campaign: string | null
+          utm_content: string | null
+          utm_medium: string | null
+          utm_source: string | null
+          visitor_id: string | null
+        }
+        Insert: {
+          analytics_consent?: boolean
+          campaign_id?: string | null
+          company?: string | null
+          contact_status?: string
+          created_at?: string
+          email: string
+          file_mode?: string
+          id: string
+          kind: string
+          locale: string
+          page_id: string
+          segment: string
+          solution: string
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          visitor_id?: string | null
+        }
+        Update: {
+          analytics_consent?: boolean
+          campaign_id?: string | null
+          company?: string | null
+          contact_status?: string
+          created_at?: string
+          email?: string
+          file_mode?: string
+          id?: string
+          kind?: string
+          locale?: string
+          page_id?: string
+          segment?: string
+          solution?: string
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          visitor_id?: string | null
+        }
+        Relationships: []
+      }
+      qualifi_request_outcomes: {
+        Row: {
+          created_at: string
+          event: string
+          lead_id: string
+        }
+        Insert: {
+          created_at?: string
+          event: string
+          lead_id: string
+        }
+        Update: {
+          created_at?: string
+          event?: string
+          lead_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "qualifi_request_outcomes_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: true
+            referencedRelation: "qualifi_leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          role: string
+          user_id: string
+        }
+        Insert: {
+          role: string
+          user_id: string
+        }
+        Update: {
+          role?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      qualifi_is_admin: { Args: never; Returns: boolean }
+      qualifi_save_lead: { Args: { p: Json }; Returns: Json }
     }
     Enums: {
       [_ in never]: never
