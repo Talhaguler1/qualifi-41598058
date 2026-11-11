@@ -11,9 +11,12 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SplatRouteImport } from './routes/$'
+import { Route as AdminLeadsRouteImport } from './routes/admin/leads'
 import { Route as ApiConfigRouteImport } from './routes/api/config'
 import { Route as ApiEventsRouteImport } from './routes/api/events'
 import { Route as ApiLeadsRouteImport } from './routes/api/leads'
+import { Route as ApiAdminLeadsRouteImport } from './routes/api/admin/leads'
+import { Route as ApiAdminLeadsExportRouteImport } from './routes/api/admin/leads/export'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -23,6 +26,11 @@ const IndexRoute = IndexRouteImport.update({
 const SplatRoute = SplatRouteImport.update({
   id: '/$',
   path: '/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminLeadsRoute = AdminLeadsRouteImport.update({
+  id: '/admin/leads',
+  path: '/admin/leads',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiConfigRoute = ApiConfigRouteImport.update({
@@ -40,43 +48,89 @@ const ApiLeadsRoute = ApiLeadsRouteImport.update({
   path: '/api/leads',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAdminLeadsRoute = ApiAdminLeadsRouteImport.update({
+  id: '/api/admin/leads',
+  path: '/api/admin/leads',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminLeadsExportRoute = ApiAdminLeadsExportRouteImport.update({
+  id: '/export',
+  path: '/export',
+  getParentRoute: () => ApiAdminLeadsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/admin/leads': typeof AdminLeadsRoute
   '/api/config': typeof ApiConfigRoute
   '/api/events': typeof ApiEventsRoute
   '/api/leads': typeof ApiLeadsRoute
+  '/api/admin/leads': typeof ApiAdminLeadsRouteWithChildren
+  '/api/admin/leads/export': typeof ApiAdminLeadsExportRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/admin/leads': typeof AdminLeadsRoute
   '/api/config': typeof ApiConfigRoute
   '/api/events': typeof ApiEventsRoute
   '/api/leads': typeof ApiLeadsRoute
+  '/api/admin/leads': typeof ApiAdminLeadsRouteWithChildren
+  '/api/admin/leads/export': typeof ApiAdminLeadsExportRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/admin/leads': typeof AdminLeadsRoute
   '/api/config': typeof ApiConfigRoute
   '/api/events': typeof ApiEventsRoute
   '/api/leads': typeof ApiLeadsRoute
+  '/api/admin/leads': typeof ApiAdminLeadsRouteWithChildren
+  '/api/admin/leads/export': typeof ApiAdminLeadsExportRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$' | '/api/config' | '/api/events' | '/api/leads'
+  fullPaths:
+    | '/'
+    | '/$'
+    | '/admin/leads'
+    | '/api/config'
+    | '/api/events'
+    | '/api/leads'
+    | '/api/admin/leads'
+    | '/api/admin/leads/export'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$' | '/api/config' | '/api/events' | '/api/leads'
-  id: '__root__' | '/' | '/$' | '/api/config' | '/api/events' | '/api/leads'
+  to:
+    | '/'
+    | '/$'
+    | '/admin/leads'
+    | '/api/config'
+    | '/api/events'
+    | '/api/leads'
+    | '/api/admin/leads'
+    | '/api/admin/leads/export'
+  id:
+    | '__root__'
+    | '/'
+    | '/$'
+    | '/admin/leads'
+    | '/api/config'
+    | '/api/events'
+    | '/api/leads'
+    | '/api/admin/leads'
+    | '/api/admin/leads/export'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SplatRoute: typeof SplatRoute
+  AdminLeadsRoute: typeof AdminLeadsRoute
   ApiConfigRoute: typeof ApiConfigRoute
   ApiEventsRoute: typeof ApiEventsRoute
   ApiLeadsRoute: typeof ApiLeadsRoute
+  ApiAdminLeadsRoute: typeof ApiAdminLeadsRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -93,6 +147,13 @@ declare module '@tanstack/react-router' {
       path: '/$'
       fullPath: '/$'
       preLoaderRoute: typeof SplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/leads': {
+      id: '/admin/leads'
+      path: '/admin/leads'
+      fullPath: '/admin/leads'
+      preLoaderRoute: typeof AdminLeadsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/config': {
@@ -116,15 +177,43 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiLeadsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/admin/leads': {
+      id: '/api/admin/leads'
+      path: '/api/admin/leads'
+      fullPath: '/api/admin/leads'
+      preLoaderRoute: typeof ApiAdminLeadsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/leads/export': {
+      id: '/api/admin/leads/export'
+      path: '/export'
+      fullPath: '/api/admin/leads/export'
+      preLoaderRoute: typeof ApiAdminLeadsExportRouteImport
+      parentRoute: typeof ApiAdminLeadsRoute
+    }
   }
 }
+
+interface ApiAdminLeadsRouteChildren {
+  ApiAdminLeadsExportRoute: typeof ApiAdminLeadsExportRoute
+}
+
+const ApiAdminLeadsRouteChildren: ApiAdminLeadsRouteChildren = {
+  ApiAdminLeadsExportRoute: ApiAdminLeadsExportRoute,
+}
+
+const ApiAdminLeadsRouteWithChildren = ApiAdminLeadsRoute._addFileChildren(
+  ApiAdminLeadsRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
+  AdminLeadsRoute: AdminLeadsRoute,
   ApiConfigRoute: ApiConfigRoute,
   ApiEventsRoute: ApiEventsRoute,
   ApiLeadsRoute: ApiLeadsRoute,
+  ApiAdminLeadsRoute: ApiAdminLeadsRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

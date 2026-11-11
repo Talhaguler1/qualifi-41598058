@@ -43,6 +43,11 @@ use the editor.
 - Read `docs/lovable-storage-setup.md` before changing forms or measurement.
   Current APIs do not have a persistent store. They must not report saved leads
   or accepted events until real persistence succeeds.
+- Private owner page: `/admin/leads`; details in `docs/admin-leads-setup.md`.
+  Admin API checks remote getUser + confirmed email + app_metadata.qualifi_admin
+  strict true. Never authorize using user_metadata or email/name from the client.
+  Reads/status writes use user bearer + RLS. Managed schema/role setup and public
+  lead/event persistence remain pending; publishing the page does not create them.
 - The research goal is page-specific primary CTA clicks. Treat real saved
   waitlist/pilot requests, uploads, bookings and payments as separate outcomes.
   Never send Meta Lead on a button click or failed submission.
