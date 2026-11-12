@@ -59,10 +59,12 @@ export function LeadInbox({
   token,
   email,
   onSignOut,
+  onChangePassword,
 }: {
   token: string;
   email: string;
   onSignOut: () => void;
+  onChangePassword?: () => void;
 }) {
   const [draft, setDraft] = useState<LeadFilters>(EMPTY_FILTERS);
   const [filters, setFilters] = useState<LeadFilters>(EMPTY_FILTERS);
@@ -161,6 +163,11 @@ export function LeadInbox({
         </span>
         <div className="qa-account">
           <span>{email}</span>
+          {onChangePassword && (
+            <button className="qa-button qa-quiet" onClick={onChangePassword}>
+              Şifre değiştir
+            </button>
+          )}
           <button className="qa-button qa-quiet" onClick={onSignOut}>
             <LogOut size={16} />
             Çıkış
@@ -468,6 +475,7 @@ export function LeadsAdminPage() {
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [changingPassword, setChangingPassword] = useState(false);
   useEffect(() => {
     let alive = true;
     let authChanged = false;
@@ -552,6 +560,8 @@ export function LeadsAdminPage() {
       setError("Çıkış doğrulanamadı. Yeniden deneyebilirsin.");
     }
   }
+  if (session && changingPassword)
+    return <ChangePasswordCard onDone={() => setChangingPassword(false)} />;
   if (session)
     return (
       <LeadInbox
@@ -559,6 +569,7 @@ export function LeadsAdminPage() {
         token={session.access_token}
         email={session.user.email ?? "Yetkili hesap"}
         onSignOut={() => void signOut()}
+        onChangePassword={() => setChangingPassword(true)}
       />
     );
   return (
@@ -611,6 +622,88 @@ export function LeadsAdminPage() {
         <a className="qa-back" href="/">
           ← Web sitesine dön
         </a>
+      </div>
+    </main>
+  );
+}
+
+export const MIN_ADMIN_PASSWORD_LENGTH = 12;
+
+function ChangePasswordCard({ onDone }: { onDone: () => void }) {
+  const [current, setCurrent] = useState("");
+  const [next, setNext] = useState("");
+  const [repeat, setRepeat] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  const [done, setDone] = useState(false);
+  async function submit(event: FormEvent) {
+    event.preventDefault();
+    setError("");
+    if (next.length < MIN_ADMIN_PASSWORD_LENGTH) {
+      setError(`Yeni şifre en az ${MIN_ADMIN_PASSWORD_LENGTH} karakter olmalı.`);
+      return;
+    }
+    if (next !== repeat) {
+      setError("Yeni şifreler birbiriyle aynı değil.");
+      return;
+    }
+    if (next === current) {
+      setError("Yeni şifre mevcut şifreden farklı olmalı.");
+      return;
+    }
+    setBusy(true);
+    try {
+      const result = await supabase.auth.updateUser({ password: next, current_password: current });
+      if (result.error) {
+        setError("Şifre değiştirilemedi. Mevcut şifreni kontrol et ya da daha güçlü bir şifre dene.");
+        return;
+      }
+      setDone(true);
+      setCurrent("");
+      setNext("");
+      setRepeat("");
+    } catch {
+      setError("Bağlantı şu anda kullanılamıyor. Biraz sonra tekrar dene.");
+    } finally {
+      setBusy(false);
+    }
+  }
+  return (
+    <main className="qualifi-admin qa-login">
+      <div className="qa-login-card">
+        <Brand />
+        <p className="qa-eyebrow">HESAP GÜVENLİĞİ</p>
+        <h1>Şifreni değiştir.</h1>
+        {done ? (
+          <p role="status">Şifren değiştirildi. Bir sonraki girişte yeni şifreni kullan.</p>
+        ) : (
+          <form onSubmit={submit}>
+            <label>
+              <span>Mevcut şifre</span>
+              <input type="password" autoComplete="current-password" required value={current} onChange={(e) => setCurrent(e.target.value)} />
+            </label>
+            <label>
+              <span>Yeni şifre (en az {MIN_ADMIN_PASSWORD_LENGTH} karakter)</span>
+              <input type="password" autoComplete="new-password" required value={next} onChange={(e) => setNext(e.target.value)} />
+            </label>
+            <label>
+              <span>Yeni şifre (tekrar)</span>
+              <input type="password" autoComplete="new-password" required value={repeat} onChange={(e) => setRepeat(e.target.value)} />
+            </label>
+            <button className="qa-button qa-primary" disabled={busy} type="submit">
+              {busy ? "Kaydediliyor…" : "Şifreyi kaydet"}
+              <Check size={16} />
+            </button>
+          </form>
+        )}
+        {error && (
+          <p className="qa-error" role="alert">
+            {error}
+          </p>
+        )}
+        <button className="qa-back" type="button" onClick={onDone}>
+          ← Başvurulara dön
+        </button>
       </div>
     </main>
   );
