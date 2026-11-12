@@ -10,10 +10,10 @@ const SITE_NAME = "QualiFi"
 // SENDER_DOMAIN is the verified sender FQDN: a delegated subdomain (e.g., "notify.example.com"), or, on a
 // domain registered through Lovable, the domain itself or a name under it (e.g., "example.com", "app.example.com").
 // It MUST match the sender verified in Lovable's email setup.
-const SENDER_DOMAIN = "qualifilab.com"
+const SENDER_DOMAIN = "notify.qualifilab.com"
 // FROM_DOMAIN is the domain shown in the From: header (e.g., "example.com").
 // Can be the root domain when display_from_root is enabled — this is cosmetic only.
-const FROM_DOMAIN = "qualifilab.com"
+const FROM_DOMAIN = "notify.qualifilab.com"
 
 export type SendTemplateEmailResult =
   | { sent: true }
