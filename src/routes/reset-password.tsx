@@ -9,7 +9,7 @@ export const Route = createFileRoute('/reset-password')({
 function PasswordPage() {
   const [ready,setReady]=useState(false),[password,setPassword]=useState(''),[error,setError]=useState(''),[done,setDone]=useState(false),[busy,setBusy]=useState(false);
   useEffect(() => {
-    const type=new URLSearchParams(window.location.hash.slice(1)).get('type');
+    const params=new URLSearchParams(window.location.hash.slice(1));const type=params.get('type');if(params.get('error')){setError('Bağlantının süresi dolmuş veya daha önce kullanılmış. Giriş sayfasındaki "Şifre belirle" ile yeni bağlantı isteyin.');return;}
     if(type!=='recovery'&&type!=='invite'){setError('Geçerli davet veya şifre yenileme bağlantısını açın.');return;}
     const check=async()=>{const {data}=await supabase.auth.getUser();setReady(Boolean(data.user));};
     void check(); const {data}=supabase.auth.onAuthStateChange(()=>{setTimeout(()=>{void check();},0);});

@@ -505,6 +505,25 @@ export function LeadsAdminPage() {
     };
   }, []);
 
+  useEffect(() => {
+    const hash = window.location.hash;
+    const type = new URLSearchParams(hash.slice(1)).get("type");
+    if (type === "recovery" || type === "invite") window.location.replace(`/reset-password${hash}`);
+  }, []);
+  const [resetNote, setResetNote] = useState("");
+  async function sendPasswordLink() {
+    setError("");
+    setResetNote("");
+    if (!email.trim()) {
+      setError("Önce e-posta adresini yaz, sonra şifre bağlantısını iste.");
+      return;
+    }
+    const result = await supabase.auth.resetPasswordForEmail(email.trim(), {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    if (result.error) setError("Bağlantı gönderilemedi. Birkaç dakika sonra yeniden dene.");
+    else setResetNote("Bu adres kayıtlıysa şifre belirleme bağlantısı gönderildi. Gelen kutunu ve spam klasörünü kontrol et.");
+  }
   async function login(event: FormEvent) {
     event.preventDefault();
     setBusy(true);
@@ -577,6 +596,10 @@ export function LeadsAdminPage() {
               {busy ? "Giriş yapılıyor…" : "Giriş yap"}
               <ArrowRight size={16} />
             </button>
+            <button className="qa-back" type="button" onClick={() => void sendPasswordLink()}>
+              Şifre belirle / şifremi unuttum
+            </button>
+            {resetNote && <p role="status">{resetNote}</p>}
             <small>Başvurular yalnızca yönetici olarak tanımlanan hesabına açıktır.</small>
           </form>
         )}
