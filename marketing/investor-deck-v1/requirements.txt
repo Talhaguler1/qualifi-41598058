@@ -1,0 +1,5 @@
+python-pptx
+reportlab
+Pillow
+fonttools
+playwright

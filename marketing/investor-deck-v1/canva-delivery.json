@@ -1,0 +1,32 @@
+{
+  "created_for": "QualiFi",
+  "date": "2026-11-15",
+  "folder": {
+    "id": "FAHa726GrLM",
+    "url": "https://www.canva.com/folder/FAHa726GrLM"
+  },
+  "investor_deck": {
+    "id": "DAHa7yMPkSQ",
+    "edit_url": "https://www.canva.com/d/1az64FMM3lwRlYa",
+    "pages": 17
+  },
+  "brand_deck": {
+    "id": "DAHa78DmB1M",
+    "edit_url": "https://www.canva.com/d/3Rcac8Ua0QzGalj",
+    "pages": 2
+  },
+  "logo_assets": {
+    "mark": "MAHa77Dzjk0",
+    "wordmark": "MAHa7_YExqc"
+  },
+  "blank_pages": [
+    9,
+    10,
+    12
+  ],
+  "other_existing_designs_modified": false,
+  "live_website_modified": false,
+  "ai_design_generation_used": false,
+  "logo_concept_image_generation_used": true,
+  "final_logo_master": "brand/QualiFi-Mark.svg"
+}
