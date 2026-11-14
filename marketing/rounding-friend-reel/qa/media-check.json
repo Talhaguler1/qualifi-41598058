@@ -1,0 +1,31 @@
+{
+  "video": {
+    "index": 0,
+    "codec_name": "h264",
+    "codec_type": "video",
+    "width": 1080,
+    "height": 1920,
+    "r_frame_rate": "30/1",
+    "duration": "25.733333"
+  },
+  "audio": {
+    "index": 1,
+    "codec_name": "aac",
+    "codec_type": "audio",
+    "sample_rate": "48000",
+    "channels": 2,
+    "r_frame_rate": "0/0",
+    "duration": "25.733000"
+  },
+  "file": {
+    "duration": "25.733333",
+    "size": "3214039"
+  },
+  "full_decode": "passed; no reported errors",
+  "av_duration_delta_seconds": 0.000333,
+  "integrated_loudness_lufs": -16.26,
+  "true_peak_dbtp": -3.91,
+  "math_in_integer_cents": "passed",
+  "captions": "Burned into video, plus optional SRT",
+  "visual_check": "Source browser screenshots and MP4 sampled frames; no human audience test"
+}

@@ -1,0 +1,49 @@
+{
+  "page_errors": [],
+  "deterministic_seek": true,
+  "audio_playback": {
+    "time": 0.344992,
+    "paused": false
+  },
+  "mobile_horizontal_overflow": false,
+  "scenes": [
+    {
+      "time": 1.47,
+      "scene": 0,
+      "speaker": "friend",
+      "caption": "Owe you $24.62?"
+    },
+    {
+      "time": 5.337999999999999,
+      "scene": 1,
+      "speaker": "friend",
+      "caption": "You get $75."
+    },
+    {
+      "time": 7.791,
+      "scene": 2,
+      "speaker": "friend",
+      "caption": "Every week?"
+    },
+    {
+      "time": 13.011000000000001,
+      "scene": 3,
+      "speaker": "expert",
+      "caption": "You still owe every cent."
+    },
+    {
+      "time": 16.962,
+      "scene": 4,
+      "speaker": "agent",
+      "caption": "This week, you\u2019re $3.36 short."
+    },
+    {
+      "time": 21.878,
+      "scene": 5,
+      "speaker": "expert",
+      "caption": "Let your agent handle the details."
+    }
+  ],
+  "duration": 25.733,
+  "review": "Read-only source and sample frames; not a human comprehension test."
+}

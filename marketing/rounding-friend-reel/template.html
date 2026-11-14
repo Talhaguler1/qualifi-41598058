@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QualiFi — The round-down friend</title>
+<style>
+@font-face{font-family:Manrope;src:url(data:font/ttf;base64,__MANROPE__) format('truetype');font-weight:600}
+@font-face{font-family:Manrope;src:url(data:font/ttf;base64,__MANROPE_BOLD__) format('truetype');font-weight:700}
+@font-face{font-family:DM;src:url(data:font/ttf;base64,__DM__) format('truetype');font-weight:500}
+@font-face{font-family:DM;src:url(data:font/ttf;base64,__DM_BOLD__) format('truetype');font-weight:700}
+:root{--forest:#203b30;--lime:#d8eea6;--paper:#f6f7f2;--muted:#637362;--line:#dce3d4;--soft:#eaf0df;--scale:.4}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:DM,Arial,sans-serif}body{background:#14281f;display:flex;align-items:center;flex-direction:column;padding:18px;color:var(--paper)}
+#viewport{width:calc(1080px*var(--scale));height:calc(1920px*var(--scale));position:relative;overflow:hidden;border-radius:18px;box-shadow:0 20px 80px #0005}
+#stage{width:1080px;height:1920px;transform:scale(var(--scale));transform-origin:top left;position:absolute;inset:0;background:var(--paper);overflow:hidden;color:var(--forest)}
+.scene{position:absolute;inset:0;visibility:hidden;opacity:0;overflow:hidden;background:var(--paper)}.scene.dark{background:var(--forest);color:var(--paper)}
+.grain{position:absolute;inset:0;z-index:30;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23000' opacity='.15' filter='url(%23n)' d='M0 0h180v180H0z'/%3E%3C/svg%3E");opacity:.045}
+.brandbar{position:absolute;left:76px;right:76px;top:242px;height:70px;display:flex;align-items:center;gap:17px;z-index:40}.brandbar img{width:64px;height:64px}.wordmark{font:700 45px Manrope;letter-spacing:-2px}.tag{margin-left:auto;font:700 22px DM;letter-spacing:2px;border:2px solid var(--line);border-radius:30px;padding:13px 21px}.brandline{position:absolute;left:76px;right:76px;top:338px;height:2px;background:var(--line);z-index:40}
+#stage[data-dark=true] .brandbar{color:var(--paper)}#stage[data-dark=true] .tag{border-color:#66836b;color:var(--lime)}#stage[data-dark=true] .brandline{background:#58715a}
+.eyebrow{position:absolute;left:80px;top:377px;right:80px;font:700 23px DM;letter-spacing:2px;color:var(--muted)}
+.headline{position:absolute;left:76px;right:76px;top:425px;font:600 100px/1.10 Manrope;letter-spacing:-4px;margin:0}.headline.compact{font-size:91px;letter-spacing:-3px}.lime{color:var(--lime)}
+.bill{position:absolute;left:76px;top:687px;width:928px;height:312px;background:white;border:2px solid var(--line);border-radius:30px;box-shadow:0 18px 36px #203b3009;transform-origin:50% 60%}
+.bill .label{position:absolute;top:29px;left:36px;font:700 23px DM;letter-spacing:2px;color:var(--muted)}.bill .due{position:absolute;top:57px;left:34px;font:600 80px Manrope;letter-spacing:-3px}
+.bill .divider{position:absolute;left:346px;top:35px;height:236px;width:2px;background:var(--line)}.bill .sentlabel{left:384px}.bill .sent{position:absolute;left:380px;top:60px;font:700 116px Manrope;letter-spacing:-6px}
+.missing{position:absolute;left:381px;top:215px;font:700 28px DM;background:var(--lime);color:var(--forest);border-radius:20px;padding:11px 20px;transform-origin:left center}
+.bill .dollar-icon{position:absolute;left:52px;top:211px;font:700 28px DM;color:var(--muted)}
+.actor{position:absolute;transform-origin:50% 95%}.person{width:100%;height:100%;overflow:visible}.friend0{width:425px;height:544px;left:325px;top:1005px}.friend1{width:425px;height:544px;left:325px;top:1005px}
+.floor{position:absolute;width:450px;height:35px;left:300px;top:1524px;border-radius:50%;background:#203b3010}
+.coins{position:absolute;left:800px;top:1050px;width:150px;height:270px}.coin{position:absolute;width:71px;height:71px;border:3px solid var(--forest);border-radius:50%;background:var(--lime);font:700 37px Manrope;text-align:center;line-height:67px;box-shadow:4px 6px 0 #203b3014}
+.scribble{position:absolute;right:92px;top:586px;color:var(--muted);font:500 27px DM;transform:rotate(-6deg)}
+.annual-top{position:absolute;left:78px;top:379px;font:700 23px DM;letter-spacing:2px;color:#c5d5bf}.annual-title{position:absolute;left:76px;top:440px;font:600 76px/1.12 Manrope;letter-spacing:-3px}
+.annual-number{position:absolute;left:70px;top:646px;font:700 185px/1 Manrope;letter-spacing:-10px;color:var(--lime)}.annual-unit{position:absolute;left:82px;top:857px;font:500 40px DM;color:#c5d5bf}
+.formula{position:absolute;left:80px;top:937px;font:500 28px/1.6 DM;color:#c5d5bf}.genius{position:absolute;right:112px;top:1102px;border:3px solid var(--lime);color:var(--lime);font:700 36px DM;letter-spacing:4px;padding:13px 24px;border-radius:10px;transform:rotate(9deg)}
+.friend-brag{width:400px;height:512px;left:340px;top:1050px}.annual-floor{position:absolute;left:320px;top:1528px;width:440px;height:30px;border-radius:50%;background:#0e241c}
+.expert-header{position:absolute;left:76px;top:433px;font:600 110px/1.08 Manrope;letter-spacing:-4px}.still-owed{position:absolute;left:78px;top:696px;background:var(--lime);border-radius:25px;width:924px;padding:26px 35px;font:600 57px Manrope;letter-spacing:-2px}.still-owed span{float:right;font-weight:700}
+.expert-actor{width:495px;height:634px;left:458px;top:886px}.friend-small{width:342px;height:438px;left:100px;top:1070px}.role-expert{position:absolute;left:570px;top:1515px;font:700 20px DM;letter-spacing:1px;color:var(--muted)}
+.expert-stripe{position:absolute;left:-100px;top:0;width:360px;height:2100px;background:var(--lime);transform:rotate(-14deg);opacity:0;pointer-events:none;z-index:20}
+.agent-heading{position:absolute;left:76px;top:425px;font:600 103px/1.08 Manrope;letter-spacing:-4px}.agent-sub{position:absolute;left:80px;top:551px;font:500 35px DM;color:var(--muted)}
+.message{position:absolute;left:76px;top:653px;width:928px;height:333px;border-radius:28px;background:var(--forest);color:var(--paper);padding:34px 36px;box-shadow:0 18px 36px #203b3012;transform-origin:75% 80%}.message-label{display:flex;align-items:center;gap:16px;font:700 22px DM;letter-spacing:1.8px;color:var(--lime)}.message-label img{width:46px;height:46px}.message p{font:500 48px/1.36 Manrope;letter-spacing:-1.4px;margin:23px 0 0}.message strong{color:var(--lime);font-weight:700}
+.friend-nudge{width:390px;height:499px;left:150px;top:1050px}.bot{position:absolute;width:292px;height:292px;left:640px;top:1154px;overflow:visible;transform-origin:50% 50%}.bot-shadow{position:absolute;left:665px;top:1494px;width:250px;height:28px;border-radius:50%;background:#203b3010}
+.hand{position:absolute;left:510px;top:1133px;width:240px;height:245px;transform-origin:95% 70%;z-index:10;opacity:0}.impact{position:absolute;left:320px;top:1142px;width:250px;height:170px;opacity:0;z-index:12}.stamp{position:absolute;left:606px;top:1005px;font:700 29px DM;border:4px solid var(--forest);border-radius:12px;padding:12px 20px;background:var(--lime);transform:rotate(-8deg);opacity:0}
+.closing .bot{top:493px;left:430px;width:220px;height:220px}.close-head{position:absolute;left:76px;top:811px;font:600 99px/1.12 Manrope;letter-spacing:-4px}.close-body{position:absolute;left:80px;top:1069px;font:500 35px/1.5 DM;color:#c5d5bf}.cta{position:absolute;left:76px;top:1234px;width:928px;height:115px;border-radius:23px;background:var(--lime);color:var(--forest);display:flex;align-items:center;justify-content:space-between;padding:0 36px;font:700 39px Manrope;letter-spacing:-1px}.cta .arrow{font:500 65px DM}.close-url{position:absolute;left:80px;top:1394px;font:500 31px DM;color:#c5d5bf}.close-dots{position:absolute;left:80px;top:1181px;display:flex;gap:14px}.close-dots i{width:9px;height:9px;background:var(--lime);border-radius:50%}
+#caption{position:absolute;left:76px;width:928px;top:1585px;min-height:100px;z-index:45;padding:18px 25px;background:var(--forest);color:var(--paper);border-radius:18px;font:500 35px/1.32 DM;text-align:center;box-shadow:0 5px 15px #203b3010}#caption b{font-weight:700;color:var(--lime)}#stage[data-dark=true] #caption{background:#f6f7f2;color:var(--forest)}#stage[data-dark=true] #caption b{color:var(--forest)}
+#bottom-label{position:absolute;left:80px;top:1730px;color:var(--muted);font:500 22px DM;z-index:42}#stage[data-dark=true] #bottom-label{color:#c5d5bf}
+#ui{width:min(680px,94vw);padding:17px 0 0;display:grid;grid-template-columns:110px 1fr 72px;gap:12px;align-items:center;font:500 13px DM}button{font:700 13px DM;border:0;border-radius:9px;padding:12px;background:var(--lime);color:var(--forest);cursor:pointer}input{width:100%;accent-color:var(--lime)}.note{max-width:680px;font:500 12px/1.6 DM;color:#bfcfba;text-align:center;padding:4px 12px}.note a{color:var(--lime)}
+body.render{padding:0;background:var(--paper);width:1080px;height:1920px;overflow:hidden;display:block}body.render #viewport{width:1080px;height:1920px;border-radius:0;box-shadow:none}body.render #stage{transform:none}body.render #ui,body.render .note{display:none}
+</style>
+</head>
+<body>
+<div id="viewport"><div id="stage" data-dark="false">
+ <section class="scene" id="scene0" aria-label="First small underpayment">
+  <div class="eyebrow">THE ROUND-DOWN FRIEND</div><h1 class="headline">That friend who<br>rounds down.</h1>
+  <div class="bill" id="bill0"><div class="label">OWED</div><div class="due">$24.62</div><div class="divider"></div><div class="label sentlabel">SENT</div><div class="sent">$24.26</div><div class="dollar-icon">Close enough?</div><div class="missing" id="missing0">$0.36 missing</div></div>
+  <div class="floor"></div><div class="actor friend0" id="friend0"></div><div class="coins" id="coins0"><div class="coin" style="left:0;top:0">¢</div><div class="coin" style="left:65px;top:90px">¢</div></div>
+ </section>
+ <section class="scene" id="scene1" aria-label="A larger underpayment">
+  <div class="eyebrow">SAME FRIEND. SAME MOVE.</div><h1 class="headline">And somehow,<br>it keeps happening.</h1>
+  <div class="bill" id="bill1"><div class="label">OWED</div><div class="due">$78.00</div><div class="divider"></div><div class="label sentlabel">SENT</div><div class="sent">$75.00</div><div class="dollar-icon">Very convenient.</div><div class="missing" id="missing1">$3.00 missing</div></div>
+  <div class="floor"></div><div class="actor friend1" id="friend1"></div><div class="coins" id="coins1"><div class="coin" style="left:0;top:0">$</div><div class="coin" style="left:65px;top:90px">$</div></div>
+ </section>
+ <section class="scene dark" id="scene2" aria-label="The fictional annual brag">
+  <div class="annual-top">HIS “FINANCIAL STRATEGY”</div><div class="annual-title">Apparently,<br>he’s a genius.</div><div class="annual-number" id="annualValue">$174.72</div><div class="annual-unit">kept over a year</div>
+  <div class="formula">($0.36 + $3.00) × 52 weeks<br>One of each example per week. Fictional skit.</div><div class="annual-floor"></div><div class="actor friend-brag" id="friend2"></div><div class="genius" id="genius">GENIUS.</div>
+ </section>
+ <section class="scene" id="scene3" aria-label="The expert interrupts">
+  <div class="eyebrow">ENTER: THE VOICE OF REASON</div><div class="expert-header">Every cent.<br>Still owed.</div><div class="still-owed">Annual unpaid balance <span>$174.72</span></div>
+  <div class="actor friend-small" id="friend3"></div><div class="actor expert-actor" id="expert0"></div><div class="role-expert">THE VOICE OF REASON</div><div class="expert-stripe" id="expertStripe"></div>
+ </section>
+ <section class="scene" id="scene4" aria-label="A fictional QualiFi follow-up nudge">
+  <div class="eyebrow">MEET THE FOLLOW-UP AGENT</div><div class="agent-heading">The friendly nudge.</div><div class="agent-sub">Small gap. Very specific reminder.</div>
+  <div class="message" id="message"><div class="message-label"><img src="__LOGO__" alt="">QUALIFI AGENT / CONCEPT MESSAGE</div><p>This week, you’re <strong>$3.36 short.</strong><br>Please send the rest.</p></div>
+  <div class="actor friend-nudge" id="friend4"></div><div class="bot-shadow"></div><div class="bot" id="agent0"></div><div class="hand" id="cartoonHand"></div><div class="impact" id="impact"></div><div class="stamp" id="stamp">FULL AMOUNT, PLEASE.</div>
+ </section>
+ <section class="scene dark closing" id="scene5" aria-label="QualiFi waiting-list invitation">
+  <div class="bot" id="agent1"></div><div class="close-head">Let your agent<br>chase the cents.</div><div class="close-body">The follow-up agent we’re building.<br>You focus on the work.</div>
+  <div class="close-dots"><i></i><i></i><i></i></div><div class="cta">Join the waiting list <span class="arrow">→</span></div><div class="close-url">Link in bio · qualifilab.com</div>
+ </section>
+ <div class="brandbar"><img src="__LOGO__" alt="QualiFi"><div class="wordmark">QualiFi.</div><div class="tag" id="statusTag">CONCEPT / FICTIONAL SKIT</div></div><div class="brandline"></div>
+ <div class="grain"></div><div id="caption"></div><div id="bottom-label">Illustrative example • Early access</div>
+</div></div>
+<div id="ui"><button id="play">Play with sound</button><input id="seek" aria-label="Video timeline" type="range" min="0" max="26" value="0" step="0.01"><span id="time">0:00</span></div>
+<p class="note">English synthetic voices · original sound effects · QualiFi concept skit.<br>Use the included MP4 for posting. The entire animation and audio also work in this standalone HTML.</p>
+<audio id="sound" preload="auto" src="data:audio/mpeg;base64,__AUDIO__"></audio>
+<script>
+const VIDEO=__TIMELINE__;
+const logoData='__LOGO__';
+const $=s=>document.querySelector(s); const clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v));
+const ease=p=>1-Math.pow(1-clamp(p),3);const back=p=>{p=clamp(p)-1;return 1+2.70158*p*p*p+1.70158*p*p};
+const sceneNodes=[...document.querySelectorAll('.scene')];
+function person(kind,id){const expert=kind==='expert';const skin=expert?'#d8b99b':'#e8d6bc';return `<svg class="person" viewBox="0 0 500 640" xmlns="http://www.w3.org/2000/svg">
+ <ellipse cx="249" cy="616" rx="153" ry="15" fill="#203b30" opacity=".08"/>
+ ${expert?'<path d="M124 190Q91 21 236 16Q389 21 364 250L321 316H148Z" fill="#203b30"/>':''}
+ <path d="M174 471L164 594H226L242 477M269 476L277 594H340L326 470" fill="${expert?'#45634d':'#60725f'}" stroke="#203b30" stroke-width="7" stroke-linejoin="round"/>
+ <path d="M160 588Q124 600 134 614H228V590M278 589V614H366Q369 599 338 589" fill="#203b30"/>
+ <rect x="209" y="233" width="73" height="80" rx="20" fill="${skin}" stroke="#203b30" stroke-width="6"/>
+ <path d="M152 284Q112 283 102 339L119 508Q241 552 365 508L384 338Q373 285 330 284L279 269Q247 306 209 269Z" fill="${expert?'#203b30':'#d8eea6'}" stroke="#203b30" stroke-width="8" stroke-linejoin="round"/>
+ ${expert?'<path d="M208 279L245 337L281 279L305 410H181Z" fill="#f6f7f2"/><path d="M207 277L164 310L205 359L244 335M281 279L325 309L286 359L246 336" fill="#637362"/><circle cx="314" cy="366" r="15" fill="#d8eea6"/>':'<path d="M160 291Q245 348 330 289M207 318L211 366M281 319L277 366" fill="none" stroke="#203b30" stroke-width="7" stroke-linecap="round"/><image href="'+logoData+'" x="213" y="372" width="65" height="65"/>'}
+ <g id="${id}-head">
+ <ellipse cx="130" cy="169" rx="25" ry="35" fill="${skin}" stroke="#203b30" stroke-width="7"/><ellipse cx="365" cy="169" rx="25" ry="35" fill="${skin}" stroke="#203b30" stroke-width="7"/>
+ <path d="M137 115Q137 34 245 35Q356 35 358 122L352 212Q338 272 249 281Q155 274 140 214Z" fill="${skin}" stroke="#203b30" stroke-width="8"/>
+ ${expert?'<path d="M135 144Q111 28 240 29Q367 21 361 140Q320 93 314 72Q219 135 136 142" fill="#203b30"/>':'<path d="M133 140Q92 51 165 23Q218-9 259 15Q327-7 356 53Q395 94 357 145L335 102Q310 124 278 92Q247 119 217 90Q170 122 152 116Z" fill="#203b30"/>'}
+ <g id="${id}-eyes"><ellipse cx="205" cy="169" rx="22" ry="26" fill="#f6f7f2"/><ellipse cx="292" cy="169" rx="22" ry="26" fill="#f6f7f2"/><ellipse cx="210" cy="172" rx="8" ry="13" fill="#203b30"/><ellipse cx="298" cy="172" rx="8" ry="13" fill="#203b30"/></g>
+ <path d="M180 135Q204 123 227 137M270 136Q293 126 316 137" fill="none" stroke="#203b30" stroke-width="9" stroke-linecap="round"/>
+ ${expert?'<circle cx="204" cy="169" r="36" fill="none" stroke="#203b30" stroke-width="8"/><circle cx="292" cy="169" r="36" fill="none" stroke="#203b30" stroke-width="8"/><path d="M240 164H256M169 162L141 153M328 161L355 151" stroke="#203b30" stroke-width="7"/>':''}
+ <path d="M246 174L236 211Q248 217 260 211" fill="none" stroke="#aa8c73" stroke-width="6" stroke-linecap="round"/>
+ <path id="${id}-mouth" d="M219 238Q248 252 279 231" fill="none" stroke="#203b30" stroke-width="7" stroke-linecap="round"/>
+ </g>
+ ${expert?'<path d="M119 321Q73 330 83 420L137 443L163 405L135 382L155 342" fill="#203b30"/><path d="M342 320L397 264L413 298L375 373" fill="#203b30" stroke="#203b30" stroke-width="9" stroke-linejoin="round"/><g transform="translate(392 196) rotate(12)"><path d="M0 74V15Q7 1 15 15V45L19 7Q28-7 35 8V46L40 13Q48 2 56 15V52L61 31Q71 20 78 33L71 88Q63 115 32 117Q8 111 0 74Z" fill="'+skin+'" stroke="#203b30" stroke-width="7"/></g>':'<path d="M119 325Q61 339 72 418Q78 452 129 452" fill="none" stroke="#203b30" stroke-width="55" stroke-linecap="round"/><path d="M120 326Q64 345 80 416Q88 439 132 436" fill="none" stroke="#d8eea6" stroke-width="38" stroke-linecap="round"/><ellipse cx="146" cy="438" rx="33" ry="25" fill="'+skin+'" stroke="#203b30" stroke-width="7"/><path d="M366 328L405 370" stroke="#203b30" stroke-width="53" stroke-linecap="round"/><path d="M364 328L404 366" stroke="#d8eea6" stroke-width="37" stroke-linecap="round"/><g transform="translate(361 304) rotate(-11)"><rect x="0" y="0" width="98" height="172" rx="19" fill="#203b30" stroke="#203b30" stroke-width="7"/><rect x="9" y="20" width="80" height="127" rx="10" fill="#f6f7f2"/><text x="50" y="108" text-anchor="middle" font-size="57" font-family="Manrope" fill="#203b30">$</text><path d="M15 160H78" stroke="#637362" stroke-width="5"/></g><ellipse cx="408" cy="428" rx="24" ry="30" fill="'+skin+'" stroke="#203b30" stroke-width="7"/>'}
+ </svg>`}
+function bot(id){return `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg"><circle cx="150" cy="150" r="145" fill="#d8eea6" opacity=".17"/><rect x="35" y="49" width="230" height="213" rx="64" fill="#d8eea6" stroke="#203b30" stroke-width="9"/><path d="M149 49V28" stroke="#203b30" stroke-width="8"/><circle cx="149" cy="20" r="11" fill="#d8eea6" stroke="#203b30" stroke-width="6"/><ellipse cx="106" cy="137" rx="14" ry="20" fill="#203b30"/><ellipse cx="193" cy="137" rx="14" ry="20" fill="#203b30"/><path id="${id}-mouth" d="M114 188Q150 216 187 188" fill="none" stroke="#203b30" stroke-width="9" stroke-linecap="round"/><path d="M265 168L283 162M35 168L17 162" stroke="#203b30" stroke-width="8" stroke-linecap="round"/></svg>`}
+['friend0','friend1','friend2','friend3','friend4'].forEach(id=>$('#'+id).innerHTML=person('friend',id));$('#expert0').innerHTML=person('expert','expert0');['agent0','agent1'].forEach(id=>$('#'+id).innerHTML=bot(id));
+$('#cartoonHand').innerHTML=`<svg viewBox="0 0 260 260"><path d="M64 224L46 172Q20 151 28 133Q37 117 57 129L82 148L78 52Q78 32 96 34Q111 36 110 55L113 111L117 33Q119 14 136 16Q152 18 150 39L149 111L158 40Q162 20 177 25Q194 30 187 51L179 123L194 75Q202 59 217 65Q232 73 222 94L205 176Q195 218 162 237Z" fill="#d8eea6" stroke="#203b30" stroke-width="11" stroke-linejoin="round"/><path d="M91 166Q141 137 181 162M105 204H171" fill="none" stroke="#203b30" stroke-width="8" stroke-linecap="round"/></svg>`;
+$('#impact').innerHTML=`<svg viewBox="0 0 250 170"><path d="M120 9L137 57L191 26L174 77L236 84L184 107L213 150L151 132L128 165L105 127L44 149L67 105L11 80L78 74L61 23L106 54Z" fill="#d8eea6" stroke="#203b30" stroke-width="5"/><text x="126" y="105" text-anchor="middle" font-family="Manrope" font-weight="700" font-size="36" fill="#203b30">NUDGE!</text></svg>`;
+const cues=VIDEO.cues;
+let captionChunks=[];
+cues.forEach(c=>{
+ let texts=c.caption.match(/[^.!?]+[.!?]+|[^.!?]+$/g)||[c.caption];
+ // Protect dollar decimals from sentence splitting.
+ texts=c.caption.replace(/(\d)\.(\d)/g,'$1¤$2').match(/[^.!?]+[.!?]+|[^.!?]+$/g).map(x=>x.replaceAll('¤','.').trim());
+ const weight=texts.reduce((a,x)=>a+x.length,0);let at=c.start;
+ texts.forEach((text,i)=>{const duration=(c.end-c.start)*text.length/weight;captionChunks.push({start:at,end:i===texts.length-1?c.end:at+duration,text,speaker:c.speaker});at+=duration;});
+});
+function amplitude(c,t){if(t<c.start||t>c.end)return 0;const p=(t-c.start)*40;const n=Math.floor(p),a=c.amplitude[n]||0,b=c.amplitude[n+1]||0;return a+(b-a)*(p-n)}
+function setMouth(id,a,surprise=false){let el=$('#'+id+'-mouth');if(!el)return;if(id.startsWith('agent')){el.setAttribute('d',a>.12?`M114 184Q150 ${202+a*43} 187 184Q150 ${181-a*10} 114 184Z`:'M114 188Q150 216 187 188');el.setAttribute('fill',a>.12?'#203b30':'none');return;}
+ if(surprise){el.setAttribute('d','M239 222C216 222 216 257 239 257C262 257 262 222 239 222Z');el.setAttribute('fill','#203b30');}
+ else if(a>.12){el.setAttribute('d',`M220 232Q247 ${228-a*12} 278 232Q252 ${240+a*39} 220 232Z`);el.setAttribute('fill','#203b30');}
+ else{el.setAttribute('d',id.startsWith('friend')?'M219 238Q248 252 279 231':'M223 237Q249 248 275 237');el.setAttribute('fill','none');}}
+window.renderAt=function(raw){
+ const t=clamp(raw,0,VIDEO.duration);let scene=0;for(let i=1;i<cues.length;i++)if(t>=cues[i].start-.12)scene=i;
+ sceneNodes.forEach((el,i)=>{el.style.visibility=i===scene?'visible':'hidden';el.style.opacity=i===scene?'1':'0';});
+ const dark=scene===2||scene===5;$('#stage').dataset.dark=dark?'true':'false';$('#statusTag').textContent=scene===5?'EARLY ACCESS':'CONCEPT / FICTIONAL SKIT';
+ $('#bottom-label').textContent=scene===2?'Fictional example. Unpaid money is still owed.':scene===5?'Follow-up agent in development':'Illustrative example • Early access';
+ const cue=cues[scene],dt=t-cue.start;const talk=amplitude(cue,t);
+ ['friend0','friend1','friend2','friend3','friend4','expert0','agent0','agent1'].forEach(id=>setMouth(id,(cue.speaker==='friend'&&id.startsWith('friend'))||(cue.speaker==='expert'&&id.startsWith('expert'))||(cue.speaker==='agent'&&id.startsWith('agent'))?talk:0,id==='friend4'&&t>=cues[4].start+.1&&t<cues[4].start+.6));
+ for(let i=0;i<5;i++){
+  const head=$('#friend'+i+'-head');head.setAttribute('transform',`rotate(${i===3?-9:i===4?-2:Math.sin(t*2.5)*2} 245 230)`);
+  const eyes=$('#friend'+i+'-eyes');eyes.setAttribute('transform',`translate(0 ${Math.sin(t*1.1)*1.2})`);eyes.style.opacity=(t%3.7)>.12?'1':'.15';
+ }
+ $('#friend0').style.transform=`translateY(${Math.sin(t*3)*4}px) rotate(${Math.sin(t*1.2)*1.2}deg)`;$('#friend1').style.transform=`translateY(${Math.sin(t*3)*4}px) rotate(-2deg)`;
+ ['bill0','bill1'].forEach((id,i)=>{$('#'+id).style.transform=`translateY(${Math.sin(t*2)*3}px) rotate(${Math.sin(t*1.5)*.3}deg)`;let pop=back((t-cues[i].start-.8)/.30);$('#missing'+i).style.transform=`scale(${Math.max(.001,pop)})`;});
+ for(let i=0;i<2;i++)$('#coins'+i).style.transform=`translateY(${Math.sin(t*2+i)*15}px) rotate(${Math.sin(t*1.6)*8}deg)`;
+ $('#annualValue').textContent='$'+(Math.round(17472*ease((t-cues[2].start)/1.8))/100).toFixed(2);
+ $('#friend2').style.transform=`rotate(${Math.sin(t*3)*2.5}deg) translateY(${Math.sin(t*4)*3}px)`;$('#genius').style.transform=`rotate(9deg) scale(${Math.max(.001,back((t-cues[2].start-1.7)/.4))})`;
+ const ex=ease((t-cues[3].start+.1)/.42);$('#expert0').style.transform=`translateX(${(1-ex)*650}px) rotate(${(1-ex)*-9}deg)`;$('#friend3').style.transform=`translateX(${-ex*16}px) rotate(-7deg)`;
+ const flash=clamp((t-cues[3].start+.12)/.35);$('#expertStripe').style.opacity=(flash>0&&flash<1)?String(Math.sin(flash*Math.PI)*.7):'0';$('#expertStripe').style.transform=`translateX(${1800*flash-600}px) rotate(-14deg)`;
+ const nd=t-cues[4].start;const botIn=back((nd+.05)/.45);$('#agent0').style.transform=`translateY(${Math.sin(t*3)*7}px) scale(${Math.max(.001,botIn)})`;$('#agent1').style.transform=`translateY(${Math.sin(t*2)*8}px)`;
+ $('#message').style.transform=`scale(${Math.max(.001,back((nd+.08)/.30))})`;
+ let hit=nd>=.02&&nd<=.62?Math.sin(clamp((nd-.02)/.60)*Math.PI):0;$('#cartoonHand').style.opacity=hit>0?'1':'0';$('#cartoonHand').style.transform=`translateX(${-260*hit}px) rotate(${-40*hit}deg)`;
+ let impact=nd>=.16&&nd<.49?Math.sin((nd-.16)/.33*Math.PI):0;$('#impact').style.opacity=String(Math.max(0,impact));$('#impact').style.transform=`scale(${.8+impact*.2}) rotate(-5deg)`;
+ $('#friend4').style.transform=`translateX(${-hit*15}px) rotate(${-hit*6}deg)`;$('#stamp').style.opacity=nd>.46?'1':'0';$('#stamp').style.transform=`rotate(-8deg) scale(${Math.max(.001,back((nd-.46)/.22))})`;
+ const cap=captionChunks.find(c=>t>=c.start&&t<c.end);
+ const caption=$('#caption');caption.style.opacity=cap?'1':'0';caption.innerHTML=cap?cap.text.replace(/(\$\d+(?:\.\d+)?)/g,'<b>$1</b>'):'';
+ $('#seek').value=t;$('#time').textContent=Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0');
+ return {time:t,scene,speaker:cue.speaker,caption:cap?.text??''};
+};
+const renderMode=new URLSearchParams(location.search).has('render');if(renderMode)document.body.classList.add('render');
+const sound=$('#sound');$('#seek').max=VIDEO.duration;let running=false,raf;
+function tick(){window.renderAt(sound.currentTime);if(running)raf=requestAnimationFrame(tick);}
+$('#play').addEventListener('click',async()=>{if(running){sound.pause();running=false;cancelAnimationFrame(raf);$('#play').textContent='Play with sound';}else{if(sound.currentTime>=VIDEO.duration-.05)sound.currentTime=0;await sound.play();running=true;$('#play').textContent='Pause';tick();}});
+$('#seek').addEventListener('input',e=>{sound.currentTime=+e.target.value;window.renderAt(+e.target.value);});sound.addEventListener('ended',()=>{running=false;$('#play').textContent='Replay';window.renderAt(VIDEO.duration);});
+function fit(){const scale=Math.min((innerWidth-24)/1080,(innerHeight-140)/1920,1);document.documentElement.style.setProperty('--scale',Math.max(.1,scale));}addEventListener('resize',fit);fit();window.renderAt(0);window.VIDEO=VIDEO;window.captionChunks=captionChunks;
+</script>
+</body></html>
