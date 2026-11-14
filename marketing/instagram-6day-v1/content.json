@@ -205,8 +205,9 @@
             "style": "light"
           },
           {
-            "title": "Gmail ve WhatsApp:\niş bağlamın.",
+            "title": "Gmail ve\nWhatsApp:\niş bağlamın.",
             "body": "Planlanan bağlantılar,\nsenin iznin ve kontrolünle.",
+            "body_gap": 60,
             "visual": "channels",
             "style": "light"
           },
@@ -540,14 +541,16 @@
             "style": "lime"
           },
           {
-            "title": "A contract.\nA payment promise.",
+            "title": "A contract.\nA payment\npromise.",
             "body": "Amounts, dates and the context behind them.",
+            "body_gap": 60,
             "visual": "fields",
             "style": "light"
           },
           {
-            "title": "Gmail. WhatsApp.\nYour work context.",
+            "title": "Gmail.\nWhatsApp.\nWork context.",
             "body": "Planned connections,\nwith your permission and control.",
+            "body_gap": 60,
             "visual": "channels",
             "style": "light"
           },
@@ -583,7 +586,7 @@
         "slides": [
           {
             "kicker": "FREELANCER / PROJECT PLAN",
-            "title": "Project finished.\nWhat does your\nincome calendar say?",
+            "title": "Project finished.\nWhen will you\nget paid?",
             "body": "A three-payment-point template\nfor your next project.",
             "visual": "milestones",
             "style": "light"
