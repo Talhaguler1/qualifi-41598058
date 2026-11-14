@@ -1,0 +1,684 @@
+{
+  "tr": {
+    "early": "ERKEN ERİŞİM",
+    "example": "ÖRNEK SENARYO",
+    "concept": "GELİŞTİRDİĞİMİZ AKIŞ",
+    "swipe": "Kaydır",
+    "save": "Kaydet",
+    "join": "Bekleme listesine katıl",
+    "bio": "Profildeki bağlantıdan",
+    "days": [
+      {
+        "day": 1,
+        "type": "carousel",
+        "id": "payment-clarity",
+        "audience": "Hizmet işletmeleri ve ajans sahipleri",
+        "goal": "Kaydetme",
+        "cta": "Bu kontrolü kaydet.",
+        "pillar": "Nakit planlama eğitimi",
+        "time": "12:30",
+        "slides": [
+          {
+            "kicker": "NAKİT NOTLARI / 01",
+            "title": "Ödeme tarihi\nbelirsizse,\nplan da belirsiz.",
+            "body": "İşi teslim eden küçük ekipler için\nbir sonraki haftayı planlama kontrolü.",
+            "visual": "calendar",
+            "style": "dark"
+          },
+          {
+            "kicker": "AYNI ÖDEME, İKİ AYRI BİLGİ",
+            "title": "Sözleşme: 30 gün.\nMesaj: “Haftaya.”",
+            "body": "Plan yaparken hangi tarihi kullanacağını\nbilmek için ikisini birlikte tut.",
+            "visual": "messages",
+            "style": "light"
+          },
+          {
+            "kicker": "HAFTALIK KONTROL",
+            "title": "Üç bilgiyi\naynı yere yaz.",
+            "body": "Tutar. Söz verilen tarih.\nSon konuşmada değişen koşul.",
+            "visual": "fields",
+            "style": "light"
+          },
+          {
+            "kicker": "BİR SONRAKİ KARAR",
+            "title": "Yaklaşan giderini\nbu tarihle birlikte gör.",
+            "body": "Beklenen tahsilatı ve ödeme gecikmesi\nihtimalini aynı planda değerlendir.",
+            "visual": "timeline",
+            "style": "light"
+          },
+          {
+            "kicker": "HAFTAYA DA KULLAN",
+            "title": "Ödeme kontrolün\nelinin altında olsun.",
+            "body": "Bir sonraki haftayı planlamadan\nönce bu üç bilgiye dön.",
+            "visual": "cta",
+            "cta": "Bu kontrolü kaydet",
+            "style": "dark"
+          }
+        ],
+        "caption": "İşi teslim ettikten sonra ödeme bilgisi bazen sözleşmede, bazen son mesajda kalır. Haftalık planında tutarı, söz verilen tarihi ve son konuşmada değişen koşulu birlikte tut.\n\nQualiFi’yi bu dağınık iş bağlamından daha açık bir nakit planı oluşturmak için geliştiriyoruz. Şimdilik bu üç maddelik kontrolü kaydet.",
+        "hashtags": "#NakitAkışı #TahsilatTakibi #AjansYönetimi",
+        "alt": "Koyu yeşil ve kırık beyaz beş slayt. Ödeme tarihi belirsizliğinden başlayıp tutar, tarih ve son mesaj kontrolünü anlatıyor. Örnek ödeme zaman çizelgesi gerçek müşteri verisi değildir.",
+        "story": {
+          "title": "Ödeme tarihleri\nen çok nerede\nkalıyor?",
+          "body": "Kendi çalışma düzenini düşün.",
+          "sticker": "poll",
+          "options": [
+            "Sözleşmelerde",
+            "Mesajlarda"
+          ],
+          "visual": "messages"
+        },
+        "voiceover": ""
+      },
+      {
+        "day": 2,
+        "type": "reel",
+        "id": "late-payment",
+        "audience": "Ajanslar, danışmanlar, freelancerlar",
+        "goal": "İhtiyaç yorumu",
+        "cta": "Yorumda seç: VADE veya TAKİP.",
+        "pillar": "Problem keşfi",
+        "time": "12:30",
+        "duration": 18,
+        "scenes": [
+          {
+            "title": "İşi teslim ettin.\nÖdeme hâlâ yok.",
+            "body": "Proje bazlı çalışanların tanıyabileceği bir an.",
+            "visual": "calendar",
+            "style": "light"
+          },
+          {
+            "title": "“Haftaya\nhallederiz.”",
+            "body": "Yeni tarih, son mesajın içinde kaldı.",
+            "visual": "messages",
+            "style": "light"
+          },
+          {
+            "title": "Seni en çok\nne zorluyor?",
+            "body": "Vadenin belirsizliği mi,\nhatırlatmayı üstlenmek mi?",
+            "visual": "choice",
+            "style": "light"
+          },
+          {
+            "title": "VADE\nveya TAKİP",
+            "body": "Kendi deneyimini yorumda bir kelimeyle anlat.",
+            "visual": "cta",
+            "cta": "Yorumda birini seç",
+            "style": "dark"
+          }
+        ],
+        "caption": "Geciken bir ödeme, sonraki iş planını da etkileyebilir. Senin için zor olan tarih belirsizliği mi, tekrar tekrar hatırlatmak mı?\n\nQualiFi’nin ilk akışlarını gerçek ihtiyaçlara göre şekillendiriyoruz. Yorumda VADE ya da TAKİP yaz. Müşteri adı veya sözleşme paylaşmana gerek yok.",
+        "hashtags": "#Freelancer #Tahsilat #NakitPlanlama",
+        "alt": "18 saniyelik tipografik video. İş teslimi, ertelenen ödeme mesajı ve vade ya da takip seçimi gösteriliyor. Mesaj görseli kurgusal bir örnektir.",
+        "story": {
+          "title": "Geciken ödemede\nen zor kısım?",
+          "body": "Birini seç; ilk akışları buna göre şekillendirelim.",
+          "sticker": "poll",
+          "options": [
+            "Tarihi bilememek",
+            "Tekrar hatırlatmak"
+          ],
+          "visual": "choice"
+        },
+        "voiceover": "İşi teslim ettin. Ödeme hâlâ yok. Son mesajda “haftaya hallederiz” yazıyor. Seni en çok ne zorluyor: vadenin belirsizliği mi, tekrar hatırlatmak mı? Yorumda vade ya da takip yaz."
+      },
+      {
+        "day": 3,
+        "type": "carousel",
+        "id": "agent-team",
+        "audience": "Küçük işletme ve girişim kurucuları",
+        "goal": "Erken erişim başvurusu",
+        "cta": "Profildeki bağlantıdan bekleme listesine katıl.",
+        "pillar": "Ürün vizyonu",
+        "time": "12:30",
+        "slides": [
+          {
+            "kicker": "QUALIFI / ÜRÜN VİZYONU",
+            "title": "Küçük işletmen için\ndaha net bir\nödeme planı.",
+            "body": "Sözleşmeleri, iş yazışmalarını ve ödeme takibini\ntek sohbette birleştirmek için geliştiriyoruz.",
+            "visual": "agents",
+            "style": "dark"
+          },
+          {
+            "kicker": "01 / SÖZLEŞME AJANI",
+            "title": "Ödeme koşulları\nbir araya gelir.",
+            "body": "Hedefimiz: sözleşmelerden tutarları,\nvadeleri ve ödeme koşullarını çıkarmak.",
+            "visual": "contract",
+            "style": "light"
+          },
+          {
+            "kicker": "02 + 03 / BAĞLAM AJANLARI",
+            "title": "Konuşmalar da\nplanın parçası olur.",
+            "body": "Sektör verileri, geçmiş gecikmeler ve\nizin verdiğin iş yazışmaları birlikte incelenir.",
+            "visual": "context",
+            "style": "light"
+          },
+          {
+            "kicker": "04 + 05 / TAKİP VE ÖNGÖRÜ",
+            "title": "Sen sorarsın.\nPlan görünür olur.",
+            "body": "Hedefimiz: ödeme takibi ve nakit senaryoları.\nİstediğinde detay ve dashboard görünümü.",
+            "visual": "conversation",
+            "style": "light"
+          },
+          {
+            "kicker": "BİRLİKTE GELİŞTİRELİM",
+            "title": "Bu çalışma şekli\nsana uyar mı?",
+            "body": "Profil bağlantısını aç;\nsayfadaki bekleme listesine katıl.",
+            "visual": "cta",
+            "cta": "Bekleme listesine katıl",
+            "style": "dark"
+          }
+        ],
+        "caption": "QualiFi’de geliştirdiğimiz modelde beş uzman ajan; sözleşme, sektör ve gecikme bağlamı, iş yazışmaları, ödeme takibi ve nakit öngörüsü üzerinde çalışacak. Ön planda ise sorularını yönelttiğin tek bir arayüz olacak. Detayları ve dashboardları istediğinde inceleyebileceksin.\n\nBu, geliştirdiğimiz ürün vizyonu. Canlı Gmail/WhatsApp bağlantısı veya otomatik tahsilat vaadi değil. Pilot ihtiyaçlarını anlamak için profil bağlantısını açıp sayfadaki bekleme listesine katıl.",
+        "hashtags": "#FinansalPlanlama #YapayZeka #Girişimcilik",
+        "alt": "Beş slaytta QualiFi’nin geliştirdiği beş uzman ajan ve kullanıcı arayüzü anlatılıyor. Ajan ağı ve sohbetler kavramsal tasarımlardır, canlı ürün ekranı değildir.",
+        "story": {
+          "title": "Ödeme planını\nbirlikte\nşekillendirelim.",
+          "body": "QualiFi erken erişim\nBekleme listesi açık.",
+          "sticker": "link",
+          "link_label": "Bekleme listesi",
+          "visual": "agents"
+        },
+        "voiceover": ""
+      },
+      {
+        "day": 4,
+        "type": "reel",
+        "id": "work-context",
+        "audience": "Veri paylaşımına dikkat eden işletme sahipleri",
+        "goal": "Erken erişim başvurusu",
+        "cta": "Profildeki bağlantıdan bekleme listesine katıl.",
+        "pillar": "Güven ve yaklaşım",
+        "time": "12:30",
+        "duration": 20,
+        "scenes": [
+          {
+            "title": "Nakit planlamaya\nişinin bilgileriyle\nbaşla.",
+            "body": "QualiFi’de geliştirdiğimiz yaklaşım.",
+            "visual": "contract",
+            "style": "lime"
+          },
+          {
+            "title": "Bir sözleşme.\nBir ödeme sözü.",
+            "body": "Tutarlar, tarihler ve işin bağlamı.",
+            "visual": "fields",
+            "style": "light"
+          },
+          {
+            "title": "Gmail ve WhatsApp:\niş bağlamın.",
+            "body": "Planlanan bağlantılar,\nsenin iznin ve kontrolünle.",
+            "visual": "channels",
+            "style": "light"
+          },
+          {
+            "title": "Banka bilgisi\ngirmeden\nnakit planlama.",
+            "body": "Profil bağlantısını aç;\nsayfadaki bekleme listesine katıl.",
+            "visual": "cta",
+            "cta": "Bekleme listesine katıl",
+            "style": "dark"
+          }
+        ],
+        "caption": "QualiFi’nin tasarladığımız başlangıç noktası banka bilgilerin değil, yaptığın işe ait sözleşmeler ve iş yazışmaları. Gmail ve WhatsApp gibi kanalları, kullanıcının izniyle iş bağlamına eklemeyi hedefliyoruz.\n\nEntegrasyon kapsamı geliştirme aşamasında. Banka şifresi veya hassas belgeyi Instagram’dan gönderme. Bu yaklaşımı kendi işin için değerlendirmek istersen profil bağlantısını açıp sayfadaki bekleme listesine katıl.",
+        "hashtags": "#Küçükİşletme #FinansalTakip #QualiFi",
+        "alt": "20 saniyelik video, sözleşme ve ödeme bilgilerini başlangıç noktası olarak anlatıyor. Gmail ve WhatsApp metinleri planlanan bağlantıları gösterir; resmi ortaklık veya çalışan entegrasyon iddiası yoktur.",
+        "story": {
+          "title": "İşinin bağlamıyla\nbaşlayan bir\nfinans akışı.",
+          "body": "Sözleşmeler ve iş yazışmaları üzerine\ngeliştirdiğimiz yaklaşımı incele.",
+          "sticker": "link",
+          "link_label": "Bekleme listesi",
+          "visual": "channels"
+        },
+        "voiceover": "QualiFi’nin başlangıç noktası yaptığın iş. Bir sözleşme, bir ödeme sözü, tutarlar ve tarihler. İş yazışmalarını senin izninle bu bağlama eklemeyi hedefliyoruz. Bu yaklaşım sana uygunsa profil bağlantısından bekleme listesine katıl."
+      },
+      {
+        "day": 5,
+        "type": "carousel",
+        "id": "freelancer-plan",
+        "audience": "Freelancerlar ve bağımsız danışmanlar",
+        "goal": "Kaydetme",
+        "cta": "Sonraki projen için kaydet.",
+        "pillar": "Kullanılabilir proje şablonu",
+        "time": "12:30",
+        "slides": [
+          {
+            "kicker": "FREELANCER / PROJE PLANI",
+            "title": "Proje bitti.\nGelir takvimin\nnasıl?",
+            "body": "Bir sonraki işin için\nüç ödeme noktalı mini şablon.",
+            "visual": "milestones",
+            "style": "light"
+          },
+          {
+            "kicker": "01 / BAŞLANGIÇ",
+            "title": "Avansı\nnetleştir.",
+            "body": "Hangi tutar, hangi tarihte?\nİşe başlama koşulunu yaz.",
+            "visual": "advance",
+            "style": "light"
+          },
+          {
+            "kicker": "02 / ARA TESLİM",
+            "title": "Ara ödemeyi\nteslime bağla.",
+            "body": "Hangi iş parçası, hangi tutar?\nOnay ve ödeme tarihini ayrı tut.",
+            "visual": "milestones",
+            "style": "light"
+          },
+          {
+            "kicker": "03 / SON TESLİM",
+            "title": "Kalan tutarın\nvadesini yaz.",
+            "body": "Son teslimi, tahsilat tarihini ve\ntakip edeceğin günü birlikte planla.",
+            "visual": "timeline",
+            "style": "light"
+          },
+          {
+            "kicker": "BİR SONRAKİ PROJENE",
+            "title": "Avans. Ara ödeme.\nSon ödeme.",
+            "body": "Üç ödeme noktasını\nproje planına ekle.",
+            "visual": "cta",
+            "cta": "Bu şablonu kaydet",
+            "style": "dark"
+          }
+        ],
+        "caption": "Freelance bir projede iş takvimi kadar ödeme takvimi de net olsun. Avans, ara teslim ve son ödeme için tutarı ve tarihi ayrı ayrı yaz. Müşteri onayı ile paranın geleceği günü aynı tarih kabul etme.\n\nBu genel bir planlama şablonu; her sözleşmenin koşulları farklı olabilir. Sonraki projen için kaydet.",
+        "hashtags": "#FreelanceÇalışma #ProjeYönetimi #GelirPlanlama",
+        "alt": "Beş slaytlık freelancer ödeme şablonu. Avans, ara teslim ve son ödeme için ayrı tarihler öneriliyor. Tüm tutar ve çizimler örnek niteliğindedir.",
+        "story": {
+          "title": "Proje gelirinde\nen zor kısım\nsenin için ne?",
+          "body": "Müşteri adı veya tutar paylaşmadan anlat.",
+          "sticker": "question",
+          "question_label": "Bir cümleyle anlat",
+          "visual": "milestones"
+        },
+        "voiceover": ""
+      },
+      {
+        "day": 6,
+        "type": "reel",
+        "id": "early-access",
+        "audience": "İlgi gösteren işletme sahipleri ve freelancerlar",
+        "goal": "Erken erişim başvurusu",
+        "cta": "Profildeki bağlantıdan bekleme listesine katıl.",
+        "pillar": "Davet ve araştırma",
+        "time": "12:30",
+        "duration": 18,
+        "scenes": [
+          {
+            "title": "Bir sonraki\nödemeni\nplanlamak için.",
+            "body": "QualiFi’yi geliştiriyoruz.",
+            "visual": "timeline",
+            "style": "dark"
+          },
+          {
+            "title": "Sözleşme.\nİş bağlamı.\nÖdeme takibi.",
+            "body": "Tek bir konuşmada bir araya gelsin.",
+            "visual": "agents",
+            "style": "light"
+          },
+          {
+            "title": "Sen stratejiye\nzaman ayır.",
+            "body": "Ödemelerin takibi için tasarladığımız\nakışı birlikte şekillendirelim.",
+            "visual": "conversation",
+            "style": "light"
+          },
+          {
+            "title": "İlk adım:\nbekleme listesi.",
+            "body": "Profil bağlantısını aç;\nsayfadaki bekleme listesine katıl.",
+            "visual": "cta",
+            "cta": "Bekleme listesine katıl",
+            "style": "dark"
+          }
+        ],
+        "caption": "Hangi tarihte ne kadar ödeme beklediğini görmek, takip işlerini yönetmek ve sonraki kararını planlamak. QualiFi’yi bu ihtiyaçlar için geliştiriyoruz.\n\nİlk adım, profil bağlantısını açıp sayfadaki bekleme listesine katılmak. Uygun ihtiyaçları daha sonra 20 dakikalık bir demo görüşmesinde değerlendirebiliriz. Bu kayıt canlı ajan açmaz veya randevu oluşturmaz.",
+        "hashtags": "#NakitAkışı #İşletmeYönetimi #QualiFi",
+        "alt": "18 saniyelik erken erişim daveti. Örnek ödeme çizelgesi ve kavramsal ajan ağı gösteriliyor. Son sahne profil bağlantısındaki bekleme listesine yönlendiriyor.",
+        "story": {
+          "title": "Bir sonraki\nödemeni birlikte\nplanlayalım.",
+          "body": "QualiFi erken erişim\nİlk adım: bekleme listesi.",
+          "sticker": "link",
+          "link_label": "Bekleme listesi",
+          "visual": "timeline"
+        },
+        "voiceover": "Bir sonraki ödemeni planlamak için QualiFi’yi geliştiriyoruz. Sözleşme, iş bağlamı ve ödeme takibi tek bir konuşmada bir araya gelsin. İlk adım erken erişim. Profildeki bağlantıdan bekleme listesine katıl."
+      }
+    ]
+  },
+  "en": {
+    "early": "EARLY ACCESS",
+    "example": "ILLUSTRATIVE EXAMPLE",
+    "concept": "THE WORKFLOW WE ARE BUILDING",
+    "swipe": "Swipe",
+    "save": "Save this",
+    "join": "Join the waiting list",
+    "bio": "Link in bio",
+    "days": [
+      {
+        "day": 1,
+        "type": "carousel",
+        "id": "payment-clarity",
+        "audience": "Service businesses and agency owners",
+        "goal": "Saves",
+        "cta": "Save this payment check.",
+        "pillar": "Cash planning education",
+        "time": "19:30",
+        "slides": [
+          {
+            "kicker": "CASH NOTES / 01",
+            "title": "Unclear payment\ndates make\nplanning harder.",
+            "body": "A weekly payment check\nfor small service teams.",
+            "visual": "calendar",
+            "style": "dark"
+          },
+          {
+            "kicker": "ONE PAYMENT, TWO SOURCES",
+            "title": "Contract: 30 days.\nMessage: “Next week.”",
+            "body": "Keep both together when deciding\nwhich date belongs in your plan.",
+            "visual": "messages",
+            "style": "light"
+          },
+          {
+            "kicker": "YOUR WEEKLY CHECK",
+            "title": "Keep three details\nin one place.",
+            "body": "Amount. Promised date.\nWhat changed in the last conversation.",
+            "visual": "fields",
+            "style": "light"
+          },
+          {
+            "kicker": "YOUR NEXT DECISION",
+            "title": "Plan the next bill\nalongside it.",
+            "body": "Consider expected collections and\nthe possibility of a payment delay together.",
+            "visual": "timeline",
+            "style": "light"
+          },
+          {
+            "kicker": "USE IT AGAIN NEXT WEEK",
+            "title": "Keep your payment\ncheck close.",
+            "body": "Return to these three details\nbefore planning the next week.",
+            "visual": "cta",
+            "cta": "Save this check",
+            "style": "dark"
+          }
+        ],
+        "caption": "After a project is delivered, the payment terms may live in a contract while the latest promise sits in a message. Keep the amount, promised date and latest change together in your weekly plan.\n\nWe are building QualiFi to turn that scattered work context into a clearer cash plan. Save this three-part check for next week.",
+        "hashtags": "#CashFlow #AgencyOwner #PaymentTracking",
+        "alt": "Five forest-green and off-white slides explain a payment check using amount, date and the latest conversation. The payment timeline is illustrative, not customer data.",
+        "story": {
+          "title": "Where do payment\ndates usually\nend up?",
+          "body": "Think about your own workflow.",
+          "sticker": "poll",
+          "options": [
+            "In contracts",
+            "In messages"
+          ],
+          "visual": "messages"
+        },
+        "voiceover": ""
+      },
+      {
+        "day": 2,
+        "type": "reel",
+        "id": "late-payment",
+        "audience": "Agencies, consultants and freelancers",
+        "goal": "Problem-specific comments",
+        "cta": "Comment DATE or FOLLOW-UP.",
+        "pillar": "Problem discovery",
+        "time": "19:30",
+        "duration": 18,
+        "scenes": [
+          {
+            "title": "Work delivered.\nPayment still\npending.",
+            "body": "A moment project-based teams may recognize.",
+            "visual": "calendar",
+            "style": "light"
+          },
+          {
+            "title": "“We’ll sort it\nnext week.”",
+            "body": "The new date is buried in a message.",
+            "visual": "messages",
+            "style": "light"
+          },
+          {
+            "title": "What makes\nit harder?",
+            "body": "An uncertain date,\nor having to chase it again?",
+            "visual": "choice",
+            "style": "light"
+          },
+          {
+            "title": "DATE\nor FOLLOW-UP",
+            "body": "Tell us which one matches your experience.",
+            "visual": "cta",
+            "cta": "Choose one in the comments",
+            "style": "dark"
+          }
+        ],
+        "caption": "A late payment can affect the next piece of work you take on. What is harder for you: not knowing the date, or following up again?\n\nWe are shaping QualiFi around real payment workflows. Comment DATE or FOLLOW-UP. Please leave out client names and private documents.",
+        "hashtags": "#FreelanceBusiness #LatePayments #CashPlanning",
+        "alt": "An 18-second typography video shows delivered work, a delayed payment message and a choice between date uncertainty and follow-up. The message is fictional.",
+        "story": {
+          "title": "What makes a late\npayment harder?",
+          "body": "Your answer helps shape the first workflows.",
+          "sticker": "poll",
+          "options": [
+            "Uncertain date",
+            "Following up again"
+          ],
+          "visual": "choice"
+        },
+        "voiceover": "Work delivered. Payment still pending. The last message says, next week. What makes it harder: an uncertain date, or having to follow up again? Tell us in the comments: date or follow-up."
+      },
+      {
+        "day": 3,
+        "type": "carousel",
+        "id": "agent-team",
+        "audience": "Small-business and startup founders",
+        "goal": "Early-access requests",
+        "cta": "Join the waiting list through the link in bio.",
+        "pillar": "Product vision",
+        "time": "19:30",
+        "slides": [
+          {
+            "kicker": "QUALIFI / PRODUCT VISION",
+            "title": "A clearer cash plan\nfor your small team.",
+            "body": "We’re building one conversation around\ncontracts, messages and payment follow-ups.",
+            "visual": "agents",
+            "style": "dark"
+          },
+          {
+            "kicker": "01 / CONTRACT AGENT",
+            "title": "Payment terms\ncome together.",
+            "body": "Our goal: extract amounts, due dates\nand payment conditions from contracts.",
+            "visual": "contract",
+            "style": "light"
+          },
+          {
+            "kicker": "02 + 03 / CONTEXT AGENTS",
+            "title": "Conversations\nbecome context.",
+            "body": "Industry data, previous delays and\nthe work messages you choose to share.",
+            "visual": "context",
+            "style": "light"
+          },
+          {
+            "kicker": "04 + 05 / FOLLOW-UP AND OUTLOOK",
+            "title": "You ask.\nThe plan takes shape.",
+            "body": "The goal: payment follow-ups and cash scenarios.\nExplore details and dashboards when you need them.",
+            "visual": "conversation",
+            "style": "light"
+          },
+          {
+            "kicker": "HELP US BUILD IT",
+            "title": "Would this fit\nthe way you work?",
+            "body": "Open our profile link;\njoin the waiting list on the page.",
+            "visual": "cta",
+            "cta": "Join the waiting list",
+            "style": "dark"
+          }
+        ],
+        "caption": "The QualiFi workflow we are building brings five specialist agents together: contract analysis, industry and delay context, work conversations, payment follow-up and cash outlooks. You interact through one conversational interface, with details and dashboards available when needed.\n\nThis is our product vision, not a claim of live Gmail or WhatsApp integrations or automated collection. Open the link in bio and join the waiting list on the page to help shape the pilot.",
+        "hashtags": "#CashFlowPlanning #AIAgents #StartupFounder",
+        "alt": "Five slides explain the five-agent QualiFi product vision and conversational interface. Agent networks and conversations are concept illustrations, not live product screenshots.",
+        "story": {
+          "title": "Help shape\na clearer\npayment plan.",
+          "body": "QualiFi early access\nThe waiting list is open.",
+          "sticker": "link",
+          "link_label": "Waiting list",
+          "visual": "agents"
+        },
+        "voiceover": ""
+      },
+      {
+        "day": 4,
+        "type": "reel",
+        "id": "work-context",
+        "audience": "Business owners who want control over shared data",
+        "goal": "Early-access requests",
+        "cta": "Join the waiting list through the link in bio.",
+        "pillar": "Trust and approach",
+        "time": "19:30",
+        "duration": 20,
+        "scenes": [
+          {
+            "title": "Cash planning,\nstarting with\nyour work.",
+            "body": "The approach we are building at QualiFi.",
+            "visual": "contract",
+            "style": "lime"
+          },
+          {
+            "title": "A contract.\nA payment promise.",
+            "body": "Amounts, dates and the context behind them.",
+            "visual": "fields",
+            "style": "light"
+          },
+          {
+            "title": "Gmail. WhatsApp.\nYour work context.",
+            "body": "Planned connections,\nwith your permission and control.",
+            "visual": "channels",
+            "style": "light"
+          },
+          {
+            "title": "Cash planning,\nwithout bank details.",
+            "body": "An approach we’re developing.\nOpen our profile link and join the page’s waiting list.",
+            "visual": "cta",
+            "cta": "Join the waiting list",
+            "style": "dark"
+          }
+        ],
+        "caption": "We are designing QualiFi to start with contracts and work conversations, without asking for bank details. Our aim is to bring channels such as Gmail and WhatsApp into that work context with the user’s permission.\n\nIntegration scope is still being developed. Please do not send bank credentials or private documents on Instagram. Open the link in bio and join the waiting list on the page if this approach fits your work.",
+        "hashtags": "#SmallBusiness #PaymentTracking #QualiFi",
+        "alt": "A 20-second video introduces contracts and work messages as the starting point. Gmail and WhatsApp refer to planned connections, without implying live integration or partnership.",
+        "story": {
+          "title": "A finance workflow\nthat starts with\nyour work.",
+          "body": "Explore the approach we are building\naround contracts and work conversations.",
+          "sticker": "link",
+          "link_label": "Waiting list",
+          "visual": "channels"
+        },
+        "voiceover": "Start with the work you do. A contract. A payment promise. Amounts, dates and context. We aim to connect work conversations with your permission, without asking for bank details. Join the waiting list through the link in bio."
+      },
+      {
+        "day": 5,
+        "type": "carousel",
+        "id": "freelancer-plan",
+        "audience": "Freelancers and independent consultants",
+        "goal": "Saves",
+        "cta": "Save this for your next project.",
+        "pillar": "Practical project template",
+        "time": "19:30",
+        "slides": [
+          {
+            "kicker": "FREELANCER / PROJECT PLAN",
+            "title": "Project finished.\nWhat does your\nincome calendar say?",
+            "body": "A three-payment-point template\nfor your next project.",
+            "visual": "milestones",
+            "style": "light"
+          },
+          {
+            "kicker": "01 / KICKOFF",
+            "title": "Set the\ndeposit terms.",
+            "body": "What amount, on which date?\nWrite down the condition for starting.",
+            "visual": "advance",
+            "style": "light"
+          },
+          {
+            "kicker": "02 / MILESTONE",
+            "title": "Tie the payment\nto a milestone.",
+            "body": "Which deliverable, which amount?\nSeparate approval and payment dates.",
+            "visual": "milestones",
+            "style": "light"
+          },
+          {
+            "kicker": "03 / FINAL DELIVERY",
+            "title": "Write down when\nthe balance is due.",
+            "body": "Plan final delivery, the collection date\nand the day you will follow up.",
+            "visual": "timeline",
+            "style": "light"
+          },
+          {
+            "kicker": "FOR YOUR NEXT PROJECT",
+            "title": "Deposit. Milestone.\nFinal payment.",
+            "body": "Add three payment points\nto your project plan.",
+            "visual": "cta",
+            "cta": "Save this template",
+            "style": "dark"
+          }
+        ],
+        "caption": "Give your freelance project a payment calendar as clear as the delivery calendar. Write down a separate amount and date for the deposit, milestone and final payment. Client approval and money arriving are different events.\n\nThis is a general planning template; individual contract terms vary. Save it for your next project.",
+        "hashtags": "#Freelancer #ProjectPlanning #IncomePlanning",
+        "alt": "A five-slide freelance payment template covers deposit, milestone and final payment. It separates delivery, approval and expected collection dates. All diagrams are illustrative.",
+        "story": {
+          "title": "What is hardest\nabout planning\nproject income?",
+          "body": "Tell us without client names or private amounts.",
+          "sticker": "question",
+          "question_label": "Tell us in one sentence",
+          "visual": "milestones"
+        },
+        "voiceover": ""
+      },
+      {
+        "day": 6,
+        "type": "reel",
+        "id": "early-access",
+        "audience": "Interested business owners and freelancers",
+        "goal": "Early-access requests",
+        "cta": "Join the waiting list through the link in bio.",
+        "pillar": "Invitation and research",
+        "time": "19:30",
+        "duration": 18,
+        "scenes": [
+          {
+            "title": "Plan for your\nnext payment.",
+            "body": "That is why we are building QualiFi.",
+            "visual": "timeline",
+            "style": "dark"
+          },
+          {
+            "title": "Contracts.\nWork context.\nPayment follow-up.",
+            "body": "Brought together in one conversation.",
+            "visual": "agents",
+            "style": "light"
+          },
+          {
+            "title": "Make room\nfor strategy.",
+            "body": "Help shape the payment workflow\nwe are building.",
+            "visual": "conversation",
+            "style": "light"
+          },
+          {
+            "title": "First step:\nthe waiting list.",
+            "body": "Open our profile link;\njoin the waiting list on the page.",
+            "visual": "cta",
+            "cta": "Join the waiting list",
+            "style": "dark"
+          }
+        ],
+        "caption": "See which payments you expect, manage follow-ups and plan your next decision. These are the needs we are building QualiFi around.\n\nStart by opening the link in bio and joining the waiting list on the page. We can explore suitable needs in a later 20-minute demo conversation. Joining does not activate a live agent or book an appointment.",
+        "hashtags": "#CashFlow #BusinessPlanning #QualiFi",
+        "alt": "An 18-second early-access invitation uses an illustrative payment timeline and concept agent network. The closing scene directs viewers to the waiting list through the profile link.",
+        "story": {
+          "title": "Plan your next\npayment\nwith us.",
+          "body": "QualiFi early access\nFirst step: the waiting list.",
+          "sticker": "link",
+          "link_label": "Waiting list",
+          "visual": "timeline"
+        },
+        "voiceover": "Plan for your next payment. We are building QualiFi to bring contracts, work context and payment follow-ups into one conversation. Make room for strategy. Your first step is early access. Join through the link in bio."
+      }
+    ]
+  }
+}
