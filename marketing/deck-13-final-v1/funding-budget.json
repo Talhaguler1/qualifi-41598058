@@ -1,0 +1,34 @@
+{
+  "proposed_raise_try": 1500000,
+  "horizon_months": 12,
+  "funding_uses": [
+    {
+      "label": "12 aylık çekirdek operasyon",
+      "amount_try": 850273.931103392,
+      "display_thousand_try": 850
+    },
+    {
+      "label": "Muhasebe / ERP entegrasyonları",
+      "amount_try": 200000,
+      "display_thousand_try": 200
+    },
+    {
+      "label": "Veri güvenliği ve yedekleme",
+      "amount_try": 100000,
+      "display_thousand_try": 100
+    },
+    {
+      "label": "B2B pilotları ve işlem akışları",
+      "amount_try": 150000,
+      "display_thousand_try": 150
+    },
+    {
+      "label": "Rezerv ve beklenmeyen giderler",
+      "amount_try": 199726.06889660796,
+      "display_thousand_try": 200
+    }
+  ],
+  "expected_revenue_not_deducted": true,
+  "rounding": "Display uses rounded thousand TRY, exact amounts remain in model.",
+  "infrastructure": "Managed cloud, backups, recovery testing and security; not physical data-center construction."
+}
