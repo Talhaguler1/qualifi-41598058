@@ -1,0 +1,16 @@
+{
+  "model_calculation_independently_recomputed": true,
+  "baseline_revenue": 314246.43701130716,
+  "baseline_operating_result": -536027.4940920849,
+  "zero_denominator_excel_display": "blank for margins; Hesaplanamaz for CAC",
+  "ltv": "No value invented",
+  "team_profile_confirmed_by_user": true,
+  "photo": "Existing Canva asset MAHa-goqjks retained; no portrait editing or Git copy",
+  "review": "Read-only source/clarity and arithmetic review; not a human comprehension test",
+  "canva_pages_targeted": [
+    9,
+    10
+  ],
+  "save_status": "committed pages9 and10 only; explicitly approved",
+  "other_page_text_objects_unchanged_in_save_transaction": true
+}
