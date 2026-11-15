@@ -1,0 +1,131 @@
+{
+  "name": "QualiFi-Pazar-TAM-SAM-SOM-TR",
+  "slides": 1,
+  "pages": [
+    {
+      "section": "05 / Pazar ve hedefleme",
+      "title": "Geniş pazar.\nOdaklı başlangıç.",
+      "notes": "Türkiye scope; enterprise counts, not revenue. Source: KOSGEB 2026 statistics based on TÜİK 2024, Table3, printedp11/PDFp20. TAM3,928,385 SMEs in covered industry/services. SAM sector-based proxy65,699 J +312,028 M=377,727; includes micro/small/medium SMEs. Product fit, collection workflow, permissions, integration readiness and willingness to pay remain unvalidated. SOM requires a stated time horizon and bottom-up sales capacity; no customer target invented. Banks are not included in this initial sector proxy. Rings schematic, not proportional.",
+      "blank_by_user_request": false,
+      "text_boxes": [
+        {
+          "text": "YATIRIMCI SUNUMU",
+          "x": 1300,
+          "y": 95,
+          "width": 500,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "05 / PAZAR VE HEDEFLEME",
+          "x": 120,
+          "y": 212,
+          "width": 1690,
+          "height": 27.5,
+          "font_px": 22,
+          "line_count": 1
+        },
+        {
+          "text": "Geniş pazar.\nOdaklı başlangıç.",
+          "x": 120,
+          "y": 270,
+          "width": 1675,
+          "height": 152.32000000000002,
+          "font_px": 68,
+          "line_count": 2
+        },
+        {
+          "text": "QualiFi · qualifilab.com",
+          "x": 120,
+          "y": 1004,
+          "width": 1200,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "01",
+          "x": 1680,
+          "y": 1004,
+          "width": 120,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "Şema ölçekli değildir",
+          "x": 220,
+          "y": 895,
+          "width": 490,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "TAM · 3,93 milyon",
+          "x": 930,
+          "y": 480,
+          "width": 850,
+          "height": 70.0,
+          "font_px": 56,
+          "line_count": 1
+        },
+        {
+          "text": "Türkiye’de sanayi ve hizmetlerdeki KOBİ’ler.\nResmî sayı: 3.928.385 · 2024",
+          "x": 930,
+          "y": 556,
+          "width": 850,
+          "height": 67.5,
+          "font_px": 27,
+          "line_count": 2
+        },
+        {
+          "text": "SAM* · 377.727",
+          "x": 930,
+          "y": 658,
+          "width": 850,
+          "height": 65.0,
+          "font_px": 52,
+          "line_count": 1
+        },
+        {
+          "text": "Öncelikli sektör tahmini: bilgi-iletişim +\nmesleki, bilimsel ve teknik faaliyetler (J + M).",
+          "x": 930,
+          "y": 732,
+          "width": 850,
+          "height": 67.5,
+          "font_px": 27,
+          "line_count": 2
+        },
+        {
+          "text": "SOM · Doğrulanacak",
+          "x": 930,
+          "y": 838,
+          "width": 850,
+          "height": 50.0,
+          "font_px": 40,
+          "line_count": 1
+        },
+        {
+          "text": "Aylık nitelikli fırsat × ay × ücretli dönüşüm",
+          "x": 930,
+          "y": 898,
+          "width": 850,
+          "height": 28.75,
+          "font_px": 23,
+          "line_count": 1
+        },
+        {
+          "text": "Kaynak: KOSGEB (2026), TÜİK 2024 verileri · Tablo 3, s. 11 (PDF s. 20).\n*SAM sektör temelli ön tahmindir; ürün uyumu ve satın alma isteği doğrulanmadı. İşletme sayısıdır.",
+          "x": 120,
+          "y": 937,
+          "width": 1700,
+          "height": 40.32000000000001,
+          "font_px": 18,
+          "line_count": 2
+        }
+      ]
+    }
+  ]
+}

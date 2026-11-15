@@ -1,0 +1,22 @@
+{
+  "scope": "T\u00fcrkiye",
+  "year_of_data": 2024,
+  "source_publisher": "KOSGEB; underlying T\u00dc\u0130K data",
+  "source_report_year": 2026,
+  "table": "Table 3",
+  "printed_page": 11,
+  "pdf_page": 20,
+  "tam_enterprises": 3928385,
+  "sam_j_information_communication_smes": 65699,
+  "sam_m_professional_scientific_technical_smes": 312028,
+  "sam_sector_proxy_enterprises": 377727,
+  "sam_tam_ratio": 0.09615325381804482,
+  "som": null,
+  "som_status": "To validate. No sales capacity or time horizon supplied.",
+  "exclusions": [
+    "Banks not counted in initial SAM",
+    "No revenue TAM without validated pricing",
+    "No claim of measured purchase intent"
+  ],
+  "visual": "Nested rings schematic; not to scale"
+}
