@@ -48,7 +48,7 @@ rev=sum(x['revenue_try'] for x in rows);cogs=sum(x['cogs_try'] for x in rows);re
 summary={'annual_revenue_try':rev,'month12_mrr_try':rows[-1]['revenue_try'],'annual_operating_result_try':result,'annual_cogs_try':cogs,'annual_gross_margin':(rev-cogs)/rev if rev>0 else None,'month12_gross_margin':rows[-1]['gross_profit_try']/rows[-1]['revenue_try'] if rows[-1]['revenue_try']>0 else None,'annual_new_paid_accounts':sum(A['new_paid_accounts_by_month']),'month12_active_paid_accounts':active,'acquisition_cost_budget_try':acq,'modeled_cac_try':acq/sum(A['new_paid_accounts_by_month']) if sum(A['new_paid_accounts_by_month'])>0 else None,'ltv':'Not estimated; no observed paid retention cohorts.','break_even_active_accounts':(rows[-1]['opex_try']+A['fixed_direct_infrastructure_monthly_try'])/(A['arpa_try']-A['variable_direct_cost_per_account_try']) if A['arpa_try']>A['variable_direct_cost_per_account_try'] else None}
 (R/'financial-model.json').write_text(json.dumps({'status':'illustrative assumptions, not actuals, guidance or a guaranteed forecast','assumptions':A,'monthly':rows,'summary':summary},ensure_ascii=False,indent=2),encoding='utf-8')
 with (R/'financial-model.csv').open('w',encoding='utf-8-sig',newline='') as f:
- w=csv.DictWriter(f,fieldnames=list(rows[0]));w.writeheader();w.writerows(rows)
+ w=csv.DictWriter(f,fieldnames=list(rows[0]),lineterminator='\n');w.writeheader();w.writerows(rows)
 
 # Editable workbook: actual Excel formulas; calc.json supplies independent evaluated output.
 wb=Workbook();a=wb.active;a.title='Varsayımlar'
@@ -94,7 +94,7 @@ font_manager.fontManager.addfont(str(F/'DM-Sans-400.ttf'));plt.rcParams['font.fa
 fig,ax=plt.subplots(figsize=(9.4,2.7));fig.patch.set_facecolor(PAPER);ax.set_facecolor(PAPER)
 x=list(range(1,13));ax.plot(x,[r['revenue_try']/1000 for r in rows],color=FOREST,lw=2.6,label='Gelir');ax.plot(x,[r['total_cost_try']/1000 for r in rows],color='#7D9E4E',lw=2.4,label='Toplam gider');ax.plot(x,[r['operating_result_try']/1000 for r in rows],color=SAGE,lw=2.2,ls='--',label='Faaliyet sonucu')
 ax.axhline(0,color=LINE,lw=1);ax.set_xticks([1,3,6,9,12],['1. ay','3. ay','6. ay','9. ay','12. ay']);ax.set_ylabel('bin TL',fontsize=9,color=SAGE);ax.tick_params(colors=SAGE,labelsize=9);ax.grid(axis='y',color=LINE,lw=.7);ax.spines[['top','right','left','bottom']].set_visible(False);ax.legend(loc='upper left',fontsize=9,frameon=False,ncol=3);fig.tight_layout(pad=.8);fig.savefig(R/'financial-chart.svg',format='svg');plt.close(fig)
-chart=(R/'financial-chart.svg').read_text();inner=chart[chart.index('>',chart.index('<svg'))+1:chart.rfind('</svg>')];inner=re.sub(r'<metadata>.*?</metadata>','',inner,flags=re.S)
+chart=(R/'financial-chart.svg').read_text();chart='\n'.join(line.rstrip() for line in chart.splitlines())+'\n';(R/'financial-chart.svg').write_text(chart,encoding='utf-8');inner=chart[chart.index('>',chart.index('<svg'))+1:chart.rfind('</svg>')];inner=re.sub(r'<metadata>.*?</metadata>','',inner,flags=re.S)
 # Matplotlib's SVG size is 676.8 ×194.4 points; scale it into the composed page.
 def trfmt(n,decimals=0):
  return f'{n:,.{decimals}f}'.replace(',','~').replace('.',',').replace('~','.')
@@ -109,7 +109,7 @@ for yy,label in [(304,'Gelir / müşteri / ay: '+trfmt(A['arpa_try'])+' TL'),(34
 finance+=rect(0,540,1680,72,SOFT)
 for xx,label,value in [(24,'YILLIK BRÜT MARJ','%'+trfmt(summary['annual_gross_margin']*100,1) if summary['annual_gross_margin'] is not None else 'Hesaplanamaz'),(450,'SENARYO CAC',trfmt(summary['modeled_cac_try'])+' TL' if summary['modeled_cac_try'] is not None else 'Hesaplanamaz'),(890,'LTV','Kohortla ölçülecek')]:finance+=text(label,xx,566,17,color=SAGE,font='bold')+text(value,xx,596,25,font='bold')
 finance+=text('KDV, vergi, finansman, başlangıç yatırımı ve işletme sermayesi hariçtir. Resmî fiyat veya gerçekleşmiş sonuç değildir.',0,642,18,color=SAGE)+'</svg>'
-(R/'financial-composition.svg').write_text(finance,encoding='utf-8')
+(R/'financial-composition.svg').write_text('\n'.join(line.rstrip() for line in finance.splitlines())+'\n',encoding='utf-8')
 with sync_playwright() as pw:
  b=pw.chromium.launch(executable_path='/usr/bin/chromium',headless=True,args=['--no-sandbox'])
  for name,w,h in [('team-titles',1680,740),('financial-composition',1680,650)]:
