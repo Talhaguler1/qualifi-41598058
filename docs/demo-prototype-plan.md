@@ -199,10 +199,17 @@ qualifi_workspace_files için kullanıcı güncellemesi gerekmiyor.
 
 Sonra:
 qualifi_workspace_files tablosundaki bir dosya için taahhütleri çıkaran bir
-sunucu fonksiyonu ekle (extract-commitments). Lovable AI ağ geçidini kullan;
-LOVABLE_API_KEY tarayıcıya gitmesin.
+sunucu rotası ekle: POST /api/workspace/extract (dosya:
+src/routes/api/workspace/extract.ts, iş mantığı ayrı bir .server.ts dosyasında,
+mevcut demo-interactions rotası gibi). Lovable AI ağ geçidini kullan;
+LOVABLE_API_KEY tarayıcıya gitmesin. src/lib/demo, src/components/demo ve
+src/routes/demo dosyalarına dokunma.
 
-- Girdi: file_id. Çağıran kullanıcı dosyanın sahibi olmalı.
+- Girdi: JSON {"file_id": "<uuid>"}; kullanıcı yalnız Authorization: Bearer
+  <oturum anahtarı> başlığından tanınır. Çağıran kullanıcı dosyanın sahibi olmalı.
+- Yanıt: 200 {"status": "extracted", "count": <eklenen taahhüt sayısı>} veya
+  hata durumunda uygun kod + {"error": "<kısa kod>", "message": "<Türkçe açıklama>"}.
+- Aynı dosya tekrar işlenirse önce o dosyaya bağlı eski taahhütleri sil.
 - Fatura görseli → görsel model; sözleşme PDF, Excel/CSV, WhatsApp .txt
   dışa aktarımı → metin olarak oku.
 - Çıktı: counterparty, direction, amount, currency, due_date, kind, confidence,
@@ -212,7 +219,8 @@ LOVABLE_API_KEY tarayıcıya gitmesin.
   olarak, mesaj tarihine göre due_date ile çıkar.
 - Sonuçları qualifi_commitments'a yaz, dosya status'ünü güncelle.
 - Hata olursa status='failed' ve kısa Türkçe hata mesajı.
-Arayüz yapma.
+- Doğrulama, yetki ve hata durumları için odaklı testler yaz ve çalıştır.
+Arayüz yapma; yükleme ekranını GitHub üzerinden Claude ekleyecek.
 ```
 
 ### L5 — (İsteğe bağlı, sunumdan sonra) Ajanın serbest soruları
