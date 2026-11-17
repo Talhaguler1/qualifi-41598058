@@ -74,7 +74,7 @@ interface Turn {
   answer: AgentAnswer | null;
 }
 
-export function AskAgent({ ask, suggestions, resetKey }: { ask: (q: string) => AgentAnswer; suggestions: readonly string[]; resetKey: string }) {
+export function AskAgent({ ask, suggestions, resetKey, onAsk }: { ask: (q: string) => AgentAnswer; suggestions: readonly string[]; resetKey: string; onAsk?: (q: string) => void }) {
   const [turns, setTurns] = useState<Turn[]>([]);
   const [text, setText] = useState("");
   const counter = useRef(0);
@@ -90,6 +90,7 @@ export function AskAgent({ ask, suggestions, resetKey }: { ask: (q: string) => A
     const question = q.trim();
     if (!question) return;
     const id = ++counter.current;
+    onAsk?.(question);
     setTurns((t) => [...t.slice(-3), { id, question, answer: null }]);
     setText("");
     // A short pause reads as the agent thinking; the answer itself is computed instantly.
@@ -164,7 +165,7 @@ const KIND_LABEL = { reminder: "Vadeden önce hatırlat", promise_check: "Söz k
 const KIND_TONE = { reminder: "qd-pill--warn", promise_check: "qd-pill--bad", escalate: "qd-pill--bad" } as const;
 
 /** The agent's proposals. Approving only simulates sending: nothing leaves the demo. */
-export function ActionQueue({ actions, storageKey, onToast }: { actions: AgentAction[]; storageKey: string; onToast: (t: string) => void }) {
+export function ActionQueue({ actions, storageKey, onToast, onAction }: { actions: AgentAction[]; storageKey: string; onToast: (t: string) => void; onAction?: (action: "agent_approve" | "agent_edit" | "agent_snooze", id: string) => void }) {
   const [state, setState] = useLocalState<ActionState>(storageKey, {});
   const [editing, setEditing] = useState<string | null>(null);
   const [draft, setDraft] = useState("");
@@ -197,20 +198,20 @@ export function ActionQueue({ actions, storageKey, onToast }: { actions: AgentAc
                 </span>
               ) : editing === a.id ? (
                 <>
-                  <button type="button" className="qd-btn qd-btn--primary qd-btn--sm" onClick={() => { setState({ ...state, [a.id]: { ...s, text: draft } }); setEditing(null); onToast("Taslak güncellendi."); }}>
+                  <button type="button" className="qd-btn qd-btn--primary qd-btn--sm" onClick={() => { setState({ ...state, [a.id]: { ...s, text: draft } }); setEditing(null); onAction?.("agent_edit", a.receivable.id); onToast("Taslak güncellendi."); }}>
                     Kaydet
                   </button>
                   <button type="button" className="qd-btn qd-btn--sm" onClick={() => setEditing(null)}>Vazgeç</button>
                 </>
               ) : (
                 <>
-                  <button type="button" className="qd-btn qd-btn--primary qd-btn--sm" onClick={() => { setState({ ...state, [a.id]: { state: "sent", text } }); onToast(`${a.customer.name} için WhatsApp mesajı onaylandı (demo, gönderilmedi).`); }}>
+                  <button type="button" className="qd-btn qd-btn--primary qd-btn--sm" onClick={() => { setState({ ...state, [a.id]: { state: "sent", text } }); onAction?.("agent_approve", a.receivable.id); onToast(`${a.customer.name} için WhatsApp mesajı onaylandı (demo, gönderilmedi).`); }}>
                     {a.kind === "escalate" ? <PhoneCall size={13} /> : <MessageCircle size={13} />} Onayla
                   </button>
                   <button type="button" className="qd-btn qd-btn--sm" onClick={() => { setDraft(text); setEditing(a.id); }}>
                     <Pencil size={13} /> Düzenle
                   </button>
-                  <button type="button" className="qd-btn qd-btn--ghost qd-btn--sm" onClick={() => { setState({ ...state, [a.id]: { state: "snoozed", text } }); onToast("3 gün sonra tekrar hatırlatılacak."); }}>
+                  <button type="button" className="qd-btn qd-btn--ghost qd-btn--sm" onClick={() => { setState({ ...state, [a.id]: { state: "snoozed", text } }); onAction?.("agent_snooze", a.receivable.id); onToast("3 gün sonra tekrar hatırlatılacak."); }}>
                     <Clock3 size={13} /> Ertele
                   </button>
                 </>

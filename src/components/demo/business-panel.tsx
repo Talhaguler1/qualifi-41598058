@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Area, Bar, ComposedChart, Line, ReferenceDot, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis, Cell, BarChart } from "recharts";
 import { Building2, Calculator, Landmark, MessageCircle, FileText, ArrowUpRight, ArrowDownRight } from "lucide-react";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -27,6 +27,7 @@ import {
   type DemoDate,
   type PayerProfile,
 } from "@/lib/demo";
+import { trackDemo, type DemoAction } from "@/lib/demo/track";
 import { ActionQueue, AgentFeed, AskAgent, BriefingBox } from "./agent-panel";
 import { AnimatedNumber, Grade, Kpi, SourceChip, Tabs, Toast, TopBar, useMounted } from "./shared";
 
@@ -47,6 +48,22 @@ export function BusinessPanel({ tenant, date, onDate }: { tenant: string; date: 
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const clearToast = useCallback(() => setToast(null), []);
+  const log = useCallback(
+    (action: DemoAction, target?: string, detail?: string) => trackDemo({ panel: "business", tenant, demo_date: date, action, target: target ?? null, detail: detail ?? null }),
+    [tenant, date],
+  );
+  const changeDate = (d: DemoDate) => {
+    log("date_change", d);
+    onDate(d);
+  };
+  const changeTab = (t: Tab) => {
+    log("tab_open", t);
+    setTab(t);
+  };
+  const openCustomer = (c: Customer) => {
+    log("customer_open", c.id);
+    setCustomer(c);
+  };
 
   const balance = currentBalance(snap);
   const last = weeks.at(-1)!;
@@ -56,7 +73,7 @@ export function BusinessPanel({ tenant, date, onDate }: { tenant: string; date: 
 
   return (
     <div className="qd">
-      <TopBar title={dataset.company.name} subtitle={`${dataset.company.sector} · ${dataset.company.city} · ${dataset.customers.length} müşteri`} date={date} onDate={onDate} />
+      <TopBar title={dataset.company.name} subtitle={`${dataset.company.sector} · ${dataset.company.city} · ${dataset.customers.length} müşteri`} date={date} onDate={changeDate} />
       <main className="qd-main">
         <div className="qd-col">
           <div className="qd-sources">
@@ -73,12 +90,12 @@ export function BusinessPanel({ tenant, date, onDate }: { tenant: string; date: 
             <Kpi label="Vadesi geçen alacak" value={<AnimatedNumber value={overdueSum} format={money} />} sub={`${overdue.length} fatura`} />
           </section>
 
-          <CashFlowCard snap={snap} weeks={weeks} accuracy={accuracy} prevDate={prevDate} />
+          <CashFlowCard snap={snap} weeks={weeks} accuracy={accuracy} prevDate={prevDate} onScenario={(who, days) => log("scenario_run", who, `${days} gün`)} />
 
           <section className="qd-card">
             <Tabs<Tab>
               value={tab}
-              onChange={setTab}
+              onChange={changeTab}
               items={[
                 ["inflows", "Beklenen tahsilatlar"],
                 ["customers", "Müşteri ödeme karnesi"],
@@ -87,9 +104,9 @@ export function BusinessPanel({ tenant, date, onDate }: { tenant: string; date: 
               ]}
             />
             <div key={`${tab}-${date}`} className="qd-enter">
-              {tab === "inflows" ? <InflowTable snap={snap} onCustomer={setCustomer} /> : null}
-              {tab === "customers" ? <CustomerTable snap={snap} onCustomer={setCustomer} /> : null}
-              {tab === "whatsapp" ? <PromiseList snap={snap} onCustomer={setCustomer} /> : null}
+              {tab === "inflows" ? <InflowTable snap={snap} onCustomer={openCustomer} /> : null}
+              {tab === "customers" ? <CustomerTable snap={snap} onCustomer={openCustomer} /> : null}
+              {tab === "whatsapp" ? <PromiseList snap={snap} onCustomer={openCustomer} /> : null}
               {tab === "sources" ? <SourcesView snap={snap} /> : null}
             </div>
           </section>
@@ -99,14 +116,14 @@ export function BusinessPanel({ tenant, date, onDate }: { tenant: string; date: 
           <section className="qd-card qd-agent">
             <AgentFeed steps={steps} runKey={`${tenant}-${date}`} />
             <BriefingBox key={date} briefing={briefing} />
-            <AskAgent ask={ask} suggestions={SUGGESTED_QUESTIONS} resetKey={date} />
+            <AskAgent ask={ask} suggestions={SUGGESTED_QUESTIONS} resetKey={date} onAsk={(q) => log("agent_question", undefined, q)} />
           </section>
           <section className="qd-card">
             <div className="qd-card__head">
               <h2>Ajanın önerileri</h2>
               <p>Siz onaylamadan hiçbir mesaj gitmez.</p>
             </div>
-            <ActionQueue key={date} actions={actions} storageKey={`qd-actions-${tenant}-${date}`} onToast={setToast} />
+            <ActionQueue key={date} actions={actions} storageKey={`qd-actions-${tenant}-${date}`} onToast={setToast} onAction={(a, id) => log(a, id)} />
           </section>
         </aside>
       </main>
@@ -119,7 +136,7 @@ export function BusinessPanel({ tenant, date, onDate }: { tenant: string; date: 
 type Snap = ReturnType<typeof snapshot>;
 type Weeks = ReturnType<typeof weeklyForecast>;
 
-function CashFlowCard({ snap, weeks, accuracy, prevDate }: { snap: Snap; weeks: Weeks; accuracy: ReturnType<typeof forecastAccuracy> | null; prevDate: string | undefined }) {
+function CashFlowCard({ snap, weeks, accuracy, prevDate, onScenario }: { snap: Snap; weeks: Weeks; accuracy: ReturnType<typeof forecastAccuracy> | null; prevDate: string | undefined; onScenario: (who: string, days: number) => void }) {
   const mounted = useMounted();
   const candidates = useMemo(() => {
     const sums = new Map<string, number>();
@@ -129,6 +146,13 @@ function CashFlowCard({ snap, weeks, accuracy, prevDate }: { snap: Snap; weeks: 
   const [who, setWho] = useState<string>("");
   const [days, setDays] = useState(30);
   const scenario = useMemo(() => (who ? whatIfLate(snap, who, days).changed : null), [snap, who, days]);
+  // Log a scenario once the slider settles, not on every pixel.
+  useEffect(() => {
+    if (!who) return;
+    const t = setTimeout(() => onScenario(who, days), 900);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [who, days]);
   const tight = tightestWeek(weeks);
   const data = weeks.map((w, i) => ({
     label: formatDateTr(w.weekStart).replace(/ \d{4}$/, ""),

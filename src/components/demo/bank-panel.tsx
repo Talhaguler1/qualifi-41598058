@@ -19,6 +19,7 @@ import {
   type DemoDate,
   type Firm,
 } from "@/lib/demo";
+import { trackDemo, type DemoAction } from "@/lib/demo/track";
 import { AgentFeed, BriefingBox } from "./agent-panel";
 import { AnimatedNumber, Kpi, Tabs, TopBar, useMounted } from "./shared";
 
@@ -34,6 +35,11 @@ export function BankPanel({ region, banker, date, onDate, onBanker }: { region: 
   const briefing = useMemo(() => bankBriefing(firms, date, prevDate), [firms, date, prevDate]);
   const [tab, setTab] = useState<Tab>("portfolio");
   const [firm, setFirm] = useState<Firm | null>(null);
+  const log = (action: DemoAction, target?: string) => trackDemo({ panel: "bank", tenant: banker, demo_date: date, action, target: target ?? null });
+  const openFirm = (f: Firm) => {
+    log("firm_open", f.id);
+    setFirm(f);
+  };
 
   const high = firms.filter((f) => risks.get(f.id)?.level === "high");
   const allCommitments = firms.flatMap((f) => f.commitments.map((c) => ({ f, c, s: commitmentStatus(c, date) })));
@@ -51,7 +57,7 @@ export function BankPanel({ region, banker, date, onDate, onBanker }: { region: 
 
   return (
     <div className="qd">
-      <TopBar title={`${region} bölge birimi · Kredi risk`} subtitle={banker === "all" ? `Birim yöneticisi görünümü · ${BANKERS_PER_REGION} uzman` : `Uzman ${banker} · ${firms.length} firma`} date={date} onDate={onDate}>
+      <TopBar title={`${region} bölge birimi · Kredi risk`} subtitle={banker === "all" ? `Birim yöneticisi görünümü · ${BANKERS_PER_REGION} uzman` : `Uzman ${banker} · ${firms.length} firma`} date={date} onDate={(d) => { log("date_change", d); onDate(d); }}>
         <select className="qd-select" value={banker} onChange={(e) => onBanker(e.target.value)} aria-label="Uzman">
           <option value="all">Birimin tamamı (6.000 firma)</option>
           {Array.from({ length: BANKERS_PER_REGION }, (_, i) => String(i + 1).padStart(2, "0")).map((b) => (
@@ -73,7 +79,7 @@ export function BankPanel({ region, banker, date, onDate, onBanker }: { region: 
           <section className="qd-card">
             <Tabs<Tab>
               value={tab}
-              onChange={setTab}
+              onChange={(t) => { log("tab_open", t); setTab(t); }}
               items={[
                 ["portfolio", "Portföy"],
                 ["sectors", "Sektör analizi"],
@@ -82,10 +88,10 @@ export function BankPanel({ region, banker, date, onDate, onBanker }: { region: 
               ]}
             />
             <div key={`${tab}-${date}-${banker}`} className="qd-enter">
-              {tab === "portfolio" ? <Portfolio firms={firms} risks={risks} onFirm={setFirm} /> : null}
+              {tab === "portfolio" ? <Portfolio firms={firms} risks={risks} onFirm={openFirm} /> : null}
               {tab === "sectors" ? <Sectors firms={firms} date={date} /> : null}
-              {tab === "signals" ? <Signals firms={firms} date={date} onFirm={setFirm} /> : null}
-              {tab === "commitments" ? <Commitments rows={allCommitments} date={date} onFirm={setFirm} /> : null}
+              {tab === "signals" ? <Signals firms={firms} date={date} onFirm={openFirm} /> : null}
+              {tab === "commitments" ? <Commitments rows={allCommitments} date={date} onFirm={openFirm} /> : null}
             </div>
           </section>
         </div>
@@ -113,7 +119,7 @@ export function BankPanel({ region, banker, date, onDate, onBanker }: { region: 
                     </div>
                   </div>
                   <div className="qd-action__buttons">
-                    <button type="button" className="qd-btn qd-btn--primary qd-btn--sm" onClick={() => setFirm(c.firm)}>
+                    <button type="button" className="qd-btn qd-btn--primary qd-btn--sm" onClick={() => openFirm(c.firm)}>
                       <Bot size={13} /> Firma kartı
                     </button>
                     <span className="qd-pill qd-pill--muted"><Phone size={12} /> {c.firm.city}</span>

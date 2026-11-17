@@ -70,7 +70,8 @@ birleşse bile bu üçü yok.
 - [x] C — Bu plan dosyası ve istem paketi
 - [x] C — Tahmin motoru + deterministik mock veri üreticisi + testler (`src/lib/demo/`)
 - [x] L — **L0** doğrulama, buton düzeltmesi kontrolü, Publish (17 Kas)
-- [ ] L — **L1** isteği (aşağıda): boş hesap yüklemeleri + demo etkileşim kaydı
+- [x] L — **L1**: boş hesap yüklemeleri + demo etkileşim kaydı (17 Kas, Claude inceledi)
+- [x] C — Demo panelleri etkileşim kaydına bağlandı (tarih, sekme, kart, senaryo, soru, onay/düzenle/ertele)
 - [ ] G — **G1–G3** istekleri: demo belgeleri, WhatsApp sohbetleri, ana sayfa metin varyantları
 - [ ] T — Lovable'da "Edit with Lovable" rozetini gizle; takvim linkini ver (Cal.com/Calendly)
 
@@ -190,6 +191,13 @@ Yalnız şema, depo, RLS, bu sunucu rotası ve oluşan TypeScript tiplerini ekle
 ### L2 — Belgeden taahhüt çıkarma
 
 ```
+Önce küçük bir eksik: qualifi_commitments tablosunda kullanıcı kendi satırını
+GÜNCELLEYEMİYOR. Kullanıcının yalnız kendi satırlarında amount, due_date,
+counterparty, status, paid_at ve needs_review alanlarını güncelleyebileceği bir
+UPDATE izni ve RLS politikası ekle (user_id ve file_id değiştirilemesin).
+qualifi_workspace_files için kullanıcı güncellemesi gerekmiyor.
+
+Sonra:
 qualifi_workspace_files tablosundaki bir dosya için taahhütleri çıkaran bir
 sunucu fonksiyonu ekle (extract-commitments). Lovable AI ağ geçidini kullan;
 LOVABLE_API_KEY tarayıcıya gitmesin.
