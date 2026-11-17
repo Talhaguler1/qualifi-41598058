@@ -160,8 +160,8 @@ export function currentBalance(snap: Snapshot): number {
 }
 
 /** Weekly cash outlook: base case plus an optimistic–pessimistic range. */
-export function weeklyForecast(snap: Snapshot, weeks = 8): ForecastWeek[] {
-  const inflows = expectedInflows(snap);
+export function weeklyForecast(snap: Snapshot, weeks = 8, adjust?: (inflow: ExpectedInflow) => ExpectedInflow): ForecastWeek[] {
+  const inflows = adjust ? expectedInflows(snap).map(adjust) : expectedInflows(snap);
   const start = addDays(snap.asOf, 1);
   const result: ForecastWeek[] = [];
   let base = currentBalance(snap);

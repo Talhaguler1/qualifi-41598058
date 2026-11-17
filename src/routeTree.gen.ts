@@ -16,6 +16,9 @@ import { Route as AdminLeadsRouteImport } from './routes/admin/leads'
 import { Route as ApiConfigRouteImport } from './routes/api/config'
 import { Route as ApiEventsRouteImport } from './routes/api/events'
 import { Route as ApiLeadsRouteImport } from './routes/api/leads'
+import { Route as DemoIndexRouteImport } from './routes/demo/index'
+import { Route as DemoBankaRouteImport } from './routes/demo/banka'
+import { Route as DemoIsletmeRouteImport } from './routes/demo/isletme'
 import { Route as ApiAdminLeadsRouteImport } from './routes/api/admin/leads'
 import { Route as ApiAdminLeadsExportRouteImport } from './routes/api/admin/leads/export'
 import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
@@ -57,6 +60,21 @@ const ApiLeadsRoute = ApiLeadsRouteImport.update({
   path: '/api/leads',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DemoIndexRoute = DemoIndexRouteImport.update({
+  id: '/demo/',
+  path: '/demo/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DemoBankaRoute = DemoBankaRouteImport.update({
+  id: '/demo/banka',
+  path: '/demo/banka',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DemoIsletmeRoute = DemoIsletmeRouteImport.update({
+  id: '/demo/isletme',
+  path: '/demo/isletme',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAdminLeadsRoute = ApiAdminLeadsRouteImport.update({
   id: '/api/admin/leads',
   path: '/api/admin/leads',
@@ -92,6 +110,9 @@ export interface FileRoutesByFullPath {
   '/api/config': typeof ApiConfigRoute
   '/api/events': typeof ApiEventsRoute
   '/api/leads': typeof ApiLeadsRoute
+  '/demo/banka': typeof DemoBankaRoute
+  '/demo/isletme': typeof DemoIsletmeRoute
+  '/demo/': typeof DemoIndexRoute
   '/api/admin/leads': typeof ApiAdminLeadsRouteWithChildren
   '/api/admin/leads/export': typeof ApiAdminLeadsExportRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
@@ -106,6 +127,9 @@ export interface FileRoutesByTo {
   '/api/config': typeof ApiConfigRoute
   '/api/events': typeof ApiEventsRoute
   '/api/leads': typeof ApiLeadsRoute
+  '/demo/banka': typeof DemoBankaRoute
+  '/demo/isletme': typeof DemoIsletmeRoute
+  '/demo': typeof DemoIndexRoute
   '/api/admin/leads': typeof ApiAdminLeadsRouteWithChildren
   '/api/admin/leads/export': typeof ApiAdminLeadsExportRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
@@ -121,6 +145,9 @@ export interface FileRoutesById {
   '/api/config': typeof ApiConfigRoute
   '/api/events': typeof ApiEventsRoute
   '/api/leads': typeof ApiLeadsRoute
+  '/demo/banka': typeof DemoBankaRoute
+  '/demo/isletme': typeof DemoIsletmeRoute
+  '/demo/': typeof DemoIndexRoute
   '/api/admin/leads': typeof ApiAdminLeadsRouteWithChildren
   '/api/admin/leads/export': typeof ApiAdminLeadsExportRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
@@ -137,6 +164,9 @@ export interface FileRouteTypes {
     | '/api/config'
     | '/api/events'
     | '/api/leads'
+    | '/demo/banka'
+    | '/demo/isletme'
+    | '/demo/'
     | '/api/admin/leads'
     | '/api/admin/leads/export'
     | '/lovable/email/auth/preview'
@@ -151,6 +181,9 @@ export interface FileRouteTypes {
     | '/api/config'
     | '/api/events'
     | '/api/leads'
+    | '/demo/banka'
+    | '/demo/isletme'
+    | '/demo'
     | '/api/admin/leads'
     | '/api/admin/leads/export'
     | '/lovable/email/auth/preview'
@@ -165,6 +198,9 @@ export interface FileRouteTypes {
     | '/api/config'
     | '/api/events'
     | '/api/leads'
+    | '/demo/banka'
+    | '/demo/isletme'
+    | '/demo/'
     | '/api/admin/leads'
     | '/api/admin/leads/export'
     | '/lovable/email/auth/preview'
@@ -180,6 +216,9 @@ export interface RootRouteChildren {
   ApiConfigRoute: typeof ApiConfigRoute
   ApiEventsRoute: typeof ApiEventsRoute
   ApiLeadsRoute: typeof ApiLeadsRoute
+  DemoBankaRoute: typeof DemoBankaRoute
+  DemoIsletmeRoute: typeof DemoIsletmeRoute
+  DemoIndexRoute: typeof DemoIndexRoute
   ApiAdminLeadsRoute: typeof ApiAdminLeadsRouteWithChildren
   LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
   LovableEmailAuthWebhookRoute: typeof LovableEmailAuthWebhookRoute
@@ -235,6 +274,27 @@ declare module '@tanstack/react-router' {
       path: '/api/leads'
       fullPath: '/api/leads'
       preLoaderRoute: typeof ApiLeadsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/demo/': {
+      id: '/demo/'
+      path: '/demo'
+      fullPath: '/demo/'
+      preLoaderRoute: typeof DemoIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/demo/banka': {
+      id: '/demo/banka'
+      path: '/demo/banka'
+      fullPath: '/demo/banka'
+      preLoaderRoute: typeof DemoBankaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/demo/isletme': {
+      id: '/demo/isletme'
+      path: '/demo/isletme'
+      fullPath: '/demo/isletme'
+      preLoaderRoute: typeof DemoIsletmeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/admin/leads': {
@@ -295,6 +355,9 @@ const rootRouteChildren: RootRouteChildren = {
   ApiConfigRoute: ApiConfigRoute,
   ApiEventsRoute: ApiEventsRoute,
   ApiLeadsRoute: ApiLeadsRoute,
+  DemoBankaRoute: DemoBankaRoute,
+  DemoIsletmeRoute: DemoIsletmeRoute,
+  DemoIndexRoute: DemoIndexRoute,
   ApiAdminLeadsRoute: ApiAdminLeadsRouteWithChildren,
   LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
   LovableEmailAuthWebhookRoute: LovableEmailAuthWebhookRoute,

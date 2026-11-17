@@ -6,6 +6,9 @@ Rapor ve gerekçeler: Claude Docs'taki "QualiFi Site Analizi ve 24 Saatlik Plan"
 
 ## Hedef
 
+**Sunum: 24 Kasım 2026.** Demo tarihleri 27 Ekim, 10 Kasım ve 24 Kasım; varsayılan 24 Kasım,
+böylece demodaki "bugün" sunum günüyle aynı.
+
 Sunumda da kullanılacak, her tuşu çalışan bir demo ürünü qualifilab.com üzerinde:
 
 1. **Demo işletme hesapları** — `mockerpXXX`, `mockonmuhasebeXXX`, `mockbankaXXX`
@@ -20,6 +23,15 @@ Sunumda da kullanılacak, her tuşu çalışan bir demo ürünü qualifilab.com 
 QualiFi'nin farkı: taahhüdün **ne zaman** ödeneceği, müşterinin geçmişte ne kadar
 erken/geç ödediği ve ödemelerin bir ajanla takibi. ERP + ön muhasebe + banka API
 birleşse bile bu üçü yok.
+
+## Alınan kararlar (değiştirmek isterseniz söyleyin)
+
+| Karar | Neden | Sonuç |
+| --- | --- | --- |
+| Demo paneller giriş istemeden `/demo` altında açık | Sunumda ve ana sayfadaki "Demo işletmeyi incele" butonunda şifresiz açılsın | Yalnız uydurma veri gösterir, arama motorlarına kapalı (noindex). Hesaplı giriş `/app` altında ayrıca gelecek |
+| Ajan cevapları kural tabanlı, yapay zekâ çağrısı yok | Sunumda her seferinde aynı ve doğru rakam; kredi harcamaz, internet yavaşken de çalışır | Serbest soruların hepsini anlamaz; anlamadığında önerilen soruları gösterir. İsterseniz sonra Lovable AI ile genişletilir (istem L5) |
+| Animasyon için yeni kütüphane eklenmedi | Repoda bun.lock var; yeni paket Lovable kurulumunu bozabilir | Geçişler CSS ve Recharts ile; "hareketi azalt" tercihine uyar |
+| Sunum günü = demodaki "bugün" (24 Kasım) | Sahnede tarih tutarlı olsun | 27 Ekim'de ajan nakit sıkışması uyarısı verir, 24 Kasım'a gelince durum değişir |
 
 ## Değişmeyen kurallar
 
@@ -62,10 +74,14 @@ birleşse bile bu üçü yok.
 
 ### 4–13. saat: paneller ve site
 
-- [ ] C — Uygulama kabuğu: `/app` girişi, role göre yönlendirme, demo tarihi seçici
-- [ ] C — İşletme paneli: nakit tahmini (haftalık aralık), müşteri ödeme karnesi,
-      taahhütler, ajan önerileri + WhatsApp mesaj taslağı, bağlı kaynaklar
-- [ ] C — Bankacı paneli: portföy, sektör analizi, WhatsApp içgörüleri, taahhüt takibi, firma kartı
+- [x] C — Demo tarihi seçici (27 Eki · 10 Kas · 24 Kas) ve geçiş animasyonları
+- [ ] C — Uygulama kabuğu: `/app` girişi, role göre yönlendirme
+- [x] C — İşletme paneli (`/demo/isletme`): nakit tahmini + senaryo, müşteri ödeme karnesi,
+      beklenen tahsilatlar, WhatsApp sözleri, kaynaklar, müşteri kartı
+- [x] C — Ajan: adım adım çalışma akışı, günlük özet, soru-cevap, "ya geç öderse" senaryosu,
+      onay/düzenle/ertele kuyruğu (hiçbir mesaj gerçekten gönderilmez)
+- [x] C — Bankacı paneli (`/demo/banka`): portföy, sektör analizi, WhatsApp içgörüleri,
+      taahhüt takibi, firma kartı, uzman/birim seçimi, arama listesi hazırlayan ajan
 - [ ] C — Admin: CSV ile toplu hesap açma (sunucu fonksiyonu), "onun gözünden gör", demo tarihi
 - [ ] C — Boş hesap: dosya yükleme ekranı (L1 tablolarına bağlı)
 - [ ] C — Ana sayfa yeni anlatım, tek birincil buton, salt okunur "Demo işletmeyi incele"
@@ -98,7 +114,32 @@ uzman1@banka.com,banker,,,,Marmara-1,01
 
 Önerilen dağılım: 60 demo, 20 boş, 20 bankacı.
 
+## Adım adım: kim nereye ne yazacak
+
+Sıra önemli; bir adım bitmeden sonrakine geçmeyin.
+
+1. **Lovable → proje ayarları:** "Edit with Lovable" rozetini gizleyin (kredi harcamaz).
+2. **Lovable → sohbet (Plan modu):** aşağıdaki **L0** istemini yapıştırın, planı okuyun, onaylayın. Bu yalnız GitHub'daki son değişiklikleri çekip önizlemeyi doğrular.
+3. **Lovable önizleme:** `/demo`, `/demo/isletme`, `/demo/banka` sayfalarını açıp tıklayın. Sorun görürseniz bana yazın; Lovable'a düzelttirmeyin (kredi + çakışma).
+4. **Lovable → Publish:** önizleme sorunsuzsa yayınlayın. Canlı adres: qualifilab.com/demo
+5. **ChatGPT → yeni sohbet "QualiFi demo belgeleri":** G1, sonra aynı sohbette G2.
+6. **ChatGPT → yeni sohbet "QualiFi metinleri":** G3. Beğendiğiniz başlığı bana gönderin; ana sayfaya ben koyarım.
+7. **Lovable → sohbet (Plan modu):** L1 (boş hesap yüklemeleri). Plan onayından sonra Build.
+8. **Bana:** "L1 bitti" yazın; yükleme ekranını, `/app` girişini ve admin hesap açma ekranını yazayım.
+9. **Lovable:** L2 (belgeden taahhüt çıkarma).
+10. **ChatGPT → Codex:** G4 incelemesi; çıktıyı bana yapıştırın.
+
 ## Lovable istem paketi
+
+### L0 — GitHub değişikliklerini doğrula (Plan modu, kod yazdırmayın)
+
+```
+GitHub'dan gelen son commit'leri incele: /demo, /demo/isletme ve /demo/banka
+rotaları ile src/lib/demo ve src/components/demo eklendi. Hiçbir dosyayı
+değiştirme. Yalnız önizlemenin hatasız derlendiğini ve bu üç sayfanın
+açıldığını doğrula; sorun varsa ne olduğunu yaz ama düzeltme.
+```
+
 
 Her isteği önce **Plan** modunda gönderin, planı okuyup onaylayın, sonra Build.
 
@@ -146,6 +187,16 @@ LOVABLE_API_KEY tarayıcıya gitmesin.
 - Sonuçları qualifi_commitments'a yaz, dosya status'ünü güncelle.
 - Hata olursa status='failed' ve kısa Türkçe hata mesajı.
 Arayüz yapma.
+```
+
+### L5 — (İsteğe bağlı, sunumdan sonra) Ajanın serbest soruları
+
+```
+src/lib/demo/agent.ts içindeki askAgent kural tabanlı çalışıyor. Bunu bozmadan,
+intent "unknown" döndüğünde Lovable AI ağ geçidini çağıran bir sunucu fonksiyonu
+ekle: soruyu ve snapshot'tan hesaplanmış özet rakamları (bakiye, 8 haftalık
+tahmin, en riskli 5 müşteri) gönder, yalnız bu rakamlara dayanarak 3 cümlelik
+Türkçe cevap üret. Rakam uydurma. LOVABLE_API_KEY tarayıcıya gitmesin.
 ```
 
 ### L3 — Görsel cila

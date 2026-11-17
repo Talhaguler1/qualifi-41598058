@@ -87,6 +87,22 @@ export function normaliseTenant(tenant: string): string {
   return digits.slice(-3).padStart(3, "0");
 }
 
+const NAME_WORD: Record<(typeof SECTORS)[number], string> = {
+  Yazılım: "Yazılım",
+  "E-ticaret": "E-Ticaret",
+  Lojistik: "Lojistik",
+  "Gıda toptan": "Gıda",
+  Tekstil: "Tekstil",
+  Medikal: "Medikal",
+  Ajans: "Reklam",
+  Eğitim: "Eğitim",
+};
+
+function namedCustomer(rng: Rng): { name: string; sector: string } {
+  const sector = rng.pick(SECTORS);
+  return { name: `${brandWord(rng)} ${NAME_WORD[sector]} ${rng.pick(CUSTOMER_SUFFIX)}`, sector };
+}
+
 function pickPersona(rng: Rng): Persona {
   let roll = rng.next();
   for (const [persona, share] of PERSONA_SHARE) {
@@ -126,8 +142,7 @@ export function generateBusiness(tenantInput: string): BusinessDataset {
   for (let i = 1; i <= customerCount; i++) {
     customers.push({
       id: `c${tenant}-${String(i).padStart(3, "0")}`,
-      name: `${brandWord(rng)} ${rng.pick(SECTORS)} ${rng.pick(CUSTOMER_SUFFIX)}`,
-      sector: rng.pick(SECTORS),
+      ...namedCustomer(rng),
       persona: pickPersona(rng),
     });
   }

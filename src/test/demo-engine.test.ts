@@ -131,3 +131,41 @@ describe("banker portfolio", () => {
     for (let i = 1; i < rows.length; i++) expect(rows[i - 1]!.highRiskShare).toBeGreaterThanOrEqual(rows[i]!.highRiskShare);
   });
 });
+
+import { agentRun, askAgent, bankBriefing, businessBriefing, detectIntent, SUGGESTED_QUESTIONS, whatIfLate, tightestWeek } from "@/lib/demo";
+
+describe("agent", () => {
+  const d = generateBusiness("017");
+  const s = snapshot(d, "2026-11-24");
+
+  it("logs a full round over the three mock sources, WhatsApp, scorecards, forecast and follow-ups", () => {
+    const steps = agentRun(d, "2026-11-24", "2026-11-10");
+    expect(steps.map((x) => x.tool)).toEqual(["erp", "muhasebe", "banka", "whatsapp", "karne", "tahmin", "takip"]);
+    expect(steps[0]?.title).toContain("mockerp017");
+    expect(steps.at(-1)?.detail).toContain("onayınızı");
+  });
+
+  it("routes every suggested question to a real answer", () => {
+    for (const q of SUGGESTED_QUESTIONS) {
+      const a = askAgent(s, q);
+      expect(a.intent).not.toBe("unknown");
+      expect(a.text.length).toBeGreaterThan(10);
+    }
+    expect(detectIntent("merhaba")).toBe("unknown");
+  });
+
+  it("what-if delays only the chosen customer and never improves the tightest week", () => {
+    const id = d.customers[0]!.id;
+    const r = whatIfLate(s, id, 30);
+    expect(tightestWeek(r.changed).balanceBase).toBeLessThanOrEqual(tightestWeek(r.base).balanceBase + 1);
+    const a = askAgent(s, "En büyük müşterim 30 gün geç öderse?");
+    expect(a.scenario?.changed).toHaveLength(8);
+  });
+
+  it("briefs the business and the banker", () => {
+    expect(businessBriefing(s).points).toHaveLength(3);
+    const b = bankBriefing(generatePortfolio("Marmara-1", "01"), "2026-11-24");
+    expect(b.callList.length).toBeGreaterThan(0);
+    expect(b.points).toHaveLength(3);
+  });
+});

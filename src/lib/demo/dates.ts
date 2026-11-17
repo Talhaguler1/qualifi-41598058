@@ -30,9 +30,19 @@ export function formatDateTr(iso: string): string {
  * The dates a demo account can be viewed at. Data dated after the chosen date is
  * hidden, so moving forward "delivers" new invoices, payments and messages.
  */
-export const DEMO_DATES = ["2026-10-01", "2026-11-01", "2026-12-01"] as const;
+/** The last one is the presentation day (24 Nov 2026), so the demo's "today" matches the room's. */
+export const DEMO_DATES = ["2026-10-27", "2026-11-10", "2026-11-24"] as const;
 export type DemoDate = (typeof DEMO_DATES)[number];
-export const DEFAULT_DEMO_DATE: DemoDate = "2026-11-01";
+export const DEFAULT_DEMO_DATE: DemoDate = "2026-11-24";
+export const DEMO_DATE_LABELS: Record<DemoDate, string> = {
+  "2026-10-27": "4 hafta önce",
+  "2026-11-10": "2 hafta önce",
+  "2026-11-24": "Bugün · sunum günü",
+};
+
+export function isDemoDate(value: unknown): value is DemoDate {
+  return typeof value === "string" && (DEMO_DATES as readonly string[]).includes(value);
+}
 
 /** History starts a year before the first demo date; data runs past the last one. */
 export const HISTORY_START = "2025-10-01";
