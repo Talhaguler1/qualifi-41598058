@@ -54,11 +54,12 @@ birleşse bile bu üçü yok.
 
 | İstek | Tahmin | Gerçek |
 | --- | --- | --- |
-| L1 Yükleme tabloları + depo (Plan + Build) | 4–6 | |
+| L0 + buton kontrolü (Plan) | 2 | |
+| L1 Yükleme tabloları + depo + etkileşim kaydı (Plan + Build) | 5–8 | |
 | L2 Belgeden taahhüt çıkarma fonksiyonu | 4–8 | |
 | L3 Görsel cila (panel sayfaları) | 8–15 | |
 | L4 Hata düzeltme payı | 5–10 | |
-| **Toplam** | **21–39** | |
+| **Toplam** | **24–43** | |
 
 ## Zaman çizelgesi ve görevler
 
@@ -68,7 +69,8 @@ birleşse bile bu üçü yok.
 
 - [x] C — Bu plan dosyası ve istem paketi
 - [x] C — Tahmin motoru + deterministik mock veri üreticisi + testler (`src/lib/demo/`)
-- [ ] L — **L1** isteği (aşağıda): boş hesap yüklemeleri için tablolar ve depo
+- [x] L — **L0** doğrulama, buton düzeltmesi kontrolü, Publish (17 Kas)
+- [ ] L — **L1** isteği (aşağıda): boş hesap yüklemeleri + demo etkileşim kaydı
 - [ ] G — **G1–G3** istekleri: demo belgeleri, WhatsApp sohbetleri, ana sayfa metin varyantları
 - [ ] T — Lovable'da "Edit with Lovable" rozetini gizle; takvim linkini ver (Cal.com/Calendly)
 
@@ -124,7 +126,7 @@ Sıra önemli; bir adım bitmeden sonrakine geçmeyin.
 4. **Lovable → Publish:** önizleme sorunsuzsa yayınlayın. Canlı adres: qualifilab.com/demo
 5. **ChatGPT → yeni sohbet "QualiFi demo belgeleri":** G1, sonra aynı sohbette G2.
 6. **ChatGPT → yeni sohbet "QualiFi metinleri":** G3. Beğendiğiniz başlığı bana gönderin; ana sayfaya ben koyarım.
-7. **Lovable → sohbet (Plan modu):** L1 (boş hesap yüklemeleri). Plan onayından sonra Build.
+7. **Lovable → sohbet (Plan modu):** L1 (boş hesap yüklemeleri + demo etkileşim kaydı). Plan onayından sonra Build.
 8. **Bana:** "L1 bitti" yazın; yükleme ekranını, `/app` girişini ve admin hesap açma ekranını yazayım.
 9. **Lovable:** L2 (belgeden taahhüt çıkarma).
 10. **ChatGPT → Codex:** G4 incelemesi; çıktıyı bana yapıştırın.
@@ -143,15 +145,16 @@ açıldığını doğrula; sorun varsa ne olduğunu yaz ama düzeltme.
 
 Her isteği önce **Plan** modunda gönderin, planı okuyup onaylayın, sonra Build.
 
-### L1 — Boş hesap yüklemeleri
+### L1 — Boş hesap yüklemeleri + demo etkileşim kaydı
 
 ```
-QualiFi uygulamasına, boş işletme hesaplarının yüklediği dosyalar için özel
-veri yapısı ekle. Mevcut qualifi_leads / qualifi_events tablolarına ve admin
-paneline dokunma.
+QualiFi uygulamasına iki özel veri yapısı ekle. Mevcut qualifi_leads /
+qualifi_events tablolarına, admin paneline ve src/lib/demo, src/components/demo
+dosyalarına dokunma. Arayüz yapma; arayüzü GitHub üzerinden Claude ekleyecek.
 
-1. Özel depolama kovası: workspace-files (herkese açık değil, 10 MB sınırı;
-   pdf, png, jpg, xlsx, csv, txt kabul).
+A) Boş hesap yüklemeleri
+1. Özel depolama kovası: workspace-files (herkese açık değil, dosya başı 10 MB;
+   pdf, png, jpg, xlsx, csv, txt).
 2. Tablo qualifi_workspace_files: id, user_id (auth.users), kind
    ('contract' | 'invoice_image' | 'spreadsheet' | 'whatsapp'), storage_path,
    original_name, status ('uploaded' | 'processing' | 'extracted' | 'failed'),
@@ -161,12 +164,27 @@ paneline dokunma.
    due_date (date), kind ('invoice' | 'contract_installment' | 'promise' | 'expense'),
    status ('open' | 'paid'), paid_at (date, nullable), confidence (0-1),
    evidence (kısa alıntı), needs_review (boolean), created_at.
-4. RLS: kullanıcı yalnız kendi satırlarını ve kendi klasöründeki dosyaları
-   görür/ekler/siler. app_metadata.qualifi_admin === true olan kullanıcı hepsini
-   okuyabilir. user_metadata ile yetki verme.
-5. Kullanıcı kendi verisini tek seferde silebilsin (KVKK).
-Arayüz yapma; arayüzü GitHub üzerinden Claude ekleyecek. Yalnız şema, depo,
-RLS ve oluşan TypeScript tiplerini güncelle.
+4. Kullanıcı kendi dosyalarını ve taahhütlerini tek seferde silebilsin (KVKK).
+
+B) Demo etkileşim kaydı (geri bildirim için)
+5. Tablo qualifi_demo_interactions: id, user_id (nullable; giriş yapılmamış
+   /demo ziyaretinde boş), session_id (tarayıcıda üretilen rastgele uuid),
+   panel ('business' | 'bank'), tenant (text, örn. '017'), demo_date (date),
+   action ('agent_approve' | 'agent_edit' | 'agent_snooze' | 'agent_question'
+   | 'scenario_run' | 'date_change' | 'customer_open' | 'firm_open' | 'tab_open'),
+   target (kısa metin, örn. fatura veya firma no), detail (en fazla 300
+   karakter; ajan sorusunun metni burada), created_at.
+6. Bu tabloya yalnız bir sunucu rotası (POST /api/demo-interactions) yazsın;
+   alanları doğrulasın, e-posta veya telefon gibi kişisel veri içeren detail'i
+   reddetsin, aynı session_id'den dakikada 60'tan fazla kaydı reddetsin.
+
+Yetki (RLS)
+7. A'daki tablolar ve dosyalar: kullanıcı yalnız kendi satırlarını görür,
+   ekler, siler. app_metadata.qualifi_admin === true olan kullanıcı hepsini
+   okuyabilir. user_metadata ile asla yetki verme.
+8. qualifi_demo_interactions: tarayıcıdan doğrudan okuma/yazma yok; yalnız
+   admin okuyabilir.
+Yalnız şema, depo, RLS, bu sunucu rotası ve oluşan TypeScript tiplerini ekle.
 ```
 
 ### L2 — Belgeden taahhüt çıkarma
