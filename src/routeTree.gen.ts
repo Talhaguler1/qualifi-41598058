@@ -21,6 +21,7 @@ import { Route as DemoIndexRouteImport } from './routes/demo/index'
 import { Route as DemoBankaRouteImport } from './routes/demo/banka'
 import { Route as DemoIsletmeRouteImport } from './routes/demo/isletme'
 import { Route as ApiAdminLeadsRouteImport } from './routes/api/admin/leads'
+import { Route as ApiWorkspaceExtractRouteImport } from './routes/api/workspace/extract'
 import { Route as ApiAdminLeadsExportRouteImport } from './routes/api/admin/leads/export'
 import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
 import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
@@ -86,6 +87,11 @@ const ApiAdminLeadsRoute = ApiAdminLeadsRouteImport.update({
   path: '/api/admin/leads',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiWorkspaceExtractRoute = ApiWorkspaceExtractRouteImport.update({
+  id: '/api/workspace/extract',
+  path: '/api/workspace/extract',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAdminLeadsExportRoute = ApiAdminLeadsExportRouteImport.update({
   id: '/export',
   path: '/export',
@@ -121,6 +127,7 @@ export interface FileRoutesByFullPath {
   '/demo/isletme': typeof DemoIsletmeRoute
   '/demo/': typeof DemoIndexRoute
   '/api/admin/leads': typeof ApiAdminLeadsRouteWithChildren
+  '/api/workspace/extract': typeof ApiWorkspaceExtractRoute
   '/api/admin/leads/export': typeof ApiAdminLeadsExportRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -139,6 +146,7 @@ export interface FileRoutesByTo {
   '/demo/isletme': typeof DemoIsletmeRoute
   '/demo': typeof DemoIndexRoute
   '/api/admin/leads': typeof ApiAdminLeadsRouteWithChildren
+  '/api/workspace/extract': typeof ApiWorkspaceExtractRoute
   '/api/admin/leads/export': typeof ApiAdminLeadsExportRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -158,6 +166,7 @@ export interface FileRoutesById {
   '/demo/isletme': typeof DemoIsletmeRoute
   '/demo/': typeof DemoIndexRoute
   '/api/admin/leads': typeof ApiAdminLeadsRouteWithChildren
+  '/api/workspace/extract': typeof ApiWorkspaceExtractRoute
   '/api/admin/leads/export': typeof ApiAdminLeadsExportRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -178,6 +187,7 @@ export interface FileRouteTypes {
     | '/demo/isletme'
     | '/demo/'
     | '/api/admin/leads'
+    | '/api/workspace/extract'
     | '/api/admin/leads/export'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -196,6 +206,7 @@ export interface FileRouteTypes {
     | '/demo/isletme'
     | '/demo'
     | '/api/admin/leads'
+    | '/api/workspace/extract'
     | '/api/admin/leads/export'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -214,6 +225,7 @@ export interface FileRouteTypes {
     | '/demo/isletme'
     | '/demo/'
     | '/api/admin/leads'
+    | '/api/workspace/extract'
     | '/api/admin/leads/export'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -233,6 +245,7 @@ export interface RootRouteChildren {
   DemoIsletmeRoute: typeof DemoIsletmeRoute
   DemoIndexRoute: typeof DemoIndexRoute
   ApiAdminLeadsRoute: typeof ApiAdminLeadsRouteWithChildren
+  ApiWorkspaceExtractRoute: typeof ApiWorkspaceExtractRoute
   LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
   LovableEmailAuthWebhookRoute: typeof LovableEmailAuthWebhookRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
@@ -324,6 +337,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAdminLeadsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/workspace/extract': {
+      id: '/api/workspace/extract'
+      path: '/api/workspace/extract'
+      fullPath: '/api/workspace/extract'
+      preLoaderRoute: typeof ApiWorkspaceExtractRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/admin/leads/export': {
       id: '/api/admin/leads/export'
       path: '/export'
@@ -380,6 +400,7 @@ const rootRouteChildren: RootRouteChildren = {
   DemoIsletmeRoute: DemoIsletmeRoute,
   DemoIndexRoute: DemoIndexRoute,
   ApiAdminLeadsRoute: ApiAdminLeadsRouteWithChildren,
+  ApiWorkspaceExtractRoute: ApiWorkspaceExtractRoute,
   LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
   LovableEmailAuthWebhookRoute: LovableEmailAuthWebhookRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,

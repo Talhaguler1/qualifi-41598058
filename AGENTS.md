@@ -67,3 +67,5 @@ use the editor.
 - Keep fixed-recipient owner notifications separate from persistence success; the private inbox remains the source of truth when email fails.
 - Workspace uploads live in the private `workspace-files` bucket under `<user_id>/`; owner-only RLS plus admin read via `qualifi_is_admin()`. Why: KVKK isolation per user.
 - Demo interactions are written only by `/api/demo-interactions` (service role after validation, PII rejection, per-session rate limit); browsers never write that table. Why: untrusted anonymous input.
+- Document extraction runs only in `/api/workspace/extract` (owner verified from bearer, service role after ownership check); AI calls go through Lovable AI Gateway Responses with logic in `workspace-extract.server.ts` and injectable deps. Why: keeps the key server-side and logic testable.
+- New public tables must REVOKE the default anon/authenticated table rights and grant only what policies need (column-level UPDATE where fields are restricted). Why: default privileges grant ALL.

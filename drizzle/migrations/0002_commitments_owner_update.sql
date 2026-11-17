@@ -1,0 +1,2 @@
+GRANT UPDATE (amount, due_date, counterparty, status, paid_at, needs_review) ON public.qualifi_commitments TO authenticated;
+CREATE POLICY own_update ON public.qualifi_commitments FOR UPDATE TO authenticated USING (user_id = auth.uid()) WITH CHECK (user_id = auth.uid());
