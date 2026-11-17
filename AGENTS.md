@@ -65,3 +65,5 @@ use the editor.
 - Keep admin authorization in both remote Auth verification and RLS backed by protected user_roles plus strict server-managed metadata; grant only contact-status updates.
 - Keep document uploads unavailable until private file persistence is implemented; never imply that sample mode stores a document.
 - Keep fixed-recipient owner notifications separate from persistence success; the private inbox remains the source of truth when email fails.
+- Workspace uploads live in the private `workspace-files` bucket under `<user_id>/`; owner-only RLS plus admin read via `qualifi_is_admin()`. Why: KVKK isolation per user.
+- Demo interactions are written only by `/api/demo-interactions` (service role after validation, PII rejection, per-session rate limit); browsers never write that table. Why: untrusted anonymous input.

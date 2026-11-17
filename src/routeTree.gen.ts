@@ -14,6 +14,7 @@ import { Route as SplatRouteImport } from './routes/$'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AdminLeadsRouteImport } from './routes/admin/leads'
 import { Route as ApiConfigRouteImport } from './routes/api/config'
+import { Route as ApiDemoInteractionsRouteImport } from './routes/api/demo-interactions'
 import { Route as ApiEventsRouteImport } from './routes/api/events'
 import { Route as ApiLeadsRouteImport } from './routes/api/leads'
 import { Route as DemoIndexRouteImport } from './routes/demo/index'
@@ -48,6 +49,11 @@ const AdminLeadsRoute = AdminLeadsRouteImport.update({
 const ApiConfigRoute = ApiConfigRouteImport.update({
   id: '/api/config',
   path: '/api/config',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiDemoInteractionsRoute = ApiDemoInteractionsRouteImport.update({
+  id: '/api/demo-interactions',
+  path: '/api/demo-interactions',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiEventsRoute = ApiEventsRouteImport.update({
@@ -108,6 +114,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/admin/leads': typeof AdminLeadsRoute
   '/api/config': typeof ApiConfigRoute
+  '/api/demo-interactions': typeof ApiDemoInteractionsRoute
   '/api/events': typeof ApiEventsRoute
   '/api/leads': typeof ApiLeadsRoute
   '/demo/banka': typeof DemoBankaRoute
@@ -125,6 +132,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/admin/leads': typeof AdminLeadsRoute
   '/api/config': typeof ApiConfigRoute
+  '/api/demo-interactions': typeof ApiDemoInteractionsRoute
   '/api/events': typeof ApiEventsRoute
   '/api/leads': typeof ApiLeadsRoute
   '/demo/banka': typeof DemoBankaRoute
@@ -143,6 +151,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/admin/leads': typeof AdminLeadsRoute
   '/api/config': typeof ApiConfigRoute
+  '/api/demo-interactions': typeof ApiDemoInteractionsRoute
   '/api/events': typeof ApiEventsRoute
   '/api/leads': typeof ApiLeadsRoute
   '/demo/banka': typeof DemoBankaRoute
@@ -162,6 +171,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/admin/leads'
     | '/api/config'
+    | '/api/demo-interactions'
     | '/api/events'
     | '/api/leads'
     | '/demo/banka'
@@ -179,6 +189,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/admin/leads'
     | '/api/config'
+    | '/api/demo-interactions'
     | '/api/events'
     | '/api/leads'
     | '/demo/banka'
@@ -196,6 +207,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/admin/leads'
     | '/api/config'
+    | '/api/demo-interactions'
     | '/api/events'
     | '/api/leads'
     | '/demo/banka'
@@ -214,6 +226,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   AdminLeadsRoute: typeof AdminLeadsRoute
   ApiConfigRoute: typeof ApiConfigRoute
+  ApiDemoInteractionsRoute: typeof ApiDemoInteractionsRoute
   ApiEventsRoute: typeof ApiEventsRoute
   ApiLeadsRoute: typeof ApiLeadsRoute
   DemoBankaRoute: typeof DemoBankaRoute
@@ -260,6 +273,13 @@ declare module '@tanstack/react-router' {
       path: '/api/config'
       fullPath: '/api/config'
       preLoaderRoute: typeof ApiConfigRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/demo-interactions': {
+      id: '/api/demo-interactions'
+      path: '/api/demo-interactions'
+      fullPath: '/api/demo-interactions'
+      preLoaderRoute: typeof ApiDemoInteractionsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/events': {
@@ -353,6 +373,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   AdminLeadsRoute: AdminLeadsRoute,
   ApiConfigRoute: ApiConfigRoute,
+  ApiDemoInteractionsRoute: ApiDemoInteractionsRoute,
   ApiEventsRoute: ApiEventsRoute,
   ApiLeadsRoute: ApiLeadsRoute,
   DemoBankaRoute: DemoBankaRoute,

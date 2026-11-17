@@ -14,6 +14,107 @@ export type Database = {
   }
   public: {
     Tables: {
+      qualifi_commitments: {
+        Row: {
+          amount: number
+          confidence: number | null
+          counterparty: string
+          created_at: string
+          currency: string
+          direction: string
+          due_date: string | null
+          evidence: string | null
+          file_id: string | null
+          id: string
+          kind: string
+          needs_review: boolean
+          paid_at: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          confidence?: number | null
+          counterparty: string
+          created_at?: string
+          currency?: string
+          direction: string
+          due_date?: string | null
+          evidence?: string | null
+          file_id?: string | null
+          id?: string
+          kind: string
+          needs_review?: boolean
+          paid_at?: string | null
+          status?: string
+          user_id?: string
+        }
+        Update: {
+          amount?: number
+          confidence?: number | null
+          counterparty?: string
+          created_at?: string
+          currency?: string
+          direction?: string
+          due_date?: string | null
+          evidence?: string | null
+          file_id?: string | null
+          id?: string
+          kind?: string
+          needs_review?: boolean
+          paid_at?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "qualifi_commitments_file_id_fkey"
+            columns: ["file_id"]
+            isOneToOne: false
+            referencedRelation: "qualifi_workspace_files"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      qualifi_demo_interactions: {
+        Row: {
+          action: string
+          created_at: string
+          demo_date: string
+          detail: string | null
+          id: string
+          panel: string
+          session_id: string
+          target: string | null
+          tenant: string
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          demo_date: string
+          detail?: string | null
+          id?: string
+          panel: string
+          session_id: string
+          target?: string | null
+          tenant: string
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          demo_date?: string
+          detail?: string | null
+          id?: string
+          panel?: string
+          session_id?: string
+          target?: string | null
+          tenant?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       qualifi_events: {
         Row: {
           created_at: string
@@ -133,6 +234,39 @@ export type Database = {
           },
         ]
       }
+      qualifi_workspace_files: {
+        Row: {
+          created_at: string
+          error: string | null
+          id: string
+          kind: string
+          original_name: string
+          status: string
+          storage_path: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          error?: string | null
+          id?: string
+          kind: string
+          original_name: string
+          status?: string
+          storage_path: string
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          error?: string | null
+          id?: string
+          kind?: string
+          original_name?: string
+          status?: string
+          storage_path?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           role: string
@@ -153,6 +287,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      qualifi_delete_my_workspace: { Args: never; Returns: Json }
       qualifi_is_admin: { Args: never; Returns: boolean }
       qualifi_save_lead: { Args: { p: Json }; Returns: Json }
     }
