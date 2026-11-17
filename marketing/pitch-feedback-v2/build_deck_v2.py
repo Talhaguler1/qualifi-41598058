@@ -102,5 +102,5 @@ s.rect(120,850,1680,65,'soft',r=12);s.text('İşletme ve banka pilotları için 
 manifest=d.save();(R/'deck-manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2))
 out=['# QualiFi — 17 Kasım 2026 sunum konuşma ve tıklama notları','Ana anlatı: proje ve vadeli tahsilatla çalışan KOBİ. Banka: gelecekteki pilot. Tüm görüşme bulguları kurucunun nitel aktarımı.']
 for section,title,speech,extra in notes:out+=['## '+section,title,speech,'Kanıt / durum: '+extra,'']
-(R/'KONUSMA-NOTLARI.md').write_text('\n\n'.join(out))
+(R/'KONUSMA-NOTLARI.md').write_text('\n\n'.join(out).rstrip()+'\n')
 print('Built editable PPTX + vector PDF:',len(manifest['pages']),'slides.')

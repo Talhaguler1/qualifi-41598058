@@ -139,4 +139,3 @@ Muhammed Talha Güler
 Ben Talha. Özyeğin’de Yönetim Bilişim Sistemleri ve Bilgisayar Mühendisliği çift anadal öğrencisiyim; emlyon’da dijital pazarlama değişim eğitimi aldım. Porsuk, Endgame Arena, QualifiLab ve OzU Ventures çalışmalarındaki deneyimimi bu projeye taşıyorum. QualiFi’yi işletmelerle başlayıp ölçülebilir bir banka pilotuna doğru geliştirmek için görüşmeye açığım.
 
 Kanıt / durum: Fotoğrafın tam çözünürlüklü Canva varlığı mevcut9.sayfada korunacak ve ana sunumda sona taşınacak. Aşağıdaki kaynak sunum, çalışma kopyasıdır; ana dosyada özgün ekip sayfası kullanılacak.
-
