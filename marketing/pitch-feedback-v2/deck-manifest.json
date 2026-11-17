@@ -1,0 +1,1937 @@
+{
+  "name": "QualiFi-Gorusme-Bulgulari-Sunum-v2",
+  "slides": 13,
+  "pages": [
+    {
+      "section": "01 / Giriş",
+      "title": "",
+      "notes": "İşi teslim ettiniz. Ödeme cuma gelecekti; yeni tarih bir mesajda kaldı. Peki gelecek ay yeni bir projeyi üstlenebilir misiniz? QualiFi’yi proje ve vadeli tahsilatla çalışan KOBİ’lerin bu soruya daha az elle takip yaparak cevap verebilmesi için geliştiriyorum. Bu açılış örnektir; müşteri alıntısı değildir.\n\nAna kullanıcı işletme sahibi ve finans sorumlusu. Bankalar sonraki büyüme alanı. Henüz çalışan otonom ajan veya tahsilat garantisi iddiası yok.",
+      "blank_by_user_request": false,
+      "text_boxes": [
+        {
+          "text": "YATIRIMCI SUNUMU",
+          "x": 1300,
+          "y": 95,
+          "width": 500,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "01 / GİRİŞ",
+          "x": 120,
+          "y": 212,
+          "width": 1690,
+          "height": 27.5,
+          "font_px": 22,
+          "line_count": 1
+        },
+        {
+          "text": "QualiFi · qualifilab.com",
+          "x": 120,
+          "y": 1004,
+          "width": 1200,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "01",
+          "x": 1680,
+          "y": 1004,
+          "width": 120,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "İş bitti.\nÖdeme takibi bitmedi.",
+          "x": 120,
+          "y": 315,
+          "width": 1680,
+          "height": 227.99999999999997,
+          "font_px": 100,
+          "line_count": 2
+        },
+        {
+          "text": "Proje ve vadeli tahsilatla çalışan KOBİ’ler için\nsözleşme, iş iletişimi ve mevcut kayıtlardan nakit planı.",
+          "x": 120,
+          "y": 640,
+          "width": 1640,
+          "height": 95.0,
+          "font_px": 38,
+          "line_count": 2
+        },
+        {
+          "text": "İLK ODAK: TEKNOLOJİ VE HİZMET İŞLETMELERİ",
+          "x": 120,
+          "y": 805,
+          "width": 1500,
+          "height": 30.0,
+          "font_px": 24,
+          "line_count": 1
+        },
+        {
+          "text": "GELİŞTİRME AŞAMASINDA",
+          "x": 138,
+          "y": 891,
+          "width": 464,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        }
+      ]
+    },
+    {
+      "section": "02 / Görüşmelerden problem",
+      "title": "Kayıtlar var.\nBirleşik nakit resmi yok.",
+      "notes": "İlk görüşmelerden üç ihtiyaç aktarıldı. Birincisi, veriler birden fazla yerden alınıyor ve farklı yerlere gidiyor. İkincisi, nakit akışı otomatik görülemiyor. Üçüncüsü, olası yeni projelerin etkisi karşılaştırılamıyor. Bunlar nitel bulgular; görüşme sayısı veya tüm pazarın görüşü gibi sunmuyorum.\n\nKaynak: kurucunun aktardığı ilk görüşmeler. Nitel bulgular; örneklem büyüklüğü ve yaygınlık ölçümü paylaşılmadı.",
+      "blank_by_user_request": false,
+      "text_boxes": [
+        {
+          "text": "YATIRIMCI SUNUMU",
+          "x": 1300,
+          "y": 95,
+          "width": 500,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "02 / GÖRÜŞMELERDEN PROBLEM",
+          "x": 120,
+          "y": 212,
+          "width": 1690,
+          "height": 27.5,
+          "font_px": 22,
+          "line_count": 1
+        },
+        {
+          "text": "Kayıtlar var.\nBirleşik nakit resmi yok.",
+          "x": 120,
+          "y": 270,
+          "width": 1675,
+          "height": 152.32000000000002,
+          "font_px": 68,
+          "line_count": 2
+        },
+        {
+          "text": "QualiFi · qualifilab.com",
+          "x": 120,
+          "y": 1004,
+          "width": 1200,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "02",
+          "x": 1680,
+          "y": 1004,
+          "width": 120,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "İlk görüşmelerde dile getirilen ihtiyaçlar.",
+          "x": 120,
+          "y": 490,
+          "width": 1580,
+          "height": 40.0,
+          "font_px": 32,
+          "line_count": 1
+        },
+        {
+          "text": "1",
+          "x": 120,
+          "y": 582,
+          "width": 48,
+          "height": 27.5,
+          "font_px": 22,
+          "line_count": 1
+        },
+        {
+          "text": "Veri farklı kaynak ve sistemler arasında",
+          "x": 200,
+          "y": 567,
+          "width": 1530,
+          "height": 46.25,
+          "font_px": 37,
+          "line_count": 1
+        },
+        {
+          "text": "Birden çok noktadan çekilip farklı yerlere aktarılıyor.",
+          "x": 200,
+          "y": 618,
+          "width": 1500,
+          "height": 36.25,
+          "font_px": 29,
+          "line_count": 1
+        },
+        {
+          "text": "2",
+          "x": 120,
+          "y": 700,
+          "width": 48,
+          "height": 27.5,
+          "font_px": 22,
+          "line_count": 1
+        },
+        {
+          "text": "Nakit akışı otomatik görünmüyor",
+          "x": 200,
+          "y": 685,
+          "width": 1530,
+          "height": 46.25,
+          "font_px": 37,
+          "line_count": 1
+        },
+        {
+          "text": "Girdiler değiştikçe güncellenen bir görünüm isteniyor.",
+          "x": 200,
+          "y": 736,
+          "width": 1500,
+          "height": 36.25,
+          "font_px": 29,
+          "line_count": 1
+        },
+        {
+          "text": "3",
+          "x": 120,
+          "y": 818,
+          "width": 48,
+          "height": 27.5,
+          "font_px": 22,
+          "line_count": 1
+        },
+        {
+          "text": "Yeni projenin etkisi görülemiyor",
+          "x": 200,
+          "y": 803,
+          "width": 1530,
+          "height": 46.25,
+          "font_px": 37,
+          "line_count": 1
+        },
+        {
+          "text": "Olası işin tahsilat ve gider senaryosu karşılaştırılamıyor.",
+          "x": 200,
+          "y": 854,
+          "width": 1500,
+          "height": 36.25,
+          "font_px": 29,
+          "line_count": 1
+        },
+        {
+          "text": "Kurucunun aktardığı nitel görüşme bulguları · Henüz yaygınlık veya ödeme isteği ölçümü değil.",
+          "x": 120,
+          "y": 938,
+          "width": 1680,
+          "height": 27.5,
+          "font_px": 22,
+          "line_count": 1
+        }
+      ]
+    },
+    {
+      "section": "03 / Ürün ve AI katmanı",
+      "title": "Beş görev arka planda.\nSiz sonucu ve gerekçesini sorun.",
+      "notes": "Sözleşme ajanı tutar ve vadeyi, iletişim ajanı son taahhütleri çıkarır. Bağlam ajanı geçmiş ödeme ve uygun sektör verisine bakar. Takip ajanı, ödeme durumu doğrulandıktan sonra mesajı kullanıcı onayına hazırlar. Planlama ajanı beklenen nakdi ve proje senaryosunu günceller. Kullanıcı beş ayrı sistem yönetmez; tek konuşma ekranından sonucu ve dayanağını sorar.\n\nTasarlanan özellik setidir. Kaynak gösterme, belirsizlik, yetki ve kullanıcı onayı ürün gereksinimidir; canlı ürün başarısı değildir. Banka şifresi istenmeden belgeyle başlanabilir; gerçekleşen ödeme ERP/CSV veya kullanıcı teyidiyle doğrulanmalı.",
+      "blank_by_user_request": false,
+      "text_boxes": [
+        {
+          "text": "YATIRIMCI SUNUMU",
+          "x": 1300,
+          "y": 95,
+          "width": 500,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "03 / ÜRÜN VE AI KATMANI",
+          "x": 120,
+          "y": 212,
+          "width": 1690,
+          "height": 27.5,
+          "font_px": 22,
+          "line_count": 1
+        },
+        {
+          "text": "Beş görev arka planda.\nSiz sonucu ve gerekçesini sorun.",
+          "x": 120,
+          "y": 270,
+          "width": 1675,
+          "height": 152.32000000000002,
+          "font_px": 68,
+          "line_count": 2
+        },
+        {
+          "text": "QualiFi · qualifilab.com",
+          "x": 120,
+          "y": 1004,
+          "width": 1200,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "03",
+          "x": 1680,
+          "y": 1004,
+          "width": 120,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "01",
+          "x": 120,
+          "y": 562,
+          "width": 315,
+          "height": 30.0,
+          "font_px": 24,
+          "line_count": 1
+        },
+        {
+          "text": "Sözleşme",
+          "x": 120,
+          "y": 625,
+          "width": 315,
+          "height": 43.75,
+          "font_px": 35,
+          "line_count": 1
+        },
+        {
+          "text": "Tutar · vade · koşul",
+          "x": 120,
+          "y": 690,
+          "width": 315,
+          "height": 30.0,
+          "font_px": 24,
+          "line_count": 1
+        },
+        {
+          "text": "Belgeden yükümlülük\nçıkarır; kaynağını gösterir.",
+          "x": 120,
+          "y": 749,
+          "width": 315,
+          "height": 65.0,
+          "font_px": 25,
+          "line_count": 2
+        },
+        {
+          "text": "02",
+          "x": 462,
+          "y": 562,
+          "width": 315,
+          "height": 30.0,
+          "font_px": 24,
+          "line_count": 1
+        },
+        {
+          "text": "İş iletişimi",
+          "x": 462,
+          "y": 625,
+          "width": 315,
+          "height": 43.75,
+          "font_px": 35,
+          "line_count": 1
+        },
+        {
+          "text": "Son ödeme taahhüdü",
+          "x": 462,
+          "y": 690,
+          "width": 315,
+          "height": 30.0,
+          "font_px": 24,
+          "line_count": 1
+        },
+        {
+          "text": "İzinli yazışmadaki tarih\nve değişiklikleri ayırır.",
+          "x": 462,
+          "y": 749,
+          "width": 315,
+          "height": 65.0,
+          "font_px": 25,
+          "line_count": 2
+        },
+        {
+          "text": "03",
+          "x": 804,
+          "y": 562,
+          "width": 315,
+          "height": 30.0,
+          "font_px": 24,
+          "line_count": 1
+        },
+        {
+          "text": "Bağlam",
+          "x": 804,
+          "y": 625,
+          "width": 315,
+          "height": 43.75,
+          "font_px": 35,
+          "line_count": 1
+        },
+        {
+          "text": "Geçmiş + sektör",
+          "x": 804,
+          "y": 690,
+          "width": 315,
+          "height": 30.0,
+          "font_px": 24,
+          "line_count": 1
+        },
+        {
+          "text": "Ödeme geçmişi ve uygun\nsektör verisini inceler.",
+          "x": 804,
+          "y": 749,
+          "width": 315,
+          "height": 65.0,
+          "font_px": 25,
+          "line_count": 2
+        },
+        {
+          "text": "04",
+          "x": 1146,
+          "y": 562,
+          "width": 315,
+          "height": 30.0,
+          "font_px": 24,
+          "line_count": 1
+        },
+        {
+          "text": "Takip",
+          "x": 1146,
+          "y": 625,
+          "width": 315,
+          "height": 43.75,
+          "font_px": 35,
+          "line_count": 1
+        },
+        {
+          "text": "Onaylı aksiyon",
+          "x": 1146,
+          "y": 690,
+          "width": 315,
+          "height": 30.0,
+          "font_px": 24,
+          "line_count": 1
+        },
+        {
+          "text": "Ödeme teyidinden sonra\nmesajı onaya hazırlar.",
+          "x": 1146,
+          "y": 749,
+          "width": 315,
+          "height": 65.0,
+          "font_px": 25,
+          "line_count": 2
+        },
+        {
+          "text": "05",
+          "x": 1488,
+          "y": 562,
+          "width": 315,
+          "height": 30.0,
+          "font_px": 24,
+          "line_count": 1
+        },
+        {
+          "text": "Nakit planı",
+          "x": 1488,
+          "y": 625,
+          "width": 315,
+          "height": 43.75,
+          "font_px": 35,
+          "line_count": 1
+        },
+        {
+          "text": "Senaryo + gerekçe",
+          "x": 1488,
+          "y": 690,
+          "width": 315,
+          "height": 30.0,
+          "font_px": 24,
+          "line_count": 1
+        },
+        {
+          "text": "Beklenen nakdi günceller;\nyeni proje etkisini kıyaslar.",
+          "x": 1488,
+          "y": 749,
+          "width": 315,
+          "height": 65.0,
+          "font_px": 25,
+          "line_count": 2
+        },
+        {
+          "text": "GİRDİ: ERP / Excel + sözleşme + izinli iş iletişimi → ORTAK VERİ MODELİ → nakit planı / takip / aktarım",
+          "x": 120,
+          "y": 874,
+          "width": 1680,
+          "height": 30.0,
+          "font_px": 24,
+          "line_count": 1
+        },
+        {
+          "text": "Tasarlanan ürün · Ödeme teyidi gerekir; vadenin geçmesi tek başına yeterli değildir. Ayrıntı ve gerekçe isteğe bağlıdır.",
+          "x": 120,
+          "y": 932,
+          "width": 1680,
+          "height": 27.5,
+          "font_px": 22,
+          "line_count": 1
+        }
+      ]
+    },
+    {
+      "section": "04 / Temsilî ürün deneyimi",
+      "title": "Bu projeyi alırsam\nbu ay nakdim ne olur?",
+      "notes": "Temsilî bir örnek alalım. Başlangıç nakdi 40 bin, mevcut tahsilatlar 60 bin ve ödemeler 70 bin: dönem sonu 30 bin TL. Yeni 80 bin TL’lik projenin bu ay 20 bin TL avansı, 35 bin TL ek maliyeti varsa dönem sonu nakdi 15 bine iner. Kalan tahsilat sonraki dönemdir. QualiFi’nin hedefi, sonucu dayanağıyla göstermek ve avans veya vade görüşmesi gibi seçenekleri incelemektir.\n\nTüm tutarlar varsayımsal ve tek dönemlidir. Yeni projenin kalan 60 bin TL tahsilatı bu döneme dahil değildir. Gerçek vergi, çalışma sermayesi ve riskler örnek kapsamı dışındadır. Bu çalışan bir ürün gösterimi değildir.",
+      "blank_by_user_request": false,
+      "text_boxes": [
+        {
+          "text": "YATIRIMCI SUNUMU",
+          "x": 1300,
+          "y": 95,
+          "width": 500,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "04 / TEMSİLÎ ÜRÜN DENEYİMİ",
+          "x": 120,
+          "y": 212,
+          "width": 1690,
+          "height": 27.5,
+          "font_px": 22,
+          "line_count": 1
+        },
+        {
+          "text": "Bu projeyi alırsam\nbu ay nakdim ne olur?",
+          "x": 120,
+          "y": 270,
+          "width": 1675,
+          "height": 152.32000000000002,
+          "font_px": 68,
+          "line_count": 2
+        },
+        {
+          "text": "QualiFi · qualifilab.com",
+          "x": 120,
+          "y": 1004,
+          "width": 1200,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "04",
+          "x": 1680,
+          "y": 1004,
+          "width": 120,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "1",
+          "x": 120,
+          "y": 502,
+          "width": 48,
+          "height": 27.5,
+          "font_px": 22,
+          "line_count": 1
+        },
+        {
+          "text": "Mevcut plan",
+          "x": 195,
+          "y": 489,
+          "width": 920,
+          "height": 37.5,
+          "font_px": 30,
+          "line_count": 1
+        },
+        {
+          "text": "40 bin başlangıç + 60 bin tahsilat − 70 bin ödeme = 30 bin TL",
+          "x": 195,
+          "y": 532,
+          "width": 900,
+          "height": 31.25,
+          "font_px": 25,
+          "line_count": 1
+        },
+        {
+          "text": "2",
+          "x": 120,
+          "y": 610,
+          "width": 48,
+          "height": 27.5,
+          "font_px": 22,
+          "line_count": 1
+        },
+        {
+          "text": "Yeni proje varsayımı",
+          "x": 195,
+          "y": 597,
+          "width": 920,
+          "height": 37.5,
+          "font_px": 30,
+          "line_count": 1
+        },
+        {
+          "text": "80 bin TL iş: bu ay 20 bin avans, 35 bin maliyet; kalan sonra.",
+          "x": 195,
+          "y": 640,
+          "width": 900,
+          "height": 31.25,
+          "font_px": 25,
+          "line_count": 1
+        },
+        {
+          "text": "3",
+          "x": 120,
+          "y": 718,
+          "width": 48,
+          "height": 27.5,
+          "font_px": 22,
+          "line_count": 1
+        },
+        {
+          "text": "Senaryoları karşılaştır",
+          "x": 195,
+          "y": 705,
+          "width": 920,
+          "height": 37.5,
+          "font_px": 30,
+          "line_count": 1
+        },
+        {
+          "text": "Proje alınmazsa 30 bin TL / alınırsa 15 bin TL dönem sonu.",
+          "x": 195,
+          "y": 748,
+          "width": 900,
+          "height": 31.25,
+          "font_px": 25,
+          "line_count": 1
+        },
+        {
+          "text": "4",
+          "x": 120,
+          "y": 826,
+          "width": 48,
+          "height": 27.5,
+          "font_px": 22,
+          "line_count": 1
+        },
+        {
+          "text": "Gerekçeyi ve seçeneği sor",
+          "x": 195,
+          "y": 813,
+          "width": 920,
+          "height": 37.5,
+          "font_px": 30,
+          "line_count": 1
+        },
+        {
+          "text": "Nakit bu ay 15 bin TL azalır. Avans veya maliyet vadesi görüşülebilir.",
+          "x": 195,
+          "y": 856,
+          "width": 900,
+          "height": 31.25,
+          "font_px": 25,
+          "line_count": 1
+        },
+        {
+          "text": "TEK KONUŞMA ARAYÜZÜ · KAVRAMSAL",
+          "x": 1190,
+          "y": 519,
+          "width": 580,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "Bu proje nakdimi nasıl etkiler?",
+          "x": 1190,
+          "y": 570,
+          "width": 560,
+          "height": 37.5,
+          "font_px": 30,
+          "line_count": 1
+        },
+        {
+          "text": "Dönem sonu: 15 bin TL\nMevcut plana göre: −15 bin TL",
+          "x": 1215,
+          "y": 663,
+          "width": 530,
+          "height": 70.0,
+          "font_px": 28,
+          "line_count": 2
+        },
+        {
+          "text": "Neden?\nMaliyet, kalan tahsilattan önce çıkıyor.\nKaynak: proje girdileri ve mevcut plan.",
+          "x": 1190,
+          "y": 785,
+          "width": 565,
+          "height": 90.0,
+          "font_px": 24,
+          "line_count": 3
+        },
+        {
+          "text": "Temsilî senaryo · Tüm tutarlar varsayımsaldır. Arayüz ve ajanlar geliştirme hedefidir.",
+          "x": 120,
+          "y": 939,
+          "width": 1680,
+          "height": 27.5,
+          "font_px": 22,
+          "line_count": 1
+        }
+      ]
+    },
+    {
+      "section": "05 / Pazar ve hedefleme",
+      "title": "Geniş pazar.\nOdaklı başlangıç.",
+      "notes": "TAM için 3,93 milyon sanayi ve hizmet KOBİ’si var. SAM için bilgi-iletişim ile mesleki, bilimsel ve teknik faaliyetlerdeki 377.727 işletmeyi sektör havuzu olarak kullanıyorum. Bu nitelikli müşteri veya satın alma isteği değildir. İlk ay teknoloji odaklı 900 işletmeye ulaşmak bir erişim hedefi; ücretli müşteri SOM’u değil.\n\nKaynak: KOSGEB 2026 / TÜİK 2024, Tablo 3, basılı s.11 / PDF s.20. J: 65.699 + M: 312.028 = 377.727. SOM pilot verisiyle doğrulanacak.",
+      "blank_by_user_request": false,
+      "text_boxes": [
+        {
+          "text": "YATIRIMCI SUNUMU",
+          "x": 1300,
+          "y": 95,
+          "width": 500,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "05 / PAZAR VE HEDEFLEME",
+          "x": 120,
+          "y": 212,
+          "width": 1690,
+          "height": 27.5,
+          "font_px": 22,
+          "line_count": 1
+        },
+        {
+          "text": "Geniş pazar.\nOdaklı başlangıç.",
+          "x": 120,
+          "y": 270,
+          "width": 1675,
+          "height": 152.32000000000002,
+          "font_px": 68,
+          "line_count": 2
+        },
+        {
+          "text": "QualiFi · qualifilab.com",
+          "x": 120,
+          "y": 1004,
+          "width": 1200,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "05",
+          "x": 1680,
+          "y": 1004,
+          "width": 120,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "TAM",
+          "x": 155,
+          "y": 552,
+          "width": 400,
+          "height": 52.5,
+          "font_px": 42,
+          "line_count": 1
+        },
+        {
+          "text": "SAM",
+          "x": 225,
+          "y": 642,
+          "width": 275,
+          "height": 46.25,
+          "font_px": 37,
+          "line_count": 1
+        },
+        {
+          "text": "SOM",
+          "x": 286,
+          "y": 735,
+          "width": 153,
+          "height": 35.0,
+          "font_px": 28,
+          "line_count": 1
+        },
+        {
+          "text": "TAM 3,93 milyon",
+          "x": 790,
+          "y": 500,
+          "width": 1000,
+          "height": 56.25,
+          "font_px": 45,
+          "line_count": 1
+        },
+        {
+          "text": "Türkiye’de sanayi ve hizmetlerdeki KOBİ’ler",
+          "x": 790,
+          "y": 565,
+          "width": 1000,
+          "height": 33.75,
+          "font_px": 27,
+          "line_count": 1
+        },
+        {
+          "text": "SAM* 377.727",
+          "x": 790,
+          "y": 650,
+          "width": 1000,
+          "height": 56.25,
+          "font_px": 45,
+          "line_count": 1
+        },
+        {
+          "text": "Bilgi-iletişim ile mesleki, bilimsel ve teknik faaliyetler (J + M)",
+          "x": 790,
+          "y": 715,
+          "width": 1000,
+          "height": 33.75,
+          "font_px": 27,
+          "line_count": 1
+        },
+        {
+          "text": "SOM · Doğrulanacak",
+          "x": 790,
+          "y": 800,
+          "width": 1000,
+          "height": 56.25,
+          "font_px": 45,
+          "line_count": 1
+        },
+        {
+          "text": "İlk ay erişim hedefi: 900 teknoloji odaklı işletme",
+          "x": 790,
+          "y": 865,
+          "width": 1000,
+          "height": 33.75,
+          "font_px": 27,
+          "line_count": 1
+        },
+        {
+          "text": "KOSGEB 2026 / TÜİK 2024, Tablo 3, basılı s.11 / PDF s.20 · SAM sektör temelli ön tahmindir.",
+          "x": 120,
+          "y": 930,
+          "width": 1680,
+          "height": 26.25,
+          "font_px": 21,
+          "line_count": 1
+        }
+      ]
+    },
+    {
+      "section": "06 / İş modeli",
+      "title": "KOBİ aboneliğiyle başla.\nBanka pilotuyla genişle.",
+      "notes": "İlk gelir modeli, işletme sahibinin veya finans ekibinin kullandığı abonelik. Veri kaynağı, belge ve iş hacmi plan kapsamını belirleyecek. Kurumsal banka tarafı ise ihtiyaç ve sonuç doğrulandıktan sonra pilot ve lisans görüşmesidir. Kesin fiyat ve ödeme isteği henüz doğrulanmış değil.\n\nTR fiyatları yayımlanmıyor. Finansal örnekteki fiyat yalnız varsayımdır. Banka geliri finansal senaryoya dahil değildir.",
+      "blank_by_user_request": false,
+      "text_boxes": [
+        {
+          "text": "YATIRIMCI SUNUMU",
+          "x": 1300,
+          "y": 95,
+          "width": 500,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "06 / İŞ MODELİ",
+          "x": 120,
+          "y": 212,
+          "width": 1690,
+          "height": 27.5,
+          "font_px": 22,
+          "line_count": 1
+        },
+        {
+          "text": "KOBİ aboneliğiyle başla.\nBanka pilotuyla genişle.",
+          "x": 120,
+          "y": 270,
+          "width": 1675,
+          "height": 152.32000000000002,
+          "font_px": 68,
+          "line_count": 2
+        },
+        {
+          "text": "QualiFi · qualifilab.com",
+          "x": 120,
+          "y": 1004,
+          "width": 1200,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "06",
+          "x": 1680,
+          "y": 1004,
+          "width": 120,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "01 / İŞLETME",
+          "x": 120,
+          "y": 545,
+          "width": 760,
+          "height": 30.0,
+          "font_px": 24,
+          "line_count": 1
+        },
+        {
+          "text": "Aylık abonelik",
+          "x": 120,
+          "y": 610,
+          "width": 760,
+          "height": 56.25,
+          "font_px": 45,
+          "line_count": 1
+        },
+        {
+          "text": "Beklenen nakit, proje senaryosu ve\nkullanıcı onaylı takip akışı.",
+          "x": 120,
+          "y": 695,
+          "width": 760,
+          "height": 77.5,
+          "font_px": 31,
+          "line_count": 2
+        },
+        {
+          "text": "Kapsam: veri kaynağı, belge ve iş hacmi",
+          "x": 120,
+          "y": 835,
+          "width": 760,
+          "height": 31.25,
+          "font_px": 25,
+          "line_count": 1
+        },
+        {
+          "text": "02 / BANKA · SONRAKİ AŞAMA",
+          "x": 1010,
+          "y": 545,
+          "width": 760,
+          "height": 30.0,
+          "font_px": 24,
+          "line_count": 1
+        },
+        {
+          "text": "Pilot → kurumsal lisans",
+          "x": 1010,
+          "y": 610,
+          "width": 760,
+          "height": 56.25,
+          "font_px": 45,
+          "line_count": 1
+        },
+        {
+          "text": "İzinli işletme özeti ve uzman incelemesi.\nKapsam, pilot sonucuyla belirlenecek.",
+          "x": 1010,
+          "y": 695,
+          "width": 760,
+          "height": 77.5,
+          "font_px": 31,
+          "line_count": 2
+        },
+        {
+          "text": "Önkoşul: veri izni ve ölçülmüş ek değer",
+          "x": 1010,
+          "y": 835,
+          "width": 760,
+          "height": 31.25,
+          "font_px": 25,
+          "line_count": 1
+        },
+        {
+          "text": "İş modeli hipotezi · Paket, fiyat ve satın alma isteği işletme pilotuyla doğrulanacak.",
+          "x": 120,
+          "y": 936,
+          "width": 1680,
+          "height": 27.5,
+          "font_px": 22,
+          "line_count": 1
+        }
+      ]
+    },
+    {
+      "section": "07 / Görüşmelerden ürün kararına",
+      "title": "Bu bulgular, ilk sürümün\nkapsamını belirliyor.",
+      "notes": "Görüşmelerden gelen ihtiyaçları ürün kararına çevirdim. Çoklu kaynak ihtiyacı veri akışını, otomatik görünüm ihtiyacı beklenen nakit güncellemesini, yeni iş ihtiyacı proje senaryosunu öne aldı. Önceki ERP geri bildirimi de mükerrer veri girişinden kaçınmamız gerektiğini söyledi. Bugün canlı olan, site ve başvuru akışları. Sıradaki doğrulama gerçek iş akışında bir pilot.\n\nÜrün kararları tamamlanmış uygulama veya kanıtlanmış fayda değildir. Görüşme sayısı, ücretli müşteri sayısı, gelir ve dönüşüm oranı verilmedi. Kaynak: kurucunun aktardığı ilk görüşmeler. Nitel bulgular; örneklem büyüklüğü ve yaygınlık ölçümü paylaşılmadı.",
+      "blank_by_user_request": false,
+      "text_boxes": [
+        {
+          "text": "YATIRIMCI SUNUMU",
+          "x": 1300,
+          "y": 95,
+          "width": 500,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "07 / GÖRÜŞMELERDEN ÜRÜN KARARINA",
+          "x": 120,
+          "y": 212,
+          "width": 1690,
+          "height": 27.5,
+          "font_px": 22,
+          "line_count": 1
+        },
+        {
+          "text": "Bu bulgular, ilk sürümün\nkapsamını belirliyor.",
+          "x": 120,
+          "y": 270,
+          "width": 1675,
+          "height": 152.32000000000002,
+          "font_px": 68,
+          "line_count": 2
+        },
+        {
+          "text": "QualiFi · qualifilab.com",
+          "x": 120,
+          "y": 1004,
+          "width": 1200,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "07",
+          "x": 1680,
+          "y": 1004,
+          "width": 120,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "GÖRÜŞMEDE DİLE GETİRİLEN İHTİYAÇ",
+          "x": 120,
+          "y": 500,
+          "width": 770,
+          "height": 28.75,
+          "font_px": 23,
+          "line_count": 1
+        },
+        {
+          "text": "PLANLANAN ÜRÜN KARŞILIĞI",
+          "x": 1010,
+          "y": 500,
+          "width": 770,
+          "height": 28.75,
+          "font_px": 23,
+          "line_count": 1
+        },
+        {
+          "text": "1",
+          "x": 120,
+          "y": 565,
+          "width": 60,
+          "height": 38.75,
+          "font_px": 31,
+          "line_count": 1
+        },
+        {
+          "text": "Farklı kaynaklardan al, farklı yerlere aktar.",
+          "x": 195,
+          "y": 565,
+          "width": 720,
+          "height": 36.25,
+          "font_px": 29,
+          "line_count": 1
+        },
+        {
+          "text": "→",
+          "x": 930,
+          "y": 565,
+          "width": 60,
+          "height": 40.0,
+          "font_px": 32,
+          "line_count": 1
+        },
+        {
+          "text": "Mevcut kaynakları ortak veri modeline bağla.",
+          "x": 1010,
+          "y": 565,
+          "width": 770,
+          "height": 36.25,
+          "font_px": 29,
+          "line_count": 1
+        },
+        {
+          "text": "2",
+          "x": 120,
+          "y": 665,
+          "width": 60,
+          "height": 38.75,
+          "font_px": 31,
+          "line_count": 1
+        },
+        {
+          "text": "Nakit akışını otomatik göremiyorum.",
+          "x": 195,
+          "y": 665,
+          "width": 720,
+          "height": 36.25,
+          "font_px": 29,
+          "line_count": 1
+        },
+        {
+          "text": "→",
+          "x": 930,
+          "y": 665,
+          "width": 60,
+          "height": 40.0,
+          "font_px": 32,
+          "line_count": 1
+        },
+        {
+          "text": "Yeni veri geldikçe beklenen nakit planını güncelle.",
+          "x": 1010,
+          "y": 665,
+          "width": 770,
+          "height": 36.25,
+          "font_px": 29,
+          "line_count": 1
+        },
+        {
+          "text": "3",
+          "x": 120,
+          "y": 765,
+          "width": 60,
+          "height": 38.75,
+          "font_px": 31,
+          "line_count": 1
+        },
+        {
+          "text": "Olası proje senaryolarını göremiyorum.",
+          "x": 195,
+          "y": 765,
+          "width": 720,
+          "height": 36.25,
+          "font_px": 29,
+          "line_count": 1
+        },
+        {
+          "text": "→",
+          "x": 930,
+          "y": 765,
+          "width": 60,
+          "height": 40.0,
+          "font_px": 32,
+          "line_count": 1
+        },
+        {
+          "text": "İş alınırsa / alınmazsa tahsilat ve gideri kıyasla.",
+          "x": 1010,
+          "y": 765,
+          "width": 770,
+          "height": 36.25,
+          "font_px": 29,
+          "line_count": 1
+        },
+        {
+          "text": "BUGÜN: site + başvuru akışları.  SIRADA: veri kalitesi, fayda ve ödeme isteğini gerçek iş akışında sınamak.",
+          "x": 140,
+          "y": 886,
+          "width": 1640,
+          "height": 28.75,
+          "font_px": 23,
+          "line_count": 1
+        },
+        {
+          "text": "Kurucunun aktardığı nitel görüşme bulguları · Tırnak içi doğrudan alıntı veya yaygınlık ölçümü değildir.",
+          "x": 120,
+          "y": 943,
+          "width": 1680,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        }
+      ]
+    },
+    {
+      "section": "08 / Rekabet ve farklılaşma",
+      "title": "Farkı, kullandığımız veride\nve iş akışında arıyoruz.",
+      "notes": "Paraşüt nakit ve tahsilat takibi sunuyor. QNB Dijital Köprü ön muhasebe ve entegre iş çözümlerine erişim sağlıyor. Dolayısıyla rakiplerde entegrasyon veya nakit takibi yok diyemeyiz. QualiFi’nin test edeceği yaklaşım, izinli sözleşme ve iletişimi mevcut kayda bağlayıp gerekçeli nakit ve proje senaryosu sunmak.\n\nResmî kaynaklar 17Kasım2026: https://www.parasut.com/kullanim-kilavuzu/nakit-akisi-tahsilat-ve-odeme-takibi ; https://www.qnb.com.tr/dijitalkopru/dijital-cozumlerimiz/kolaybi . QualiFi üstünlüğü doğrulanmış değil.",
+      "blank_by_user_request": false,
+      "text_boxes": [
+        {
+          "text": "YATIRIMCI SUNUMU",
+          "x": 1300,
+          "y": 95,
+          "width": 500,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "08 / REKABET VE FARKLILAŞMA",
+          "x": 120,
+          "y": 212,
+          "width": 1690,
+          "height": 27.5,
+          "font_px": 22,
+          "line_count": 1
+        },
+        {
+          "text": "Farkı, kullandığımız veride\nve iş akışında arıyoruz.",
+          "x": 120,
+          "y": 270,
+          "width": 1675,
+          "height": 152.32000000000002,
+          "font_px": 68,
+          "line_count": 2
+        },
+        {
+          "text": "QualiFi · qualifilab.com",
+          "x": 120,
+          "y": 1004,
+          "width": 1200,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "08",
+          "x": 1680,
+          "y": 1004,
+          "width": 120,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "MEVCUT ÜRÜN",
+          "x": 120,
+          "y": 556,
+          "width": 520,
+          "height": 28.75,
+          "font_px": 23,
+          "line_count": 1
+        },
+        {
+          "text": "Paraşüt",
+          "x": 120,
+          "y": 620,
+          "width": 520,
+          "height": 50.0,
+          "font_px": 40,
+          "line_count": 1
+        },
+        {
+          "text": "Finansal kayıt, nakit akışı,\ntahsilat ve ödeme takibi.",
+          "x": 120,
+          "y": 713,
+          "width": 520,
+          "height": 72.5,
+          "font_px": 29,
+          "line_count": 2
+        },
+        {
+          "text": "MEVCUT PLATFORMLAR",
+          "x": 700,
+          "y": 556,
+          "width": 520,
+          "height": 28.75,
+          "font_px": 23,
+          "line_count": 1
+        },
+        {
+          "text": "QNB Dijital Köprü",
+          "x": 700,
+          "y": 620,
+          "width": 520,
+          "height": 50.0,
+          "font_px": 40,
+          "line_count": 1
+        },
+        {
+          "text": "Ön muhasebe, e-dönüşüm ve\nentegre iş çözümlerine erişim.",
+          "x": 700,
+          "y": 713,
+          "width": 520,
+          "height": 72.5,
+          "font_px": 29,
+          "line_count": 2
+        },
+        {
+          "text": "HEDEFLENEN YAKLAŞIM",
+          "x": 1280,
+          "y": 556,
+          "width": 520,
+          "height": 28.75,
+          "font_px": 23,
+          "line_count": 1
+        },
+        {
+          "text": "QualiFi",
+          "x": 1280,
+          "y": 620,
+          "width": 520,
+          "height": 50.0,
+          "font_px": 40,
+          "line_count": 1
+        },
+        {
+          "text": "Sözleşme + izinli iletişim +\nmevcut kayıtla gerekçeli\nnakit ve proje senaryosu.",
+          "x": 1280,
+          "y": 713,
+          "width": 520,
+          "height": 108.75,
+          "font_px": 29,
+          "line_count": 3
+        },
+        {
+          "text": "Kaynak: Paraşüt kullanım kılavuzu; QNB Dijital Köprü / KolayBi ürün sayfası · 17 Kasım 2026",
+          "x": 120,
+          "y": 926,
+          "width": 1680,
+          "height": 26.25,
+          "font_px": 21,
+          "line_count": 1
+        }
+      ]
+    },
+    {
+      "section": "09 / Banka için değer hipotezi",
+      "title": "Banka pilotu:\nişletmenin nakit ihtiyacını anlamak.",
+      "notes": "Bankaya önerim ham mesajları göstermek değil, işletmenin izin verdiği veriden kaynaklı bir iş özeti üretmek. Nakit ihtiyacı görüşmesine hazırlığı, geri ödeme değerlendirmesine ek bağlamı ve daha ilgili hizmet görüşmelerini pilotta sınamak istiyorum. Kazanım yüzdesi veya risk azalması iddia etmiyorum.\n\nBankayla canlı ortaklık yok. Ham yazışma varsayılan paylaşılmaz. Kredi kararı bankada; otomatik skor ya da onay mekanizması sunulmuyor. Bu bir gelecek pilotu önerisi.",
+      "blank_by_user_request": false,
+      "text_boxes": [
+        {
+          "text": "YATIRIMCI SUNUMU",
+          "x": 1300,
+          "y": 95,
+          "width": 500,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "09 / BANKA İÇİN DEĞER HİPOTEZİ",
+          "x": 120,
+          "y": 212,
+          "width": 1690,
+          "height": 27.5,
+          "font_px": 22,
+          "line_count": 1
+        },
+        {
+          "text": "Banka pilotu:\nişletmenin nakit ihtiyacını anlamak.",
+          "x": 120,
+          "y": 270,
+          "width": 1675,
+          "height": 152.32000000000002,
+          "font_px": 68,
+          "line_count": 2
+        },
+        {
+          "text": "QualiFi · qualifilab.com",
+          "x": 120,
+          "y": 1004,
+          "width": 1200,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "09",
+          "x": 1680,
+          "y": 1004,
+          "width": 120,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "İŞLETME SİNYALİ",
+          "x": 120,
+          "y": 500,
+          "width": 500,
+          "height": 28.75,
+          "font_px": 23,
+          "line_count": 1
+        },
+        {
+          "text": "BANKA İÇİN HİPOTEZ",
+          "x": 700,
+          "y": 500,
+          "width": 600,
+          "height": 28.75,
+          "font_px": 23,
+          "line_count": 1
+        },
+        {
+          "text": "PİLOT ÖLÇÜMÜ",
+          "x": 1380,
+          "y": 500,
+          "width": 420,
+          "height": 28.75,
+          "font_px": 23,
+          "line_count": 1
+        },
+        {
+          "text": "Tahsilat ve yaklaşan ödeme farkı",
+          "x": 120,
+          "y": 575,
+          "width": 510,
+          "height": 36.25,
+          "font_px": 29,
+          "line_count": 1
+        },
+        {
+          "text": "Nakit ihtiyacı görüşmesine hazırlık",
+          "x": 700,
+          "y": 575,
+          "width": 600,
+          "height": 36.25,
+          "font_px": 29,
+          "line_count": 1
+        },
+        {
+          "text": "Hazırlık süresi / kullanılabilirlik",
+          "x": 1380,
+          "y": 575,
+          "width": 420,
+          "height": 36.25,
+          "font_px": 29,
+          "line_count": 1
+        },
+        {
+          "text": "Vade ve son taahhütteki değişim",
+          "x": 120,
+          "y": 680,
+          "width": 510,
+          "height": 36.25,
+          "font_px": 29,
+          "line_count": 1
+        },
+        {
+          "text": "Değerlendirmeye kaynaklı ek bağlam",
+          "x": 700,
+          "y": 680,
+          "width": 600,
+          "height": 36.25,
+          "font_px": 29,
+          "line_count": 1
+        },
+        {
+          "text": "Uyarı isabeti / yanlış alarm",
+          "x": 1380,
+          "y": 680,
+          "width": 420,
+          "height": 36.25,
+          "font_px": 29,
+          "line_count": 1
+        },
+        {
+          "text": "Proje ve finansman senaryosu",
+          "x": 120,
+          "y": 785,
+          "width": 510,
+          "height": 36.25,
+          "font_px": 29,
+          "line_count": 1
+        },
+        {
+          "text": "İlgili hizmeti uygun bağlamda görüşmek",
+          "x": 700,
+          "y": 785,
+          "width": 600,
+          "height": 36.25,
+          "font_px": 29,
+          "line_count": 1
+        },
+        {
+          "text": "Kullanım / görüşmeye dönüşüm",
+          "x": 1380,
+          "y": 785,
+          "width": 420,
+          "height": 36.25,
+          "font_px": 29,
+          "line_count": 1
+        },
+        {
+          "text": "Önerilen pilot: izinli türetilmiş özet. Ham yazışma varsayılan paylaşılmaz; kredi kararı bankada kalır.",
+          "x": 120,
+          "y": 938,
+          "width": 1680,
+          "height": 27.5,
+          "font_px": 22,
+          "line_count": 1
+        }
+      ]
+    },
+    {
+      "section": "10 / Ürün ve bankacılık yol haritası",
+      "title": "İşletme ajanından\nbankada değerlendirilebilir bağlama.",
+      "notes": "Önce veriyi güvenilir birleştirmek, sonra ajan önerisini ölçmek gerekiyor. Üçüncü aşama, işletmenin izin verdiği özetlerle banka pilotunun kapsamını sınırlandırmak. Ancak ölçülmüş ek değer ve uygunluk varsa kurum içi API, yetki ve izlenebilirlikle ölçekleme düşünülebilir. Banka ürünü yalnızca AI etiketi değil; bu geçiş ölçütlerine bağlı bir araştırma ve ürünleşme yolu.\n\n1–12ay önerilen yatırım dönemi. 12ay sonrası bu yatırım planının dışında. Erişim izinleri, güvenlik, veri kalitesi, yanlış alarm ve insan değerlendirmesi geçiş ölçütüdür. WhatsApp Business erişimi fizibiliteye bağlıdır.",
+      "blank_by_user_request": false,
+      "text_boxes": [
+        {
+          "text": "YATIRIMCI SUNUMU",
+          "x": 1300,
+          "y": 95,
+          "width": 500,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "10 / ÜRÜN VE BANKACILIK YOL HARİTASI",
+          "x": 120,
+          "y": 212,
+          "width": 1690,
+          "height": 27.5,
+          "font_px": 22,
+          "line_count": 1
+        },
+        {
+          "text": "İşletme ajanından\nbankada değerlendirilebilir bağlama.",
+          "x": 120,
+          "y": 270,
+          "width": 1675,
+          "height": 152.32000000000002,
+          "font_px": 68,
+          "line_count": 2
+        },
+        {
+          "text": "QualiFi · qualifilab.com",
+          "x": 120,
+          "y": 1004,
+          "width": 1200,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "10",
+          "x": 1680,
+          "y": 1004,
+          "width": 120,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "01  /  1–3 AY",
+          "x": 120,
+          "y": 560,
+          "width": 395,
+          "height": 27.5,
+          "font_px": 22,
+          "line_count": 1
+        },
+        {
+          "text": "Veriyi birleştir",
+          "x": 120,
+          "y": 632,
+          "width": 395,
+          "height": 41.25,
+          "font_px": 33,
+          "line_count": 1
+        },
+        {
+          "text": "Sözleşme + CSV / Excel\nTutar, vade ve tahsilat eşleme",
+          "x": 120,
+          "y": 705,
+          "width": 395,
+          "height": 60.0,
+          "font_px": 24,
+          "line_count": 2
+        },
+        {
+          "text": "GEÇİŞ ÖLÇÜTÜ",
+          "x": 120,
+          "y": 849,
+          "width": 395,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "Alan doğruluğu / veri kalitesi",
+          "x": 120,
+          "y": 891,
+          "width": 395,
+          "height": 27.5,
+          "font_px": 22,
+          "line_count": 1
+        },
+        {
+          "text": "02  /  4–6 AY",
+          "x": 548,
+          "y": 560,
+          "width": 395,
+          "height": 27.5,
+          "font_px": 22,
+          "line_count": 1
+        },
+        {
+          "text": "Ajanı doğrula",
+          "x": 548,
+          "y": 632,
+          "width": 395,
+          "height": 41.25,
+          "font_px": 33,
+          "line_count": 1
+        },
+        {
+          "text": "Seçili ERP / Gmail bağlantısı\nKaynaklı öneri ve kullanıcı onayı",
+          "x": 548,
+          "y": 705,
+          "width": 395,
+          "height": 60.0,
+          "font_px": 24,
+          "line_count": 2
+        },
+        {
+          "text": "GEÇİŞ ÖLÇÜTÜ",
+          "x": 548,
+          "y": 849,
+          "width": 395,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "Hatalı takip / senaryo hatası",
+          "x": 548,
+          "y": 891,
+          "width": 395,
+          "height": 27.5,
+          "font_px": 22,
+          "line_count": 1
+        },
+        {
+          "text": "03  /  7–12 AY",
+          "x": 976,
+          "y": 560,
+          "width": 395,
+          "height": 27.5,
+          "font_px": 22,
+          "line_count": 1
+        },
+        {
+          "text": "Banka pilotu",
+          "x": 976,
+          "y": 632,
+          "width": 395,
+          "height": 41.25,
+          "font_px": 33,
+          "line_count": 1
+        },
+        {
+          "text": "İzinli özet + uzman incelemesi\nGeçmiş veride değerlendirme",
+          "x": 976,
+          "y": 705,
+          "width": 395,
+          "height": 60.0,
+          "font_px": 24,
+          "line_count": 2
+        },
+        {
+          "text": "GEÇİŞ ÖLÇÜTÜ",
+          "x": 976,
+          "y": 849,
+          "width": 395,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "Ek değer / yanlış alarm analizi",
+          "x": 976,
+          "y": 891,
+          "width": 395,
+          "height": 27.5,
+          "font_px": 22,
+          "line_count": 1
+        },
+        {
+          "text": "04  /  12 AY SONRASI",
+          "x": 1404,
+          "y": 560,
+          "width": 395,
+          "height": 27.5,
+          "font_px": 22,
+          "line_count": 1
+        },
+        {
+          "text": "Kanıt varsa ölçekle",
+          "x": 1404,
+          "y": 632,
+          "width": 395,
+          "height": 41.25,
+          "font_px": 33,
+          "line_count": 1
+        },
+        {
+          "text": "API, kurum içi rol ve yetki\nİzlenebilirlik / güvenlik testleri",
+          "x": 1404,
+          "y": 705,
+          "width": 395,
+          "height": 60.0,
+          "font_px": 24,
+          "line_count": 2
+        },
+        {
+          "text": "GEÇİŞ ÖLÇÜTÜ",
+          "x": 1404,
+          "y": 849,
+          "width": 395,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "Teknik ve ticari uygunluk",
+          "x": 1404,
+          "y": 891,
+          "width": 395,
+          "height": 27.5,
+          "font_px": 22,
+          "line_count": 1
+        },
+        {
+          "text": "Önerilen plan · İzin, veri kalitesi ve pilot sonuçlarına bağlıdır. 12 ay sonrası mevcut yatırım döneminin dışındadır.",
+          "x": 120,
+          "y": 943,
+          "width": 1680,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        }
+      ]
+    },
+    {
+      "section": "11 / Finansal örnek senaryo",
+      "title": "12 aylık örnek senaryo",
+      "notes": "Bu grafik gerçek gelir veya müşteri verisi değil; önceki onaylanan varsayımlı model. Yıllık gelir yaklaşık 314 bin TL, 12. ay MRR 67,6 bin TL, faaliyet sonucu yaklaşık eksi 986 bin TL. Entegrasyon, veri ve B2B için 450 bin TL ek kapsam modelde var. Bu senaryo kesin fiyat veya kesin büyüme taahhüdü değil; yatırım planının hangi varsayımlara dayandığını görünür kılıyor.\n\nVarsayımlar önceki modelle aynıdır. 1.500TL/hesap/ay,450TLdeğişkenmaliyet,%3aylık kayıp,50brütyenihesap. KDV/vergi/finansman/ilk yatırım/işletme sermayesi hariç. Banka geliri eklenmedi. LTV bilinmiyor. Model: QualiFi-12-Aylik-Yatirim-Senaryosu.xlsx",
+      "blank_by_user_request": false,
+      "text_boxes": [
+        {
+          "text": "YATIRIMCI SUNUMU",
+          "x": 1300,
+          "y": 95,
+          "width": 500,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "11 / FİNANSAL ÖRNEK SENARYO",
+          "x": 120,
+          "y": 212,
+          "width": 1690,
+          "height": 27.5,
+          "font_px": 22,
+          "line_count": 1
+        },
+        {
+          "text": "12 aylık örnek senaryo",
+          "x": 120,
+          "y": 270,
+          "width": 1675,
+          "height": 76.16000000000001,
+          "font_px": 68,
+          "line_count": 1
+        },
+        {
+          "text": "QualiFi · qualifilab.com",
+          "x": 120,
+          "y": 1004,
+          "width": 1200,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "11",
+          "x": 1680,
+          "y": 1004,
+          "width": 120,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        }
+      ]
+    },
+    {
+      "section": "12 / Yatırım talebi ve kullanım",
+      "title": "Bu yatırımla hedef:\nçalışan ürün ve kurumsal pilot.",
+      "notes": "Önerdiğim 1,5 milyon TL, 12 aylık bir planlama senaryosu. Çekirdek operasyon850 bin; muhasebeERP200 bin; veri güvenliği ve yedekleme100 bin; B2B pilotları150 bin; rezerv200 binTL. Amacım entegrasyonları, ajan davranışını ve işletme pilotunu doğrulamak; uygun koşullar oluşursa banka pilotunun kapsamını çalışmak. Bunlar tedarikçi teklifleriyle netleşecek bütçeler.\n\nTutarlar plan varsayımıdır. Fiziksel veri merkezi kurma, ödeme kuruluşu faaliyeti, değerleme ve hisse oranı varsayılmadı. Gelir yatırım ihtiyacından düşülmedi. 12ay çalışma garantisi değildir.",
+      "blank_by_user_request": false,
+      "text_boxes": [
+        {
+          "text": "YATIRIMCI SUNUMU",
+          "x": 1300,
+          "y": 95,
+          "width": 500,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "12 / YATIRIM TALEBİ VE KULLANIM",
+          "x": 120,
+          "y": 212,
+          "width": 1690,
+          "height": 27.5,
+          "font_px": 22,
+          "line_count": 1
+        },
+        {
+          "text": "Bu yatırımla hedef:\nçalışan ürün ve kurumsal pilot.",
+          "x": 120,
+          "y": 270,
+          "width": 1675,
+          "height": 152.32000000000002,
+          "font_px": 68,
+          "line_count": 2
+        },
+        {
+          "text": "QualiFi · qualifilab.com",
+          "x": 120,
+          "y": 1004,
+          "width": 1200,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "12",
+          "x": 1680,
+          "y": 1004,
+          "width": 120,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "Pilot ve yatırım görüşmesi: talha.guler@ozu.edu.tr · qualifilab.com",
+          "x": 120,
+          "y": 943,
+          "width": 1680,
+          "height": 27.5,
+          "font_px": 22,
+          "line_count": 1
+        }
+      ]
+    },
+    {
+      "section": "13 / Kurucu ve kapanış",
+      "title": "Muhammed Talha Güler",
+      "notes": "Ben Talha. Özyeğin’de Yönetim Bilişim Sistemleri ve Bilgisayar Mühendisliği çift anadal öğrencisiyim; emlyon’da dijital pazarlama değişim eğitimi aldım. Porsuk, Endgame Arena, QualifiLab ve OzU Ventures çalışmalarındaki deneyimimi bu projeye taşıyorum. QualiFi’yi işletmelerle başlayıp ölçülebilir bir banka pilotuna doğru geliştirmek için görüşmeye açığım.\n\nFotoğrafın tam çözünürlüklü Canva varlığı mevcut9.sayfada korunacak ve ana sunumda sona taşınacak. Aşağıdaki kaynak sunum, çalışma kopyasıdır; ana dosyada özgün ekip sayfası kullanılacak.",
+      "blank_by_user_request": false,
+      "text_boxes": [
+        {
+          "text": "YATIRIMCI SUNUMU",
+          "x": 1300,
+          "y": 95,
+          "width": 500,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "13 / KURUCU VE KAPANIŞ",
+          "x": 120,
+          "y": 212,
+          "width": 1690,
+          "height": 27.5,
+          "font_px": 22,
+          "line_count": 1
+        },
+        {
+          "text": "Muhammed Talha Güler",
+          "x": 120,
+          "y": 270,
+          "width": 1675,
+          "height": 76.16000000000001,
+          "font_px": 68,
+          "line_count": 1
+        },
+        {
+          "text": "QualiFi · qualifilab.com",
+          "x": 120,
+          "y": 1004,
+          "width": 1200,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "13",
+          "x": 1680,
+          "y": 1004,
+          "width": 120,
+          "height": 25.0,
+          "font_px": 20,
+          "line_count": 1
+        },
+        {
+          "text": "Kurucu",
+          "x": 120,
+          "y": 465,
+          "width": 1200,
+          "height": 35.0,
+          "font_px": 28,
+          "line_count": 1
+        },
+        {
+          "text": "Özyeğin Üniversitesi\nYönetim Bilişim Sistemleri + Bilgisayar Mühendisliği çift anadal\nemlyon’da dijital pazarlama değişim eğitimi",
+          "x": 120,
+          "y": 530,
+          "width": 1630,
+          "height": 135.0,
+          "font_px": 36,
+          "line_count": 3
+        },
+        {
+          "text": "Önceki çalışmalar",
+          "x": 120,
+          "y": 715,
+          "width": 1630,
+          "height": 35.0,
+          "font_px": 28,
+          "line_count": 1
+        },
+        {
+          "text": "Porsuk · Endgame Arena · QualifiLab · OzU Ventures",
+          "x": 120,
+          "y": 765,
+          "width": 1630,
+          "height": 43.75,
+          "font_px": 35,
+          "line_count": 1
+        },
+        {
+          "text": "İşletme ve banka pilotları için görüşelim.  talha.guler@ozu.edu.tr",
+          "x": 145,
+          "y": 866,
+          "width": 1630,
+          "height": 36.25,
+          "font_px": 29,
+          "line_count": 1
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+current-*.png
+*-private.json
+QualiFi-Tiklamali-Prova.html
