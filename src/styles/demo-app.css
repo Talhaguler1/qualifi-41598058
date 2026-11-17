@@ -21,11 +21,12 @@
   font: 14px/1.5 "DM Sans", "Segoe UI", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
-.qd *, .qd *::before, .qd *::after { box-sizing: border-box; }
-.qd button, .qd input, .qd select, .qd textarea { font: inherit; color: inherit; }
-.qd button { cursor: pointer; }
+/* :where() keeps these resets at zero specificity so component colours (e.g. dark primary buttons) always win. */
+:where(.qd) *, :where(.qd) *::before, :where(.qd) *::after { box-sizing: border-box; }
+:where(.qd) :where(button, input, select, textarea) { font: inherit; color: inherit; }
+:where(.qd) button { cursor: pointer; }
 .qd :focus-visible { outline: 3px solid #8fbf4d; outline-offset: 2px; border-radius: 10px; }
-.qd h1, .qd h2, .qd h3, .qd p { margin: 0; }
+:where(.qd) :where(h1, h2, h3, p) { margin: 0; }
 .qd-num { font-variant-numeric: tabular-nums; }
 
 /* ---------- top bar ---------- */
@@ -41,7 +42,7 @@
 .qd-brand img { width: 28px; height: 28px; }
 .qd-brand span { color: #8fbf4d; }
 .qd-company { display: flex; flex-direction: column; line-height: 1.2; padding-left: 16px; border-left: 1px solid var(--qd-line); }
-.qd-company b { font-size: 15px; }
+.qd-company b, .qd-company h1 { font-size: 15px; font-weight: 700; letter-spacing: normal; line-height: 1.2; }
 .qd-company small { color: var(--qd-muted); font-size: 12px; }
 .qd-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; background: var(--qd-lime); color: var(--qd-lime-ink); font-size: 11px; font-weight: 600; letter-spacing: 0.3px; }
 .qd-spacer { flex: 1; }

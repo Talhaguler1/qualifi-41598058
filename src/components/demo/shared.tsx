@@ -69,7 +69,7 @@ export function TopBar({ title, subtitle, date, onDate, children }: { title: str
     <header className="qd-top">
       <Brand />
       <div className="qd-company">
-        <b>{title}</b>
+        <h1>{title}</h1>
         <small>{subtitle}</small>
       </div>
       <span className="qd-badge" title="Bu hesaptaki tüm kaynaklar ve kayıtlar demo amaçlı üretilmiştir.">

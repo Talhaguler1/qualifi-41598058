@@ -2,7 +2,7 @@
 // own payment history. Works the same for mock demo data and uploaded data.
 
 import type { BusinessDataset, ChatMessage, Customer, Expense, Receivable } from "./business";
-import { addDays, diffDays, maxDate } from "./dates";
+import { addDays, diffDays, formatDateTr, maxDate } from "./dates";
 
 /** What is known on `asOf`: nothing dated later exists yet. */
 export interface Snapshot {
@@ -118,7 +118,7 @@ export function expectedInflows(snap: Snapshot): ExpectedInflow[] {
         .at(-1)?.promiseDate;
       let expected = maxDate(addDays(r.dueDate, p.medianDelay), tomorrow);
       let reason = p.paidCount
-        ? `Vade ${r.dueDate}; bu müşteri ortanca ${p.medianDelay} gün ${p.medianDelay >= 0 ? "geç" : "erken"} ödüyor.`
+        ? `Vade ${formatDateTr(r.dueDate)}; bu müşteri ortanca ${p.medianDelay} gün ${p.medianDelay >= 0 ? "geç" : "erken"} ödüyor.`
         : "Ödeme geçmişi yok; vade tarihi esas alındı.";
       if (overdueDays > 0 && expected <= addDays(snap.asOf, 3)) {
         expected = addDays(snap.asOf, Math.max(7, p.p75Delay - overdueDays));
@@ -128,7 +128,7 @@ export function expectedInflows(snap: Snapshot): ExpectedInflow[] {
         // Promise breakers' promises are discounted by their usual slip.
         const slip = p.grade === "C" || p.grade === "D" ? Math.max(0, p.medianDelay - 7) : 0;
         expected = addDays(promise, slip);
-        reason = slip ? `Mesajda ${promise} sözü verdi; sözlerini genelde ${slip} gün kaçırıyor.` : `Mesajda ${promise} tarihinde ödeme sözü verdi.`;
+        reason = slip ? `Mesajda ${formatDateTr(promise)} için söz verdi; sözlerini genelde ${slip} gün kaçırıyor.` : `Mesajda ${formatDateTr(promise)} tarihinde ödeme sözü verdi.`;
       }
       return {
         receivable: r,
@@ -211,8 +211,8 @@ export function agentActions(snap: Snapshot, limit = 12): AgentAction[] {
         customer: inflow.customer,
         receivable: r,
         dueInDays,
-        reason: `${brokenPromise.promiseDate} tarihinde ödeme sözü vermişti, ödeme gelmedi.`,
-        draftMessage: `Merhaba, ${r.id} numaralı ${fmt(r.amount)} tutarlı ödeme için ${brokenPromise.promiseDate} tarihini konuşmuştuk ama henüz ulaşmadı. Bugün gönderebilecek misiniz?`,
+        reason: `${formatDateTr(brokenPromise.promiseDate as string)} tarihinde ödeme sözü vermişti, ödeme gelmedi.`,
+        draftMessage: `Merhaba, ${r.id} numaralı ${fmt(r.amount)} tutarlı ödeme için ${formatDateTr(brokenPromise.promiseDate as string)} tarihini konuşmuştuk ama henüz ulaşmadı. Bugün gönderebilecek misiniz?`,
       });
     } else if (dueInDays < -30 && (p.grade === "D" || inflow.atRisk)) {
       actions.push({
@@ -232,7 +232,7 @@ export function agentActions(snap: Snapshot, limit = 12): AgentAction[] {
         receivable: r,
         dueInDays,
         reason: `${dueInDays} gün sonra vadesi doluyor; bu müşteri genelde ${p.medianDelay} gün geç ödüyor.`,
-        draftMessage: `Merhaba, ${r.dueDate} vadeli ${r.id} numaralı ${fmt(r.amount)} tutarlı faturamızı hatırlatmak isteriz. Ödeme tarihini teyit edebilir misiniz? Teşekkürler.`,
+        draftMessage: `Merhaba, ${formatDateTr(r.dueDate)} vadeli ${r.id} numaralı ${fmt(r.amount)} tutarlı faturamızı hatırlatmak isteriz. Ödeme tarihini teyit edebilir misiniz? Teşekkürler.`,
       });
     }
   }
