@@ -17,9 +17,13 @@ import { Route as ApiConfigRouteImport } from './routes/api/config'
 import { Route as ApiDemoInteractionsRouteImport } from './routes/api/demo-interactions'
 import { Route as ApiEventsRouteImport } from './routes/api/events'
 import { Route as ApiLeadsRouteImport } from './routes/api/leads'
+import { Route as AppIndexRouteImport } from './routes/app/index'
+import { Route as AppGirisRouteImport } from './routes/app/giris'
 import { Route as DemoIndexRouteImport } from './routes/demo/index'
 import { Route as DemoBankaRouteImport } from './routes/demo/banka'
 import { Route as DemoIsletmeRouteImport } from './routes/demo/isletme'
+import { Route as ApiAdminAccountsRouteImport } from './routes/api/admin/accounts'
+import { Route as ApiAdminDemoActivityRouteImport } from './routes/api/admin/demo-activity'
 import { Route as ApiAdminLeadsRouteImport } from './routes/api/admin/leads'
 import { Route as ApiWorkspaceExtractRouteImport } from './routes/api/workspace/extract'
 import { Route as ApiAdminLeadsExportRouteImport } from './routes/api/admin/leads/export'
@@ -67,6 +71,16 @@ const ApiLeadsRoute = ApiLeadsRouteImport.update({
   path: '/api/leads',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/app/',
+  path: '/app/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppGirisRoute = AppGirisRouteImport.update({
+  id: '/app/giris',
+  path: '/app/giris',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DemoIndexRoute = DemoIndexRouteImport.update({
   id: '/demo/',
   path: '/demo/',
@@ -80,6 +94,16 @@ const DemoBankaRoute = DemoBankaRouteImport.update({
 const DemoIsletmeRoute = DemoIsletmeRouteImport.update({
   id: '/demo/isletme',
   path: '/demo/isletme',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminAccountsRoute = ApiAdminAccountsRouteImport.update({
+  id: '/api/admin/accounts',
+  path: '/api/admin/accounts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminDemoActivityRoute = ApiAdminDemoActivityRouteImport.update({
+  id: '/api/admin/demo-activity',
+  path: '/api/admin/demo-activity',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAdminLeadsRoute = ApiAdminLeadsRouteImport.update({
@@ -123,9 +147,13 @@ export interface FileRoutesByFullPath {
   '/api/demo-interactions': typeof ApiDemoInteractionsRoute
   '/api/events': typeof ApiEventsRoute
   '/api/leads': typeof ApiLeadsRoute
+  '/app/giris': typeof AppGirisRoute
   '/demo/banka': typeof DemoBankaRoute
   '/demo/isletme': typeof DemoIsletmeRoute
+  '/app/': typeof AppIndexRoute
   '/demo/': typeof DemoIndexRoute
+  '/api/admin/accounts': typeof ApiAdminAccountsRoute
+  '/api/admin/demo-activity': typeof ApiAdminDemoActivityRoute
   '/api/admin/leads': typeof ApiAdminLeadsRouteWithChildren
   '/api/workspace/extract': typeof ApiWorkspaceExtractRoute
   '/api/admin/leads/export': typeof ApiAdminLeadsExportRoute
@@ -142,9 +170,13 @@ export interface FileRoutesByTo {
   '/api/demo-interactions': typeof ApiDemoInteractionsRoute
   '/api/events': typeof ApiEventsRoute
   '/api/leads': typeof ApiLeadsRoute
+  '/app/giris': typeof AppGirisRoute
   '/demo/banka': typeof DemoBankaRoute
   '/demo/isletme': typeof DemoIsletmeRoute
+  '/app': typeof AppIndexRoute
   '/demo': typeof DemoIndexRoute
+  '/api/admin/accounts': typeof ApiAdminAccountsRoute
+  '/api/admin/demo-activity': typeof ApiAdminDemoActivityRoute
   '/api/admin/leads': typeof ApiAdminLeadsRouteWithChildren
   '/api/workspace/extract': typeof ApiWorkspaceExtractRoute
   '/api/admin/leads/export': typeof ApiAdminLeadsExportRoute
@@ -162,9 +194,13 @@ export interface FileRoutesById {
   '/api/demo-interactions': typeof ApiDemoInteractionsRoute
   '/api/events': typeof ApiEventsRoute
   '/api/leads': typeof ApiLeadsRoute
+  '/app/giris': typeof AppGirisRoute
   '/demo/banka': typeof DemoBankaRoute
   '/demo/isletme': typeof DemoIsletmeRoute
+  '/app/': typeof AppIndexRoute
   '/demo/': typeof DemoIndexRoute
+  '/api/admin/accounts': typeof ApiAdminAccountsRoute
+  '/api/admin/demo-activity': typeof ApiAdminDemoActivityRoute
   '/api/admin/leads': typeof ApiAdminLeadsRouteWithChildren
   '/api/workspace/extract': typeof ApiWorkspaceExtractRoute
   '/api/admin/leads/export': typeof ApiAdminLeadsExportRoute
@@ -183,9 +219,13 @@ export interface FileRouteTypes {
     | '/api/demo-interactions'
     | '/api/events'
     | '/api/leads'
+    | '/app/giris'
     | '/demo/banka'
     | '/demo/isletme'
+    | '/app/'
     | '/demo/'
+    | '/api/admin/accounts'
+    | '/api/admin/demo-activity'
     | '/api/admin/leads'
     | '/api/workspace/extract'
     | '/api/admin/leads/export'
@@ -202,9 +242,13 @@ export interface FileRouteTypes {
     | '/api/demo-interactions'
     | '/api/events'
     | '/api/leads'
+    | '/app/giris'
     | '/demo/banka'
     | '/demo/isletme'
+    | '/app'
     | '/demo'
+    | '/api/admin/accounts'
+    | '/api/admin/demo-activity'
     | '/api/admin/leads'
     | '/api/workspace/extract'
     | '/api/admin/leads/export'
@@ -221,9 +265,13 @@ export interface FileRouteTypes {
     | '/api/demo-interactions'
     | '/api/events'
     | '/api/leads'
+    | '/app/giris'
     | '/demo/banka'
     | '/demo/isletme'
+    | '/app/'
     | '/demo/'
+    | '/api/admin/accounts'
+    | '/api/admin/demo-activity'
     | '/api/admin/leads'
     | '/api/workspace/extract'
     | '/api/admin/leads/export'
@@ -241,9 +289,13 @@ export interface RootRouteChildren {
   ApiDemoInteractionsRoute: typeof ApiDemoInteractionsRoute
   ApiEventsRoute: typeof ApiEventsRoute
   ApiLeadsRoute: typeof ApiLeadsRoute
+  AppGirisRoute: typeof AppGirisRoute
   DemoBankaRoute: typeof DemoBankaRoute
   DemoIsletmeRoute: typeof DemoIsletmeRoute
+  AppIndexRoute: typeof AppIndexRoute
   DemoIndexRoute: typeof DemoIndexRoute
+  ApiAdminAccountsRoute: typeof ApiAdminAccountsRoute
+  ApiAdminDemoActivityRoute: typeof ApiAdminDemoActivityRoute
   ApiAdminLeadsRoute: typeof ApiAdminLeadsRouteWithChildren
   ApiWorkspaceExtractRoute: typeof ApiWorkspaceExtractRoute
   LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
@@ -309,6 +361,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiLeadsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app/': {
+      id: '/app/'
+      path: '/app'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app/giris': {
+      id: '/app/giris'
+      path: '/app/giris'
+      fullPath: '/app/giris'
+      preLoaderRoute: typeof AppGirisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/demo/': {
       id: '/demo/'
       path: '/demo'
@@ -328,6 +394,20 @@ declare module '@tanstack/react-router' {
       path: '/demo/isletme'
       fullPath: '/demo/isletme'
       preLoaderRoute: typeof DemoIsletmeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/accounts': {
+      id: '/api/admin/accounts'
+      path: '/api/admin/accounts'
+      fullPath: '/api/admin/accounts'
+      preLoaderRoute: typeof ApiAdminAccountsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/demo-activity': {
+      id: '/api/admin/demo-activity'
+      path: '/api/admin/demo-activity'
+      fullPath: '/api/admin/demo-activity'
+      preLoaderRoute: typeof ApiAdminDemoActivityRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/admin/leads': {
@@ -396,9 +476,13 @@ const rootRouteChildren: RootRouteChildren = {
   ApiDemoInteractionsRoute: ApiDemoInteractionsRoute,
   ApiEventsRoute: ApiEventsRoute,
   ApiLeadsRoute: ApiLeadsRoute,
+  AppGirisRoute: AppGirisRoute,
   DemoBankaRoute: DemoBankaRoute,
   DemoIsletmeRoute: DemoIsletmeRoute,
+  AppIndexRoute: AppIndexRoute,
   DemoIndexRoute: DemoIndexRoute,
+  ApiAdminAccountsRoute: ApiAdminAccountsRoute,
+  ApiAdminDemoActivityRoute: ApiAdminDemoActivityRoute,
   ApiAdminLeadsRoute: ApiAdminLeadsRouteWithChildren,
   ApiWorkspaceExtractRoute: ApiWorkspaceExtractRoute,
   LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,

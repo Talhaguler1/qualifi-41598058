@@ -64,7 +64,7 @@ export function DateSwitcher({ value, onChange }: { value: DemoDate; onChange: (
   );
 }
 
-export function TopBar({ title, subtitle, date, onDate, children }: { title: string; subtitle: string; date: DemoDate; onDate: (d: DemoDate) => void; children?: ReactNode }) {
+export function TopBar({ title, subtitle, date, onDate, children, badge = "Demo verisi" }: { title: string; subtitle: string; date?: DemoDate; onDate?: (d: DemoDate) => void; children?: ReactNode; badge?: string | null }) {
   return (
     <header className="qd-top">
       <Brand />
@@ -72,12 +72,14 @@ export function TopBar({ title, subtitle, date, onDate, children }: { title: str
         <h1>{title}</h1>
         <small>{subtitle}</small>
       </div>
-      <span className="qd-badge" title="Bu hesaptaki tüm kaynaklar ve kayıtlar demo amaçlı üretilmiştir.">
-        <Sparkles size={12} /> Demo verisi
-      </span>
+      {badge ? (
+        <span className="qd-badge" title="Bu hesaptaki tüm kaynaklar ve kayıtlar demo amaçlı üretilmiştir.">
+          <Sparkles size={12} /> {badge}
+        </span>
+      ) : null}
       <div className="qd-spacer" />
       {children}
-      <DateSwitcher value={date} onChange={onDate} />
+      {date && onDate ? <DateSwitcher value={date} onChange={onDate} /> : null}
     </header>
   );
 }

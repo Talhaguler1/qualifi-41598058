@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { Area, Bar, ComposedChart, Line, ReferenceDot, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis, Cell, BarChart } from "recharts";
 import { Building2, Calculator, Landmark, MessageCircle, FileText, ArrowUpRight, ArrowDownRight } from "lucide-react";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -40,7 +40,7 @@ import { AnimatedNumber, Grade, Kpi, SourceChip, Tabs, Toast, TopBar, useMounted
 type Tab = "inflows" | "customers" | "whatsapp" | "sources";
 const DOC_LABEL = { invoice: "Fatura", contract_installment: "Sözleşme taksiti", cheque: "Çek", note: "Senet" } as const;
 
-export function BusinessPanel({ tenant, date, onDate }: { tenant: string; date: DemoDate; onDate: (d: DemoDate) => void }) {
+export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: string; date: DemoDate; onDate: (d: DemoDate) => void; accountSlot?: ReactNode }) {
   const dataset = useMemo(() => generateBusiness(tenant), [tenant]);
   const snap = useMemo(() => snapshot(dataset, date), [dataset, date]);
   const prevDate = DEMO_DATES[DEMO_DATES.indexOf(date) - 1];
@@ -85,6 +85,7 @@ export function BusinessPanel({ tenant, date, onDate }: { tenant: string; date: 
         <button type="button" className="qd-btn qd-btn--primary qd-btn--sm" onClick={() => { log("tab_open", "bank-share"); setShareOpen(true); }}>
           Karnemi bankama göster
         </button>
+        {accountSlot}
       </TopBar>
       <main className="qd-main">
         <div className="qd-col">

@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, type ReactNode } from "react";
 import { Bar, BarChart, CartesianGrid, Line, LineChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis, Cell } from "recharts";
 import { Bot, Phone } from "lucide-react";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -31,7 +31,7 @@ const STATUS_LABEL = { kept: ["Tutuldu", "qd-pill--good"], late: ["Gecikmeli", "
 const SIGNAL_LABEL = { promise: ["Ödeme sözü", "qd-pill--muted"], deferral: ["Erteleme talebi", "qd-pill--warn"], stress: ["Nakit sıkıntısı", "qd-pill--bad"], positive: ["Olumlu", "qd-pill--good"] } as const;
 const LEVEL = { high: ["Yüksek", "qd-pill--bad"], medium: ["Orta", "qd-pill--warn"], low: ["Düşük", "qd-pill--good"] } as const;
 
-export function BankPanel({ region, banker, date, onDate, onBanker, sharedTenant }: { region: string; banker: string; date: DemoDate; onDate: (d: DemoDate) => void; onBanker: (b: string) => void; sharedTenant?: string | undefined }) {
+export function BankPanel({ region, banker, date, onDate, onBanker, sharedTenant, accountSlot, lockBanker }: { region: string; banker: string; date: DemoDate; onDate: (d: DemoDate) => void; onBanker: (b: string) => void; sharedTenant?: string | undefined; accountSlot?: ReactNode; lockBanker?: boolean }) {
   const firms = useMemo(() => (banker === "all" ? generateRegion(region) : generatePortfolio(region, banker)), [region, banker]);
   const prevDate = DEMO_DATES[DEMO_DATES.indexOf(date) - 1] ?? addDays(date, -14);
   const risks = useMemo(() => new Map(firms.map((f) => [f.id, firmRisk(f, date)])), [firms, date]);
@@ -61,6 +61,8 @@ export function BankPanel({ region, banker, date, onDate, onBanker, sharedTenant
   return (
     <div className="qd">
       <TopBar title={`${region} bölge birimi · Kredi risk`} subtitle={banker === "all" ? `Birim yöneticisi görünümü · ${BANKERS_PER_REGION} uzman` : `Uzman ${banker} · ${firms.length} firma`} date={date} onDate={(d) => { log("date_change", d); onDate(d); }}>
+        {accountSlot}
+        {lockBanker ? null : (
         <select className="qd-select" value={banker} onChange={(e) => onBanker(e.target.value)} aria-label="Uzman">
           <option value="all">Birimin tamamı (6.000 firma)</option>
           {Array.from({ length: BANKERS_PER_REGION }, (_, i) => String(i + 1).padStart(2, "0")).map((b) => (
@@ -69,6 +71,7 @@ export function BankPanel({ region, banker, date, onDate, onBanker, sharedTenant
             </option>
           ))}
         </select>
+        )}
       </TopBar>
       <main className="qd-main">
         <div className="qd-col">

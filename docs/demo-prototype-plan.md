@@ -79,15 +79,15 @@ birleşse bile bu üçü yok.
 ### 4–13. saat: paneller ve site
 
 - [x] C — Demo tarihi seçici (27 Eki · 10 Kas · 24 Kas) ve geçiş animasyonları
-- [ ] C — Uygulama kabuğu: `/app` girişi, role göre yönlendirme
+- [x] C — Giriş (`/app/giris`) ve role göre panel (`/app`): demo işletme, bankacı, boş işletme, admin (17 Kas)
 - [x] C — İşletme paneli (`/demo/isletme`): nakit tahmini + senaryo, müşteri ödeme karnesi,
       beklenen tahsilatlar, WhatsApp sözleri, kaynaklar, müşteri kartı
 - [x] C — Ajan: adım adım çalışma akışı, günlük özet, soru-cevap, "ya geç öderse" senaryosu,
       onay/düzenle/ertele kuyruğu (hiçbir mesaj gerçekten gönderilmez)
 - [x] C — Bankacı paneli (`/demo/banka`): portföy, sektör analizi, WhatsApp içgörüleri,
       taahhüt takibi, firma kartı, uzman/birim seçimi, arama listesi hazırlayan ajan
-- [ ] C — Admin: CSV ile toplu hesap açma (sunucu fonksiyonu), "onun gözünden gör", demo tarihi
-- [ ] C — Boş hesap: dosya yükleme ekranı (L1 tablolarına bağlı)
+- [x] C — Admin: CSV ile hesap açma (davet e-postası veya kopyalanabilir davet bağlantısı), hesap listesi, "onun gözünden gör", demo etkinliği (17 Kas)
+- [x] C — Boş hesap çalışma alanı: yükle → ajan okur → kontrol/düzelt → 8 haftalık görünüm → tümünü sil (17 Kas)
 - [ ] C — Ana sayfa yeni anlatım, tek birincil buton, salt okunur "Demo işletmeyi incele"
 - [ ] C — Site düzeltmeleri: dosya yükleme vaadi, kaybolan CTA ölçümleri, sitemap
 - [ ] L — **L2** isteği: belgeden taahhüt çıkarma

@@ -30,6 +30,12 @@ function randomUuid(): string {
 }
 
 let memorySession: string | null = null;
+let authToken: string | null = null;
+
+/** Signed-in pages pass the session token so the server can attach the user to each event. */
+export function setDemoAuthToken(token: string | null): void {
+  authToken = token;
+}
 
 export function demoSessionId(): string {
   try {
@@ -59,7 +65,7 @@ export function trackDemo(event: DemoEvent): void {
   try {
     void fetch("/api/demo-interactions", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: authToken ? { "Content-Type": "application/json", Authorization: `Bearer ${authToken}` } : { "Content-Type": "application/json" },
       body: JSON.stringify(body),
       keepalive: true,
     }).catch(() => undefined);
