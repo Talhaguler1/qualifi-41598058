@@ -23,7 +23,7 @@ const tiny = (): BusinessDataset => ({
   company: { name: "Test A.Ş.", sector: "Yazılım", city: "İstanbul" },
   sources: { erp: "mockerp999", onMuhasebe: "mockonmuhasebe999", banka: "mockbanka999" },
   openingBalance: 100_000,
-  customers: [{ id: "late", name: "Geç Ltd.", sector: "Yazılım", persona: "late" }],
+  customers: [{ id: "late", name: "Geç Ltd.", sector: "Yazılım", persona: "late", payMethod: "transfer" }],
   receivables: [
     { id: "a", customerId: "late", kind: "invoice", source: "mockonmuhasebe", issueDate: "2026-06-01", dueDate: "2026-07-01", amount: 10_000, paidDate: "2026-07-11" },
     { id: "b", customerId: "late", kind: "invoice", source: "mockonmuhasebe", issueDate: "2026-07-01", dueDate: "2026-08-01", amount: 10_000, paidDate: "2026-08-11" },
@@ -132,6 +132,7 @@ describe("banker portfolio", () => {
   });
 });
 
+import { addDays } from "@/lib/demo";
 import { agentRun, askAgent, bankBriefing, businessBriefing, detectIntent, SUGGESTED_QUESTIONS, whatIfLate, tightestWeek } from "@/lib/demo";
 
 describe("agent", () => {
@@ -163,7 +164,8 @@ describe("agent", () => {
   });
 
   it("briefs the business and the banker", () => {
-    expect(businessBriefing(s).points).toHaveLength(3);
+    expect(businessBriefing(s).points).toHaveLength(4);
+    expect(businessBriefing(s).points.at(-1)).toContain("çek/senet");
     const b = bankBriefing(generatePortfolio("Marmara-1", "01"), "2026-11-24");
     expect(b.callList.length).toBeGreaterThan(0);
     expect(b.points).toHaveLength(3);
@@ -183,5 +185,63 @@ describe("prediction and promise scorecard", () => {
     }
     for (const p of s.promises) expect(p.message.promiseDate! <= "2026-11-24").toBe(true);
     expect(s.paid).toBeLessThanOrEqual(s.predictions.length);
+  });
+});
+
+describe("cheques and promissory notes", () => {
+  it("generates Turkish instruments that clear on the due date or bounce", () => {
+    const d = generateBusiness("017");
+    const cheques = d.receivables.filter((r) => r.kind === "cheque");
+    const notes = d.receivables.filter((r) => r.kind === "note");
+    expect(cheques.length).toBeGreaterThan(20);
+    expect(notes.length).toBeGreaterThan(0);
+    for (const c of cheques) if (c.paidDate) expect(c.paidDate <= addDays(c.dueDate, 1)).toBe(true);
+  });
+
+  it("expects a cheque on its due date and flags bounced ones as at risk", () => {
+    const d = generateBusiness("017");
+    const s = snapshot(d, "2026-11-24");
+    for (const i of expectedInflows(s).filter((x) => x.receivable.kind === "cheque")) {
+      if (i.receivable.dueDate < "2026-11-24") expect(i.atRisk).toBe(true);
+      else expect(i.expected).toBe(i.receivable.dueDate > "2026-11-24" ? i.receivable.dueDate : "2026-11-25");
+    }
+  });
+});
+
+import { parseAmount, withProject, defaultProject } from "@/lib/demo";
+
+describe("new project scenario", () => {
+  it("reads Turkish amounts", () => {
+    expect(parseAmount("500 bin TL'lik yeni bir projeyi alırsam ne olur?")).toBe(500_000);
+    expect(parseAmount("1,2 milyon")).toBe(1_200_000);
+    expect(parseAmount("250.000 TL")).toBe(250_000);
+    expect(parseAmount("yeni proje")).toBeNull();
+  });
+
+  it("adds the advance, spreads the cost and pushes the rest past delivery", () => {
+    const s = snapshot(generateBusiness("017"), "2026-11-24");
+    const plan = { amount: 500_000, advancePct: 20, cost: 240_000, deliveryWeeks: 4, termDays: 60 };
+    const r = withProject(s, plan);
+    expect(r.flows.reduce((sum, f) => sum + f.amount, 0)).toBe(500_000 - 240_000);
+    // Within 8 weeks only the advance and the cost land: the balance drops by cost − advance.
+    expect(r.base.at(-1)!.balanceBase - r.changed.at(-1)!.balanceBase).toBe(240_000 - 100_000);
+    expect(askAgent(s, "500 bin TL'lik yeni bir projeyi alırsam ne olur?").intent).toBe("project");
+    expect(defaultProject(s).amount).toBeGreaterThan(0);
+  });
+});
+
+import { bankShareSummary } from "@/lib/demo";
+
+describe("scorecard the business shares with its bank", () => {
+  it("adds up, carries no customer names and covers the Turkish instruments", () => {
+    const d = generateBusiness("017");
+    const s = bankShareSummary(d, "2026-11-24");
+    const gradeTotal = Object.values(s.byGrade).reduce((a, b) => a + b, 0);
+    expect(Math.round(gradeTotal)).toBe(Math.round(s.openReceivables));
+    const agingTotal = s.aging.current + s.aging.d1_30 + s.aging.d31_60 + s.aging.d60plus;
+    expect(Math.round(agingTotal)).toBe(Math.round(s.openReceivables));
+    expect(s.instruments.dueLast12m).toBeGreaterThan(0);
+    const text = JSON.stringify(s);
+    for (const c of d.customers.slice(0, 50)) expect(text.includes(c.name)).toBe(false);
   });
 });

@@ -1,7 +1,16 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { BankPanel } from "@/components/demo/bank-panel";
 import { demoHead } from "@/components/demo/head";
-import { BANKERS_PER_REGION, DEFAULT_DEMO_DATE, isDemoDate, type DemoDate } from "@/lib/demo";
+import { BANKERS_PER_REGION, DEFAULT_DEMO_DATE, isDemoDate, normaliseTenant, type DemoDate } from "@/lib/demo";
+
+function sharedOf(value: unknown): string | undefined {
+  if (value === undefined || value === null || value === "") return undefined;
+  try {
+    return normaliseTenant(String(value));
+  } catch {
+    return undefined;
+  }
+}
 
 function bankerOf(value: unknown): string {
   if (value === "all") return "all";
@@ -10,21 +19,27 @@ function bankerOf(value: unknown): string {
 }
 
 export const Route = createFileRoute("/demo/banka")({
-  validateSearch: (s: Record<string, unknown>): { b: string; d: DemoDate } => ({ b: bankerOf(s["b"]), d: isDemoDate(s["d"]) ? s["d"] : DEFAULT_DEMO_DATE }),
+  validateSearch: (s: Record<string, unknown>): { b: string; d: DemoDate; s?: string } => {
+    const base = { b: bankerOf(s["b"]), d: isDemoDate(s["d"]) ? s["d"] : DEFAULT_DEMO_DATE };
+    const shared = sharedOf(s["s"]);
+    return shared ? { ...base, s: shared } : base;
+  },
   head: () => demoHead("Bankacı paneli", "QualiFi demo kredi risk paneli: portföy, sektör analizi, WhatsApp içgörüleri ve taahhüt takibi. Tüm veriler demo amaçlıdır."),
   component: BankDemoPage,
 });
 
 function BankDemoPage() {
-  const { b, d } = Route.useSearch();
+  const { b, d, s } = Route.useSearch();
+  const keep = s ? { s } : {};
   const navigate = useNavigate({ from: "/demo/banka" });
   return (
     <BankPanel
       region="Marmara-1"
+      sharedTenant={s}
       banker={b}
       date={d}
-      onDate={(next) => void navigate({ search: { b, d: next }, replace: true, resetScroll: false })}
-      onBanker={(next) => void navigate({ search: { b: next, d }, replace: true, resetScroll: false })}
+      onDate={(next) => void navigate({ search: { b, d: next, ...keep }, replace: true, resetScroll: false })}
+      onBanker={(next) => void navigate({ search: { b: next, d, ...keep }, replace: true, resetScroll: false })}
     />
   );
 }

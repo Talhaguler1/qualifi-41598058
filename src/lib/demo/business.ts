@@ -13,12 +13,16 @@ export interface Customer {
   name: string;
   sector: string;
   persona: Persona;
+  /** How this customer usually settles: bank transfer, post-dated cheque (çek) or promissory note (senet). */
+  payMethod: PayMethod;
 }
+
+export type PayMethod = "transfer" | "cheque" | "note";
 
 export interface Receivable {
   id: string;
   customerId: string;
-  kind: "invoice" | "contract_installment";
+  kind: "invoice" | "contract_installment" | "cheque" | "note";
   source: SourceSystem;
   issueDate: string;
   dueDate: string;
@@ -103,6 +107,18 @@ function namedCustomer(rng: Rng): { name: string; sector: string } {
   return { name: `${brandWord(rng)} ${NAME_WORD[sector]} ${rng.pick(CUSTOMER_SUFFIX)}`, sector };
 }
 
+function pickPayMethod(rng: Rng): PayMethod {
+  const roll = rng.next();
+  return roll < 0.22 ? "cheque" : roll < 0.3 ? "note" : "transfer";
+}
+
+/** Cheques clear on the due date or bounce (karşılıksız); notes may slip a little or be protested. */
+function instrumentOutcome(rng: Rng, persona: Persona, dueDate: string, cheque: boolean): string | null {
+  const bounce = { punctual: 0.005, late: 0.02, irregular: 0.04, promise_breaker: 0.2, distressed: dueDate >= "2026-10-01" ? 0.6 : 0.1 }[persona];
+  if (rng.chance(bounce)) return null;
+  return addDays(dueDate, cheque ? rng.int(0, 1) : rng.int(0, persona === "punctual" ? 2 : 10));
+}
+
 function pickPersona(rng: Rng): Persona {
   let roll = rng.next();
   for (const [persona, share] of PERSONA_SHARE) {
@@ -144,6 +160,7 @@ export function generateBusiness(tenantInput: string): BusinessDataset {
       id: `c${tenant}-${String(i).padStart(3, "0")}`,
       ...namedCustomer(rng),
       persona: pickPersona(rng),
+      payMethod: pickPayMethod(rng),
     });
   }
 
@@ -161,6 +178,22 @@ export function generateBusiness(tenantInput: string): BusinessDataset {
       if (!rng.chance(frequency)) continue;
       const issueDate = withDay(month, rng.int(1, 28));
       if (issueDate > DATA_END) continue;
+      if (customer.payMethod !== "transfer" && rng.chance(0.8)) {
+        // Turkish B2B: the buyer hands over a post-dated cheque or a note at invoice time.
+        const instrumentDue = addDays(issueDate, rng.pick([60, 75, 90, 120]));
+        const cheque = customer.payMethod === "cheque";
+        receivables.push({
+          id: `${cheque ? "CEK" : "SNT"}-${tenant}-${String(invoiceNo++).padStart(5, "0")}`,
+          customerId: customer.id,
+          kind: cheque ? "cheque" : "note",
+          source: "mockonmuhasebe",
+          issueDate,
+          dueDate: instrumentDue,
+          amount: rng.amount(10_000, 90_000 * size, 500),
+          paidDate: instrumentOutcome(rng, customer.persona, instrumentDue, cheque),
+        });
+        continue;
+      }
       const dueDate = addDays(issueDate, terms);
       const delay = paymentDelay(rng, customer.persona, dueDate);
       receivables.push({

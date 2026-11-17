@@ -73,6 +73,20 @@ Exchange ve Moody's Pulse ödeme verisi ağı kuruyor. Bu yüzden farklılaşma
 3) İşletmenin izinli verisinden bankaya erken uyarı: bankanın mevcut
    göstergelerinden daha erken/isabetli sinyal.
 Bunlar pilotta sınanacak tezlerdir, kanıtlanmış üstünlük değil.
+Demoya 17 Kas'ta eklenenler (farklılaşmayı ekranda gösterir):
+- Çek ve senet: mock verilerde vadeli çek/senet portföyü; ajan takas günü
+  tahsilatı bekler, notu düşük keşideciden gelen çek için teyit önerir,
+  karşılıksız çıkanı tahmine katmaz.
+- "Bu işi alırsam": işin bedeli, avans, ek maliyet, teslim süresi ve kalan
+  ödemenin vadesiyle 8 haftalık nakde etkisi ve karar ("taşınabilir" /
+  "kasayı eksiye düşürüyor, şu kadar finansman gerekir").
+- "Karnemi bankama göster": işletme, müşteri isimleri ve mesaj metni olmadan
+  ödeme karnesinin özetini bankasına gönderir; bankacı panelinde "İşletme
+  paylaştı" kartı olarak görünür. Banka KOBİ'yi izlemiyor; KOBİ iyi karnesini
+  kendisi götürüyor.
+Önerilen konumlandırma: "QualiFi, finans ekibi olmayan KOBİ'nin tahsilat
+ajanı: faturayı, çeki ve WhatsApp'taki sözü tek takvimde izler; işletme isterse
+bu ödeme karnesini bankasına götürür."
 Demo bu tezleri gösterir: 10 Kas ve 24 Kas ekranlarında "Tahmin ve söz
 karnesi" bölümü, önceki tarihte yapılan tahminlerin ve verilen ödeme
 sözlerinin o güne kadar nasıl sonuçlandığını tek tek gösterir.

@@ -71,6 +71,7 @@ birleşse bile bu üçü yok.
 - [x] C — Tahmin motoru + deterministik mock veri üreticisi + testler (`src/lib/demo/`)
 - [x] L — **L0** doğrulama, buton düzeltmesi kontrolü, Publish (17 Kas)
 - [x] L — **L1**: boş hesap yüklemeleri + demo etkileşim kaydı (17 Kas, Claude inceledi)
+- [x] C — Tahmin ve söz karnesi; çek/senet; "Bu işi alırsam" senaryosu; "Karnemi bankama göster" (17 Kas)
 - [x] C — Demo panelleri etkileşim kaydına bağlandı (tarih, sekme, kart, senaryo, soru, onay/düzenle/ertele)
 - [ ] G — **G1–G3** istekleri: demo belgeleri, WhatsApp sohbetleri, ana sayfa metin varyantları
 - [ ] T — Lovable'da "Edit with Lovable" rozetini gizle; takvim linkini ver (Cal.com/Calendly)

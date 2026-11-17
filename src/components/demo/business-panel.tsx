@@ -18,7 +18,11 @@ import {
   money,
   payerProfile,
   scenarioGap,
+  defaultProject,
+  withProject,
+  type ProjectPlan,
   scorecard,
+  bankShareSummary,
   snapshot,
   SUGGESTED_QUESTIONS,
   tightestWeek,
@@ -30,9 +34,11 @@ import {
 } from "@/lib/demo";
 import { trackDemo, type DemoAction } from "@/lib/demo/track";
 import { ActionQueue, AgentFeed, AskAgent, BriefingBox } from "./agent-panel";
+import { ShareSummaryView } from "./share-view";
 import { AnimatedNumber, Grade, Kpi, SourceChip, Tabs, Toast, TopBar, useMounted } from "./shared";
 
 type Tab = "inflows" | "customers" | "whatsapp" | "sources";
+const DOC_LABEL = { invoice: "Fatura", contract_installment: "Sözleşme taksiti", cheque: "Çek", note: "Senet" } as const;
 
 export function BusinessPanel({ tenant, date, onDate }: { tenant: string; date: DemoDate; onDate: (d: DemoDate) => void }) {
   const dataset = useMemo(() => generateBusiness(tenant), [tenant]);
@@ -48,6 +54,7 @@ export function BusinessPanel({ tenant, date, onDate }: { tenant: string; date: 
   const [tab, setTab] = useState<Tab>("inflows");
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [toast, setToast] = useState<string | null>(null);
+  const [shareOpen, setShareOpen] = useState(false);
   const clearToast = useCallback(() => setToast(null), []);
   const log = useCallback(
     (action: DemoAction, target?: string, detail?: string) => trackDemo({ panel: "business", tenant, demo_date: date, action, target: target ?? null, detail: detail ?? null }),
@@ -74,7 +81,11 @@ export function BusinessPanel({ tenant, date, onDate }: { tenant: string; date: 
 
   return (
     <div className="qd">
-      <TopBar title={dataset.company.name} subtitle={`${dataset.company.sector} · ${dataset.company.city} · ${dataset.customers.length} müşteri`} date={date} onDate={changeDate} />
+      <TopBar title={dataset.company.name} subtitle={`${dataset.company.sector} · ${dataset.company.city} · ${dataset.customers.length} müşteri`} date={date} onDate={changeDate}>
+        <button type="button" className="qd-btn qd-btn--primary qd-btn--sm" onClick={() => { log("tab_open", "bank-share"); setShareOpen(true); }}>
+          Karnemi bankama göster
+        </button>
+      </TopBar>
       <main className="qd-main">
         <div className="qd-col">
           <div className="qd-sources">
@@ -91,7 +102,7 @@ export function BusinessPanel({ tenant, date, onDate }: { tenant: string; date: 
             <Kpi label="Vadesi geçen alacak" value={<AnimatedNumber value={overdueSum} format={money} />} sub={`${overdue.length} fatura`} />
           </section>
 
-          <CashFlowCard snap={snap} weeks={weeks} accuracy={accuracy} prevDate={prevDate} onScenario={(who, days) => log("scenario_run", who, `${days} gün`)} />
+          <CashFlowCard snap={snap} weeks={weeks} accuracy={accuracy} prevDate={prevDate} onScenario={(target, detail) => log("scenario_run", target, detail)} />
 
           <ScorecardCard dataset={dataset} prevDate={prevDate} date={date} onCustomer={openCustomer} />
 
@@ -131,6 +142,7 @@ export function BusinessPanel({ tenant, date, onDate }: { tenant: string; date: 
         </aside>
       </main>
       <CustomerSheet snap={snap} customer={customer} onClose={() => setCustomer(null)} />
+      <ShareSheet open={shareOpen} onClose={() => setShareOpen(false)} dataset={dataset} date={date} onShared={() => { log("tab_open", "bank-share-sent"); setToast("Demo: paylaşım bankacı paneline yansıdı. Gerçekte hiçbir veri gönderilmedi."); }} />
       {toast ? <Toast text={toast} onDone={clearToast} /> : null}
     </div>
   );
@@ -139,23 +151,32 @@ export function BusinessPanel({ tenant, date, onDate }: { tenant: string; date: 
 type Snap = ReturnType<typeof snapshot>;
 type Weeks = ReturnType<typeof weeklyForecast>;
 
-function CashFlowCard({ snap, weeks, accuracy, prevDate, onScenario }: { snap: Snap; weeks: Weeks; accuracy: ReturnType<typeof forecastAccuracy> | null; prevDate: string | undefined; onScenario: (who: string, days: number) => void }) {
+function CashFlowCard({ snap, weeks, accuracy, prevDate, onScenario }: { snap: Snap; weeks: Weeks; accuracy: ReturnType<typeof forecastAccuracy> | null; prevDate: string | undefined; onScenario: (target: string, detail: string) => void }) {
   const mounted = useMounted();
   const candidates = useMemo(() => {
     const sums = new Map<string, number>();
     for (const i of expectedInflows(snap)) if (!i.atRisk) sums.set(i.customer.id, (sums.get(i.customer.id) ?? 0) + i.receivable.amount);
     return [...sums.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8).map(([id, sum]) => ({ c: snap.dataset.customers.find((x) => x.id === id)!, sum }));
   }, [snap]);
+  const [mode, setMode] = useState<"late" | "project">("late");
   const [who, setWho] = useState<string>("");
   const [days, setDays] = useState(30);
-  const scenario = useMemo(() => (who ? whatIfLate(snap, who, days).changed : null), [snap, who, days]);
-  // Log a scenario once the slider settles, not on every pixel.
+  const [plan, setPlan] = useState<ProjectPlan | null>(null);
+  const project = plan ?? defaultProject(snap);
+  const projectResult = useMemo(() => (mode === "project" && plan ? withProject(snap, plan) : null), [snap, mode, plan]);
+  const scenario = useMemo(
+    () => (mode === "late" ? (who ? whatIfLate(snap, who, days).changed : null) : (projectResult?.changed ?? null)),
+    [snap, mode, who, days, projectResult],
+  );
+  const setP = (patch: Partial<ProjectPlan>) => setPlan({ ...project, ...patch });
+  // Log a scenario once the inputs settle, not on every pixel.
   useEffect(() => {
-    if (!who) return;
-    const t = setTimeout(() => onScenario(who, days), 900);
+    if (mode === "late" && !who) return;
+    if (mode === "project" && !plan) return;
+    const t = setTimeout(() => (mode === "late" ? onScenario(who, `${days} gün`) : onScenario("yeni-is", `${project.amount} TL, avans %${project.advancePct}`)), 900);
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [who, days]);
+  }, [mode, who, days, plan]);
   const tight = tightestWeek(weeks);
   const data = weeks.map((w, i) => ({
     label: formatDateTr(w.weekStart).replace(/ \d{4}$/, ""),
@@ -206,20 +227,61 @@ function CashFlowCard({ snap, weeks, accuracy, prevDate, onScenario }: { snap: S
       </div>
       <div className="qd-toolbar" style={{ marginTop: 12, marginBottom: 0 }}>
         <span className="qd-eyebrow">Senaryo dene</span>
-        <select className="qd-select" value={who} onChange={(e) => setWho(e.target.value)} aria-label="Geç ödeyecek müşteri">
-          <option value="">Müşteri seçin…</option>
-          {candidates.map(({ c, sum }) => (
-            <option key={c.id} value={c.id}>
-              {c.name} ({money(sum)})
-            </option>
-          ))}
-        </select>
-        <label style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 13 }}>
-          <input type="range" min={7} max={60} step={1} value={days} onChange={(e) => setDays(Number(e.target.value))} disabled={!who} />
-          <span className="qd-num">{days} gün geç öderse</span>
-        </label>
-        {scenario ? <ScenarioPill base={weeks} changed={scenario} /> : null}
+        <div className="qd-tabs" role="tablist" style={{ marginBottom: 0 }}>
+          <button type="button" role="tab" aria-selected={mode === "late"} onClick={() => setMode("late")}>Müşteri geç öderse</button>
+          <button type="button" role="tab" aria-selected={mode === "project"} onClick={() => { setMode("project"); if (!plan) setPlan(project); }}>Bu işi alırsam</button>
+        </div>
+        {mode === "late" ? (
+          <>
+            <select className="qd-select" value={who} onChange={(e) => setWho(e.target.value)} aria-label="Geç ödeyecek müşteri">
+              <option value="">Müşteri seçin…</option>
+              {candidates.map(({ c, sum }) => (
+                <option key={c.id} value={c.id}>
+                  {c.name} ({money(sum)})
+                </option>
+              ))}
+            </select>
+            <label style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 13 }}>
+              <input type="range" min={7} max={60} step={1} value={days} onChange={(e) => setDays(Number(e.target.value))} disabled={!who} />
+              <span className="qd-num">{days} gün geç öderse</span>
+            </label>
+            {scenario ? <ScenarioPill base={weeks} changed={scenario} /> : null}
+          </>
+        ) : null}
       </div>
+      {mode === "project" ? (
+        <div className="qd-project qd-enter">
+          <label>
+            <span>İşin bedeli (TL)</span>
+            <input className="qd-input qd-num" type="number" min={10000} step={10000} value={project.amount} onChange={(e) => setP({ amount: Math.max(0, Number(e.target.value) || 0) })} />
+          </label>
+          <label>
+            <span>Avans: %{project.advancePct} ({money((project.amount * project.advancePct) / 100)})</span>
+            <input type="range" min={0} max={60} step={5} value={project.advancePct} onChange={(e) => setP({ advancePct: Number(e.target.value) })} />
+          </label>
+          <label>
+            <span>Ek maliyet (TL, ekip/dış hizmet)</span>
+            <input className="qd-input qd-num" type="number" min={0} step={10000} value={project.cost} onChange={(e) => setP({ cost: Math.max(0, Number(e.target.value) || 0) })} />
+          </label>
+          <label>
+            <span>Teslim süresi</span>
+            <select className="qd-select" value={project.deliveryWeeks} onChange={(e) => setP({ deliveryWeeks: Number(e.target.value) })}>
+              {[2, 3, 4, 6, 8].map((w) => (
+                <option key={w} value={w}>{w} hafta</option>
+              ))}
+            </select>
+          </label>
+          <label>
+            <span>Kalan ödemenin vadesi</span>
+            <select className="qd-select" value={project.termDays} onChange={(e) => setP({ termDays: Number(e.target.value) })}>
+              {[0, 30, 60, 90].map((d) => (
+                <option key={d} value={d}>{d === 0 ? "Teslimde" : `Teslimden ${d} gün sonra`}</option>
+              ))}
+            </select>
+          </label>
+          {projectResult ? <ProjectVerdict base={weeks} changed={projectResult.changed} flows={projectResult.flows} /> : null}
+        </div>
+      ) : null}
     </section>
   );
 }
@@ -316,6 +378,56 @@ function ScorecardCard({ dataset, prevDate, date, onCustomer }: { dataset: Retur
   );
 }
 
+function ProjectVerdict({ base, changed, flows }: { base: Weeks; changed: Weeks; flows: ReturnType<typeof withProject>["flows"] }) {
+  const t0 = tightestWeek(base);
+  const t1 = tightestWeek(changed);
+  const rest = flows.find((f) => f.label === "Kalan ödeme");
+  const lastWeek = base.at(-1)?.weekStart ?? "";
+  const negative = t1.balanceLow < 0;
+  const need = negative ? -t1.balanceLow : 0;
+  return (
+    <div className={`qd-verdict ${negative ? "qd-verdict--bad" : "qd-verdict--good"}`}>
+      <b>{negative ? "Bu iş, kötü senaryoda kasayı eksiye düşürüyor." : "Bu iş nakit açısından taşınabilir."}</b>
+      <span>
+        En dar hafta {formatDateTr(t1.weekStart)}: beklenen {money(t1.balanceBase)} (bu iş olmadan {money(t0.balanceBase)}), kötü senaryoda {money(t1.balanceLow)}.
+        {negative ? ` Avansı artırmak, maliyeti teslime yaymak ya da yaklaşık ${money(need)} kısa vadeli finansman gerekir.` : ""}
+      </span>
+      {rest ? <span>Kalan {money(rest.amount)} {formatDateTr(rest.date)} tarihinde{rest.date > lastWeek ? "; 8 haftalık görünümün dışında" : ""}.</span> : null}
+    </div>
+  );
+}
+
+function ShareSheet({ open, onClose, dataset, date, onShared }: { open: boolean; onClose: () => void; dataset: ReturnType<typeof generateBusiness>; date: string; onShared: () => void }) {
+  const summary = useMemo(() => (open ? bankShareSummary(dataset, date) : null), [open, dataset, date]);
+  const [sent, setSent] = useState(false);
+  return (
+    <Sheet open={open} onOpenChange={(o) => { if (!o) { onClose(); setSent(false); } }}>
+      <SheetContent className="qd-sheet qd">
+        <SheetHeader>
+          <SheetTitle>Ödeme karnenizi bankanızla paylaşın</SheetTitle>
+          <SheetDescription>
+            Banka sizi izlemiyor; iyi ödeme karnenizi siz götürüyorsunuz. Daha hızlı limit görüşmesi ve uygun finansman için yalnız aşağıdaki özet gider. Paylaşımı istediğiniz an geri çekebilirsiniz.
+          </SheetDescription>
+        </SheetHeader>
+        {summary ? <ShareSummaryView summary={summary} audience="business" /> : null}
+        <div className="qd-action__buttons" style={{ marginTop: 16 }}>
+          {sent ? (
+            <>
+              <span className="qd-pill qd-pill--good">Paylaşıldı · demo</span>
+              <a className="qd-btn qd-btn--primary qd-btn--sm" href={`/demo/banka?b=01&d=${date}&s=${dataset.tenant}`}>Bankacı ekranında gör</a>
+            </>
+          ) : (
+            <button type="button" className="qd-btn qd-btn--primary" onClick={() => { setSent(true); onShared(); }}>
+              Bankama gönder (demo)
+            </button>
+          )}
+        </div>
+        <p style={{ color: "var(--qd-muted)", fontSize: 12, marginTop: 10 }}>Demo: gerçek bir bankaya veri gönderilmez. Banka entegrasyonu pilot ve izin sözleşmesiyle kurulur.</p>
+      </SheetContent>
+    </Sheet>
+  );
+}
+
 function ScenarioPill({ base, changed }: { base: Weeks; changed: Weeks }) {
   const gap = scenarioGap(base, changed);
   const negative = changed.some((w) => w.balanceBase < 0);
@@ -363,7 +475,7 @@ function InflowTable({ snap, onCustomer }: { snap: Snap; onCustomer: (c: Custome
             return (
               <tr key={i.receivable.id} data-clickable onClick={() => onCustomer(i.customer)}>
                 <td>{i.customer.name}</td>
-                <td><span className="qd-pill qd-pill--muted">{i.receivable.kind === "contract_installment" ? "Sözleşme taksiti" : "Fatura"}</span></td>
+                <td><span className={`qd-pill ${i.receivable.kind === "cheque" || i.receivable.kind === "note" ? "qd-pill--warn" : "qd-pill--muted"}`}>{DOC_LABEL[i.receivable.kind]}</span></td>
                 <td className="qd-num">{formatDateTr(i.receivable.dueDate)}</td>
                 <td className="qd-num">
                   {i.atRisk ? <span className="qd-pill qd-pill--bad">Riskli · tahmine dahil değil</span> : <>{formatDateTr(i.expected)} {late > 3 ? <span className="qd-pill qd-pill--warn">+{late} gün</span> : late < -1 ? <span className="qd-pill qd-pill--good">erken</span> : null}</>}
@@ -487,7 +599,7 @@ function SourcesView({ snap }: { snap: Snap }) {
   const paid = snap.receivables.filter((r) => r.paidDate);
   const items = [
     { icon: <Building2 size={16} />, name: d.sources.erp, kind: "ERP (demo)", lines: [`${d.customers.length} müşteri kartı`, `${invoices.length} sipariş`, `${snap.pastExpenses.filter((e) => e.source === "mockerp").length + snap.plannedExpenses.filter((e) => e.source === "mockerp").length} planlı/gerçek gider`] },
-    { icon: <Calculator size={16} />, name: d.sources.onMuhasebe, kind: "Ön muhasebe (demo)", lines: [`${invoices.length} fatura`, `${paid.length} tahsilat kaydı`, "Vade ve KDV bilgileri"] },
+    { icon: <Calculator size={16} />, name: d.sources.onMuhasebe, kind: "Ön muhasebe (demo)", lines: [`${invoices.length} fatura`, `${paid.length} tahsilat kaydı`, `${snap.receivables.filter((r) => r.kind === "cheque").length} çek, ${snap.receivables.filter((r) => r.kind === "note").length} senet kaydı`] },
     { icon: <Landmark size={16} />, name: d.sources.banka, kind: "Banka hesabı (demo)", lines: [`Bakiye ${money(currentBalance(snap))}`, `${paid.length + snap.pastExpenses.length} hesap hareketi`, "Günlük eşleştirme"] },
     { icon: <MessageCircle size={16} />, name: "WhatsApp Business", kind: "Sohbet dışa aktarımı (demo)", lines: [`${snap.chats.length} mesaj`, `${snap.chats.filter((m) => m.promiseDate).length} ödeme sözü`, "Kaynak mesaj her zaman gösterilir"] },
   ];

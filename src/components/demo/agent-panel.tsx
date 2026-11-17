@@ -161,8 +161,8 @@ function AnswerBody({ answer }: { answer: AgentAnswer }) {
 
 type ActionState = Record<string, { state?: "sent" | "snoozed"; text?: string }>;
 
-const KIND_LABEL = { reminder: "Vadeden önce hatırlat", promise_check: "Söz kontrolü", escalate: "Görüşme öner" } as const;
-const KIND_TONE = { reminder: "qd-pill--warn", promise_check: "qd-pill--bad", escalate: "qd-pill--bad" } as const;
+const KIND_LABEL = { reminder: "Vadeden önce hatırlat", promise_check: "Söz kontrolü", escalate: "Görüşme öner", instrument_check: "Çek/senet teyidi" } as const;
+const KIND_TONE = { reminder: "qd-pill--warn", promise_check: "qd-pill--bad", escalate: "qd-pill--bad", instrument_check: "qd-pill--warn" } as const;
 
 /** The agent's proposals. Approving only simulates sending: nothing leaves the demo. */
 export function ActionQueue({ actions, storageKey, onToast, onAction }: { actions: AgentAction[]; storageKey: string; onToast: (t: string) => void; onAction?: (action: "agent_approve" | "agent_edit" | "agent_snooze", id: string) => void }) {

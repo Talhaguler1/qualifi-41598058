@@ -14,6 +14,8 @@ import {
   generatePortfolio,
   generateRegion,
   money,
+  bankShareSummary,
+  generateBusiness,
   sectorAnalysis,
   type AgentStep,
   type DemoDate,
@@ -21,6 +23,7 @@ import {
 } from "@/lib/demo";
 import { trackDemo, type DemoAction } from "@/lib/demo/track";
 import { AgentFeed, BriefingBox } from "./agent-panel";
+import { ShareSummaryView } from "./share-view";
 import { AnimatedNumber, Kpi, Tabs, TopBar, useMounted } from "./shared";
 
 type Tab = "portfolio" | "sectors" | "signals" | "commitments";
@@ -28,7 +31,7 @@ const STATUS_LABEL = { kept: ["Tutuldu", "qd-pill--good"], late: ["Gecikmeli", "
 const SIGNAL_LABEL = { promise: ["Ödeme sözü", "qd-pill--muted"], deferral: ["Erteleme talebi", "qd-pill--warn"], stress: ["Nakit sıkıntısı", "qd-pill--bad"], positive: ["Olumlu", "qd-pill--good"] } as const;
 const LEVEL = { high: ["Yüksek", "qd-pill--bad"], medium: ["Orta", "qd-pill--warn"], low: ["Düşük", "qd-pill--good"] } as const;
 
-export function BankPanel({ region, banker, date, onDate, onBanker }: { region: string; banker: string; date: DemoDate; onDate: (d: DemoDate) => void; onBanker: (b: string) => void }) {
+export function BankPanel({ region, banker, date, onDate, onBanker, sharedTenant }: { region: string; banker: string; date: DemoDate; onDate: (d: DemoDate) => void; onBanker: (b: string) => void; sharedTenant?: string | undefined }) {
   const firms = useMemo(() => (banker === "all" ? generateRegion(region) : generatePortfolio(region, banker)), [region, banker]);
   const prevDate = DEMO_DATES[DEMO_DATES.indexOf(date) - 1] ?? addDays(date, -14);
   const risks = useMemo(() => new Map(firms.map((f) => [f.id, firmRisk(f, date)])), [firms, date]);
@@ -69,6 +72,7 @@ export function BankPanel({ region, banker, date, onDate, onBanker }: { region: 
       </TopBar>
       <main className="qd-main">
         <div className="qd-col">
+          {sharedTenant ? <SharedCard tenant={sharedTenant} date={date} /> : null}
           <section className="qd-kpis" key={`kpi-${date}-${banker}`}>
             <Kpi tone="accent" label="İzlenen firma" value={<AnimatedNumber value={firms.length} format={(n) => Math.round(n).toLocaleString("tr-TR")} />} sub={`Toplam kredi ${money(firms.reduce((s, f) => s + f.loanAmount, 0))}`} />
             <Kpi {...(high.length ? { tone: "alert" as const } : {})} label="Yüksek risk" value={<AnimatedNumber value={high.length} format={(n) => Math.round(n).toLocaleString("tr-TR")} />} sub={`${money(high.reduce((s, f) => s + f.loanAmount, 0))} kredi`} />
@@ -132,6 +136,23 @@ export function BankPanel({ region, banker, date, onDate, onBanker }: { region: 
       </main>
       <FirmSheet firm={firm} date={date} onClose={() => setFirm(null)} />
     </div>
+  );
+}
+
+function SharedCard({ tenant, date }: { tenant: string; date: string }) {
+  const summary = useMemo(() => bankShareSummary(generateBusiness(tenant), date), [tenant, date]);
+  return (
+    <section className="qd-card qd-enter" style={{ borderColor: "#b6dbb8" }}>
+      <div className="qd-card__head">
+        <div>
+          <span className="qd-eyebrow">İşletmenin paylaştığı ödeme karnesi · yeni</span>
+          <h2>{summary.company.name}</h2>
+          <p>{summary.company.sector} · {summary.company.city} · {formatDateTr(date)} itibarıyla, işletmenin kendi onayıyla</p>
+        </div>
+        <span className="qd-pill qd-pill--good">İşletme paylaştı · demo</span>
+      </div>
+      <ShareSummaryView summary={summary} audience="bank" />
+    </section>
   );
 }
 

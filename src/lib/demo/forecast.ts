@@ -112,6 +112,32 @@ export function expectedInflows(snap: Snapshot): ExpectedInflow[] {
       const customer = customers.get(r.customerId) as Customer;
       const overdueDays = diffDays(snap.asOf, r.dueDate);
       const atRisk = overdueDays > 45 && (p.grade === "D" || p.paidCount === 0);
+      if (r.kind === "cheque" || r.kind === "note") {
+        // Cheques clear on the due date via clearing (takas) or bounce; notes may slip a few days.
+        const label = r.kind === "cheque" ? "Çek" : "Senet";
+        const risky = p.grade === "C" || p.grade === "D";
+        if (overdueDays > 0) {
+          return {
+            receivable: r,
+            customer,
+            expected: addDays(snap.asOf, 30),
+            optimistic: addDays(snap.asOf, 14),
+            pessimistic: addDays(snap.asOf, 60),
+            atRisk: true,
+            reason: `${label} ${formatDateTr(r.dueDate)} vadesinde ödenmedi (${r.kind === "cheque" ? "karşılıksız" : "protesto riski"}); tahmine dahil edilmedi.`,
+          };
+        }
+        const expected = maxDate(r.kind === "cheque" ? r.dueDate : addDays(r.dueDate, 2), tomorrow);
+        return {
+          receivable: r,
+          customer,
+          expected,
+          optimistic: maxDate(r.dueDate, tomorrow),
+          pessimistic: risky ? addDays(r.dueDate, 30) : addDays(expected, r.kind === "cheque" ? 1 : 7),
+          atRisk: false,
+          reason: `${label} vadesi ${formatDateTr(r.dueDate)}${r.kind === "cheque" ? "; takas günü tahsil edilir" : ""}.${risky ? " Keşidecinin ödeme notu düşük, karşılıksız kalma riski var." : ""}`,
+        };
+      }
       // A promise in the chat is used when it is still ahead of us.
       const promise = snap.chats
         .filter((m) => m.receivableId === r.id && m.promiseDate && m.promiseDate > snap.asOf)
@@ -160,7 +186,14 @@ export function currentBalance(snap: Snapshot): number {
 }
 
 /** Weekly cash outlook: base case plus an optimistic–pessimistic range. */
-export function weeklyForecast(snap: Snapshot, weeks = 8, adjust?: (inflow: ExpectedInflow) => ExpectedInflow): ForecastWeek[] {
+/** A one-off cash movement added on top of the data (positive = money in), e.g. a new project. */
+export interface ExtraFlow {
+  date: string;
+  amount: number;
+  label: string;
+}
+
+export function weeklyForecast(snap: Snapshot, weeks = 8, adjust?: (inflow: ExpectedInflow) => ExpectedInflow, extra: ExtraFlow[] = []): ForecastWeek[] {
   const inflows = adjust ? expectedInflows(snap).map(adjust) : expectedInflows(snap);
   const start = addDays(snap.asOf, 1);
   const result: ForecastWeek[] = [];
@@ -174,18 +207,20 @@ export function weeklyForecast(snap: Snapshot, weeks = 8, adjust?: (inflow: Expe
     const inflowBase = inflows.filter((i) => !i.atRisk && within(i.expected)).reduce((s, i) => s + i.receivable.amount, 0);
     const inflowLow = inflows.filter((i) => !i.atRisk && within(i.pessimistic)).reduce((s, i) => s + i.receivable.amount, 0);
     const inflowHigh = inflows.filter((i) => within(i.optimistic)).reduce((s, i) => s + i.receivable.amount, 0);
-    const outflow = snap.plannedExpenses.filter((e) => within(e.date)).reduce((s, e) => s + e.amount, 0);
-    base += inflowBase - outflow;
-    low += inflowLow - outflow;
-    high += inflowHigh - outflow;
-    result.push({ weekStart: from, inflowBase, inflowLow, inflowHigh, outflow, balanceBase: base, balanceLow: low, balanceHigh: high });
+    const extraIn = extra.filter((f) => f.amount > 0 && within(f.date)).reduce((s, f) => s + f.amount, 0);
+    const extraOut = extra.filter((f) => f.amount < 0 && within(f.date)).reduce((s, f) => s - f.amount, 0);
+    const outflow = snap.plannedExpenses.filter((e) => within(e.date)).reduce((s, e) => s + e.amount, 0) + extraOut;
+    base += inflowBase + extraIn - outflow;
+    low += inflowLow + extraIn - outflow;
+    high += inflowHigh + extraIn - outflow;
+    result.push({ weekStart: from, inflowBase: inflowBase + extraIn, inflowLow: inflowLow + extraIn, inflowHigh: inflowHigh + extraIn, outflow, balanceBase: base, balanceLow: low, balanceHigh: high });
   }
   return result;
 }
 
 export interface AgentAction {
   id: string;
-  kind: "reminder" | "promise_check" | "escalate";
+  kind: "reminder" | "promise_check" | "escalate" | "instrument_check";
   customer: Customer;
   receivable: Receivable;
   dueInDays: number;
@@ -203,7 +238,33 @@ export function agentActions(snap: Snapshot, limit = 12): AgentAction[] {
     const p = payerProfile(snap, r.customerId);
     const dueInDays = diffDays(r.dueDate, snap.asOf);
     const brokenPromise = snap.chats.find((m) => m.receivableId === r.id && m.promiseDate && m.promiseDate <= snap.asOf);
-    const name = inflow.customer.name;
+    const instrument = r.kind === "cheque" || r.kind === "note";
+    const label = r.kind === "cheque" ? "çek" : "senet";
+    if (instrument && dueInDays < 0 && dueInDays >= -21) {
+      actions.push({
+        id: `bounced-${r.id}`,
+        kind: "escalate",
+        customer: inflow.customer,
+        receivable: r,
+        dueInDays,
+        reason: `${formatDateTr(r.dueDate)} vadeli ${label} ödenmedi. Karşılıksız ${label} için hemen görüşme önerilir.`,
+        draftMessage: `Merhaba, ${formatDateTr(r.dueDate)} vadeli ${fmt(r.amount)} tutarlı ${label} ödenmedi. Bugün bir ödeme planı konuşabilir miyiz?`,
+      });
+      continue;
+    }
+    if (instrument && dueInDays >= 0 && dueInDays <= 10 && (p.grade === "C" || p.grade === "D")) {
+      actions.push({
+        id: `instrument-${r.id}`,
+        kind: "instrument_check",
+        customer: inflow.customer,
+        receivable: r,
+        dueInDays,
+        reason: `${label.charAt(0).toUpperCase() + label.slice(1)} ${dueInDays} gün sonra vadede; keşidecinin ödemeleri gecikiyor, karşılıksız riski var.`,
+        draftMessage: `Merhaba, ${formatDateTr(r.dueDate)} vadeli ${fmt(r.amount)} tutarlı ${label} için hesabınızda karşılık bulunacağını teyit edebilir misiniz? Teşekkürler.`,
+      });
+      continue;
+    }
+    if (instrument) continue;
     if (brokenPromise) {
       actions.push({
         id: `promise-${r.id}`,
@@ -236,8 +297,13 @@ export function agentActions(snap: Snapshot, limit = 12): AgentAction[] {
       });
     }
   }
-  const order = { promise_check: 0, escalate: 1, reminder: 2 } as const;
-  return actions.sort((a, b) => order[a.kind] - order[b.kind] || b.receivable.amount - a.receivable.amount).slice(0, limit);
+  const order = { promise_check: 0, escalate: 1, instrument_check: 2, reminder: 3 } as const;
+  // At most 3 of each kind, so the queue shows the agent's different jobs side by side.
+  const perKind: Record<string, number> = {};
+  return actions
+    .sort((a, b) => order[a.kind] - order[b.kind] || b.receivable.amount - a.receivable.amount)
+    .filter((a) => (perKind[a.kind] = (perKind[a.kind] ?? 0) + 1) <= 3)
+    .slice(0, limit);
 }
 
 /** How well the outlook made on `from` predicted the money that actually arrived before `to`. */
