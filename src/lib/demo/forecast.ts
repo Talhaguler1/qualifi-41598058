@@ -250,3 +250,70 @@ export function forecastAccuracy(dataset: BusinessDataset, from: string, to: str
     .reduce((s, r) => s + r.amount, 0);
   return { from, to, predicted, actual, errorRate: actual ? Math.abs(predicted - actual) / actual : 0 };
 }
+
+export type PredictionOutcome = "on_time" | "late" | "early" | "unpaid";
+
+export interface PredictionCheck {
+  receivable: Receivable;
+  customer: Customer;
+  expected: string;
+  paidDate: string | null;
+  /** Days between QualiFi's expected date and the real payment (null if unpaid). */
+  errorDays: number | null;
+  outcome: PredictionOutcome;
+}
+
+export interface PromiseCheck {
+  message: ChatMessage;
+  customer: Customer;
+  amount: number;
+  paidDate: string | null;
+  outcome: "kept" | "late" | "broken";
+}
+
+export interface Scorecard {
+  from: string;
+  to: string;
+  predictions: PredictionCheck[];
+  paid: number;
+  /** Mean absolute error in days among paid items: QualiFi vs. "pays on the due date". */
+  avgErrorQualifi: number;
+  avgErrorDueDate: number;
+  promises: PromiseCheck[];
+}
+
+/**
+ * Checks predictions made on `from` against what had happened by `to`: only
+ * outcomes that are already known on `to` are judged, never future weeks.
+ */
+export function scorecard(dataset: BusinessDataset, from: string, to: string): Scorecard {
+  const predictions: PredictionCheck[] = expectedInflows(snapshot(dataset, from))
+    .filter((i) => !i.atRisk && i.expected > from && i.expected <= to)
+    .map((i) => {
+      const real = dataset.receivables.find((r) => r.id === i.receivable.id);
+      const paidDate = real?.paidDate && real.paidDate <= to ? real.paidDate : null;
+      const errorDays = paidDate ? diffDays(paidDate, i.expected) : null;
+      const outcome: PredictionOutcome = errorDays === null ? "unpaid" : errorDays > 3 ? "late" : errorDays < -3 ? "early" : "on_time";
+      return { receivable: i.receivable, customer: i.customer, expected: i.expected, paidDate, errorDays, outcome };
+    });
+  const paid = predictions.filter((p) => p.paidDate);
+  const mean = (xs: number[]) => (xs.length ? Math.round((xs.reduce((s, x) => s + Math.abs(x), 0) / xs.length) * 10) / 10 : 0);
+  const customers = new Map(dataset.customers.map((c) => [c.id, c]));
+  const promises: PromiseCheck[] = dataset.chats
+    .filter((m) => m.promiseDate && m.date <= to && (m.promiseDate as string) > from && (m.promiseDate as string) <= to)
+    .map((m) => {
+      const r = dataset.receivables.find((x) => x.id === m.receivableId);
+      const paidDate = r?.paidDate && r.paidDate <= to ? r.paidDate : null;
+      const outcome = !paidDate ? "broken" : diffDays(paidDate, m.promiseDate as string) > 2 ? "late" : "kept";
+      return { message: m, customer: customers.get(m.customerId) as Customer, amount: r?.amount ?? 0, paidDate, outcome };
+    });
+  return {
+    from,
+    to,
+    predictions,
+    paid: paid.length,
+    avgErrorQualifi: mean(paid.map((p) => p.errorDays as number)),
+    avgErrorDueDate: mean(paid.map((p) => diffDays(p.paidDate as string, p.receivable.dueDate))),
+    promises,
+  };
+}

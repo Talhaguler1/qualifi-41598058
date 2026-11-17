@@ -169,3 +169,19 @@ describe("agent", () => {
     expect(b.points).toHaveLength(3);
   });
 });
+
+import { scorecard } from "@/lib/demo";
+
+describe("prediction and promise scorecard", () => {
+  it("judges only outcomes known by the later date", () => {
+    const d = generateBusiness("017");
+    const s = scorecard(d, "2026-11-10", "2026-11-24");
+    expect(s.predictions.length).toBeGreaterThan(0);
+    for (const p of s.predictions) {
+      expect(p.expected > "2026-11-10" && p.expected <= "2026-11-24").toBe(true);
+      if (p.paidDate) expect(p.paidDate <= "2026-11-24").toBe(true);
+    }
+    for (const p of s.promises) expect(p.message.promiseDate! <= "2026-11-24").toBe(true);
+    expect(s.paid).toBeLessThanOrEqual(s.predictions.length);
+  });
+});

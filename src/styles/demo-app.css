@@ -103,6 +103,7 @@
 .qd-table tbody tr[data-clickable] { cursor: pointer; }
 .qd-table tbody tr[data-clickable]:hover { background: var(--qd-soft); }
 .qd-right { text-align: right !important; }
+.qd-table td.qd-num { white-space: nowrap; }
 
 .qd-grade { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 8px; font-weight: 700; font-size: 12px; }
 .qd-grade--A { background: #e3f2df; color: var(--qd-good); }

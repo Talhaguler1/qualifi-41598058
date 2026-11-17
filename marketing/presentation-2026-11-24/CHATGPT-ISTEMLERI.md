@@ -55,15 +55,34 @@ Bugün ne var (gerçek): qualifilab.com/demo adresinde çalışan, tıklanabilir
 
 Ne YOK (sunumda olduğu gibi söylenmeyecek): ödeme yapan müşteri, banka
 ortaklığı, gerçek veriyle ölçülmüş doğruluk oranı, canlı WhatsApp/ERP bağlantısı.
-Görüşmelerden 3 nitel bulgu var: veri birden fazla yerden geliyor ve farklı yerlere
-gidiyor; nakit akışı otomatik görülemiyor; yeni projenin nakde etkisi
-karşılaştırılamıyor.
+Dayanak: yaklaşık 20 girişimle görüşme ve yakından gözlemlenen bir yazılım
+şirketinin ödeme gecikmesi (isim verilmeden anlatılacak). Nitel bulgular: veri
+birden fazla yerden geliyor ve farklı yerlere gidiyor; nakit akışı otomatik
+görülemiyor; yeni projenin nakde etkisi karşılaştırılamıyor; görüşülen
+girişimlerde geciken alacaklarla tekrar tekrar karşılaşıldı. Kesin oran,
+görüşme kayıtlarından sayılmadan söylenmeyecek.
+
+Rakip araştırması sonucu (17 Kas): Tesorio ve Upflow ödeme davranışı tahmini,
+yazışmadan taahhüt çıkarma ve takip ajanını zaten sunuyor; D&B Global Trade
+Exchange ve Moody's Pulse ödeme verisi ağı kuruyor. Bu yüzden farklılaşma
+"bu yeteneklere sahibiz" değil, şu üç tez:
+1) Türkiye'de 100-200 alıcılı KOBİ'nin iş akışına uyum: yerel muhasebe,
+   Türkçe yazışma (WhatsApp), daha az elle işlem.
+2) Verilen söz ile gerçekleşen ödemeyi karşılaştırmak: yazışmanın, yalnız
+   ödeme geçmişine bakan modele ek tahmin faydası.
+3) İşletmenin izinli verisinden bankaya erken uyarı: bankanın mevcut
+   göstergelerinden daha erken/isabetli sinyal.
+Bunlar pilotta sınanacak tezlerdir, kanıtlanmış üstünlük değil.
+Demo bu tezleri gösterir: 10 Kas ve 24 Kas ekranlarında "Tahmin ve söz
+karnesi" bölümü, önceki tarihte yapılan tahminlerin ve verilen ödeme
+sözlerinin o güne kadar nasıl sonuçlandığını tek tek gösterir.
 
 Marka: koyu yeşil #203B30, açık lime #D8EEA6, kırık beyaz #F6F7F2. Sade, sakin,
 güven veren; abartı ve "devrim" dili yok. Kısa ifade: "Bir sonraki ödemene netlik."
 
-Sunum: 24 Kasım 2026. Kitle: [BURAYA YAZIN: jüri / yatırımcı / banka ekibi /
-kulüp etkinliği?]. Süre: [__ dakika] + [__ dakika soru].
+Sunum: 24 Kasım 2026. Kitle: Akbank yetkilileri, girişim sermayesi tarafından
+bir katılımcı ve diğer jüri üyeleri. Süre: 7 dakika sunum + 8 dakika soru-cevap.
+Hedef: jürinin hem bugünkü probleme hem de ürünün büyüyebileceğine inanması.
 ```
 
 ---
@@ -97,8 +116,11 @@ ADIM 3 — Seçtiğim omurgayla slayt slayt akış çıkar (en fazla 12 slayt):
 her slayt için başlık (en fazla 8 kelime), ekranda tek cümle, konuşma metni
 (süreyi saniye olarak yaz), geçiş cümlesi. Demo anını ayrı yaz: canlı demoda
 tam olarak hangi ekrana, hangi sırayla tıklayacağım ve o sırada ne söyleyeceğim
-(öneri: 27 Ekim'de ajanın "2 Aralık haftasında kasa ekside" uyarısı → senaryo →
-24 Kasım'a geçip tahminin gerçekleşenle karşılaştırması → bankacı paneline geçiş).
+(öneri: 10 Kasım ekranında ajanın beklediği ödemeler ve verilen WhatsApp
+sözleri → 24 Kasım'a geçince "Tahmin ve söz karnesi": hangi tahmin tuttu, hangi
+söz tutulmadı, vade tarihine bakan basit yönteme göre fark → "şu müşteri 30 gün
+geç öderse" senaryosu → bankacı paneline geçiş. 24 Kasım'dan sonraki haftalar
+için yapılan tahminler henüz sonuçlanmadı; bunlar "tuttu" diye gösterilmez).
 Demo en fazla 2 dakika.
 
 ADIM 4 — Şunları ayrıca yaz:

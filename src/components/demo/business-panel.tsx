@@ -18,6 +18,7 @@ import {
   money,
   payerProfile,
   scenarioGap,
+  scorecard,
   snapshot,
   SUGGESTED_QUESTIONS,
   tightestWeek,
@@ -91,6 +92,8 @@ export function BusinessPanel({ tenant, date, onDate }: { tenant: string; date: 
           </section>
 
           <CashFlowCard snap={snap} weeks={weeks} accuracy={accuracy} prevDate={prevDate} onScenario={(who, days) => log("scenario_run", who, `${days} gün`)} />
+
+          <ScorecardCard dataset={dataset} prevDate={prevDate} date={date} onCustomer={openCustomer} />
 
           <section className="qd-card">
             <Tabs<Tab>
@@ -217,6 +220,98 @@ function CashFlowCard({ snap, weeks, accuracy, prevDate, onScenario }: { snap: S
         </label>
         {scenario ? <ScenarioPill base={weeks} changed={scenario} /> : null}
       </div>
+    </section>
+  );
+}
+
+const OUTCOME = {
+  on_time: ["Tuttu (±3 gün)", "qd-pill--good"],
+  early: ["Erken geldi", "qd-pill--good"],
+  late: ["Geç geldi", "qd-pill--warn"],
+  unpaid: ["Henüz gelmedi", "qd-pill--bad"],
+} as const;
+const PROMISE = { kept: ["Söz tutuldu", "qd-pill--good"], late: ["Gecikmeli", "qd-pill--warn"], broken: ["Tutulmadı", "qd-pill--bad"] } as const;
+
+function ScorecardCard({ dataset, prevDate, date, onCustomer }: { dataset: ReturnType<typeof generateBusiness>; prevDate: string | undefined; date: string; onCustomer: (c: Customer) => void }) {
+  const card = useMemo(() => (prevDate ? scorecard(dataset, prevDate, date) : null), [dataset, prevDate, date]);
+  if (!card || !prevDate) {
+    return (
+      <section className="qd-card qd-enter">
+        <span className="qd-eyebrow">Tahmin ve söz karnesi</span>
+        <p style={{ marginTop: 6, color: "var(--qd-muted)" }}>
+          Bu ilk tarih. {formatDateTr(DEMO_DATES[1])} veya {formatDateTr(DEMO_DATES[2])} tarihine geçin: ajanın bugün beklediği ödemelerin ve WhatsApp'ta verilen sözlerin o güne kadar nasıl sonuçlandığını burada tek tek göreceksiniz.
+        </p>
+      </section>
+    );
+  }
+  const hit = card.predictions.filter((p) => p.outcome === "on_time" || p.outcome === "early").length;
+  const kept = card.promises.filter((p) => p.outcome === "kept").length;
+  const late = card.promises.filter((p) => p.outcome === "late").length;
+  const broken = card.promises.filter((p) => p.outcome === "broken").length;
+  const rows = [...card.predictions].sort((a, b) => b.receivable.amount - a.receivable.amount).slice(0, 8);
+  return (
+    <section className="qd-card qd-enter" key={date}>
+      <div className="qd-card__head">
+        <div>
+          <span className="qd-eyebrow">Tahmin ve söz karnesi</span>
+          <h2>{formatDateTr(prevDate)} tarihinde beklenen ödemeler {formatDateTr(date)} tarihine kadar geldi mi?</h2>
+        </div>
+        <span className="qd-pill qd-pill--muted" title="Sentetik demo verisi üzerinde hesaplandı. Gerçek doğruluk pilotta, gerçek ödeme verisiyle ölçülecek.">Demo verisi · gerçek doğruluk pilotta ölçülecek</span>
+      </div>
+      <div className="qd-stat-row" style={{ marginTop: 0 }}>
+        <div className="qd-stat">
+          <span>Zamanında veya erken gelen</span>
+          <b className="qd-num">{hit} / {card.predictions.length} ödeme</b>
+        </div>
+        <div className="qd-stat">
+          <span>Ortalama sapma (gelen ödemeler)</span>
+          <b className="qd-num">Ajan {card.avgErrorQualifi} gün</b>
+          <span>Yalnız vade tarihine bakınca {card.avgErrorDueDate} gün</span>
+        </div>
+        <div className="qd-stat">
+          <span>WhatsApp'ta verilen ödeme sözleri</span>
+          <b className="qd-num">{card.promises.length ? `${kept} tutuldu · ${late} gecikti · ${broken} tutulmadı` : "Bu dönemde söz yok"}</b>
+        </div>
+      </div>
+      <div className="qd-table-wrap">
+        <table className="qd-table">
+          <thead>
+            <tr>
+              <th>Müşteri</th>
+              <th className="qd-right">Tutar</th>
+              <th>Vade</th>
+              <th>Ajanın beklediği</th>
+              <th>Gerçekleşen</th>
+              <th>Sonuç</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((p) => (
+              <tr key={p.receivable.id} data-clickable onClick={() => onCustomer(p.customer)}>
+                <td>{p.customer.name}</td>
+                <td className="qd-right qd-num">{money(p.receivable.amount)}</td>
+                <td className="qd-num">{formatDateTr(p.receivable.dueDate)}</td>
+                <td className="qd-num">{formatDateTr(p.expected)}</td>
+                <td className="qd-num">{p.paidDate ? formatDateTr(p.paidDate) : "—"}</td>
+                <td><span className={`qd-pill ${OUTCOME[p.outcome][1]}`}>{OUTCOME[p.outcome][0]}{p.errorDays !== null && Math.abs(p.errorDays) > 0 ? ` (${p.errorDays > 0 ? "+" : ""}${p.errorDays} g)` : ""}</span></td>
+              </tr>
+            ))}
+            {card.promises.map((p) => (
+              <tr key={p.message.id} data-clickable onClick={() => onCustomer(p.customer)}>
+                <td>{p.customer.name}<div style={{ color: "var(--qd-muted)", fontSize: 11.5 }}>WhatsApp: “{p.message.text}”</div></td>
+                <td className="qd-right qd-num">{money(p.amount)}</td>
+                <td className="qd-num">—</td>
+                <td className="qd-num">Söz: {formatDateTr(p.message.promiseDate as string)}</td>
+                <td className="qd-num">{p.paidDate ? formatDateTr(p.paidDate) : "—"}</td>
+                <td><span className={`qd-pill ${PROMISE[p.outcome][1]}`}>{PROMISE[p.outcome][0]}</span></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p style={{ color: "var(--qd-muted)", fontSize: 12, marginTop: 10 }}>
+        Yalnız {formatDateTr(date)} itibarıyla sonucu belli olan tahminler değerlendirilir; sonraki haftalar için yapılan tahminler henüz sınanmadı.
+      </p>
     </section>
   );
 }
