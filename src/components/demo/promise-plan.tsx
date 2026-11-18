@@ -17,14 +17,17 @@ const STATUS: Record<Stage, [readonly [string, string], string]> = {
  * matched, buyer-confirmed promise and then a planned payment order. Fully simulated: nothing
  * is sent and no bank instruction is created.
  */
+/** The largest open receivable with a promise still ahead: the one the vision card plays out. */
+export function featuredPromise(snap: Snapshot) {
+  const open = new Map(snap.receivables.filter((r) => r.paidDate === null).map((r) => [r.id, r]));
+  return snap.chats
+    .filter((m) => m.promiseDate && m.promiseDate > snap.asOf && m.receivableId && open.has(m.receivableId))
+    .map((m) => ({ msg: m, r: open.get(m.receivableId as string)! }))
+    .sort((a, b) => b.r.amount - a.r.amount)[0];
+}
+
 export function PromisePlanCard({ snap, onLog }: { snap: Snapshot; onLog: (step: string) => void }) {
-  const featured = useMemo(() => {
-    const open = new Map(snap.receivables.filter((r) => r.paidDate === null).map((r) => [r.id, r]));
-    return snap.chats
-      .filter((m) => m.promiseDate && m.promiseDate > snap.asOf && m.receivableId && open.has(m.receivableId))
-      .map((m) => ({ msg: m, r: open.get(m.receivableId as string)! }))
-      .sort((a, b) => b.r.amount - a.r.amount)[0];
-  }, [snap]);
+  const featured = useMemo(() => featuredPromise(snap), [snap]);
   const [stage, setStage] = useState<Stage>("promise");
   const [busy, setBusy] = useState<string | null>(null);
 

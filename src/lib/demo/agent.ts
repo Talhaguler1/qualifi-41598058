@@ -434,7 +434,7 @@ export function bankBriefing(firms: Firm[], asOf: string, since = addDays(asOf, 
     .map((r) => ({ firm: r.firm, score: r.now.score, change: r.change, reason: r.now.factors.slice().sort((a, b) => b.points - a.points)[0]?.label ?? "" }));
   return {
     headline: risers.length
-      ? L(`Son 2 haftada ${risers.length} firmanın riski belirgin arttı. Öncelik: ${risers[0]?.firm.name}.`, `Risk rose sharply for ${risers.length} firms in the last 2 weeks. Priority: ${risers[0]?.firm.name}.`)
+      ? L(`Son 2 haftada ${risers.length} firmanın riski belirgin arttı. Öncelik: ${(risers[0]?.firm.name ?? "").replace(/\.$/, "")}.`, `Risk rose sharply for ${risers.length} firms in the last 2 weeks. Priority: ${(risers[0]?.firm.name ?? "").replace(/\.$/, "")}.`)
       : L("Son 2 haftada portföyde belirgin bir kötüleşme yok.", "No clear deterioration in the portfolio over the last 2 weeks."),
     points: [
       L(`${high.length} firma yüksek riskte; kredi tutarı ${money(high.reduce((s, r) => s + r.firm.loanAmount, 0))}.`, `${high.length} firms are high risk; loan exposure ${money(high.reduce((s, r) => s + r.firm.loanAmount, 0))}.`),

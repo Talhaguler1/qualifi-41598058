@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { Area, Bar, ComposedChart, Line, ReferenceDot, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis, Cell, BarChart } from "recharts";
-import { Building2, Calculator, Landmark, MessageCircle, FileText, ArrowUpRight, ArrowDownRight } from "lucide-react";
+import { Building2, Calculator, Landmark, MessageCircle, FileText, ArrowUpRight, ArrowDownRight, TrendingUp, Handshake, BellRing, UserCheck, Target, Share2 } from "lucide-react";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import {
   addDays,
@@ -41,12 +41,14 @@ import {
   type PayerProfile,
 } from "@/lib/demo";
 import { trackDemo, type DemoAction } from "@/lib/demo/track";
-import { ActionQueue, AgentFeed, AskAgent, BriefingBox } from "./agent-panel";
+import { ActionQueue, AskAgent } from "./agent-panel";
 import { ShareSummaryView } from "./share-view";
-import { PromisePlanCard } from "./promise-plan";
-import { AnimatedNumber, Grade, Kpi, SourceChip, Tabs, Toast, TopBar, useMounted } from "./shared";
+import { featuredPromise, PromisePlanCard } from "./promise-plan";
+import { AgentHero, FocusArea, StoryGrid, useStoryFocus, type StoryCard } from "./home";
+import { AnimatedNumber, Grade, SourceChip, Tabs, Toast, TopBar, useMounted } from "./shared";
 
 type Tab = "inflows" | "customers" | "whatsapp" | "sources";
+type Story = "cash" | "promise" | "actions" | "customers" | "scorecard";
 const DOC_LABEL = {
   invoice: ["Fatura", "Invoice"],
   contract_installment: ["Sözleşme taksiti", "Contract instalment"],
@@ -64,6 +66,16 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
   const steps = useMemo(() => agentRun(dataset, date, prevDate ?? addDays(date, -14)), [dataset, date, prevDate]);
   const briefing = useMemo(() => businessBriefing(snap), [snap]);
   const accuracy = useMemo(() => (prevDate ? forecastAccuracy(dataset, prevDate, date) : null), [dataset, prevDate, date]);
+  const card = useMemo(() => (prevDate ? scorecard(dataset, prevDate, date) : null), [dataset, prevDate, date]);
+  const featured = useMemo(() => featuredPromise(snap), [snap]);
+  const risky = useMemo(
+    () =>
+      snap.dataset.customers.filter((c) => {
+        const p = payerProfile(snap, c.id);
+        return p.openAmount > 0 && (p.grade === "C" || p.grade === "D");
+      }).length,
+    [snap],
+  );
   const ask = useCallback((q: string) => askAgent(snap, q), [snap]);
   const [tab, setTab] = useState<Tab>("inflows");
   const [customer, setCustomer] = useState<Customer | null>(null);
@@ -74,6 +86,7 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
     (action: DemoAction, target?: string, detail?: string) => trackDemo({ panel: "business", tenant, demo_date: date, action, target: target ?? null, detail: detail ?? null }),
     [tenant, date],
   );
+  const story = useStoryFocus(null, (key) => log("tab_open", `card-${key}`));
   const changeDate = (d: DemoDate) => {
     log("date_change", d);
     onDate(d);
@@ -86,77 +99,162 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
     log("customer_open", c.id);
     setCustomer(c);
   };
+  const openShare = () => {
+    log("tab_open", "bank-share");
+    setShareOpen(true);
+  };
 
   const balance = currentBalance(snap);
   const last = weeks.at(-1)!;
   const tight = tightestWeek(weeks);
   const overdue = inflows.filter((i) => i.receivable.dueDate < date);
   const overdueSum = overdue.reduce((s, i) => s + i.receivable.amount, 0);
+  const hit = card ? card.predictions.filter((p) => p.outcome === "on_time" || p.outcome === "early").length : 0;
+  const featuredName = featured ? snap.dataset.customers.find((c) => c.id === featured.r.customerId)?.name : undefined;
+
+  const cards: StoryCard[] = [
+    {
+      key: "cash",
+      icon: <TrendingUp size={15} />,
+      eyebrow: L("Nakit · 8 hafta", "Cash · 8 weeks"),
+      value: money(tight.balanceLow),
+      text: L(
+        `En dar hafta ${formatDateTr(tight.weekStart)} (kötü senaryo). Grafik ve "ya şöyle olursa" senaryoları.`,
+        `Tightest week ${formatDateTr(tight.weekStart)} (downside case). Chart and what-if scenarios.`,
+      ),
+      ...(tight.balanceLow < 0 ? { tone: "alert" as const } : {}),
+    },
+    {
+      key: "promise",
+      icon: <Handshake size={15} />,
+      eyebrow: L("Sözden işleme", "Promise to transaction"),
+      value: featured ? money(featured.r.amount) : "—",
+      text: featured
+        ? L(`${featuredName}: "Cuma gönderiyoruz." Bu sözü planlı ödemeye dönüştürün.`, `${featuredName}: "We'll send it Friday." Turn that promise into a scheduled payment.`)
+        : L("Bu tarihte bekleyen söz yok; 24 Kasım'a geçin.", "No pending promise on this date; switch to 24 November."),
+      cta: L("Canlı izle", "Watch it live"),
+    },
+    {
+      key: "actions",
+      icon: <BellRing size={15} />,
+      eyebrow: L("Bugün takip", "Follow up today"),
+      value: L(`${actions.length} müşteri`, `${actions.length} customers`),
+      text: L("Ajan mesaj taslaklarını hazırladı; siz onaylamadan hiçbiri gitmez.", "The agent drafted the messages; none goes out until you approve it."),
+    },
+    {
+      key: "customers",
+      icon: <UserCheck size={15} />,
+      eyebrow: L("Müşteri ödeme karnesi", "Customer payer scorecard"),
+      value: L(`${risky} müşteri geç ödüyor`, `${risky} customers pay late`),
+      text: L(`${money(overdueSum)} vadesi geçmiş, ${overdue.length} fatura. Kim ne zaman öder, WhatsApp sözleri, kaynaklar.`, `${money(overdueSum)} overdue across ${overdue.length} invoices. Who pays when, WhatsApp promises, sources.`),
+      ...(overdue.length ? { tone: "alert" as const } : {}),
+    },
+    {
+      key: "scorecard",
+      icon: <Target size={15} />,
+      eyebrow: L("Ajan ne kadar tuttu?", "How accurate was the agent?"),
+      value: card && prevDate ? `${hit} / ${card.predictions.length}` : "—",
+      text:
+        card && prevDate
+          ? L(`${formatDateTr(prevDate)} tarihinde beklenen ödemelerden ${hit} tanesi zamanında geldi. Demo verisi.`, `${hit} of the payments expected on ${formatDateTr(prevDate)} arrived on time. Demo data.`)
+          : L(`Önceki tarih yok. ${formatDateTr(DEMO_DATES[1])} tarihine geçin.`, `No earlier date. Switch to ${formatDateTr(DEMO_DATES[1])}.`),
+      ...(card && prevDate ? { tone: "good" as const } : {}),
+    },
+    {
+      key: "share",
+      icon: <Share2 size={15} />,
+      eyebrow: L("Bankama göster", "Show my bank"),
+      value: L("Ödeme karnem", "My scorecard"),
+      text: L("Bankanıza yalnız özet gider; müşteri adları ve mesajlar gitmez. Tek tıkla paylaşın.", "Only a summary goes to your bank, never customer names or messages. Share in one click."),
+      tone: "accent",
+      cta: L("Paylaş", "Share"),
+      onActivate: openShare,
+    },
+  ];
+  const titles: Record<Story, string> = {
+    cash: L("Nakit akışı · 8 hafta", "Cash flow · 8 weeks"),
+    promise: L("Sözden işleme", "Promise to transaction"),
+    actions: L("Bugün takip", "Follow up today"),
+    customers: L("Müşteriler ve belgeler", "Customers and documents"),
+    scorecard: L("Tahmin ve söz karnesi", "Forecast and promise scorecard"),
+  };
+  const open = story.open as Story | null;
 
   return (
     <div className="qd">
       <TopBar langSwitch title={dataset.company.name} subtitle={`${sectorName(dataset.company.sector)} · ${dataset.company.city} · ${dataset.customers.length} ${L("müşteri", "customers")}`} date={date} onDate={changeDate}>
-        <button type="button" className="qd-btn qd-btn--primary qd-btn--sm" onClick={() => { log("tab_open", "bank-share"); setShareOpen(true); }}>
-          {L("Karnemi bankama göster", "Show my scorecard to my bank")}
-        </button>
         {accountSlot}
       </TopBar>
-      <main className="qd-main">
-        <div className="qd-col">
-          <div className="qd-sources">
-            <SourceChip icon={<Building2 size={12} />} name={dataset.sources.erp} />
-            <SourceChip icon={<Calculator size={12} />} name={dataset.sources.onMuhasebe} />
-            <SourceChip icon={<Landmark size={12} />} name={dataset.sources.banka} />
-            <SourceChip icon={<MessageCircle size={12} />} name="WhatsApp Business" />
-          </div>
+      <main className="qd-home">
+        <AgentHero
+          title={L("QualiFi ajanı", "QualiFi agent")}
+          headline={briefing.headline}
+          tone={briefing.tone}
+          points={briefing.points.slice(0, 2)}
+          runKey={`${tenant}-${date}`}
+          steps={steps}
+          stats={[
+            {
+              label: L("Bugünkü bakiye", "Balance today"),
+              value: <AnimatedNumber value={balance} format={money} />,
+              sub: L(`${formatDateTr(date)} · ${dataset.sources.banka}`, `${formatDateTr(date)} · ${dataset.sources.banka}`),
+            },
+            {
+              label: L("8 hafta sonra", "In 8 weeks"),
+              value: <AnimatedNumber value={last.balanceBase} format={money} />,
+              sub: `${L("Aralık", "Range")} ${money(last.balanceLow)} – ${money(last.balanceHigh)}`,
+            },
+          ]}
+        >
+          <AskAgent ask={ask} suggestions={suggestedQuestions().slice(0, 4)} resetKey={date} onAsk={(q) => log("agent_question", undefined, q)} />
+        </AgentHero>
 
-          <section className="qd-kpis" key={`kpi-${date}`}>
-            <Kpi tone="accent" label={L("Bugünkü bakiye", "Balance today")} value={<AnimatedNumber value={balance} format={money} />} sub={L(`${formatDateTr(date)} itibarıyla, ${dataset.sources.banka}`, `As of ${formatDateTr(date)}, ${dataset.sources.banka}`)} />
-            <Kpi label={L("8 hafta sonra (en olası)", "In 8 weeks (most likely)")} value={<AnimatedNumber value={last.balanceBase} format={money} />} sub={`${L("Aralık", "Range")} ${money(last.balanceLow)} – ${money(last.balanceHigh)}`} />
-            <Kpi {...(tight.balanceLow < 0 ? { tone: "alert" as const } : {})} label={L("En dar hafta", "Tightest week")} value={<AnimatedNumber value={tight.balanceLow} format={money} />} sub={L(`${formatDateTr(tight.weekStart)} haftası, kötü senaryo`, `Week of ${formatDateTr(tight.weekStart)}, downside case`)} />
-            <Kpi label={L("Vadesi geçen alacak", "Overdue receivables")} value={<AnimatedNumber value={overdueSum} format={money} />} sub={L(`${overdue.length} fatura`, `${overdue.length} invoices`)} />
-          </section>
-
-          <CashFlowCard snap={snap} weeks={weeks} accuracy={accuracy} prevDate={prevDate} onScenario={(target, detail) => log("scenario_run", target, detail)} />
-
-          <PromisePlanCard key={`plan-${date}`} snap={snap} onLog={(step) => log("scenario_run", "promise-plan", step)} />
-
-          <ScorecardCard dataset={dataset} prevDate={prevDate} date={date} onCustomer={openCustomer} />
-
-          <section className="qd-card">
-            <Tabs<Tab>
-              value={tab}
-              onChange={changeTab}
-              items={[
-                ["inflows", L("Beklenen tahsilatlar", "Expected collections")],
-                ["customers", L("Müşteri ödeme karnesi", "Customer payer scorecard")],
-                ["whatsapp", L("WhatsApp sözleri", "WhatsApp promises")],
-                ["sources", L("Kaynaklar ve belgeler", "Sources and documents")],
-              ]}
-            />
-            <div key={`${tab}-${date}`} className="qd-enter">
-              {tab === "inflows" ? <InflowTable snap={snap} onCustomer={openCustomer} /> : null}
-              {tab === "customers" ? <CustomerTable snap={snap} onCustomer={openCustomer} /> : null}
-              {tab === "whatsapp" ? <PromiseList snap={snap} onCustomer={openCustomer} /> : null}
-              {tab === "sources" ? <SourcesView snap={snap} /> : null}
-            </div>
-          </section>
+        <div className="qd-home__sources">
+          <span>{L("Bağlı kaynaklar:", "Connected sources:")}</span>
+          <SourceChip icon={<Building2 size={12} />} name={dataset.sources.erp} />
+          <SourceChip icon={<Calculator size={12} />} name={dataset.sources.onMuhasebe} />
+          <SourceChip icon={<Landmark size={12} />} name={dataset.sources.banka} />
+          <SourceChip icon={<MessageCircle size={12} />} name="WhatsApp Business" />
         </div>
 
-        <aside className="qd-side">
-          <section className="qd-card qd-agent">
-            <AgentFeed steps={steps} runKey={`${tenant}-${date}`} />
-            <BriefingBox key={date} briefing={briefing} />
-            <AskAgent ask={ask} suggestions={suggestedQuestions()} resetKey={date} onAsk={(q) => log("agent_question", undefined, q)} />
-          </section>
-          <section className="qd-card">
-            <div className="qd-card__head">
-              <h2>{L("Ajanın önerileri", "Agent suggestions")}</h2>
-              <p>{L("Siz onaylamadan hiçbir mesaj gitmez.", "No message goes out without your approval.")}</p>
-            </div>
-            <ActionQueue key={date} actions={actions} storageKey={`qd-actions-${tenant}-${date}`} onToast={setToast} onAction={(a, id) => log(a, id)} />
-          </section>
-        </aside>
+        <StoryGrid cards={cards} open={open} onToggle={story.toggle} />
+
+        {open ? (
+          <FocusArea openKey={`${open}-${date}`} title={titles[open]} onClose={story.close}>
+            {open === "cash" ? <CashFlowCard snap={snap} weeks={weeks} accuracy={accuracy} prevDate={prevDate} onScenario={(target, detail) => log("scenario_run", target, detail)} /> : null}
+            {open === "promise" ? <PromisePlanCard key={`plan-${date}`} snap={snap} onLog={(step) => log("scenario_run", "promise-plan", step)} /> : null}
+            {open === "actions" ? (
+              <section className="qd-card">
+                <div className="qd-card__head">
+                  <h2>{L("Ajanın önerileri", "Agent suggestions")}</h2>
+                  <p>{L("Siz onaylamadan hiçbir mesaj gitmez.", "No message goes out without your approval.")}</p>
+                </div>
+                <ActionQueue key={date} actions={actions} storageKey={`qd-actions-${tenant}-${date}`} onToast={setToast} onAction={(a, id) => log(a, id)} />
+              </section>
+            ) : null}
+            {open === "customers" ? (
+              <section className="qd-card">
+                <Tabs<Tab>
+                  value={tab}
+                  onChange={changeTab}
+                  items={[
+                    ["inflows", L("Beklenen tahsilatlar", "Expected collections")],
+                    ["customers", L("Müşteri ödeme karnesi", "Customer payer scorecard")],
+                    ["whatsapp", L("WhatsApp sözleri", "WhatsApp promises")],
+                    ["sources", L("Kaynaklar ve belgeler", "Sources and documents")],
+                  ]}
+                />
+                <div key={`${tab}-${date}`} className="qd-enter">
+                  {tab === "inflows" ? <InflowTable snap={snap} onCustomer={openCustomer} /> : null}
+                  {tab === "customers" ? <CustomerTable snap={snap} onCustomer={openCustomer} /> : null}
+                  {tab === "whatsapp" ? <PromiseList snap={snap} onCustomer={openCustomer} /> : null}
+                  {tab === "sources" ? <SourcesView snap={snap} /> : null}
+                </div>
+              </section>
+            ) : null}
+            {open === "scorecard" ? <ScorecardCard dataset={dataset} prevDate={prevDate} date={date} onCustomer={openCustomer} /> : null}
+          </FocusArea>
+        ) : null}
       </main>
       <CustomerSheet snap={snap} customer={customer} onClose={() => setCustomer(null)} />
       <ShareSheet open={shareOpen} onClose={() => setShareOpen(false)} dataset={dataset} date={date} onShared={() => { log("tab_open", "bank-share-sent"); setToast(L("Demo: paylaşım bankacı paneline yansıdı. Gerçekte hiçbir veri gönderilmedi.", "Demo: the share now appears in the banker panel. No data was actually sent.")); }} />

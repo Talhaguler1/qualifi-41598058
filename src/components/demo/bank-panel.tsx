@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState, type ReactNode } from "react";
 import { Bar, BarChart, CartesianGrid, Line, LineChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis, Cell } from "recharts";
-import { Bot, Phone } from "lucide-react";
+import { Bot, Phone, PhoneCall, ShieldAlert, PieChart, MessageCircle, CalendarClock, FileCheck2 } from "lucide-react";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import {
   addDays,
@@ -17,6 +17,7 @@ import {
   bankShareSummary,
   generateBusiness,
   sectorAnalysis,
+  isEnglish,
   L,
   pick,
   pct,
@@ -25,15 +26,16 @@ import {
   sectorName,
   messageText,
   type AgentStep,
+  type BankBriefing,
   type DemoDate,
   type Firm,
 } from "@/lib/demo";
 import { trackDemo, type DemoAction } from "@/lib/demo/track";
-import { AgentFeed, BriefingBox } from "./agent-panel";
 import { ShareSummaryView } from "./share-view";
-import { AnimatedNumber, Kpi, Tabs, TopBar, useMounted } from "./shared";
+import { AgentHero, FocusArea, StoryGrid, useStoryFocus, type StoryCard } from "./home";
+import { AnimatedNumber, TopBar, useMounted } from "./shared";
 
-type Tab = "portfolio" | "sectors" | "signals" | "commitments";
+type Story = "calls" | "portfolio" | "sectors" | "signals" | "commitments" | "shared";
 const STATUS_LABEL = { kept: [["Tutuldu", "Kept"], "qd-pill--good"], late: [["Gecikmeli", "Late"], "qd-pill--warn"], broken: [["Tutulmadı", "Broken"], "qd-pill--bad"], upcoming: [["Yaklaşıyor", "Upcoming"], "qd-pill--muted"] } as const;
 const SIGNAL_LABEL = { promise: [["Ödeme sözü", "Payment promise"], "qd-pill--muted"], deferral: [["Erteleme talebi", "Deferral request"], "qd-pill--warn"], stress: [["Nakit sıkıntısı", "Cash stress"], "qd-pill--bad"], positive: [["Olumlu", "Positive"], "qd-pill--good"] } as const;
 const LEVEL = { high: [["Yüksek", "High"], "qd-pill--bad"], medium: [["Orta", "Medium"], "qd-pill--warn"], low: [["Düşük", "Low"], "qd-pill--good"] } as const;
@@ -43,9 +45,10 @@ export function BankPanel({ region, banker, date, onDate, onBanker, sharedTenant
   const prevDate = DEMO_DATES[DEMO_DATES.indexOf(date) - 1] ?? addDays(date, -14);
   const risks = useMemo(() => new Map(firms.map((f) => [f.id, firmRisk(f, date)])), [firms, date]);
   const briefing = useMemo(() => bankBriefing(firms, date, prevDate), [firms, date, prevDate]);
-  const [tab, setTab] = useState<Tab>("portfolio");
+  const sectors = useMemo(() => sectorAnalysis(firms, date), [firms, date]);
   const [firm, setFirm] = useState<Firm | null>(null);
   const log = (action: DemoAction, target?: string) => trackDemo({ panel: "bank", tenant: banker, demo_date: date, action, target: target ?? null });
+  const story = useStoryFocus(sharedTenant ? "shared" : null, (key) => log("tab_open", `card-${key}`));
   const openFirm = (f: Firm) => {
     log("firm_open", f.id);
     setFirm(f);
@@ -54,16 +57,86 @@ export function BankPanel({ region, banker, date, onDate, onBanker, sharedTenant
   const high = firms.filter((f) => risks.get(f.id)?.level === "high");
   const allCommitments = firms.flatMap((f) => f.commitments.map((c) => ({ f, c, s: commitmentStatus(c, date) })));
   const broken = allCommitments.filter((x) => x.s === "broken");
-  const upcoming = allCommitments.filter((x) => x.s === "upcoming" && x.c.date <= addDays(date, 7));
+  // Same windows as the agent's briefing, so the hero and the cards never disagree.
+  const upcoming = allCommitments.filter((x) => x.c.date > date && x.c.date <= addDays(date, 7));
+  const brokenNow = broken.filter((x) => x.c.date > prevDate);
   const newSignals = firms.flatMap((f) => f.signals.filter((s) => s.date > prevDate && s.date <= date));
+  const newStress = newSignals.filter((s) => s.type === "stress" || s.type === "deferral");
+  const stressFirms = firms.filter((f) => f.signals.some((s) => s.date > prevDate && s.date <= date && (s.type === "stress" || s.type === "deferral"))).length;
+  const topSector = sectors[0];
+  const totalLoans = firms.reduce((s, f) => s + f.loanAmount, 0);
+  const highLoans = high.reduce((s, f) => s + f.loanAmount, 0);
 
   const steps: AgentStep[] = [
     { id: "p", tool: "karne", title: L(`${count(firms.length)} firmanın tahsilat verisi tarandı`, `Scanned collection data for ${count(firms.length)} firms`), detail: L(`Firmaların kendi müşterilerinden tahsil süreleri ${formatDateTr(date)} itibarıyla güncellendi.`, `Updated how fast each firm collects from its own customers, as of ${formatDateTr(date)}.`) },
-    { id: "w", tool: "whatsapp", title: L("WhatsApp yazışmaları okundu", "Read WhatsApp messages"), detail: L(`${newSignals.length} yeni işaret: ${newSignals.filter((s) => s.type === "stress" || s.type === "deferral").length} sıkıntı/erteleme, ${newSignals.filter((s) => s.type === "promise").length} ödeme sözü.`, `${newSignals.length} new signals: ${newSignals.filter((s) => s.type === "stress" || s.type === "deferral").length} stress/deferral, ${newSignals.filter((s) => s.type === "promise").length} payment promises.`) },
-    { id: "t", tool: "takip", title: L("Taahhütler kontrol edildi", "Checked commitments"), detail: L(`${broken.length} tutulmayan, önümüzdeki 7 günde ${upcoming.length} taahhüt.`, `${broken.length} broken; ${upcoming.length} due in the next 7 days.`) },
-    { id: "s", tool: "tahmin", title: L("Sektör analizi yenilendi", "Refreshed the sector analysis"), detail: `${L("En riskli sektör", "Riskiest sector")}: ${sectorName(sectorAnalysis(firms, date)[0]?.sector ?? "—")}.` },
+    { id: "w", tool: "whatsapp", title: L("WhatsApp yazışmaları okundu", "Read WhatsApp messages"), detail: L(`${newSignals.length} yeni işaret: ${newStress.length} sıkıntı/erteleme, ${newSignals.filter((s) => s.type === "promise").length} ödeme sözü.`, `${newSignals.length} new signals: ${newStress.length} stress/deferral, ${newSignals.filter((s) => s.type === "promise").length} payment promises.`) },
+    { id: "t", tool: "takip", title: L("Taahhütler kontrol edildi", "Checked commitments"), detail: L(`${brokenNow.length} yeni tutulmayan, önümüzdeki 7 günde ${upcoming.length} taahhüt.`, `${brokenNow.length} newly broken; ${upcoming.length} due in the next 7 days.`) },
+    { id: "s", tool: "tahmin", title: L("Sektör analizi yenilendi", "Refreshed the sector analysis"), detail: `${L("En riskli sektör", "Riskiest sector")}: ${sectorName(topSector?.sector ?? "—")}.` },
     { id: "c", tool: "banka", title: L("Bugünün arama listesi hazır", "Today's call list is ready"), detail: L(`${briefing.callList.length} firma; gerekçeleriyle birlikte.`, `${briefing.callList.length} firms, each with its reason.`) },
   ];
+
+  const cards: StoryCard[] = [
+    {
+      key: "calls",
+      icon: <PhoneCall size={15} />,
+      eyebrow: L("Bugün aranacaklar", "Calls for today"),
+      value: L(`${briefing.callList.length} firma`, `${briefing.callList.length} firms`),
+      text: briefing.callList[0]
+        ? L(`Önce ${briefing.callList[0].firm.name}: ${briefing.callList[0].reason.toLocaleLowerCase("tr")}.`, `First ${briefing.callList[0].firm.name}: ${briefing.callList[0].reason.toLowerCase()}.`)
+        : L("Bugün aranması gereken firma yok.", "No firm needs a call today."),
+      ...(briefing.callList.length ? { tone: "alert" as const } : {}),
+    },
+    {
+      key: "portfolio",
+      icon: <ShieldAlert size={15} />,
+      eyebrow: L("Portföy riski", "Portfolio risk"),
+      value: L(`${high.length} yüksek riskli`, `${high.length} high risk`),
+      text: L(`${count(firms.length)} firmadan; ${money(highLoans)} kredi (toplam ${money(totalLoans)}). Her skorun gerekçesi görünür.`, `Out of ${count(firms.length)} firms; ${money(highLoans)} in loans (of ${money(totalLoans)}). Every score shows its reasons.`),
+    },
+    {
+      key: "sectors",
+      icon: <PieChart size={15} />,
+      eyebrow: L("Sektör analizi", "Sector analysis"),
+      value: topSector ? sectorName(topSector.sector) : "—",
+      text: topSector
+        ? L(`En riskli sektör: firmaların ${pct(Math.round(topSector.highRiskShare * 100))}'i yüksek riskte, tahsil süresi 3 ayda ${topSector.avgDelayChange > 0 ? "+" : ""}${topSector.avgDelayChange.toLocaleString("tr-TR")} gün.`, `Riskiest sector: ${pct(Math.round(topSector.highRiskShare * 100))} of firms are high risk; collection time ${topSector.avgDelayChange > 0 ? "+" : ""}${topSector.avgDelayChange} days in 3 months.`)
+        : "",
+    },
+    {
+      key: "signals",
+      icon: <MessageCircle size={15} />,
+      eyebrow: L("WhatsApp içgörüleri", "WhatsApp insights"),
+      value: L(`${stressFirms} firma`, `${stressFirms} firms`),
+      text: L(`Son 2 haftada ${newStress.length} nakit sıkıntısı veya erteleme mesajı. Her içgörünün yanında kaynak mesaj durur.`, `${newStress.length} cash-stress or deferral messages in the last 2 weeks. Every insight sits next to its source message.`),
+      ...(stressFirms ? { tone: "alert" as const } : {}),
+    },
+    {
+      key: "commitments",
+      icon: <CalendarClock size={15} />,
+      eyebrow: L("Taahhüt takibi", "Commitment tracking"),
+      value: L(`${brokenNow.length} tutulmadı`, `${brokenNow.length} broken`),
+      text: L(`Son 2 haftada. ${upcoming.length} taahhüdün vadesi önümüzdeki 7 günde; toplamda ${broken.length} tutulmayan (${money(broken.reduce((s, x) => s + x.c.amount, 0))}).`, `In the last 2 weeks. ${upcoming.length} commitments fall due in the next 7 days; ${broken.length} broken in total (${money(broken.reduce((s, x) => s + x.c.amount, 0))}).`),
+    },
+    {
+      key: "shared",
+      icon: <FileCheck2 size={15} />,
+      eyebrow: L("İşletmenin paylaştığı karne", "Scorecard shared by a business"),
+      value: sharedTenant ? L("1 yeni karne", "1 new scorecard") : L("Paylaşım yok", "No shares yet"),
+      text: sharedTenant
+        ? L("Bir işletme kendi ödeme karnesini onayıyla gönderdi. Limit görüşmesi için hazır özet.", "A business sent its own payment scorecard with consent. A ready summary for a credit-limit talk.")
+        : L("İşletmeler 'Karnemi bankama göster' ile özet gönderdiğinde burada görünür.", "When a business uses 'Show my scorecard to my bank', the summary appears here."),
+      tone: "accent",
+    },
+  ];
+  const titles: Record<Story, string> = {
+    calls: L("Bugün aranacaklar", "Calls for today"),
+    portfolio: L("Portföy", "Portfolio"),
+    sectors: L("Sektör analizi", "Sector analysis"),
+    signals: L("WhatsApp içgörüleri", "WhatsApp insights"),
+    commitments: L("Taahhüt takibi", "Commitment tracking"),
+    shared: L("İşletmenin paylaştığı karne", "Scorecard shared by a business"),
+  };
+  const open = story.open as Story | null;
 
   return (
     <div className="qd">
@@ -80,72 +153,84 @@ export function BankPanel({ region, banker, date, onDate, onBanker, sharedTenant
         </select>
         )}
       </TopBar>
-      <main className="qd-main">
-        <div className="qd-col">
-          {sharedTenant ? <SharedCard tenant={sharedTenant} date={date} /> : null}
-          <section className="qd-kpis" key={`kpi-${date}-${banker}`}>
-            <Kpi tone="accent" label={L("İzlenen firma", "Firms monitored")} value={<AnimatedNumber value={firms.length} format={count} />} sub={`${L("Toplam kredi", "Total loans")} ${money(firms.reduce((s, f) => s + f.loanAmount, 0))}`} />
-            <Kpi {...(high.length ? { tone: "alert" as const } : {})} label={L("Yüksek risk", "High risk")} value={<AnimatedNumber value={high.length} format={count} />} sub={`${money(high.reduce((s, f) => s + f.loanAmount, 0))} ${L("kredi", "in loans")}`} />
-            <Kpi label={L("Tutulmayan taahhüt", "Broken commitments")} value={<AnimatedNumber value={broken.length} format={(n) => String(Math.round(n))} />} sub={`${money(broken.reduce((s, x) => s + x.c.amount, 0))}`} />
-            <Kpi label={L("7 gün içinde vadesi gelen", "Due within 7 days")} value={<AnimatedNumber value={upcoming.length} format={(n) => String(Math.round(n))} />} sub={L("taahhüt", "commitments")} />
-          </section>
+      <main className="qd-home">
+        <AgentHero
+          title={L("QualiFi risk ajanı", "QualiFi risk agent")}
+          headline={briefing.headline}
+          tone={high.length > firms.length * 0.15 ? "alert" : "watch"}
+          points={briefing.points}
+          runKey={`${banker}-${date}`}
+          steps={steps}
+          stats={[
+            { label: L("İzlenen firma", "Firms monitored"), value: <AnimatedNumber value={firms.length} format={count} />, sub: `${L("Toplam kredi", "Total loans")} ${money(totalLoans)}` },
+            { label: L("Yüksek risk", "High risk"), value: <AnimatedNumber value={high.length} format={count} />, sub: `${money(highLoans)} ${L("kredi", "in loans")}` },
+          ]}
+        />
 
-          <section className="qd-card">
-            <Tabs<Tab>
-              value={tab}
-              onChange={(t) => { log("tab_open", t); setTab(t); }}
-              items={[
-                ["portfolio", L("Portföy", "Portfolio")],
-                ["sectors", L("Sektör analizi", "Sector analysis")],
-                ["signals", L("WhatsApp içgörüleri", "WhatsApp insights")],
-                ["commitments", L("Taahhüt takibi", "Commitment tracking")],
-              ]}
-            />
-            <div key={`${tab}-${date}-${banker}`} className="qd-enter">
-              {tab === "portfolio" ? <Portfolio firms={firms} risks={risks} onFirm={openFirm} /> : null}
-              {tab === "sectors" ? <Sectors firms={firms} date={date} /> : null}
-              {tab === "signals" ? <Signals firms={firms} date={date} onFirm={openFirm} /> : null}
-              {tab === "commitments" ? <Commitments rows={allCommitments} date={date} onFirm={openFirm} /> : null}
-            </div>
-          </section>
-        </div>
-        <aside className="qd-side">
-          <section className="qd-card qd-agent">
-            <AgentFeed steps={steps} runKey={`${banker}-${date}`} />
-            <BriefingBox key={`${banker}-${date}`} briefing={{ headline: briefing.headline, points: briefing.points, tone: high.length > firms.length * 0.15 ? "alert" : "watch" }} />
-          </section>
-          <section className="qd-card">
-            <div className="qd-card__head">
-              <h2>{L("Bugün aranacaklar", "Calls for today")}</h2>
-              <p>{L("Riski en çok artandan başlayarak", "Starting with the biggest risk increase")}</p>
-            </div>
-            <div className="qd-actions">
-              {briefing.callList.map((c, i) => (
-                <article key={c.firm.id} className="qd-action qd-enter" style={{ animationDelay: `${i * 60}ms` }}>
-                  <div className="qd-action__top">
-                    <div>
-                      <div className="qd-action__name">{c.firm.name}</div>
-                      <div className="qd-action__reason">{c.reason}</div>
-                    </div>
-                    <div style={{ textAlign: "right" }}>
-                      <span className={`qd-pill ${c.score >= 60 ? "qd-pill--bad" : "qd-pill--warn"}`}>{L("Skor", "Score")} {c.score}</span>
-                      {c.change > 0 ? <div className="qd-num" style={{ color: "var(--qd-bad)", fontSize: 12, marginTop: 4 }}>+{c.change} {L("puan", "pts")}</div> : null}
-                    </div>
-                  </div>
-                  <div className="qd-action__buttons">
-                    <button type="button" className="qd-btn qd-btn--primary qd-btn--sm" onClick={() => openFirm(c.firm)}>
-                      <Bot size={13} /> {L("Firma kartı", "Firm card")}
-                    </button>
-                    <span className="qd-pill qd-pill--muted"><Phone size={12} /> {c.firm.city}</span>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </section>
-        </aside>
+        <StoryGrid cards={cards} open={open} onToggle={story.toggle} />
+
+        {open ? (
+          <FocusArea openKey={`${open}-${date}-${banker}`} title={titles[open]} onClose={story.close}>
+            {open === "calls" ? <CallList briefing={briefing} onFirm={openFirm} /> : null}
+            {open === "portfolio" ? <section className="qd-card"><Portfolio firms={firms} risks={risks} onFirm={openFirm} /></section> : null}
+            {open === "sectors" ? <section className="qd-card"><Sectors firms={firms} date={date} /></section> : null}
+            {open === "signals" ? <section className="qd-card"><Signals firms={firms} date={date} onFirm={openFirm} /></section> : null}
+            {open === "commitments" ? <section className="qd-card"><Commitments rows={allCommitments} date={date} onFirm={openFirm} /></section> : null}
+            {open === "shared" ? (
+              sharedTenant ? (
+                <SharedCard tenant={sharedTenant} date={date} />
+              ) : (
+                <section className="qd-card">
+                  <p style={{ color: "var(--qd-muted)" }}>
+                    {L(
+                      "Banka işletmeyi izlemez; işletme iyi ödeme karnesini kendisi getirir. İşletme panelinde 'Karnemi bankama göster' düğmesine basıldığında özet burada belirir.",
+                      "The bank does not watch the business; the business brings its good scorecard itself. When 'Show my scorecard to my bank' is pressed in the business panel, the summary appears here.",
+                    )}
+                  </p>
+                  <a className="qd-btn qd-btn--primary qd-btn--sm" style={{ marginTop: 12 }} href={`/demo/isletme?t=017&d=${date}${isEnglish() ? "&l=en" : ""}`}>
+                    {L("İşletme panelinden dene", "Try it from the business panel")}
+                  </a>
+                </section>
+              )
+            ) : null}
+          </FocusArea>
+        ) : null}
       </main>
       <FirmSheet firm={firm} date={date} onClose={() => setFirm(null)} />
     </div>
+  );
+}
+
+function CallList({ briefing, onFirm }: { briefing: BankBriefing; onFirm: (f: Firm) => void }) {
+  return (
+    <section className="qd-card">
+      <div className="qd-card__head">
+        <h2>{L("Bugün aranacaklar", "Calls for today")}</h2>
+        <p>{L("Riski en çok artandan başlayarak", "Starting with the biggest risk increase")}</p>
+      </div>
+      <div className="qd-actions">
+        {briefing.callList.map((c, i) => (
+          <article key={c.firm.id} className="qd-action qd-enter" style={{ animationDelay: `${i * 60}ms` }}>
+            <div className="qd-action__top">
+              <div>
+                <div className="qd-action__name">{c.firm.name}</div>
+                <div className="qd-action__reason">{c.reason}</div>
+              </div>
+              <div style={{ textAlign: "right" }}>
+                <span className={`qd-pill ${c.score >= 60 ? "qd-pill--bad" : "qd-pill--warn"}`}>{L("Skor", "Score")} {c.score}</span>
+                {c.change > 0 ? <div className="qd-num" style={{ color: "var(--qd-bad)", fontSize: 12, marginTop: 4 }}>+{c.change} {L("puan", "pts")}</div> : null}
+              </div>
+            </div>
+            <div className="qd-action__buttons">
+              <button type="button" className="qd-btn qd-btn--primary qd-btn--sm" onClick={() => onFirm(c.firm)}>
+                <Bot size={13} /> {L("Firma kartı", "Firm card")}
+              </button>
+              <span className="qd-pill qd-pill--muted"><Phone size={12} /> {c.firm.city}</span>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
   );
 }
 
