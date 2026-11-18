@@ -256,3 +256,99 @@ bana yapıştırın. Ben:
 - Demo akışını sunumdaki konuşmayla birebir eşlerim (gerekirse demoya
   sunum için "sunum modu" eklerim),
 - Ana sayfa ve demo giriş metnini aynı dile çekerim.
+
+
+---
+
+## 5 — "QualiFi keskin tez" (GPT-6.1 Sol, düşünme açık; gerekirse Deep research)
+
+18 Kasım derin araştırmasından sonra: araştırma dürüst ama savunmacı kaldı.
+Bu istem rakip taramasını tekrar ettirmez; ondan sonra gelen soruyu sorar:
+"Herkesin yapabildiğini bildiğimize göre, kimsenin yapmadığı ve 5 yılda
+kategori kuracak hamle ne?"
+
+```
+[Ortak bağlam bloğu]
+
+ÖNCEKİ ARAŞTIRMANIN SONUCU (bunu tekrar araştırma, üzerine kur):
+- Ödeme davranışı tahmini (Tesorio, Growfin, Chaser), WhatsApp'tan ödeme sözü
+  çıkarma (Peakflo), takip ajanı (Upflow, Stuut), nakit senaryosu (Float,
+  Finrota NAP360), ödeme davranışı ağı (D&B, Moody's Pulse), vade müzakere
+  ajanı (Pactum) ve banka erken uyarısı (SAS, Moody's, Findeks) zaten var.
+- Türk bankaları DBS, garantili vadeli ödeme (Akbank Ödemen Güvende, Ziraat
+  Kesin Ödeme, VakıfBank Vinov), çek/senet, açık bankacılık ve tedarikçi
+  finansmanı sunuyor.
+- TCMB 17 Mart 2026: ÖHVPS 2.0.0 ile ileri tarihli ve düzenli ödeme emri
+  başlatma mümkün. e-Fatura'da 1,94 milyon mükellef var (GİB 2025); her
+  faturada alıcının vergi numarası var.
+- Önceki araştırmanın önerdiği yön: "aynı alacağı tüm kaynaklarda tanı",
+  "tahsilat engelini bul", "güvenli avans/vade hesapla". Bunlar doğru ama
+  jüriye "iyi bir araç" der, "kategori" demez.
+
+BUGÜN ÇALIŞAN ÜRÜN (qualifilab.com):
+- Ücretsiz kayıt; belge (PDF, fatura görseli, Excel, WhatsApp .txt) yükleme;
+  ajan tutar/vade/karşı taraf/ödeme sözü çıkarıyor; kullanıcı düzeltiyor;
+  8 haftalık nakit görünümü; döviz ve olası tekrar ayrımı.
+- Demo: ödeme karnesi, çek/senet, "Bu işi alırsam" senaryosu, tahmin ve söz
+  karnesi, "Karnemi bankama göster" (KOBİ'nin kendi onayıyla bankaya özet),
+  bankacı paneli (portföy, sektör, WhatsApp içgörüsü, taahhüt takibi).
+- Belge okuma maliyeti çok düşük (ucuz model); ölçek maliyeti sorun değil.
+
+GÖREV: QualiFi için "çok ileri ama gerçekçi" ve fark yaratan çözüm bul. Üç
+eksende keskinleş: (1) KOBİ'nin deneyimi, (2) ölçülebilir sonuç, (3) banka.
+
+ADIM 1 — Ezber bozan 12 fikir üret. Her biri tek cümle + hangi gerçek
+altyapıya dayandığı (ÖHVPS 2.0 ileri tarihli ödeme emri, e-Fatura/VKN,
+çek/senet, DBS, KVKK açık rıza, WhatsApp Business, faktoring 6361 vb.).
+Kural: "dashboard", "tahmin", "AI asistan", "risk skoru" tek başına fikir
+sayılmaz. Şu tür tersine çevirmeleri zorla:
+- Sözü veriye değil, işleme çevirmek (ör. WhatsApp'taki "cuma öderim" →
+  alıcıya tek dokunuşla ileri tarihli ödeme talimatı linki).
+- Bankanın erken UYARISINI erken YARDIMA çevirmek (en dar hafta görüldüğü an,
+  sözü teyitli alacaklar karşılığında banka teklifi).
+- KOBİ'yi izlenen değil veri sahibi yapmak (iyi ödeme karnesi = daha iyi
+  koşul; "karne taşınabilirliği").
+- Alıcıyı da kazandırmak (zamanında ödeyen alıcıya erken ödeme iskontosu /
+  itibar), iki taraflı ağ etkisi.
+- Ödemenin önündeki engeli (eksik evrak, itiraz, yanlış muhatap) ajanın
+  kendisinin çözmesi.
+
+ADIM 2 — 12 fikri tabloyla puanla (1-5): KOBİ'ye ilk haftada somut fayda,
+bankaya gelir/risk etkisi, kopyalanma zorluğu (neden?), Türkiye'ye özgü
+zamanlama avantajı, 24 Kasım'a kadar demoda gösterilebilirlik, düzenleyici
+risk. En iyi 3'ü seç; neden diğerlerini elediğini bir cümleyle yaz.
+
+ADIM 3 — Seçilen 3 fikir için ayrı ayrı:
+a) Kullanıcı hikâyesi: Pazartesi sabahı bir KOBİ sahibinin telefonunda ne
+   oluyor, adım adım (ekran değil; mesaj, karar, tek dokunuş).
+b) Bankanın tarafı: hangi birim kullanır, hangi kararı daha iyi verir, banka
+   bundan nasıl para kazanır veya zarar önler; Akbank'ın mevcut bir ürününe
+   (Ödemen Güvende, DBS, KOBİ kredileri) nasıl takılır.
+c) Neden bugün mümkün (2026 altyapısı), neden 3 yıl önce değildi.
+d) Neden kopyalanması zor: biriken veri, iki taraflı ağ, güven, lisans/ortak.
+e) Ölçülecek tek metrik ve pilotta başarı eşiği.
+f) Yasal/izin gerçeği: QualiFi ne yapar, yetkili kuruluş ne yapar (ödeme
+   emri başlatma, faktoring, müşteri sırrı). Engel değil, tasarım kısıtı
+   olarak yaz.
+
+ADIM 4 — Bu üçünü tek bir 5 yıllık hikâyeye bağla:
+"Bugün → 1 yıl → 3 yıl → 5 yıl". Her aşamada KOBİ ne yaşar, banka ne kazanır,
+QualiFi'nin elinde ne birikir. 2031 için tek cümlelik kategori adı öner
+(ör. "ticari sözün altyapısı"); 3 alternatif ver.
+
+ADIM 5 — 24 Kasım sunumu için:
+- 7 dakikanın içine sığacak "keskin tez" slaytı (en fazla 20 kelime) ve 30
+  saniyelik konuşma metni.
+- Demoda bugün gösterilebilecek bir "vizyon anı" önerisi: mevcut ekranlara
+  en fazla 1 gün işle eklenebilecek, fikri somutlaştıran tek etkileşim
+  (ör. "en dar haftada banka teklifi" kartı veya "sözü talimata çevir"
+  butonu). Ekranda ne yazar, kullanıcı neye basar, sonra ne olur; demo
+  verisi olduğunu nasıl dürüstçe belirtiriz.
+- Akbank jürisinin soracağı en sert 5 soru ve cevabı.
+
+YAZIM KURALLARI: Sade Türkçe, kısa cümle. Cesur ol ama olmayan müşteri,
+ortaklık, doğruluk oranı yazma. Her iddiayı şu etiketlerden biriyle
+işaretle: [Bugün çalışıyor] [24 Kasım demosu] [Pilot hedefi] [Vizyon].
+Rakip listesini tekrar etme; yalnız fikrin özgünlüğünü test etmek için
+gerektiğinde bir rakibe atıf yap.
+```
