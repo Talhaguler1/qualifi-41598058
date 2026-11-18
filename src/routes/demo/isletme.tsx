@@ -19,7 +19,7 @@ export const Route = createFileRoute("/demo/isletme")({
   },
   head: ({ match }) =>
     (match.search as { l?: string }).l === "en"
-      ? demoHead("Business panel", "QualiFi demo business panel: payer scorecard, cash forecast and follow-up agent. All data is for demo purposes.", "en")
+      ? demoHead("Business panel", "QualiFi demo business panel: payment scorecard, cash forecast and follow-up agent. All data is for demo purposes.", "en")
       : demoHead("İşletme paneli", "QualiFi demo işletme paneli: ödeme karnesi, nakit tahmini ve takip ajanı. Tüm veriler demo amaçlıdır."),
   component: BusinessDemoPage,
 });

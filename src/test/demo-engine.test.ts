@@ -46,7 +46,7 @@ describe("demo business data", () => {
     const d = generateBusiness("017");
     expect(d.customers.length).toBeGreaterThanOrEqual(100);
     expect(d.customers.length).toBeLessThanOrEqual(200);
-    expect(d.sources).toEqual({ erp: "mockerp017", onMuhasebe: "mockonmuhasebe017", banka: "mockbanka017" });
+    expect(d.sources).toEqual({ erp: "ERP sistemi", onMuhasebe: "Ön muhasebe", banka: "Banka A ••4417" });
     expect(d.contracts).toHaveLength(3);
     expect(d.chats.some((m) => m.promiseDate)).toBe(true);
   });
@@ -142,7 +142,7 @@ describe("agent", () => {
   it("logs a full round over the three mock sources, WhatsApp, scorecards, forecast and follow-ups", () => {
     const steps = agentRun(d, "2026-11-24", "2026-11-10");
     expect(steps.map((x) => x.tool)).toEqual(["erp", "muhasebe", "banka", "whatsapp", "karne", "tahmin", "takip"]);
-    expect(steps[0]?.title).toContain("mockerp017");
+    expect(steps[0]?.title).toContain("ERP");
     expect(steps.at(-1)?.detail).toContain("onayınızı");
   });
 

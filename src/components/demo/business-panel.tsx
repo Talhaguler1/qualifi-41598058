@@ -81,10 +81,11 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
     setLiveOpen(false);
   }, [tenant, date]);
   const weeks = useMemo(() => forecastWithEvents(snap, events), [snap, events]);
+  const briefing = useMemo(() => businessBriefing(snap, weeks), [snap, weeks]);
   const inflows = useMemo(() => expectedInflows(snap), [snap]);
   const actions = useMemo(() => agentActions(snap, 8), [snap]);
   const steps = useMemo(() => agentRun(dataset, date, prevDate ?? addDays(date, -14)), [dataset, date, prevDate]);
-  const briefing = useMemo(() => businessBriefing(snap), [snap]);
+
   const accuracy = useMemo(() => (prevDate ? forecastAccuracy(dataset, prevDate, date) : null), [dataset, prevDate, date]);
   const card = useMemo(() => (prevDate ? scorecard(dataset, prevDate, date) : null), [dataset, prevDate, date]);
   const featured = useMemo(() => featuredPromise(snap), [snap]);
@@ -151,20 +152,20 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
       key: "cash",
       icon: <TrendingUp size={15} />,
       eyebrow: L("Nakit · 8 hafta", "Cash · 8 weeks"),
-      value: money(tight.balanceLow),
+      value: money(tight.balanceBase),
       text: L(
-        `En dar hafta ${formatDateTr(tight.weekStart)} (kötü senaryo). Grafik ve "ya şöyle olursa" senaryoları.`,
-        `Tightest week ${formatDateTr(tight.weekStart)} (downside case). Chart and what-if scenarios.`,
+        `En dar hafta ${formatDateTr(tight.weekStart)}, en olası bakiye. Kötü senaryoda ${money(tight.balanceLow)}.`,
+        `Tightest week ${formatDateTr(tight.weekStart)}, most likely balance. ${money(tight.balanceLow)} in the downside case.`,
       ),
       ...(tight.balanceLow < 0 ? { tone: "alert" as const } : {}),
     },
     {
       key: "promise",
       icon: <Handshake size={15} />,
-      eyebrow: L("Sözden işleme", "Promise to transaction"),
+      eyebrow: L("Sözden ödemeye", "From promise to payment"),
       value: featured ? money(featured.r.amount) : "—",
       text: featured
-        ? L(`${featuredName}: "Cuma gönderiyoruz." Bu sözü planlı ödemeye dönüştürün.`, `${featuredName}: "We'll send it Friday." Turn that promise into a scheduled payment.`)
+        ? L(`${featuredName}: “Cuma gönderiyoruz.” Bu sözü planlı ödemeye dönüştürün.`, `${featuredName}: “We'll send it Friday.” Turn that promise into a scheduled payment.`)
         : L("Bu tarihte bekleyen söz yok; 24 Kasım'a geçin.", "No pending promise on this date; switch to 24 November."),
       cta: L("Canlı izle", "Watch it live"),
     },
@@ -178,7 +179,7 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
     {
       key: "customers",
       icon: <UserCheck size={15} />,
-      eyebrow: L("Müşteri ödeme karnesi", "Customer payer scorecard"),
+      eyebrow: L("Müşteri ödeme karnesi", "Customer payment scorecard"),
       value: money(overdueSum),
       text: L(`Vadesi geçmiş ${overdue.length} fatura. Kim ne zaman öder, WhatsApp sözleri ve kaynak belgeler burada.`, `Overdue across ${overdue.length} invoices. Who pays when, WhatsApp promises and source documents.`),
       ...(overdue.length ? { tone: "alert" as const } : {}),
@@ -200,15 +201,15 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
       eyebrow: L("Bankalarım", "My banks"),
       value: money(bankCash),
       text: offers.length
-        ? L(`3 bankada nakit. Banka A'dan yeni bir teklif var; karşılaştırın.`, `Cash across 3 banks. A new offer from Banka A is waiting; compare it.`)
-        : L("3 bankadaki nakit ve kredi tek ekranda. Teklif isteyin, karnenizi paylaşın.", "Cash and credit at 3 banks on one screen. Ask for quotes, share your scorecard."),
+        ? L(`3 bankada toplam nakit (${money(balance)} Banka A'da). Banka A'dan yeni bir teklif var.`, `Total cash at 3 banks (${money(balance)} at Banka A). A new offer from Banka A is waiting.`)
+        : L(`3 bankada toplam nakit; ${money(balance)} Banka A ana hesabında. Teklif isteyin, karnenizi paylaşın.`, `Total cash at 3 banks; ${money(balance)} in the main Banka A account. Ask for quotes, share your scorecard.`),
       tone: "accent",
       cta: offers.length ? L("Teklifi gör", "See the offer") : L("Aç", "Open"),
     },
   ];
   const titles: Record<Story, string> = {
     cash: L("Nakit akışı · 8 hafta", "Cash flow · 8 weeks"),
-    promise: L("Sözden işleme", "Promise to transaction"),
+    promise: L("Sözden ödemeye", "From promise to payment"),
     actions: L("Bugün takip", "Follow up today"),
     customers: L("Müşteriler ve belgeler", "Customers and documents"),
     scorecard: L("Tahmin ve söz karnesi", "Forecast and promise scorecard"),
@@ -281,7 +282,7 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
                   onChange={changeTab}
                   items={[
                     ["inflows", L("Beklenen tahsilatlar", "Expected collections")],
-                    ["customers", L("Müşteri ödeme karnesi", "Customer payer scorecard")],
+                    ["customers", L("Müşteri ödeme karnesi", "Customer payment scorecard")],
                     ["whatsapp", L("WhatsApp sözleri", "WhatsApp promises")],
                     ["sources", L("Kaynaklar ve belgeler", "Sources and documents")],
                   ]}

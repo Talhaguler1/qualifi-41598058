@@ -36,8 +36,8 @@ function DemoChooser() {
         <h1>{L("Faturayı kestiniz. Peki müşteriniz ne zaman ödeyecek?", "You've sent the invoice. So when will your customer pay?")}</h1>
         <p>
           {L(
-            "ERP ve ön muhasebe ne kadar alacağınız olduğunu bilir. QualiFi her müşterinin ne zaman ödediğini öğrenir, ödemeleri bir ajanla takip eder ve önümüzdeki haftaların nakit tablosunu çıkarır. Bu demodaki şirketler, sohbetler ve kaynaklar (mockerp, mockonmuhasebe, mockbanka) gerçek değildir.",
-            "Your ERP and bookkeeping know how much you are owed. QualiFi learns when each customer actually pays, follows up with an agent and maps your cash for the coming weeks. The companies, chats and sources in this demo (mockerp, mockonmuhasebe, mockbanka) are not real.",
+            "ERP ve ön muhasebe ne kadar alacağınız olduğunu bilir. QualiFi her müşterinin ne zaman ödediğini öğrenir, ödemeleri bir ajanla takip eder ve önümüzdeki haftaların nakit tablosunu çıkarır. Bu demodaki şirketler, sohbetler, bankalar ve bağlantılar örnektir.",
+            "Your ERP and bookkeeping know how much you are owed. QualiFi learns when each customer actually pays, follows up with an agent and maps your cash for the coming weeks. The companies, chats, banks and connections in this demo are samples.",
           )}
         </p>
         <div className="qd-choices">
@@ -46,7 +46,7 @@ function DemoChooser() {
             <h2>{L("İşletme paneli", "Business panel")}</h2>
             <p>{L(`${CUSTOMERS} müşteriye satış yapan bir yazılım şirketi.`, `A software company selling to ${CUSTOMERS} customers.`)}</p>
             <ul>
-              <li>{L("Müşteri ödeme karnesi ve gecikme geçmişi", "Customer payer scorecard and delay history")}</li>
+              <li>{L("Müşteri ödeme karnesi ve gecikme geçmişi", "Customer payment scorecard and delay history")}</li>
               <li>{L("8 haftalık nakit tahmini ve senaryo", "8-week cash forecast and scenarios")}</li>
               <li>{L("Takip ajanı ve WhatsApp mesaj taslakları", "Follow-up agent and WhatsApp message drafts")}</li>
             </ul>

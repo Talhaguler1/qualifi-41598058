@@ -166,7 +166,7 @@ export function firmRisk(firm: Firm, asOf: string): FirmRisk {
   const stress = visible.filter((s) => s.type === "stress" || s.type === "deferral").length;
   if (stress) factors.push({ label: L(`WhatsApp'ta ${stress} nakit sıkışıklığı işareti`, `${stress} cash-stress signals on WhatsApp`), points: Math.min(18, stress * 9) });
   if (visible.some((s) => s.type === "positive")) factors.push({ label: L("Olumlu gelişme mesajı", "Positive news message"), points: -8 });
-  if (firm.topCustomerShare > 0.45) factors.push({ label: L(`Gelirin ${pct(Math.round(firm.topCustomerShare * 100))}'i tek müşteriden`, `${pct(Math.round(firm.topCustomerShare * 100))} of revenue from one customer`), points: 10 });
+  if (firm.topCustomerShare > 0.45) factors.push({ label: L(`Tek müşterinin gelirdeki payı ${pct(Math.round(firm.topCustomerShare * 100))}`, `${pct(Math.round(firm.topCustomerShare * 100))} of revenue from one customer`), points: 10 });
   const score = Math.max(3, Math.min(97, Math.round(8 + factors.reduce((s, f) => s + f.points, 0))));
   return { score, level: score >= 62 ? "high" : score >= 38 ? "medium" : "low", factors, delayNow: now, delayChange: change };
 }

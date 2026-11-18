@@ -100,7 +100,7 @@ const TR: SiteCopy = {
       title: "KOBİ riskini telefon çalmadan görün.",
       sub: "İşletmelerin izinle paylaştığı ödeme karnesi, maskeli veriyle erken uyarı ve doğru zamanda doğru ürün önerisi.",
       primary: { label: "Bankacı demosunu dene", href: "/demo/banka?b=01&d=2026-11-24" },
-      secondary: { label: "Kurumsal pilot talep et", href: "/tr/banka-risk-pilotu" },
+      secondary: { label: "Kurumsal pilot talep et", href: "/bankalar#pilot" },
     },
   },
   visual: {
@@ -112,7 +112,7 @@ const TR: SiteCopy = {
     warnTitle: "30 Ara haftasında nakit sıkışıyor",
     calmTitle: "Nakit önümüzdeki 8 hafta yeterli",
     calmText: "Ajan yeni mesajları ve tahsilatları izliyor.",
-    warnAdvice: "Önce vadesi gelmiş iki tahsilatı arayın: ₺336 bin.",
+    warnAdvice: "Önce vadesi gelmiş iki müşteriyi arayın: ₺170 bin.",
     milestones: ["Tasarım teslimi", "Geliştirme hakedişi", "Yayın ve bakım"],
     milestoneLate: "5 gün gecikti",
     reminder: "Hatırlatma taslağı hazır",
@@ -133,8 +133,8 @@ const TR: SiteCopy = {
     outputs: ["Güncel ödeme tarihleri", "8 haftalık nakit tahmini", "Onaylı hatırlatmalar"],
   },
   before: {
-    title: "Tek bir mesaj, dört elle iş demekti.",
-    sub: "\"Cuma öderiz\" dendiğinde tahmini güncellemek bugün yarım saat sürüyor. QualiFi'de saniyeler.",
+    title: "Tek bir mesaj, dört ayrı güncelleme demekti.",
+    sub: "“Cuma öderiz” dendiğinde tahmini güncellemek bugün yarım saat sürüyor. QualiFi'de saniyeler.",
     oldLabel: "Bugün",
     oldSteps: ["Telefonda söz alınır", "Muhasebeciye iletilir", "ERP'de vade düzeltilir", "Excel tahmini elle güncellenir"],
     newLabel: "QualiFi ile",
@@ -144,16 +144,16 @@ const TR: SiteCopy = {
   how: {
     title: "Dört adımda nakit görünürlüğü.",
     steps: [
-      { title: "Bağlan", text: "ERP, ön muhasebe, banka ve WhatsApp Business. Ya da belgeleri yükleyin." },
+      { title: "Bağlayın", text: "ERP, ön muhasebe, banka ve WhatsApp Business. Ya da belgelerinizi yükleyin." },
       { title: "Okur ve günceller", text: "Sözleri ve gecikmeleri yakalar, beklenen ödeme tarihini kendisi kaydırır." },
       { title: "Tahmin ve öneri", text: "Her müşterinin ödeme alışkanlığını öğrenir; sıkışmayı haftalar önce, ne yapacağınızla birlikte söyler." },
-      { title: "Bankanla paylaş", text: "İstersen ödeme karneni bankana gönder; teklifleri yan yana gör." },
+      { title: "Bankanızla paylaşın", text: "İsterseniz ödeme karnenizi bankanıza gönderin; teklifleri yan yana görün." },
     ],
   },
   bento: {
     title: "Tahsilattan bankaya, tek ekran.",
     tiles: [
-      { title: "Sohbetten otomatik tarih", text: "\"2 hafta sonra\" yazıldığı an fatura tarihi kayar." },
+      { title: "Sohbetten otomatik tarih", text: "“2 hafta sonra” yazıldığı an fatura tarihi kayar." },
       { title: "Onaylı hatırlatmalar", text: "Taslağı ajan yazar, siz onaylamadan gitmez." },
       { title: "8 haftalık canlı tahmin", text: "Her söz ve gecikmeyle yeniden çizilir." },
       { title: "Müşteri ödeme karnesi", text: "Kim dakik, kim sözünü tutmuyor; A'dan D'ye." },
@@ -197,7 +197,7 @@ const TR: SiteCopy = {
       { label: "Canlı demo", href: "/demo" },
       { label: "Ücretsiz hesap aç", href: "/app/kayit" },
       { label: "Giriş", href: "/app/giris" },
-      { label: "Bankalar için pilot", href: "/tr/banka-risk-pilotu" },
+      { label: "Bankalar için pilot", href: "/bankalar#pilot" },
     ],
   },
 };
@@ -236,7 +236,7 @@ const EN: SiteCopy = {
       title: "See SME risk before the phone rings.",
       sub: "Scorecards businesses share with consent, early warnings on masked data and the right product at the right time.",
       primary: { label: "Try the banker demo", href: "/demo/banka?b=01&d=2026-11-24&l=en" },
-      secondary: { label: "Request a corporate pilot", href: "/en/bank-risk-pilot" },
+      secondary: { label: "Request a corporate pilot", href: "/en/banks#pilot" },
     },
   },
   visual: {
@@ -248,7 +248,7 @@ const EN: SiteCopy = {
     warnTitle: "Cash gets tight in the week of 30 Dec",
     calmTitle: "Cash is sufficient for the next 8 weeks",
     calmText: "The agent is watching new messages and payments.",
-    warnAdvice: "Call two customers who are already due first: ₺336K.",
+    warnAdvice: "Call two customers who are already due first: ₺170K.",
     milestones: ["Design delivery", "Development milestone", "Launch and support"],
     milestoneLate: "5 days late",
     reminder: "Reminder draft ready",
@@ -270,7 +270,7 @@ const EN: SiteCopy = {
   },
   before: {
     title: "One message used to mean four manual updates.",
-    sub: "When a customer says \"we'll pay Friday\", updating the forecast takes half an hour today. With QualiFi, seconds.",
+    sub: "When a customer says “we'll pay Friday”, updating the forecast takes half an hour today. With QualiFi, seconds.",
     oldLabel: "Today",
     oldSteps: ["Promise taken on the phone", "Passed on to the accountant", "Due date fixed in the ERP", "Excel forecast updated by hand"],
     newLabel: "With QualiFi",
@@ -289,7 +289,7 @@ const EN: SiteCopy = {
   bento: {
     title: "From collections to your bank, one screen.",
     tiles: [
-      { title: "Dates from chats", text: "The moment someone writes \"in 2 weeks\", the invoice date moves." },
+      { title: "Dates from chats", text: "The moment someone writes “in 2 weeks”, the invoice date moves." },
       { title: "Approved reminders", text: "The agent drafts; nothing goes out without your approval." },
       { title: "Live 8-week forecast", text: "Redrawn with every promise and delay." },
       { title: "Customer payment scorecard", text: "Who pays on time and who breaks promises, A to D." },
@@ -333,7 +333,7 @@ const EN: SiteCopy = {
       { label: "Live demo", href: "/demo?l=en" },
       { label: "Open a free account", href: "/app/kayit" },
       { label: "Sign in", href: "/app/giris" },
-      { label: "Bank pilot", href: "/en/bank-risk-pilot" },
+      { label: "Bank pilot", href: "/en/banks#pilot" },
     ],
   },
 };

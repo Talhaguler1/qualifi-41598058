@@ -262,9 +262,9 @@ export function sampleMessages(customerName: string, delayCustomerName = custome
   const first = customerName.split(" ")[0] ?? customerName;
   const late = delayCustomerName.split(" ")[0] ?? delayCustomerName;
   return [
-    { label: L("\"2 hafta sonra ödeyeceğiz\"", "\"We'll pay in 2 weeks\""), text: L(`${late}: Merhaba, ödemeyi 2 hafta sonra yapabileceğiz, kusura bakmayın.`, `${late}: Hi, we'll be able to pay in 2 weeks, sorry about that.`) },
-    { label: L("\"Bugün ödedik\"", "\"Paid today\""), text: L(`${first}: Bugün havale yaptık, dekontu ekledim.`, `${first}: We paid today, the receipt is attached.`) },
-    { label: L("\"İkiye bölebilir miyiz?\"", "\"Can we split it?\""), text: L(`${first}: Ödemeyi ikiye bölebilir miyiz? Yarısını bu hafta, kalanını ay sonunda.`, `${first}: Can we split the payment into two? Half this week, the rest next month.`) },
-    { label: L("\"Cuma gönderiyoruz\"", "\"Sending on Friday\""), text: L(`${first}: Cuma günü gönderiyoruz.`, `${first}: We're sending it on Friday.`) },
+    { label: L("“2 hafta sonra ödeyeceğiz”", "“We'll pay in 2 weeks”"), text: L(`${late}: Merhaba, ödemeyi 2 hafta sonra yapabileceğiz, kusura bakmayın.`, `${late}: Hi, we'll be able to pay in 2 weeks, sorry about that.`) },
+    { label: L("“Bugün ödedik”", "“Paid today”"), text: L(`${first}: Bugün havale yaptık, dekontu ekledim.`, `${first}: We paid today, the receipt is attached.`) },
+    { label: L("“İkiye bölebilir miyiz?”", "“Can we split it?”"), text: L(`${first}: Ödemeyi ikiye bölebilir miyiz? Yarısını bu hafta, kalanını ay sonunda.`, `${first}: Can we split the payment into two? Half this week, the rest next month.`) },
+    { label: L("“Cuma gönderiyoruz”", "“Sending on Friday”"), text: L(`${first}: Cuma günü gönderiyoruz.`, `${first}: We're sending it on Friday.`) },
   ];
 }

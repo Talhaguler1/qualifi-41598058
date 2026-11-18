@@ -89,7 +89,7 @@ export function agentRun(dataset: BusinessDataset, asOf: string, since = addDays
     {
       id: "karne",
       tool: "karne",
-      title: L("Ödeme karneleri güncellendi", "Updated payer scorecards"),
+      title: L("Ödeme karneleri güncellendi", "Updated payment scorecards"),
       detail: slower.length
         ? L(`${slower.length} müşteri yavaşladı: `, `${slower.length} customers slowed down: `) + `${slower.slice(0, 2).map((c) => c.name).join(", ")}${slower.length > 2 ? "…" : ""}`
         : L("Notu düşen müşteri yok.", "No customer was downgraded."),
@@ -125,8 +125,8 @@ export interface Briefing {
   tone: "calm" | "watch" | "alert";
 }
 
-export function businessBriefing(snap: Snapshot): Briefing {
-  const weeks = weeklyForecast(snap);
+export function businessBriefing(snap: Snapshot, forecast?: ForecastWeek[]): Briefing {
+  const weeks = forecast ?? weeklyForecast(snap);
   const tight = tightestWeek(weeks);
   const last = weeks.at(-1) as ForecastWeek;
   const inflows = expectedInflows(snap);
@@ -434,7 +434,7 @@ export function bankBriefing(firms: Firm[], asOf: string, since = addDays(asOf, 
     .map((r) => ({ firm: r.firm, score: r.now.score, change: r.change, reason: r.now.factors.slice().sort((a, b) => b.points - a.points)[0]?.label ?? "" }));
   return {
     headline: risers.length
-      ? L(`Son 2 haftada ${risers.length} firmanın riski belirgin arttı. Öncelik: ${(risers[0]?.firm.name ?? "").replace(/\.$/, "")}.`, `Risk rose sharply for ${risers.length} firms in the last 2 weeks. Priority: ${(risers[0]?.firm.name ?? "").replace(/\.$/, "")}.`)
+      ? L(`Son 2 haftada ${risers.length} firmanın riski belirgin arttı. Öncelik: ${(callList[0]?.firm.name ?? "").replace(/\.$/, "")}.`, `Risk rose sharply for ${risers.length} firms in the last 2 weeks. Priority: ${(callList[0]?.firm.name ?? "").replace(/\.$/, "")}.`)
       : L("Son 2 haftada portföyde belirgin bir kötüleşme yok.", "No clear deterioration in the portfolio over the last 2 weeks."),
     points: [
       L(`${high.length} firma yüksek riskte; kredi tutarı ${money(high.reduce((s, r) => s + r.firm.loanAmount, 0))}.`, `${high.length} firms are high risk; loan exposure ${money(high.reduce((s, r) => s + r.firm.loanAmount, 0))}.`),

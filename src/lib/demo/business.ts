@@ -2,6 +2,7 @@
 // so `mockerp017` always has the same customers, invoices, payments and chats.
 // Nothing here is real: the sources imitate an ERP, a pre-accounting tool and a bank.
 
+import { L } from "./i18n";
 import { addDays, addMonths, DATA_END, DEMO_DATES, diffDays, HISTORY_START, withDay } from "./dates";
 import { brandWord, createRng, type Rng } from "./rng";
 
@@ -265,7 +266,8 @@ export function generateBusiness(tenantInput: string): BusinessDataset {
   return {
     tenant,
     company: { name: companyName, sector: "Yazılım ve teknoloji", city: rng.pick(CITIES) },
-    sources: { erp: `mockerp${tenant}`, onMuhasebe: `mockonmuhasebe${tenant}`, banka: `mockbanka${tenant}` },
+    // Display names of the (demo) connected systems; internal source ids stay mockerp/mockonmuhasebe/mockbanka.
+    sources: { erp: L("ERP sistemi", "ERP system"), onMuhasebe: L("Ön muhasebe", "Bookkeeping"), banka: `Banka A ••${String(4400 + Number(tenant)).slice(-4)}` },
     openingBalance,
     customers,
     receivables,

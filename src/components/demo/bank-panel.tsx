@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState, type ReactNode } from "react";
 import { Bar, BarChart, CartesianGrid, Line, LineChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis, Cell } from "recharts";
-import { Bot, Phone, PhoneCall, Sparkles, ShieldAlert, PieChart, MessageCircle, CalendarClock, FileCheck2 } from "lucide-react";
+import { Bot, MapPin, PhoneCall, Sparkles, ShieldAlert, PieChart, MessageCircle, CalendarClock, FileCheck2 } from "lucide-react";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import {
   addDays,
@@ -105,15 +105,15 @@ export function BankPanel({ region, banker, date, onDate, onBanker, sharedTenant
       eyebrow: L("Sektör analizi", "Sector analysis"),
       value: topSector ? sectorName(topSector.sector) : "—",
       text: topSector
-        ? L(`En riskli sektör: firmaların ${pct(Math.round(topSector.highRiskShare * 100))}'i yüksek riskte, tahsil süresi 3 ayda ${topSector.avgDelayChange > 0 ? "+" : ""}${topSector.avgDelayChange.toLocaleString("tr-TR")} gün.`, `Riskiest sector: ${pct(Math.round(topSector.highRiskShare * 100))} of firms are high risk; collection time ${topSector.avgDelayChange > 0 ? "+" : ""}${topSector.avgDelayChange} days in 3 months.`)
+        ? L(`En riskli sektör: yüksek riskli firma oranı ${pct(Math.round(topSector.highRiskShare * 100))}, tahsil süresi 3 ayda ${topSector.avgDelayChange > 0 ? "+" : ""}${topSector.avgDelayChange.toLocaleString("tr-TR")} gün.`, `Riskiest sector: ${pct(Math.round(topSector.highRiskShare * 100))} of firms are high risk; collection time ${topSector.avgDelayChange > 0 ? "+" : ""}${topSector.avgDelayChange} days in 3 months.`)
         : "",
     },
     {
       key: "signals",
       icon: <MessageCircle size={15} />,
-      eyebrow: L("WhatsApp içgörüleri", "WhatsApp insights"),
+      eyebrow: L("İzinli sohbet sinyalleri", "Consented chat signals"),
       value: L(`${stressFirms} firma`, `${stressFirms} firms`),
-      text: L(`Son 2 haftada ${newStress.length} nakit sıkıntısı veya erteleme mesajı. Her içgörünün yanında kaynak mesaj durur.`, `${newStress.length} cash-stress or deferral messages in the last 2 weeks. Every insight sits next to its source message.`),
+      text: L(`Son 2 haftada ${newStress.length} nakit sıkıntısı veya erteleme sinyali; işletmelerin izinle paylaştığı, sınıflandırılmış veriler.`, `${newStress.length} cash-stress or deferral signals in the last 2 weeks; classified data the businesses shared with consent.`),
       ...(stressFirms ? { tone: "alert" as const } : {}),
     },
     {
@@ -138,7 +138,7 @@ export function BankPanel({ region, banker, date, onDate, onBanker, sharedTenant
     calls: L("Bugün aranacaklar", "Calls for today"),
     portfolio: L("Portföy", "Portfolio"),
     sectors: L("Sektör analizi", "Sector analysis"),
-    signals: L("WhatsApp içgörüleri", "WhatsApp insights"),
+    signals: L("İzinli sohbet sinyalleri (işletmelerin paylaştığı)", "Consented chat signals (shared by the businesses)"),
     commitments: L("Taahhüt takibi", "Commitment tracking"),
     shared: L("İşletmenin paylaştığı karne", "Scorecard shared by a business"),
   };
@@ -210,7 +210,6 @@ function CallList({ briefing, date, onFirm }: { briefing: BankBriefing; date: st
   return (
     <section className="qd-card">
       <div className="qd-card__head">
-        <h2>{L("Bugün aranacaklar", "Calls for today")}</h2>
         <p>{L("Riski en çok artandan başlayarak; her firmaya önerilecek ürünle", "Biggest risk increase first, each with a product to offer")}</p>
       </div>
       <div className="qd-actions">
@@ -233,7 +232,7 @@ function CallList({ briefing, date, onFirm }: { briefing: BankBriefing; date: st
               <button type="button" className="qd-btn qd-btn--primary qd-btn--sm" onClick={() => onFirm(c.firm)}>
                 <Bot size={13} /> {L("Firma kartı", "Firm card")}
               </button>
-              <span className="qd-pill qd-pill--muted"><Phone size={12} /> {c.firm.city}</span>
+              <span className="qd-pill qd-pill--muted"><MapPin size={12} /> {c.firm.city}</span>
             </div>
           </article>
         ))}
@@ -428,7 +427,7 @@ function Signals({ firms, date, onFirm }: { firms: Firm[]; date: string; onFirm:
               <th>{L("Tarih", "Date")}</th>
               <th>{L("Firma", "Firm")}</th>
               <th>{L("İçgörü", "Insight")}</th>
-              <th>{L("Kaynak mesaj", "Source message")}</th>
+              <th>{L("Sinyal (işletmenin izniyle)", "Signal (with the business's consent)")}</th>
             </tr>
           </thead>
           <tbody>
@@ -505,13 +504,18 @@ function FirmSheet({ firm, date, onClose }: { firm: Firm | null; date: string; o
               <SheetDescription>{sectorName(firm.sector)} · {firm.city} · {L("kredi", "loan")} {money(firm.loanAmount)} · {L(`${formatDateTr(date)} itibarıyla`, `as of ${formatDateTr(date)}`)}</SheetDescription>
             </SheetHeader>
             <div className="qd-stat-row">
-              <div className="qd-stat"><span>{L("Risk skoru", "Risk score")}</span><b className="qd-num">{risk.score} · {pick(LEVEL[risk.level][0])}</b></div>
+              <div className="qd-stat"><span>{L("Risk skoru", "Risk score")}</span><b className="qd-num">{risk.score} · {pick(LEVEL[risk.level][0])}</b><span>{L("0–100 · yüksek = riskli", "0–100 · higher = riskier")}</span></div>
               <div className="qd-stat"><span>{L("Müşterilerinden tahsil", "Collects from customers in")}</span><b className="qd-num">{days(risk.delayNow)}</b></div>
               <div className="qd-stat"><span>{L("En büyük müşteri payı", "Largest customer share")}</span><b className="qd-num">{pct(Math.round(firm.topCustomerShare * 100))}</b></div>
             </div>
             <ProductIdea firm={firm} date={date} />
             <span className="qd-eyebrow">{L("Skoru oluşturan etkenler", "What drives the score")}</span>
             <div style={{ marginTop: 6 }}>
+              <div className="qd-factor qd-factor--base">
+                <span>{L("Başlangıç puanı (her firma)", "Base points (every firm)")}</span>
+                <div className="qd-bar"><i style={{ width: "20%" }} /></div>
+                <b className="qd-num">+8</b>
+              </div>
               {risk.factors.map((f) => (
                 <div key={f.label} className="qd-factor">
                   <span>{f.label}</span>
@@ -556,7 +560,7 @@ function FirmSheet({ firm, date, onClose }: { firm: Firm | null; date: string; o
             ) : null}
             {firm.signals.some((s) => s.date <= date) ? (
               <div style={{ marginTop: 14 }}>
-                <span className="qd-eyebrow">{L("WhatsApp (kaynak mesajlar)", "WhatsApp (source messages)")}</span>
+                <span className="qd-eyebrow">{L("İzinli sohbet sinyalleri (işletmenin paylaştığı)", "Consented chat signals (shared by the business)")}</span>
                 <div className="qd-chat" style={{ marginTop: 6 }}>
                   {firm.signals.filter((s) => s.date <= date).map((s) => (
                     <div key={s.id} className="qd-bubble">

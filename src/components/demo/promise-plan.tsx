@@ -34,11 +34,11 @@ export function PromisePlanCard({ snap, onLog }: { snap: Snapshot; onLog: (step:
   if (!featured) {
     return (
       <section className="qd-card qd-enter">
-        <span className="qd-eyebrow">{L("Sözden işleme", "From promise to transaction")}</span>
+        <span className="qd-eyebrow">{L("Sözden ödemeye", "From promise to payment")}</span>
         <p style={{ marginTop: 6, color: "var(--qd-muted)" }}>
           {L(
-            "Bu tarihte bekleyen bir ödeme sözü yok. 24 Kasım'a geçin: bir müşterinin \"cuma gönderiyoruz\" sözünü işlem planına dönüştürmeyi burada görebilirsiniz.",
-            "No pending payment promise on this date. Switch to 24 November to see a customer's \"we'll send it Friday\" turned into a transaction plan.",
+            "Bu tarihte bekleyen bir ödeme sözü yok. 24 Kasım'a geçin: bir müşterinin “cuma gönderiyoruz” sözünü işlem planına dönüştürmeyi burada görebilirsiniz.",
+            "No pending payment promise on this date. Switch to 24 November to see a customer's “we'll send it Friday” turned into a transaction plan.",
           )}
         </p>
       </section>
@@ -70,8 +70,8 @@ export function PromisePlanCard({ snap, onLog }: { snap: Snapshot; onLog: (step:
     <section className="qd-card qd-enter qd-plan">
       <div className="qd-card__head">
         <div>
-          <span className="qd-eyebrow">{L("Sözden işleme · vizyon", "From promise to transaction · vision")}</span>
-          <h2>{L("\"Cuma gönderiyoruz\" kasaya girene kadar", "From \"we'll send it Friday\" to cash in the bank")}</h2>
+          <span className="qd-eyebrow">{L("Sözden ödemeye · vizyon", "From promise to payment · vision")}</span>
+          <h2>{L("“Cuma gönderiyoruz” kasaya girene kadar", "From “we'll send it Friday” to cash in the bank")}</h2>
         </div>
         <span className={`qd-pill ${STATUS[stage][1]}`}>{pick(STATUS[stage][0])}</span>
       </div>
@@ -118,7 +118,7 @@ export function PromisePlanCard({ snap, onLog }: { snap: Snapshot; onLog: (step:
               <span>
                 {idx >= 2
                   ? L(`Alıcı teyit etti: ${formatDateTr(promised)} · ${money(r.amount)}.`, `Buyer confirmed: ${formatDateTr(promised)} · ${money(r.amount)}.`)
-                  : L("Belirsiz \"cuma\" yerine tarih ve tutar tek dokunuşla teyit edilir.", "Instead of a vague \"Friday\", date and amount are confirmed with one tap.")}
+                  : L("Belirsiz “cuma” yerine tarih ve tutar tek dokunuşla teyit edilir.", "Instead of a vague “Friday”, date and amount are confirmed with one tap.")}
               </span>
             </div>
           </li>
@@ -137,7 +137,7 @@ export function PromisePlanCard({ snap, onLog }: { snap: Snapshot; onLog: (step:
             <span className="qd-steps__icon"><BadgeCheck size={14} /></span>
             <div>
               <b>{L("Sonucu izle, karneye işle", "Track the result, update the scorecard")}</b>
-              <span>{L("Ödeme günü banka hareketiyle eşleşir; sonuç ödeme karnesine ve bankaya taşınabilir karneye yazılır.", "On the day it is matched to the bank transaction; the result goes into the payer scorecard and the scorecard the business can take to its bank.")}</span>
+              <span>{L("Ödeme günü banka hareketiyle eşleşir; sonuç ödeme karnesine ve bankaya taşınabilir karneye yazılır.", "On the day it is matched to the bank transaction; the result goes into the payment scorecard and the scorecard the business can take to its bank.")}</span>
             </div>
           </li>
         </ol>

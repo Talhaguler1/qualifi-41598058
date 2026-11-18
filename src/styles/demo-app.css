@@ -573,3 +573,5 @@
   .qd-home__sources { display: none; }
   .qd-ahero .qd-chips .qd-chip:nth-child(n + 3) { display: none; }
 }
+.qd-factor--base span { color: var(--qd-muted); }
+.qd-factor--base .qd-bar i { background: #c3cdbd !important; }

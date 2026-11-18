@@ -27,6 +27,8 @@ import {
 } from "lucide-react";
 import { Logo } from "@/components/brand/logo";
 import { AUDIENCE_PATH, AUDIENCES, COPY, HOME_PATH, type Audience, type SiteLang } from "@/lib/site/copy";
+import { BANK_COPY } from "@/lib/site/bank-copy";
+import { PilotForm } from "./pilot-form";
 import { HeroVisual } from "./visuals";
 
 const EASE_OUT = [0.22, 1, 0.36, 1] as const;
@@ -129,8 +131,8 @@ function Header({ lang, audience, onAudience }: { lang: SiteLang; audience: Audi
           <a className="btn btn--ghost btn--sm hide-sm" href="/app/giris">
             {c.nav.signIn}
           </a>
-          <a className="btn btn--primary btn--sm hide-sm" href="/app/kayit">
-            {c.nav.signUp}
+          <a className="btn btn--primary btn--sm hide-sm" href={audience === "bank" ? "#pilot" : "/app/kayit"}>
+            {audience === "bank" ? c.hero.bank.secondary.label : c.nav.signUp}
           </a>
           <button type="button" className="menu-btn" aria-expanded={open} aria-controls="site-menu" aria-label={open ? c.nav.close : c.nav.menu} onClick={() => setOpen(!open)}>
             {open ? <X {...I} /> : <Menu {...I} />}
@@ -148,7 +150,9 @@ function Header({ lang, audience, onAudience }: { lang: SiteLang; audience: Audi
               ))}
             </nav>
             <div className="site-menu__actions">
-              <a className="btn btn--primary btn--lg" href="/app/kayit">{c.nav.signUp}</a>
+              <a className="btn btn--primary btn--lg" href={audience === "bank" ? "#pilot" : "/app/kayit"} onClick={() => setOpen(false)}>
+                {audience === "bank" ? c.hero.bank.secondary.label : c.nav.signUp}
+              </a>
               <a className="btn btn--secondary btn--lg" href="/app/giris">{c.nav.signIn}</a>
             </div>
           </motion.div>
@@ -229,8 +233,8 @@ function Hero({ lang, audience, onAudience }: { lang: SiteLang; audience: Audien
 
 const SOURCE_ICONS = [Building2, Calculator, Landmark, MessageCircle, Mail, FileText];
 
-function Sources({ lang }: { lang: SiteLang }) {
-  const s = COPY[lang].sources;
+function Sources({ lang, bank }: { lang: SiteLang; bank: boolean }) {
+  const s = (bank ? BANK_COPY[lang] : COPY[lang]).sources;
   const flowRef = useVisibleClass<HTMLDivElement>();
   return (
     <section className="section">
@@ -282,8 +286,8 @@ function Sources({ lang }: { lang: SiteLang }) {
   );
 }
 
-function BeforeAfter({ lang }: { lang: SiteLang }) {
-  const b = COPY[lang].before;
+function BeforeAfter({ lang, bank }: { lang: SiteLang; bank: boolean }) {
+  const b = (bank ? BANK_COPY[lang] : COPY[lang]).before;
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.4 });
   return (
@@ -324,10 +328,11 @@ function BeforeAfter({ lang }: { lang: SiteLang }) {
   );
 }
 
-function HowItWorks({ lang }: { lang: SiteLang }) {
-  const h = COPY[lang].how;
+function HowItWorks({ lang, bank }: { lang: SiteLang; bank: boolean }) {
+  const h = (bank ? BANK_COPY[lang] : COPY[lang]).how;
   const v = COPY[lang].visual;
-  const s = COPY[lang].sources;
+  const s = (bank ? BANK_COPY[lang] : COPY[lang]).sources;
+  const tr = lang === "tr";
   const [active, setActive] = useState(0);
   const items = useRef<Array<HTMLLIElement | null>>([]);
   useEffect(() => {
@@ -373,6 +378,36 @@ function HowItWorks({ lang }: { lang: SiteLang }) {
       </div>
     </div>,
   ];
+  const bankPanels = [
+    <div key="0" className="how__panel how__panel--sources">
+      {s.items.slice(0, 5).map((it) => (
+        <span key={it} className="chip">
+          <Landmark size={15} strokeWidth={1.75} aria-hidden="true" /> {it}
+        </span>
+      ))}
+    </div>,
+    <div key="1" className="how__panel">
+      <div className="mini-masked">
+        <span><EyeOff size={14} strokeWidth={1.75} aria-hidden="true" /> {tr ? "Modelin gördüğü" : "What the model sees"}</span>
+        <code>F01-075 · B*** Lojistik A.Ş. · {tr ? "vergi no" : "tax no"} *** *** ** 41</code>
+      </div>
+    </div>,
+    <div key="2" className="how__panel">
+      <div className="mini-call">
+        <b>Bello Lojistik</b>
+        <span>{tr ? "Tahsil süresi 3 ayda +12 gün · skor 74" : "Collection time +12 days in 3 months · score 74"}</span>
+        <em><Sparkles size={13} strokeWidth={1.75} aria-hidden="true" /> {tr ? "Önerilecek ürün: Faktoring" : "Product to offer: Factoring"}</em>
+      </div>
+    </div>,
+    <div key="3" className="how__panel">
+      <div className="mini-share">
+        <Share2 size={16} strokeWidth={1.75} aria-hidden="true" />
+        <b>{tr ? "Rotatif kredi · aylık %3,65" : "Revolving credit · 3.65% monthly"}</b>
+        <span>{tr ? "Teklif, karnesini paylaşan işletmeye iletildi" : "Offer sent to the business that shared its scorecard"}</span>
+      </div>
+    </div>,
+  ];
+  const shownPanels = bank ? bankPanels : panels;
   return (
     <section className="section" id="nasil">
       <div className="wrap">
@@ -401,7 +436,7 @@ function HowItWorks({ lang }: { lang: SiteLang }) {
           <div className="how__visual" aria-hidden="true">
             <AnimatePresence mode="wait" initial={false}>
               <motion.div key={active} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.3, ease: EASE_OUT }}>
-                {panels[active]}
+                {shownPanels[active]}
               </motion.div>
             </AnimatePresence>
           </div>
@@ -416,8 +451,8 @@ function path(values: number[]) {
   return values.map((val, i) => `${i ? "L" : "M"}${((i / (values.length - 1)) * 300).toFixed(1)},${(((3.8 - val) / 2.6) * 96).toFixed(1)}`).join(" ");
 }
 
-function Bento({ lang }: { lang: SiteLang }) {
-  const b = COPY[lang].bento;
+function Bento({ lang, bank }: { lang: SiteLang; bank: boolean }) {
+  const b = (bank ? BANK_COPY[lang] : COPY[lang]).bento;
   const v = COPY[lang].visual;
   const tr = lang === "tr";
   const minis: ReactNode[] = [
@@ -428,7 +463,7 @@ function Bento({ lang }: { lang: SiteLang }) {
       </div>
     </div>,
     <div key="1" className="bento__mini">
-      <div className="mini-draft">{tr ? "\"16 Oca tarihini teyit eder misiniz?\"" : "\"Could you confirm 16 Jan?\""}</div>
+      <div className="mini-draft">{tr ? "“16 Oca tarihini teyit eder misiniz?”" : "“Could you confirm 16 Jan?”"}</div>
       <span className="btn btn--primary btn--sm" aria-hidden="true">{tr ? "Onayla" : "Approve"}</span>
     </div>,
     <div key="2" className="bento__mini">
@@ -457,7 +492,45 @@ function Bento({ lang }: { lang: SiteLang }) {
       ))}
     </div>,
   ];
-  const icons = [MessageCircle, BellRing, ChartLine, UserCheck, TriangleAlert, Landmark];
+  const bankMinis: ReactNode[] = [
+    <div key="0" className="bento__mini">
+      <div className="mini-warn">
+        <TriangleAlert size={15} strokeWidth={1.75} aria-hidden="true" /> {tr ? "Tahsil süresi 3 ayda +12 gün" : "Collection time +12 days in 3 months"}
+      </div>
+    </div>,
+    <div key="1" className="bento__mini bento__grades">
+      {(tr ? [["Tahsil süresi uzadı", 19], ["2 taahhüt tutulmadı", 28], ["Tek müşteriye bağımlılık", 10]] : [["Collection time grew", 19], ["2 commitments broken", 28], ["One-customer dependency", 10]]).map(([label, pts]) => (
+        <span key={String(label)} data-g="D" className="bento__factor">
+          <b>+{pts}</b>
+          <small>{label}</small>
+        </span>
+      ))}
+    </div>,
+    <div key="2" className="bento__mini">
+      <div className="mini-move">
+        <Sparkles size={14} strokeWidth={1.75} aria-hidden="true" /> {tr ? "Faktoring / alacak finansmanı" : "Factoring / receivables finance"}
+      </div>
+    </div>,
+    <div key="3" className="bento__mini">
+      <div className="mini-masked">
+        <code>B*** Lojistik · *** *** ** 41</code>
+      </div>
+    </div>,
+    <div key="4" className="bento__mini bento__offers">
+      {(tr ? [["7 Kas · Yapılandırma", "Tutuldu"], ["21 Kas · Ödeme sözü", "Tutulmadı"], ["28 Kas · Yapılandırma", "Yaklaşıyor"]] : [["7 Nov · Restructuring", "Kept"], ["21 Nov · Payment promise", "Broken"], ["28 Nov · Restructuring", "Upcoming"]]).map(([a, b], i) => (
+        <span key={a} data-best={i === 0}>
+          {a} <b>{b}</b>
+        </span>
+      ))}
+    </div>,
+    <div key="5" className="bento__mini">
+      <div className="mini-share">
+        <b>{tr ? "Numolin Yazılım · karne A" : "Numolin Yazılım · scorecard A"}</b>
+        <span>{tr ? "İşletme paylaştı · teklif gönderildi" : "Shared by the business · offer sent"}</span>
+      </div>
+    </div>,
+  ];
+  const icons = bank ? [TriangleAlert, ChartLine, Sparkles, EyeOff, CalendarClock, Share2] : [MessageCircle, BellRing, ChartLine, UserCheck, TriangleAlert, Landmark];
   const bentoRef = useVisibleClass<HTMLDivElement>();
   return (
     <section className="section section--soft" id="urun">
@@ -475,7 +548,7 @@ function Bento({ lang }: { lang: SiteLang }) {
                 </span>
                 <h3>{t.title}</h3>
                 <p>{t.text}</p>
-                {minis[i]}
+                {(bank ? bankMinis : minis)[i]}
               </Reveal>
             );
           })}
@@ -517,8 +590,8 @@ function Banks({ lang }: { lang: SiteLang }) {
   );
 }
 
-function Trust({ lang }: { lang: SiteLang }) {
-  const t = COPY[lang].trust;
+function Trust({ lang, bank }: { lang: SiteLang; bank: boolean }) {
+  const t = (bank ? BANK_COPY[lang] : COPY[lang]).trust;
   const icons = [ShieldCheck, Lock, Share2];
   return (
     <section className="section">
@@ -545,8 +618,8 @@ function Trust({ lang }: { lang: SiteLang }) {
   );
 }
 
-function Faq({ lang }: { lang: SiteLang }) {
-  const f = COPY[lang].faq;
+function Faq({ lang, bank }: { lang: SiteLang; bank: boolean }) {
+  const f = (bank ? BANK_COPY[lang] : COPY[lang]).faq;
   const [open, setOpen] = useState<number | null>(0);
   return (
     <section className="section section--soft" id="sss">
@@ -631,6 +704,7 @@ function Footer({ lang }: { lang: SiteLang }) {
  */
 export function Landing({ lang, initialAudience }: { lang: SiteLang; initialAudience: Audience }) {
   const [audience, setAudience] = useState<Audience>(initialAudience);
+  const bank = audience === "bank";
   useEffect(() => setAudience(initialAudience), [initialAudience]);
   const change = (a: Audience) => {
     if (a === audience) return;
@@ -646,14 +720,14 @@ export function Landing({ lang, initialAudience }: { lang: SiteLang; initialAudi
       <Header lang={lang} audience={audience} onAudience={change} />
       <main id="main">
         <Hero lang={lang} audience={audience} onAudience={change} />
-        <Sources lang={lang} />
-        <BeforeAfter lang={lang} />
-        <HowItWorks lang={lang} />
-        <Bento lang={lang} />
-        <Banks lang={lang} />
-        <Trust lang={lang} />
-        <Faq lang={lang} />
-        <Final lang={lang} audience={audience} />
+        <Sources lang={lang} bank={bank} />
+        <BeforeAfter lang={lang} bank={bank} />
+        <HowItWorks lang={lang} bank={bank} />
+        <Bento lang={lang} bank={bank} />
+        {bank ? null : <Banks lang={lang} />}
+        <Trust lang={lang} bank={bank} />
+        <Faq lang={lang} bank={bank} />
+        {bank ? <PilotForm lang={lang} /> : <Final lang={lang} audience={audience} />}
       </main>
       <Footer lang={lang} />
     </div>
