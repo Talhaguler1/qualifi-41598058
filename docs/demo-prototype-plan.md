@@ -59,6 +59,7 @@ birleşse bile bu üçü yok.
 | L2 Belgeden taahhüt çıkarma fonksiyonu | 4–8 | |
 | L3 Görsel cila (panel sayfaları) | 8–15 | |
 | L4 Hata düzeltme payı | 5–10 | |
+| L6 Ucuz modele geçiş (Plan + Build) | 2–4 | |
 | **Toplam** | **24–43** | |
 
 ## Zaman çizelgesi ve görevler
@@ -223,6 +224,27 @@ src/routes/demo dosyalarına dokunma.
 - Hata olursa status='failed' ve kısa Türkçe hata mesajı.
 - Doğrulama, yetki ve hata durumları için odaklı testler yaz ve çalıştır.
 Arayüz yapma; yükleme ekranını GitHub üzerinden Claude ekleyecek.
+```
+
+### L6 — Belge okumayı daha ucuz modele geçir (Plan modu)
+
+```
+/api/workspace/extract şu an tüm belgeleri openai/gpt-6-astra ile okuyor
+(src/lib/workspace-extract-deps.server.ts, EXTRACT_MODEL). Maliyeti düşür:
+- Metin belgeleri (WhatsApp .txt, Excel/CSV'den çıkarılan metin, PDF
+  sözleşme) için Lovable AI ağ geçidinin desteklediği daha ucuz ve hızlı
+  bir model kullan.
+- Fatura görselleri (png/jpg) için görsel okuyabilen, yine de astra'dan
+  ucuz bir model kullan.
+- Model adlarını yalnız ağ geçidinin gerçekten desteklediği listeden seç;
+  planında seçtiğin modelleri ve neden seçtiğini, astra'ya göre yaklaşık
+  maliyet farkını yaz.
+- Çıktı şeması, hata kodları, Türkçe mesajlar, rota adresi ve testler
+  aynı kalsın; testleri çalıştır.
+- src/lib/demo, src/components/demo, src/routes/demo,
+  src/lib/account-claim.server.ts ve src/routes/api/workspace/extract.ts
+  içindeki günlük sınır kontrolüne dokunma.
+Arayüz yapma.
 ```
 
 ### L5 — (İsteğe bağlı, sunumdan sonra) Ajanın serbest soruları
