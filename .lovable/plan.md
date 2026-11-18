@@ -21,5 +21,7 @@ Neden gpt-6-luna:
 
 ## Doğrulama
 - Model seçimini sınayan küçük bir test (görsel → görsel modeli, metin/PDF → metin modeli) eklenir; mevcut testlerin hepsi çalıştırılır.
-- Geçici hesapla canlı deneme: bir WhatsApp .txt ve bir fatura görseli işlenir, 200 ve beklenen taahhütler kontrol edilir, ağ geçidi kayıtlarında kullanılan model ve maliyet doğrulanır; test verisi silinir.
+- Geçici hesapla canlı deneme: bir WhatsApp .txt, bir PDF sözleşme ve bir fatura görseli işlenir, 200 ve beklenen taahhütler kontrol edilir, ağ geçidi kayıtlarında kullanılan model ve maliyet doğrulanır; test verisi silinir.
+- PDF yolu: önce gpt-6-luna'nın PDF dosya girdisini kabul ettiği canlı denemeyle doğrulanır. Kabul etmezse (400 vb.) PDF sunucuda metne çevrilip metin modeline gönderilir; bunun için testi de eklenir. Hangi yol seçildiği sonuçta yazılır.
+- Yapılacaklar `roadmap.md` dosyasına eklenir.
 - Commit edilir, yayınlanmaz.
