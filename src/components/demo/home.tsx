@@ -82,7 +82,9 @@ export function AgentHero({
   steps,
   runKey,
   children,
+  note,
 }: {
+  note?: string;
   title: string;
   headline: string;
   tone: "calm" | "watch" | "alert";
@@ -101,7 +103,7 @@ export function AgentHero({
           </span>
           <span>
             <b>{title}</b>
-            <small>{L("Bugünün özeti", "Today's summary")}</small>
+            <small>{note ?? L("Bugünün özeti", "Today's summary")}</small>
           </span>
         </div>
         <h2 key={runKey}>{headline}</h2>

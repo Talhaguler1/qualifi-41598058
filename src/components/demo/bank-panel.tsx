@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState, type ReactNode } from "react";
 import { Bar, BarChart, CartesianGrid, Line, LineChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis, Cell } from "recharts";
-import { Bot, Phone, PhoneCall, ShieldAlert, PieChart, MessageCircle, CalendarClock, FileCheck2 } from "lucide-react";
+import { Bot, Phone, PhoneCall, Sparkles, ShieldAlert, PieChart, MessageCircle, CalendarClock, FileCheck2 } from "lucide-react";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import {
   addDays,
@@ -17,6 +17,8 @@ import {
   bankShareSummary,
   generateBusiness,
   sectorAnalysis,
+  otherBanksSummary,
+  suggestProduct,
   isEnglish,
   L,
   pick,
@@ -32,6 +34,7 @@ import {
 } from "@/lib/demo";
 import { trackDemo, type DemoAction } from "@/lib/demo/track";
 import { ShareSummaryView } from "./share-view";
+import { MaskedPreview, OfferForm, ProductIdea } from "./banks-view";
 import { AgentHero, FocusSheet, StoryGrid, useStoryFocus, type StoryCard } from "./home";
 import { AnimatedNumber, SHARE_KEY, TopBar, useLocalState, useMounted } from "./shared";
 
@@ -144,7 +147,7 @@ export function BankPanel({ region, banker, date, onDate, onBanker, sharedTenant
 
   return (
     <div className="qd">
-      <TopBar langSwitch title={L(`${region} bölge birimi · Kredi risk`, `${region} regional unit · Credit risk`)} subtitle={banker === "all" ? L(`Birim yöneticisi görünümü · ${BANKERS_PER_REGION} uzman`, `Unit manager view · ${BANKERS_PER_REGION} specialists`) : L(`Uzman ${banker} · ${firms.length} firma`, `Specialist ${banker} · ${firms.length} firms`)} date={date} onDate={(d) => { log("date_change", d); onDate(d); }}>
+      <TopBar langSwitch title={L(`${region} · Müşteri ilişkileri`, `${region} · Relationship management`)} subtitle={banker === "all" ? L(`Birim yöneticisi görünümü · ${BANKERS_PER_REGION} uzman`, `Unit manager view · ${BANKERS_PER_REGION} specialists`) : L(`Uzman ${banker} · ${firms.length} firma`, `Specialist ${banker} · ${firms.length} firms`)} date={date} onDate={(d) => { log("date_change", d); onDate(d); }}>
         {accountSlot}
         {lockBanker ? null : (
         <select className="qd-select" value={banker} onChange={(e) => onBanker(e.target.value)} aria-label={L("Uzman", "Specialist")}>
@@ -159,7 +162,8 @@ export function BankPanel({ region, banker, date, onDate, onBanker, sharedTenant
       </TopBar>
       <main className="qd-home">
         <AgentHero
-          title={L("QualiFi risk ajanı", "QualiFi risk agent")}
+          title={L("QualiFi bankacı asistanı", "QualiFi banker assistant")}
+          note={L("Yapay zekâ yalnız maskeli veri görür", "The AI only sees masked data")}
           headline={briefing.headline}
           tone={high.length > firms.length * 0.15 ? "alert" : "watch"}
           points={[]}
@@ -173,7 +177,7 @@ export function BankPanel({ region, banker, date, onDate, onBanker, sharedTenant
         <StoryGrid cards={cards} open={open} onToggle={story.toggle} />
 
         <FocusSheet open={open !== null} title={shown ? titles[shown] : ""} onClose={story.close}>
-            {shown === "calls" ? <CallList briefing={briefing} onFirm={openFirm} /> : null}
+            {shown === "calls" ? <CallList briefing={briefing} date={date} onFirm={openFirm} /> : null}
             {shown === "portfolio" ? <section className="qd-card"><Portfolio firms={firms} risks={risks} onFirm={openFirm} /></section> : null}
             {shown === "sectors" ? <section className="qd-card"><Sectors firms={firms} date={date} /></section> : null}
             {shown === "signals" ? <section className="qd-card"><Signals firms={firms} date={date} onFirm={openFirm} /></section> : null}
@@ -202,12 +206,12 @@ export function BankPanel({ region, banker, date, onDate, onBanker, sharedTenant
   );
 }
 
-function CallList({ briefing, onFirm }: { briefing: BankBriefing; onFirm: (f: Firm) => void }) {
+function CallList({ briefing, date, onFirm }: { briefing: BankBriefing; date: string; onFirm: (f: Firm) => void }) {
   return (
     <section className="qd-card">
       <div className="qd-card__head">
         <h2>{L("Bugün aranacaklar", "Calls for today")}</h2>
-        <p>{L("Riski en çok artandan başlayarak", "Starting with the biggest risk increase")}</p>
+        <p>{L("Riski en çok artandan başlayarak; her firmaya önerilecek ürünle", "Biggest risk increase first, each with a product to offer")}</p>
       </div>
       <div className="qd-actions">
         {briefing.callList.map((c, i) => (
@@ -216,6 +220,9 @@ function CallList({ briefing, onFirm }: { briefing: BankBriefing; onFirm: (f: Fi
               <div>
                 <div className="qd-action__name">{c.firm.name}</div>
                 <div className="qd-action__reason">{c.reason}</div>
+                <span className="qd-pill qd-pill--idea" style={{ marginTop: 6 }}>
+                  <Sparkles size={12} strokeWidth={1.75} /> {suggestProduct(c.firm, date).title}
+                </span>
               </div>
               <div style={{ textAlign: "right" }}>
                 <span className={`qd-pill ${c.score >= 60 ? "qd-pill--bad" : "qd-pill--warn"}`}>{L("Skor", "Score")} {c.score}</span>
@@ -237,6 +244,7 @@ function CallList({ briefing, onFirm }: { briefing: BankBriefing; onFirm: (f: Fi
 
 function SharedCard({ tenant, date }: { tenant: string; date: string }) {
   const summary = useMemo(() => bankShareSummary(generateBusiness(tenant), date), [tenant, date]);
+  const others = useMemo(() => otherBanksSummary(tenant, date), [tenant, date]);
   return (
     <section className="qd-card qd-enter" style={{ borderColor: "#b6dbb8" }}>
       <div className="qd-card__head">
@@ -248,6 +256,13 @@ function SharedCard({ tenant, date }: { tenant: string; date: string }) {
         <span className="qd-pill qd-pill--good">{L("İşletme paylaştı · demo", "Shared by the business · demo")}</span>
       </div>
       <ShareSummaryView summary={summary} audience="bank" />
+      <p className="qd-other-banks">
+        {L(
+          `Diğer bankalar (işletmenin izniyle, toplam): ${others.banks} bankada ${money(others.creditUsed)} kredi${others.nextDue ? `, en yakın vade ${formatDateTr(others.nextDue)}` : ""}. Ürün ayrıntısı paylaşılmaz.`,
+          `Other banks (with the business's consent, totals only): ${money(others.creditUsed)} of credit at ${others.banks} banks${others.nextDue ? `, next due ${formatDateTr(others.nextDue)}` : ""}. No product details are shared.`,
+        )}
+      </p>
+      <OfferForm company={summary.company.name} onSent={() => undefined} />
     </section>
   );
 }
@@ -494,6 +509,7 @@ function FirmSheet({ firm, date, onClose }: { firm: Firm | null; date: string; o
               <div className="qd-stat"><span>{L("Müşterilerinden tahsil", "Collects from customers in")}</span><b className="qd-num">{days(risk.delayNow)}</b></div>
               <div className="qd-stat"><span>{L("En büyük müşteri payı", "Largest customer share")}</span><b className="qd-num">{pct(Math.round(firm.topCustomerShare * 100))}</b></div>
             </div>
+            <ProductIdea firm={firm} date={date} />
             <span className="qd-eyebrow">{L("Skoru oluşturan etkenler", "What drives the score")}</span>
             <div style={{ marginTop: 6 }}>
               {risk.factors.map((f) => (
@@ -505,6 +521,7 @@ function FirmSheet({ firm, date, onClose }: { firm: Firm | null; date: string; o
               ))}
               {!risk.factors.length ? <p style={{ color: "var(--qd-muted)" }}>{L("Belirgin risk etkeni yok.", "No notable risk factors.")}</p> : null}
             </div>
+            <MaskedPreview firm={firm} date={date} />
             <div style={{ marginTop: 14 }}>
               <span className="qd-eyebrow">{L("Firmanın kendi müşterilerinden tahsil süresi (gün)", "How fast the firm collects from its own customers (days)")}</span>
               <div style={{ height: 140 }}>

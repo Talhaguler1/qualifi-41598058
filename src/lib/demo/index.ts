@@ -7,3 +7,4 @@ export * from "./agent";
 export * from "./share";
 export * from "./i18n";
 export * from "./events";
+export * from "./banks";

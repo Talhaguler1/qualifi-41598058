@@ -176,6 +176,8 @@ export function FileIcon() {
 
 /** Where the business panel leaves its shared scorecard for the banker panel (same browser, demo only). */
 export const SHARE_KEY = "qd-shared-scorecard";
+/** Offers a banker sends back to the business (same browser, demo only). */
+export const OFFERS_KEY = "qd-bank-offers";
 
 /** Per-viewer memory for demo clicks (approved messages etc.). Safe when storage is blocked. */
 export function useLocalState<T>(key: string, initial: T): [T, (v: T) => void] {

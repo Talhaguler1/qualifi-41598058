@@ -38,6 +38,9 @@ import {
   explainEvent,
   forecastWithEvents,
   readChatMessage,
+  bankTotals,
+  businessBankProducts,
+  type OfferFromBank,
   pivotalCustomer,
   type ChatEvent,
   type EventOutcome,
@@ -51,11 +54,12 @@ import { ActionQueue, AskAgent } from "./agent-panel";
 import { ShareSummaryView } from "./share-view";
 import { featuredPromise, PromisePlanCard } from "./promise-plan";
 import { LiveUpdate, MessageComposer } from "./live-update";
+import { BanksView } from "./banks-view";
 import { AgentHero, FocusSheet, StoryGrid, useStoryFocus, type StoryCard } from "./home";
-import { AnimatedNumber, Grade, SHARE_KEY, SourceChip, Tabs, Toast, TopBar, useMounted } from "./shared";
+import { AnimatedNumber, Grade, OFFERS_KEY, SHARE_KEY, SourceChip, Tabs, Toast, TopBar, useLocalState, useMounted } from "./shared";
 
 type Tab = "inflows" | "customers" | "whatsapp" | "sources";
-type Story = "cash" | "promise" | "actions" | "customers" | "scorecard";
+type Story = "cash" | "promise" | "actions" | "customers" | "scorecard" | "banks";
 const DOC_LABEL = {
   invoice: ["Fatura", "Invoice"],
   contract_installment: ["Sözleşme taksiti", "Contract instalment"],
@@ -117,6 +121,10 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
   const overdue = inflows.filter((i) => i.receivable.dueDate < date);
   const overdueSum = overdue.reduce((s, i) => s + i.receivable.amount, 0);
   const hit = card ? card.predictions.filter((p) => p.outcome === "on_time" || p.outcome === "early").length : 0;
+  const [offers] = useLocalState<OfferFromBank[]>(OFFERS_KEY, []);
+  const bankCash = bankTotals(businessBankProducts(tenant, date, balance)).cash;
+  // Enough to lift the tightest week's downside back to about ₺1 mn, rounded; at least ₺250k.
+  const cashNeed = Math.max(250_000, Math.round((1_000_000 - tight.balanceLow) / 50_000) * 50_000);
   const featuredName = featured ? snap.dataset.customers.find((c) => c.id === featured.r.customerId)?.name : undefined;
   const processMessage = (text: string): EventOutcome | null => {
     const e = readChatMessage(snap, text, `ev-${events.length + 1}`);
@@ -187,14 +195,15 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
       ...(card && prevDate ? { tone: "good" as const } : {}),
     },
     {
-      key: "share",
-      icon: <Share2 size={15} />,
-      eyebrow: L("Bankama göster", "Show my bank"),
-      value: L("Ödeme karnem", "My scorecard"),
-      text: L("Bankanıza yalnız özet gider; müşteri adları ve mesajlar gitmez. Tek tıkla paylaşın.", "Only a summary goes to your bank, never customer names or messages. Share in one click."),
+      key: "banks",
+      icon: <Landmark size={15} />,
+      eyebrow: L("Bankalarım", "My banks"),
+      value: money(bankCash),
+      text: offers.length
+        ? L(`3 bankada nakit. Banka A'dan yeni bir teklif var; karşılaştırın.`, `Cash across 3 banks. A new offer from Banka A is waiting; compare it.`)
+        : L("3 bankadaki nakit ve kredi tek ekranda. Teklif isteyin, karnenizi paylaşın.", "Cash and credit at 3 banks on one screen. Ask for quotes, share your scorecard."),
       tone: "accent",
-      cta: L("Paylaş", "Share"),
-      onActivate: openShare,
+      cta: offers.length ? L("Teklifi gör", "See the offer") : L("Aç", "Open"),
     },
   ];
   const titles: Record<Story, string> = {
@@ -203,6 +212,7 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
     actions: L("Bugün takip", "Follow up today"),
     customers: L("Müşteriler ve belgeler", "Customers and documents"),
     scorecard: L("Tahmin ve söz karnesi", "Forecast and promise scorecard"),
+    banks: L("Bankalarım", "My banks"),
   };
   const open = story.open as Story | null;
   const shown = story.last as Story | null;
@@ -285,6 +295,19 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
               </section>
             ) : null}
             {shown === "scorecard" ? <ScorecardCard dataset={dataset} prevDate={prevDate} date={date} onCustomer={openCustomer} /> : null}
+            {shown === "banks" ? (
+              <BanksView
+                tenant={tenant}
+                date={date}
+                mainBalance={balance}
+                suggestedNeed={cashNeed}
+                onShare={() => {
+                  story.close();
+                  openShare();
+                }}
+                onLog={(what) => log("scenario_run", "banks", what)}
+              />
+            ) : null}
         </FocusSheet>
       </main>
       <FocusSheet open={liveOpen} title={L("Canlı güncelleme", "Live update")} subtitle={L("Ajan mesajı okudu ve tahmini yeniden çizdi.", "The agent read the message and redrew the forecast.")} onClose={() => setLiveOpen(false)}>

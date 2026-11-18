@@ -528,3 +528,37 @@
 .qd-reveal[data-on="true"] { opacity: 1; transform: none; }
 .qd-reveal[data-on="false"] { pointer-events: none; }
 .qd-live__label { font-size: 11px; }
+
+/* ---------- banks: one screen for all banks, quotes, offers; banker assistant ---------- */
+.qd-banks { display: flex; flex-direction: column; gap: 14px; }
+.qd-banks .qd-eyebrow { display: inline-flex; align-items: center; gap: 6px; }
+.qd-bankgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.qd-bankcol { display: flex; flex-direction: column; gap: 8px; padding: 12px 14px; border: 1px solid var(--qd-line); border-radius: 14px; background: var(--qd-paper); }
+.qd-bankcol > b { display: inline-flex; align-items: center; gap: 6px; font-family: var(--qd-font-display); font-size: 15px; }
+.qd-bankrow { display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; font-size: 13px; padding-top: 8px; border-top: 1px solid var(--qd-line); }
+.qd-bankrow small { color: var(--qd-muted); font-size: 12px; }
+.qd-bankrow__due { grid-column: 1 / -1; }
+.qd-banks__note { color: var(--qd-muted); font-size: 13px; margin-top: 12px; }
+.qd-quote-form { display: flex; flex-wrap: wrap; gap: 10px 12px; align-items: flex-end; }
+.qd-quote-form label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--qd-muted); font-weight: 600; }
+.qd-quote-form .qd-input, .qd-quote-form .qd-select { min-height: 40px; min-width: 150px; }
+.qd-quote-form__hint { flex-basis: 100%; order: 3; font-size: 12px; color: var(--qd-muted); }
+.qd-row--best td { background: #f1f8ec; }
+.qd-offer-in { border-color: #b6dbb8; }
+.qd-offer-in p { font-size: 14px; }
+.qd-btn--lg { min-height: 48px; padding: 12px 20px; font-size: 15px; border-radius: 12px; }
+.qd-idea { display: flex; gap: 12px; padding: 14px 16px; border-radius: 16px; background: #eef6e3; color: var(--qd-ink); margin: 12px 0; }
+.qd-idea > svg { color: #4f7d1d; flex: none; margin-top: 2px; }
+.qd-idea b { display: block; font-family: var(--qd-font-display); font-size: 16px; margin-top: 2px; }
+.qd-idea small { display: block; color: var(--qd-ink-2); font-size: 13px; margin-top: 2px; }
+.qd-masked { border: 1px dashed #c3cfbb; border-radius: 16px; padding: 14px 16px; margin: 12px 0; background: var(--qd-paper); }
+.qd-masked .qd-eyebrow { display: inline-flex; align-items: center; gap: 6px; }
+.qd-masked dl { display: grid; grid-template-columns: 120px 1fr; gap: 6px 10px; margin: 10px 0; font-size: 13px; }
+.qd-masked dt { color: var(--qd-muted); }
+.qd-masked dd { margin: 0; font-weight: 500; }
+.qd-masked p { color: var(--qd-muted); font-size: 12.5px; }
+.qd-offer-form { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--qd-line); display: flex; flex-direction: column; gap: 10px; }
+.qd-offer-form > b { display: inline-flex; align-items: center; gap: 6px; font-family: var(--qd-font-display); }
+.qd-pill--idea { background: #eef6e3; color: #3f6a12; }
+@media (max-width: 720px) { .qd-bankgrid { grid-template-columns: 1fr; } }
+.qd-other-banks { margin-top: 12px; font-size: 13px; color: var(--qd-ink-2); padding: 10px 12px; border-radius: 12px; background: var(--qd-soft); }
