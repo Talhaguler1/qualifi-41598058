@@ -150,7 +150,7 @@ function AnswerBody({ answer }: { answer: AgentAnswer }) {
         <div style={{ height: 120, marginTop: 8 }}>
           <ResponsiveContainer>
             <LineChart data={answer.scenario.base.map((w, i) => ({ week: formatDateTr(w.weekStart).slice(0, 6), base: w.balanceBase, changed: answer.scenario!.changed[i]?.balanceBase ?? 0 }))} margin={{ top: 6, right: 6, left: 0, bottom: 0 }}>
-              <XAxis dataKey="week" tick={{ fill: "#c3d4bd", fontSize: 10 }} axisLine={false} tickLine={false} />
+              <XAxis dataKey="week" tick={{ fill: "#c3d4bd", fontSize: 12 }} axisLine={false} tickLine={false} />
               <YAxis hide />
               <Tooltip formatter={(v: number) => money(v)} contentStyle={{ borderRadius: 10, fontSize: 12 }} />
               <Line type="monotone" dataKey="base" name={L("Bugünkü tahmin", "Current forecast")} stroke="#d8eea6" strokeWidth={2} dot={false} />

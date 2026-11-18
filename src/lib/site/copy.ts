@@ -40,6 +40,8 @@ export interface SiteCopy {
     moved: string;
     forecast: string;
     warnTitle: string;
+    calmTitle: string;
+    calmText: string;
     warnAdvice: string;
     milestones: string[];
     milestoneLate: string;
@@ -108,6 +110,8 @@ const TR: SiteCopy = {
     moved: "₺232.500 → 16 Oca",
     forecast: "8 haftalık nakit tahmini",
     warnTitle: "30 Ara haftasında nakit sıkışıyor",
+    calmTitle: "Nakit önümüzdeki 8 hafta yeterli",
+    calmText: "Ajan yeni mesajları ve tahsilatları izliyor.",
     warnAdvice: "Önce vadesi gelmiş iki tahsilatı arayın: ₺336 bin.",
     milestones: ["Tasarım teslimi", "Geliştirme hakedişi", "Yayın ve bakım"],
     milestoneLate: "5 gün gecikti",
@@ -242,6 +246,8 @@ const EN: SiteCopy = {
     moved: "₺232,500 → 16 Jan",
     forecast: "8-week cash forecast",
     warnTitle: "Cash gets tight in the week of 30 Dec",
+    calmTitle: "Cash is sufficient for the next 8 weeks",
+    calmText: "The agent is watching new messages and payments.",
     warnAdvice: "Call two customers who are already due first: ₺336K.",
     milestones: ["Design delivery", "Development milestone", "Launch and support"],
     milestoneLate: "5 days late",

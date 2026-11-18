@@ -320,7 +320,7 @@ function Portfolio({ firms, risks, onFirm }: { firms: Firm[]; risks: Risks; onFi
                 <tr key={f.id} data-clickable onClick={() => onFirm(f)}>
                   <td>
                     {f.name}
-                    <div style={{ color: "var(--qd-muted)", fontSize: 11.5 }}>{f.id} · {f.city}</div>
+                    <div style={{ color: "var(--qd-muted)", fontSize: 12 }}>{f.id} · {f.city}</div>
                   </td>
                   <td>{sectorName(f.sector)}</td>
                   <td className="qd-right qd-num">{money(f.loanAmount)}</td>
@@ -359,7 +359,7 @@ function Sectors({ firms, date }: { firms: Firm[]; date: string }) {
           <ResponsiveContainer>
             <BarChart data={data} layout="vertical" margin={{ left: 40, right: 20 }}>
               <CartesianGrid horizontal={false} stroke="#eef1ea" />
-              <XAxis type="number" tickFormatter={(v: number) => pct(v)} tick={{ fontSize: 11, fill: "#66766a" }} axisLine={false} tickLine={false} />
+              <XAxis type="number" tickFormatter={(v: number) => pct(v)} tick={{ fontSize: 12, fill: "#66766a" }} axisLine={false} tickLine={false} />
               <YAxis type="category" dataKey="sector" tick={{ fontSize: 12, fill: "#203b30" }} width={130} axisLine={false} tickLine={false} />
               <Tooltip formatter={(v: number) => pct(v)} />
               <Bar dataKey="high" radius={[0, 6, 6, 0]} barSize={16} animationDuration={800}>
@@ -435,7 +435,7 @@ function Signals({ firms, date, onFirm }: { firms: Firm[]; date: string; onFirm:
             {rows.map(({ f, s }) => (
               <tr key={s.id} data-clickable onClick={() => onFirm(f)}>
                 <td className="qd-num">{formatDateTr(s.date)}</td>
-                <td>{f.name}<div style={{ color: "var(--qd-muted)", fontSize: 11.5 }}>{sectorName(f.sector)}</div></td>
+                <td>{f.name}<div style={{ color: "var(--qd-muted)", fontSize: 12 }}>{sectorName(f.sector)}</div></td>
                 <td><span className={`qd-pill ${SIGNAL_LABEL[s.type][1]}`}>{pick(SIGNAL_LABEL[s.type][0])}</span></td>
                 <td style={{ maxWidth: 360 }}>“{messageText(s.text)}”</td>
               </tr>
@@ -528,7 +528,7 @@ function FirmSheet({ firm, date, onClose }: { firm: Firm | null; date: string; o
                 {mounted ? (
                   <ResponsiveContainer>
                     <LineChart data={firm.receivableDelay.filter((d) => d.month <= date).map((d) => ({ m: formatDateTr(d.month).replace(/^1 /, ""), days: d.days }))}>
-                      <XAxis dataKey="m" tick={{ fontSize: 10, fill: "#66766a" }} axisLine={false} tickLine={false} interval={2} />
+                      <XAxis dataKey="m" tick={{ fontSize: 12, fill: "#66766a" }} axisLine={false} tickLine={false} interval={2} />
                       <YAxis hide domain={[0, "auto"]} />
                       <Tooltip formatter={(v: number) => days(v)} />
                       <ReferenceLine y={30} stroke="#e7b2a5" strokeDasharray="4 4" />

@@ -64,7 +64,7 @@ function BusinessStory({ v }: { v: SiteCopy["visual"] }) {
           ))}
         </div>
         <span className="sv-ghost" data-on={step >= 2}>2</span>
-        <motion.span className="sv-chip" initial={false} animate={{ left: step >= 2 ? "80%" : "64%" }} transition={{ duration: 0.8, ease: EASE_MOVE }}>
+        <motion.span className="sv-chip" initial={false} animate={{ left: step >= 2 ? "80%" : "58%" }} transition={{ duration: 0.8, ease: EASE_MOVE }}>
           <CalendarClock size={12} strokeWidth={1.75} /> {v.moved}
         </motion.span>
       </div>
@@ -76,11 +76,11 @@ function BusinessStory({ v }: { v: SiteCopy["visual"] }) {
           <motion.path initial={false} animate={{ d: path(step >= 3 ? AFTER : BEFORE, W, H) }} transition={{ duration: 0.9, ease: EASE_MOVE }} className="sv-line" />
         </svg>
       </div>
-      <div className="sv-warn" data-on={step >= 4}>
-        <TriangleAlert size={16} strokeWidth={1.75} />
+      <div className="sv-warn" data-state={step >= 4 ? "warn" : "calm"}>
+        {step >= 4 ? <TriangleAlert size={16} strokeWidth={1.75} /> : <Check size={16} strokeWidth={1.75} />}
         <div>
-          <b>{v.warnTitle}</b>
-          <span>{v.warnAdvice}</span>
+          <b>{step >= 4 ? v.warnTitle : v.calmTitle}</b>
+          <span>{step >= 4 ? v.warnAdvice : v.calmText}</span>
         </div>
       </div>
     </div>

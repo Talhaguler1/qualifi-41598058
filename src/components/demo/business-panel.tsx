@@ -384,7 +384,7 @@ function CashFlowCard({ snap, weeks, accuracy, prevDate, onScenario }: { snap: S
           <ResponsiveContainer>
             <ComposedChart data={data} margin={{ top: 16, right: 8, left: 8, bottom: 0 }}>
               <XAxis dataKey="label" tick={{ fill: "#66766a", fontSize: 12 }} axisLine={false} tickLine={false} />
-              <YAxis tickFormatter={(v: number) => money(v)} tick={{ fill: "#66766a", fontSize: 11 }} axisLine={false} tickLine={false} width={78} />
+              <YAxis tickFormatter={(v: number) => money(v)} tick={{ fill: "#66766a", fontSize: 12 }} axisLine={false} tickLine={false} width={78} />
               <Tooltip content={<ChartTooltip />} />
               <ReferenceLine y={0} stroke="#b4442f" strokeDasharray="4 4" />
               <Bar dataKey="inflow" fill="#8fbf4d" radius={[6, 6, 0, 0]} barSize={14} animationDuration={700} />
@@ -535,7 +535,7 @@ function ScorecardCard({ dataset, prevDate, date, onCustomer }: { dataset: Retur
             ))}
             {card.promises.map((p) => (
               <tr key={p.message.id} data-clickable onClick={() => onCustomer(p.customer)}>
-                <td>{p.customer.name}<div style={{ color: "var(--qd-muted)", fontSize: 11.5 }}>WhatsApp: “{messageText(p.message.text)}”</div></td>
+                <td>{p.customer.name}<div style={{ color: "var(--qd-muted)", fontSize: 12 }}>WhatsApp: “{messageText(p.message.text)}”</div></td>
                 <td className="qd-right qd-num">{money(p.amount)}</td>
                 <td className="qd-num">—</td>
                 <td className="qd-num">{L("Söz", "Promise")}: {formatDateTr(p.message.promiseDate as string)}</td>
@@ -721,7 +721,7 @@ function CustomerTable({ snap, onCustomer }: { snap: Snap; onCustomer: (c: Custo
               <tr key={c.id} data-clickable onClick={() => onCustomer(c)}>
                 <td>
                   {c.name}
-                  <div style={{ color: "var(--qd-muted)", fontSize: 11.5 }}>{sectorName(c.sector)}</div>
+                  <div style={{ color: "var(--qd-muted)", fontSize: 12 }}>{sectorName(c.sector)}</div>
                 </td>
                 <td><Grade grade={p.grade} /></td>
                 <td className="qd-right qd-num">{p.paidCount ? `${p.medianDelay > 0 ? "+" : ""}${dayCount(p.medianDelay)}` : "—"}</td>
@@ -854,7 +854,7 @@ function CustomerSheet({ snap, customer, onClose }: { snap: Snap; customer: Cust
               {mounted ? (
                 <ResponsiveContainer>
                   <BarChart data={history}>
-                    <XAxis dataKey="label" tick={{ fontSize: 10, fill: "#66766a" }} axisLine={false} tickLine={false} />
+                    <XAxis dataKey="label" tick={{ fontSize: 12, fill: "#66766a" }} axisLine={false} tickLine={false} />
                     <YAxis hide />
                     <Tooltip formatter={(v: number) => dayCount(v)} />
                     <ReferenceLine y={0} stroke="#cfd8c7" />

@@ -229,7 +229,7 @@ function AccountList({ token }: { token: string }) {
           <tbody>
             {shown.map((u) => (
               <tr key={u.id}>
-                <td>{u.email}{u.company ? <div style={{ color: "var(--qd-muted)", fontSize: 11.5 }}>{u.company}</div> : null}</td>
+                <td>{u.email}{u.company ? <div style={{ color: "var(--qd-muted)", fontSize: 12 }}>{u.company}</div> : null}</td>
                 <td>{u.role === "admin" ? "Admin" : ROLE_LABEL[u.role as keyof typeof ROLE_LABEL] ?? u.role}</td>
                 <td className="qd-num">{u.tenant ? `mockerp${u.tenant}` : u.banker_no ? `${u.region} · ${u.banker_no}` : "—"}</td>
                 <td>{u.confirmed ? <span className="qd-pill qd-pill--good">Evet</span> : <span className="qd-pill qd-pill--muted">Bekliyor</span>}</td>

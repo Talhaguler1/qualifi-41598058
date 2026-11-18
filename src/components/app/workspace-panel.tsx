@@ -160,7 +160,7 @@ export function WorkspacePanel({ userId, title, token, readOnly, accountSlot }: 
                 <ResponsiveContainer>
                   <ComposedChart data={outlook.weeks.map((w) => ({ ...w, label: formatDateTr(w.weekStart).replace(/ \d{4}$/, ""), out: -w.outflow }))} margin={{ top: 16, right: 8, left: 8, bottom: 0 }}>
                     <XAxis dataKey="label" tick={{ fill: "#66766a", fontSize: 12 }} axisLine={false} tickLine={false} />
-                    <YAxis tickFormatter={(v: number) => money(v)} tick={{ fill: "#66766a", fontSize: 11 }} axisLine={false} tickLine={false} width={78} />
+                    <YAxis tickFormatter={(v: number) => money(v)} tick={{ fill: "#66766a", fontSize: 12 }} axisLine={false} tickLine={false} width={78} />
                     <Tooltip formatter={(v: number) => money(v)} />
                     <ReferenceLine y={0} stroke="#b4442f" strokeDasharray="4 4" />
                     <Bar dataKey="inflow" name="Tahsilat" fill="#8fbf4d" radius={[6, 6, 0, 0]} barSize={14} />
