@@ -33,6 +33,14 @@ birleşse bile bu üçü yok.
 | Animasyon için yeni kütüphane eklenmedi | Repoda bun.lock var; yeni paket Lovable kurulumunu bozabilir | Geçişler CSS ve Recharts ile; "hareketi azalt" tercihine uyar |
 | Sunum günü = demodaki "bugün" (24 Kasım) | Sahnede tarih tutarlı olsun | 27 Ekim'de ajan nakit sıkışması uyarısı verir, 24 Kasım'a gelince durum değişir |
 
+## Açık konular (karar bekliyor)
+
+- Kişisel hesabın ilk adımlar ekranındaki "Örnek verilerle dene" kartı demoya
+  (/demo/isletme) gidiyor. Kural: giriş yapılmış hesaptan demoya bağlantı
+  verilmez. Şimdilik bırakıldı; Talha bakıp karar verecek (18 Kas).
+- "Edit with Lovable" rozeti canlıda hâlâ görünüyor; Lovable proje ayarlarından
+  kapatılmalı (kredi harcamaz).
+
 ## Değişmeyen kurallar
 
 - Aynı dosyaya aynı anda iki araç dokunmaz. Başlamadan `git pull`, bitince push.
