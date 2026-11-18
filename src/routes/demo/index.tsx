@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Building2, Landmark } from "lucide-react";
 import { Brand, LangSwitch } from "@/components/demo/shared";
 import { demoHead } from "@/components/demo/head";
-import { DEFAULT_DEMO_DATE, generateBusiness, L, langOf, setDemoLang } from "@/lib/demo";
+import { DEFAULT_DEMO_DATE, DEMO_CUSTOMERS, L, langOf, setDemoLang } from "@/lib/demo";
 
 export const Route = createFileRoute("/demo/")({
   head: ({ match }) =>
@@ -13,8 +13,6 @@ export const Route = createFileRoute("/demo/")({
   component: DemoChooser,
 });
 
-/** The demo company's real customer count, so the start page and the panel always agree. */
-const CUSTOMERS = generateBusiness("017").customers.length;
 
 function DemoChooser() {
   const { l } = Route.useSearch();
@@ -44,7 +42,7 @@ function DemoChooser() {
           <Link className="qd-card qd-choice qd-enter" to="/demo/isletme" search={{ t: "017", d: DEFAULT_DEMO_DATE, ...keep }}>
             <span className="qd-agent__avatar"><Building2 size={18} /></span>
             <h2>{L("İşletme paneli", "Business panel")}</h2>
-            <p>{L(`${CUSTOMERS} müşteriye satış yapan bir yazılım şirketi.`, `A software company selling to ${CUSTOMERS} customers.`)}</p>
+            <p>{L(`${DEMO_CUSTOMERS} müşteriye satış yapan bir yazılım şirketi.`, `A software company selling to ${DEMO_CUSTOMERS} customers.`)}</p>
             <ul>
               <li>{L("Müşteri ödeme karnesi ve gecikme geçmişi", "Customer payment scorecard and delay history")}</li>
               <li>{L("8 haftalık nakit tahmini ve senaryo", "8-week cash forecast and scenarios")}</li>

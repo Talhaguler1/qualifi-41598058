@@ -1,4 +1,7 @@
 import siteCss from "@/styles/site.css?url";
+import onestLatin from "@fontsource-variable/onest/files/onest-latin-wght-normal.woff2?url";
+import onestLatinExt from "@fontsource-variable/onest/files/onest-latin-ext-wght-normal.woff2?url";
+import schibstedLatin from "@fontsource-variable/schibsted-grotesk/files/schibsted-grotesk-latin-wght-normal.woff2?url";
 import { AUDIENCE_PATH, COPY, HOME_PATH, type Audience, type SiteLang } from "@/lib/site/copy";
 import { Landing } from "./landing";
 
@@ -23,6 +26,8 @@ export function landingRoute(lang: SiteLang, audience: Audience) {
         { name: "twitter:card", content: "summary" },
       ],
       links: [
+        // Preload the fonts the first screen uses, so text is laid out once with the right font.
+        ...[onestLatin, onestLatinExt, schibstedLatin].map((href) => ({ rel: "preload", as: "font", type: "font/woff2", href, crossOrigin: "anonymous" as const })),
         { rel: "stylesheet", href: siteCss },
         { rel: "canonical", href: `${ORIGIN}${path(lang)}` },
         { rel: "alternate", hrefLang: "tr", href: `${ORIGIN}${path("tr")}` },

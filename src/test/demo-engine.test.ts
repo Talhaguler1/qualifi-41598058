@@ -1,3 +1,4 @@
+import { DEMO_CUSTOMERS } from "@/lib/demo";
 import { describe, expect, it } from "vitest";
 import {
   agentActions,
@@ -48,6 +49,7 @@ describe("demo business data", () => {
     expect(d.customers.length).toBeLessThanOrEqual(200);
     expect(d.sources).toEqual({ erp: "ERP sistemi", onMuhasebe: "Ön muhasebe", banka: "Banka A ••4417" });
     expect(d.contracts).toHaveLength(3);
+    expect(d.customers.length).toBe(DEMO_CUSTOMERS);
     expect(d.chats.some((m) => m.promiseDate)).toBe(true);
   });
 

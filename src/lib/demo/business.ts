@@ -333,3 +333,10 @@ function generateChats(rng: Rng, customers: Customer[], receivables: Receivable[
     })
     .sort((a, b) => a.date.localeCompare(b.date));
 }
+
+/**
+ * Customer count of the demo company (tenant 017), as a constant so pages can show it without
+ * generating the dataset (route modules share the main bundle; generating at load cost seconds
+ * of blocking time on phones). demo-engine.test.ts keeps it in sync.
+ */
+export const DEMO_CUSTOMERS = 185;

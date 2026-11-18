@@ -40,10 +40,18 @@ function Reveal({ children, className, delay = 0 }: { children: ReactNode; class
   const inView = useInView(ref, { once: true, amount: 0.2 });
   const reduce = useReducedMotion();
   const [armed, setArmed] = useState(false);
-  // Only hide content after hydration, and only if it is still below the fold.
+  // Only hide content after hydration, and only if it is still below the fold. The observer's
+  // first report gives the position without forcing a layout (measuring ~25 sections directly
+  // caused a multi-second forced reflow on slow phones).
   useEffect(() => {
-    const r = ref.current?.getBoundingClientRect();
-    if (!reduce && r && r.top > window.innerHeight) setArmed(true);
+    const el = ref.current;
+    if (reduce || !el) return;
+    const io = new IntersectionObserver(([e]) => {
+      if (e && !e.isIntersecting && e.boundingClientRect.top > (e.rootBounds?.height ?? window.innerHeight)) setArmed(true);
+      io.disconnect();
+    });
+    io.observe(el);
+    return () => io.disconnect();
   }, [reduce]);
   return (
     <div ref={ref} className={`reveal${className ? ` ${className}` : ""}`} data-armed={armed} data-in={inView} style={{ transitionDelay: `${delay}ms` }}>
