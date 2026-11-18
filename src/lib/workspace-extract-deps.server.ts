@@ -6,7 +6,14 @@ import {
   EXTRACT_INSTRUCTIONS, extractionSchema, type ExtractInput, type ExtractStore, type Extractor, type CommitmentRow,
 } from "@/lib/workspace-extract.server";
 
-export const EXTRACT_MODEL = "openai/gpt-6-astra";
+export const EXTRACT_TEXT_MODEL = "openai/gpt-6-luna";
+export const EXTRACT_IMAGE_MODEL = "openai/gpt-6-luna";
+/** Kept for compatibility; text documents use this model. */
+export const EXTRACT_MODEL = EXTRACT_TEXT_MODEL;
+
+export function pickExtractModel(type: ExtractInput["type"]): { model: string; effort: "low" | "medium" } {
+  return type === "image" ? { model: EXTRACT_IMAGE_MODEL, effort: "medium" } : { model: EXTRACT_TEXT_MODEL, effort: "low" };
+}
 
 export function spreadsheetToText(bytes: Uint8Array): string {
   const wb = XLSX.read(bytes, { type: "array" });
@@ -29,9 +36,10 @@ export function createExtractor(apiKey: string, signal?: AbortSignal): Extractor
         : input.type === "image"
           ? [{ type: "text", text: intro }, { type: "image", image: `data:${input.mediaType};base64,${input.base64}` }]
           : [{ type: "text", text: intro }, { type: "file", filename: input.name, data: input.base64, mediaType: "application/pdf" }];
+    const pick = pickExtractModel(input.type);
     let failure: unknown;
     const result = streamText({
-      model: provider.responses(EXTRACT_MODEL),
+      model: provider.responses(pick.model),
       instructions: EXTRACT_INSTRUCTIONS,
       messages: [{ role: "user", content }],
       output: Output.object({ schema: extractionSchema }),
@@ -39,7 +47,7 @@ export function createExtractor(apiKey: string, signal?: AbortSignal): Extractor
       ...(signal ? { abortSignal: signal } : {}),
       onError: ({ error }) => { failure = error; },
       providerOptions: {
-        openai: { forceReasoning: true, reasoningEffort: "low", reasoningSummary: "auto", store: false, include: ["reasoning.encrypted_content"] },
+        openai: { forceReasoning: true, reasoningEffort: pick.effort, reasoningSummary: "auto", store: false, include: ["reasoning.encrypted_content"] },
       },
     });
     try {
