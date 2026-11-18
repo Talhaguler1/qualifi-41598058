@@ -321,5 +321,13 @@ function generateChats(rng: Rng, customers: Customer[], receivables: Receivable[
       }
     }
   }
-  return chats.sort((a, b) => a.date.localeCompare(b.date));
+  // Nobody chases or promises money that has already arrived: drop messages written on or after
+  // the invoice was paid. Filtering at the end keeps the random sequence, so other data is unchanged.
+  const paidOn = new Map(receivables.map((r) => [r.id, r.paidDate]));
+  return chats
+    .filter((m) => {
+      const paid = m.receivableId ? paidOn.get(m.receivableId) : null;
+      return !paid || paid > m.date;
+    })
+    .sort((a, b) => a.date.localeCompare(b.date));
 }

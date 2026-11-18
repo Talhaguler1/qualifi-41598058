@@ -22,6 +22,13 @@ export function withDay(iso: string, day: number): string {
 
 const MONTHS_TR = ["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"] as const;
 
+/** "3 gün geç", "2 gün erken" or "vadesinde": never a minus sign next to "erken". */
+export function delayPhrase(days: number): string {
+  if (days > 0) return `${days} gün geç`;
+  if (days < 0) return `${-days} gün erken`;
+  return "vadesinde";
+}
+
 export function formatDateTr(iso: string): string {
   return `${Number(iso.slice(8, 10))} ${MONTHS_TR.at(Number(iso.slice(5, 7)) - 1) ?? ""} ${iso.slice(0, 4)}`;
 }

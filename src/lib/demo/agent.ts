@@ -4,7 +4,7 @@
 
 import { firmRisk, commitmentStatus, type Firm } from "./bank";
 import type { BusinessDataset } from "./business";
-import { addDays, diffDays, formatDateTr } from "./dates";
+import { addDays, delayPhrase, diffDays, formatDateTr } from "./dates";
 import {
   agentActions,
   currentBalance,
@@ -228,7 +228,7 @@ export function askAgent(snap: Snapshot, question: string): AgentAnswer {
       const top = worst[0];
       return {
         intent,
-        text: top ? `En riskli müşteri ${top.c.name}: ${money(top.p.overdueAmount)} vadesi geçmiş, genelde ${top.p.medianDelay} gün geç ödüyor.` : "Riskli görünen müşteri yok.",
+        text: top ? `En riskli müşteri ${top.c.name}: ${money(top.p.overdueAmount)} vadesi geçmiş, genelde ${delayPhrase(top.p.medianDelay)} ödüyor.` : "Riskli görünen müşteri yok.",
         bullets: worst.map((w) => `${w.c.name}: not ${w.p.grade}, açık ${money(w.p.openAmount)}, eğilim ${w.p.trend > 0 ? `+${w.p.trend} gün yavaşlıyor` : "sabit"}`),
       };
     }

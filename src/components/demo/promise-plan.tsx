@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { ArrowRight, BadgeCheck, Check, FileText, Landmark, Loader2, MessageCircle, RotateCcw, ShieldCheck } from "lucide-react";
-import { diffDays, formatDateTr, money, payerProfile, type Snapshot } from "@/lib/demo";
+import { delayPhrase, diffDays, formatDateTr, money, payerProfile, type Snapshot } from "@/lib/demo";
 import { Grade } from "./shared";
 
 type Stage = "promise" | "matched" | "confirmed" | "ordered";
@@ -84,7 +84,7 @@ export function PromisePlanCard({ snap, onLog }: { snap: Snapshot; onLog: (step:
             </div>
           </div>
           <p className="qd-plan__hint">
-            Ödeme notu {p.grade}; ortanca {p.medianDelay} gün geç ödüyor. Geçmiş sözler: {past.length ? `${kept}/${past.length} tutuldu` : "kayıt yok"}.
+            Ödeme notu {p.grade}; genelde {delayPhrase(p.medianDelay)} ödüyor. Geçmiş sözler: {past.length ? `${kept}/${past.length} tutuldu` : "kayıt yok"}.
           </p>
         </div>
 

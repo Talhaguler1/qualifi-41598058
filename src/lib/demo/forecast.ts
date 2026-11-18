@@ -2,7 +2,7 @@
 // own payment history. Works the same for mock demo data and uploaded data.
 
 import type { BusinessDataset, ChatMessage, Customer, Expense, Receivable } from "./business";
-import { addDays, diffDays, formatDateTr, maxDate } from "./dates";
+import { addDays, delayPhrase, diffDays, formatDateTr, maxDate } from "./dates";
 
 /** What is known on `asOf`: nothing dated later exists yet. */
 export interface Snapshot {
@@ -144,7 +144,7 @@ export function expectedInflows(snap: Snapshot): ExpectedInflow[] {
         .at(-1)?.promiseDate;
       let expected = maxDate(addDays(r.dueDate, p.medianDelay), tomorrow);
       let reason = p.paidCount
-        ? `Vade ${formatDateTr(r.dueDate)}; bu müşteri ortanca ${p.medianDelay} gün ${p.medianDelay >= 0 ? "geç" : "erken"} ödüyor.`
+        ? `Vade ${formatDateTr(r.dueDate)}; bu müşteri genelde ${delayPhrase(p.medianDelay)} ödüyor.`
         : "Ödeme geçmişi yok; vade tarihi esas alındı.";
       if (overdueDays > 0 && expected <= addDays(snap.asOf, 3)) {
         expected = addDays(snap.asOf, Math.max(7, p.p75Delay - overdueDays));
@@ -292,7 +292,7 @@ export function agentActions(snap: Snapshot, limit = 12): AgentAction[] {
         customer: inflow.customer,
         receivable: r,
         dueInDays,
-        reason: `${dueInDays} gün sonra vadesi doluyor; bu müşteri genelde ${p.medianDelay} gün geç ödüyor.`,
+        reason: `${dueInDays} gün sonra vadesi doluyor; bu müşteri genelde ${delayPhrase(p.medianDelay)} ödüyor.`,
         draftMessage: `Merhaba, ${formatDateTr(r.dueDate)} vadeli ${r.id} numaralı ${fmt(r.amount)} tutarlı faturamızı hatırlatmak isteriz. Ödeme tarihini teyit edebilir misiniz? Teşekkürler.`,
       });
     }
