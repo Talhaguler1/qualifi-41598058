@@ -5,4 +5,5 @@
 - [x] Admin panel: signed-in password change (current + new password).
 - [x] Sign-in emails: add missing auth email sender so reset links actually send (needs publish).
 - [x] Test submission, reload, status, CSV, and unauthorized access with designated temporary accounts.
-- [x] Record results and commit; do not publish.- [x] Belge okumada daha ucuz model (gpt-6-luna), PDF girdisi canlı doğrulama
+- [x] Record results and commit; do not publish.
+- [x] Belge okumada daha ucuz model (gpt-6-luna), PDF girdisi canlı doğrulama
