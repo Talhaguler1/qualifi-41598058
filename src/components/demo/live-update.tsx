@@ -90,7 +90,7 @@ export function LiveUpdate({ outcome, asOf, onAdvice }: { outcome: EventOutcome;
   // Chart geometry
   const W = 640;
   const H = 200;
-  const pad = { l: 8, r: 8, t: 14, b: 26 };
+  const pad = { l: 62, r: 8, t: 14, b: 26 };
   const values = [...before, ...after].flatMap((w) => [w.balanceBase, w.balanceLow]).concat(0);
   const max = Math.max(...values);
   const min = Math.min(...values);
@@ -195,6 +195,14 @@ export function LiveUpdate({ outcome, asOf, onAdvice }: { outcome: EventOutcome;
             animate={{ opacity: stage >= 3 ? 1 : 0 }}
             transition={{ duration: 0.4 }}
           />
+          {[max, (max + min) / 2, min].map((v) => (
+            <g key={v}>
+              <line x1={pad.l} x2={W - pad.r} y1={y(v)} y2={y(v)} className="qd-live__grid" />
+              <text x={pad.l - 8} y={y(v) + 4} textAnchor="end" className="qd-live__label">
+                {money(v)}
+              </text>
+            </g>
+          ))}
           <line x1={pad.l} x2={W - pad.r} y1={y(0)} y2={y(0)} className="qd-live__zero" />
           <path d={beforeBase} className="qd-live__before" />
           <motion.path className="qd-live__low" initial={false} animate={{ d: stage >= 3 ? afterLow : beforeLow }} transition={{ duration: reduce ? 0 : 0.9, ease: EASE_MOVE }} />

@@ -575,3 +575,7 @@
 }
 .qd-factor--base span { color: var(--qd-muted); }
 .qd-factor--base .qd-bar i { background: #c3cdbd !important; }
+
+/* Phones: the key action (customer message) comes first. */
+@media (max-width: 720px) { .qd-home > .qd-composer { order: -1; } }
+.qd-live__grid { stroke: #e9ede3; stroke-width: 1; }

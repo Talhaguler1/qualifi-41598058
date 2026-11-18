@@ -192,9 +192,21 @@ function useNarrow(): boolean {
  */
 export function FocusSheet({ open, title, subtitle, onClose, children }: { open: boolean; title: string; subtitle?: string; onClose: () => void; children: ReactNode }) {
   const narrow = useNarrow();
+  // Remember what opened the sheet so focus returns there when it closes (keyboard users).
+  const opener = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    if (open) opener.current = document.activeElement as HTMLElement | null;
+  }, [open]);
   return (
     <Sheet open={open} onOpenChange={(o) => (!o ? onClose() : undefined)}>
-      <SheetContent side={narrow ? "bottom" : "right"} className={`qd qd-sheet qd-sheet--focus${narrow ? " qd-sheet--bottom" : ""}`}>
+      <SheetContent
+        onCloseAutoFocus={(e) => {
+          if (opener.current?.isConnected) {
+            e.preventDefault();
+            opener.current.focus();
+          }
+        }}
+        side={narrow ? "bottom" : "right"} className={`qd qd-sheet qd-sheet--focus${narrow ? " qd-sheet--bottom" : ""}`}>
         <SheetHeader className="qd-sheet__head">
           <SheetTitle>{title}</SheetTitle>
           <SheetDescription className={subtitle ? undefined : "sr-only"}>{subtitle ?? title}</SheetDescription>

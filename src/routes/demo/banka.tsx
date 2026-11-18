@@ -1,7 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { BankPanel } from "@/components/demo/bank-panel";
 import { demoHead } from "@/components/demo/head";
-import { DemoLinks } from "@/components/demo/demo-links";
 import { BANKERS_PER_REGION, DEFAULT_DEMO_DATE, isDemoDate, langOf, normaliseTenant, setDemoLang, type DemoDate } from "@/lib/demo";
 
 function sharedOf(value: unknown): string | undefined {
@@ -43,7 +42,6 @@ function BankDemoPage() {
     <BankPanel
       region="Marmara-1"
       sharedTenant={s}
-      accountSlot={<DemoLinks />}
       banker={b}
       date={d}
       onDate={(next) => void navigate({ search: { b, d: next, ...keep }, replace: true, resetScroll: false })}

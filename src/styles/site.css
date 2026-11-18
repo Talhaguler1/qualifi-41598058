@@ -137,7 +137,7 @@
 .sv-line-before { fill: none; stroke: #c3cdbd; stroke-width: 2; stroke-dasharray: 5 5; }
 .sv-tight { fill: #f9e3dd; transition: opacity 0.4s; }
 .sv-tight[data-on="false"] { opacity: 0; transform: none; }
-.sv-warn { display: flex; gap: 10px; padding: 12px 14px; border-radius: 14px; background: #eaf5e4; color: #1f5f3a; transition: background 0.45s var(--ease-out), color 0.45s var(--ease-out); }
+.sv-warn { display: flex; gap: 10px; padding: 12px 14px; border-radius: 14px; background: #eaf5e4; color: #1f5f3a; }
 .sv-warn[data-state="warn"] { background: #fbe9e4; color: #8a3423; }
 .sv-warn b { display: block; font-family: var(--font-display); font-size: 15px; }
 .sv-warn span { display: block; font-size: 13px; color: var(--ink-2); }
@@ -357,3 +357,13 @@
 .bento__factor { display: grid !important; grid-template-columns: 40px 1fr !important; gap: 8px; align-items: baseline; width: 100%; font-size: 14px; }
 .bento__factor b { color: var(--risk); font-variant-numeric: tabular-nums; }
 .bento__factor small { color: var(--ink-2); font-size: 14px; }
+
+/* Reviewer fixes: hero date strip with months, mobile tabs in one scrollable row, chip inside the card. */
+.sv-axis span { white-space: nowrap; }
+@media (max-width: 640px) {
+  .tabs { display: flex; flex-wrap: nowrap; overflow-x: auto; width: 100%; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tabs button { flex: none; height: 44px; }
+  .sv-chip { font-size: 12px; padding: 5px 8px; transform: translateX(-78%); }
+  .sv-chip svg { display: none; }
+}

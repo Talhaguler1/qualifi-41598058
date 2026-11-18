@@ -60,11 +60,11 @@ function BusinessStory({ v }: { v: SiteCopy["visual"] }) {
       </div>
       <div className="sv-track">
         <div className="sv-axis">
-          {["25", "2", "9", "16", "23", "30", "6", "13"].map((d, i) => (
+          {v.axis.map((d, i) => (
             <span key={i}>{d}</span>
           ))}
         </div>
-        <span className="sv-ghost" data-on={step >= 2}>2</span>
+        <span className="sv-ghost" data-on={step >= 2}>{v.ghost}</span>
         <motion.span className="sv-chip" initial={false} animate={{ left: step >= 2 ? "80%" : "58%" }} transition={{ duration: 0.8, ease: EASE_MOVE }}>
           <CalendarClock size={12} strokeWidth={1.75} /> {v.moved}
         </motion.span>

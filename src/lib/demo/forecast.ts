@@ -151,7 +151,7 @@ export function expectedInflows(snap: Snapshot): ExpectedInflow[] {
         .at(-1)?.promiseDate;
       let expected = maxDate(addDays(r.dueDate, p.medianDelay), tomorrow);
       let reason = p.paidCount
-        ? L(`Vade ${formatDateTr(r.dueDate)}; bu müşteri genelde ${delayPhrase(p.medianDelay)} ödüyor.`, `Due ${formatDateTr(r.dueDate)}; this customer usually pays ${delayPhrase(p.medianDelay)}.`)
+        ? L(`Bu müşteri genelde ${delayPhrase(p.medianDelay)} ödüyor.`, `This customer usually pays ${delayPhrase(p.medianDelay)}.`)
         : L("Ödeme geçmişi yok; vade tarihi esas alındı.", "No payment history; the due date is used.");
       if (overdueDays > 0 && expected <= addDays(snap.asOf, 3)) {
         expected = addDays(snap.asOf, Math.max(7, p.p75Delay - overdueDays));

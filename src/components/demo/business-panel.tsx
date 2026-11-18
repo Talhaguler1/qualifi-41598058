@@ -90,7 +90,7 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
   const card = useMemo(() => (prevDate ? scorecard(dataset, prevDate, date) : null), [dataset, prevDate, date]);
   const featured = useMemo(() => featuredPromise(snap), [snap]);
 
-  const [tab, setTab] = useState<Tab>("inflows");
+  const [tab, setTab] = useState<Tab>("customers");
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const [shareOpen, setShareOpen] = useState(false);
@@ -281,8 +281,8 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
                   value={tab}
                   onChange={changeTab}
                   items={[
-                    ["inflows", L("Beklenen tahsilatlar", "Expected collections")],
                     ["customers", L("Müşteri ödeme karnesi", "Customer payment scorecard")],
+                    ["inflows", L("Beklenen tahsilatlar", "Expected collections")],
                     ["whatsapp", L("WhatsApp sözleri", "WhatsApp promises")],
                     ["sources", L("Kaynaklar ve belgeler", "Sources and documents")],
                   ]}
