@@ -260,6 +260,8 @@ export function generateBusiness(tenantInput: string): BusinessDataset {
   const cushion = (payroll + rent) * (0.45 + rng.next() * 0.3);
   const openingBalance = Math.round((cushion - (collected - spent)) / 1000) * 1000;
 
+  addFeaturedPromise(tenant, customers, receivables, chats);
+
   return {
     tenant,
     company: { name: companyName, sector: "Yazılım ve teknoloji", city: rng.pick(CITIES) },
@@ -271,6 +273,32 @@ export function generateBusiness(tenantInput: string): BusinessDataset {
     expenses,
     chats,
   };
+}
+
+export const FEATURED_PROMISE = { amount: 150_000, issueDate: "2026-10-21", dueDate: "2026-11-20", promiseDate: "2026-11-27", paidDate: "2026-11-27" } as const;
+
+/**
+ * The presentation's story: a slow payer owes a 150.000 TL milestone invoice, misses the due
+ * date and on 23 Nov writes "cuma gönderiyoruz" (Friday 27 Nov). Added after everything else
+ * without touching the random sequence, so the rest of the demo data stays the same.
+ */
+function addFeaturedPromise(tenant: string, customers: Customer[], receivables: Receivable[], chats: ChatMessage[]) {
+  // A slow payer who pays by transfer and has made promises before, so the story has a history.
+  const promisedBefore = new Set(chats.filter((m) => m.promiseDate).map((m) => m.customerId));
+  const customer =
+    customers.find((c) => c.persona === "late" && c.payMethod === "transfer" && promisedBefore.has(c.id)) ??
+    customers.find((c) => c.persona === "late" && c.payMethod === "transfer") ??
+    customers.find((c) => c.persona === "late") ??
+    customers[0];
+  if (!customer) return;
+  const id = `INV-${tenant}-90001`;
+  const f = FEATURED_PROMISE;
+  receivables.push({ id, customerId: customer.id, kind: "invoice", source: "mockonmuhasebe", issueDate: f.issueDate, dueDate: f.dueDate, amount: f.amount, paidDate: f.paidDate });
+  chats.push(
+    { id: `MSG-${customer.id}-F1`, customerId: customer.id, date: "2026-11-21", from: "us", text: `Merhaba, ${id} numaralı proje hakediş faturamızın vadesi 20 Kasım'da doldu. Ödeme tarihini paylaşabilir misiniz?`, receivableId: id },
+    { id: `MSG-${customer.id}-F2`, customerId: customer.id, date: "2026-11-23", from: "customer", text: "Merhaba, onay süreci uzadı kusura bakmayın. Cuma günü gönderiyoruz.", promiseDate: f.promiseDate, receivableId: id },
+  );
+  chats.sort((a, b) => a.date.localeCompare(b.date));
 }
 
 function generateChats(rng: Rng, customers: Customer[], receivables: Receivable[]): ChatMessage[] {

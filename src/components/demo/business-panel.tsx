@@ -35,6 +35,7 @@ import {
 import { trackDemo, type DemoAction } from "@/lib/demo/track";
 import { ActionQueue, AgentFeed, AskAgent, BriefingBox } from "./agent-panel";
 import { ShareSummaryView } from "./share-view";
+import { PromisePlanCard } from "./promise-plan";
 import { AnimatedNumber, Grade, Kpi, SourceChip, Tabs, Toast, TopBar, useMounted } from "./shared";
 
 type Tab = "inflows" | "customers" | "whatsapp" | "sources";
@@ -104,6 +105,8 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
           </section>
 
           <CashFlowCard snap={snap} weeks={weeks} accuracy={accuracy} prevDate={prevDate} onScenario={(target, detail) => log("scenario_run", target, detail)} />
+
+          <PromisePlanCard key={`plan-${date}`} snap={snap} onLog={(step) => log("scenario_run", "promise-plan", step)} />
 
           <ScorecardCard dataset={dataset} prevDate={prevDate} date={date} onCustomer={openCustomer} />
 
