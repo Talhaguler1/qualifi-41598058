@@ -2,6 +2,7 @@
 // Only the server writes app_metadata; a user can never claim demo, banker or admin here.
 // Also: a per-account daily cap on AI document reads, so open sign-up cannot drain AI credits.
 
+import { sourceFromMetadata } from "./attribution";
 import type { AuthUser } from "./accounts.server";
 
 export const DAILY_EXTRACT_LIMIT = 15;
@@ -31,7 +32,7 @@ export async function handleClaim(request: Request, deps: ClaimDeps): Promise<Re
   // Company name comes from the sign-up form (user_metadata): display only, never used for access.
   const rawCompany = user.user_metadata?.["company"];
   const company = typeof rawCompany === "string" ? rawCompany.replace(/[<>]/g, "").trim().slice(0, 120) : "";
-  await deps.setAppMetadata(user.id, { ...meta, qualifi_role: "blank", qualifi_self_signup: true, ...(company ? { qualifi_company: company } : {}) });
+  await deps.setAppMetadata(user.id, { ...meta, qualifi_role: "blank", qualifi_self_signup: true, ...(company ? { qualifi_company: company } : {}), ...sourceFromMetadata(user.user_metadata) });
   return json({ role: "blank", changed: true });
 }
 

@@ -1,3 +1,4 @@
+import { track } from "@/lib/tracking";
 import { useState, type FormEvent } from "react";
 import { ArrowRight, Check, CircleCheck } from "lucide-react";
 import { BANK_COPY } from "@/lib/site/bank-copy";
@@ -35,6 +36,7 @@ export function PilotForm({ lang }: { lang: SiteLang }) {
         }),
       });
       setState(res.ok ? "done" : "error");
+      if (res.ok) track("Lead", { content_name: "bank-pilot" });
     } catch {
       setState("error");
     }

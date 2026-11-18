@@ -1,3 +1,4 @@
+import { track, trackCustom } from "@/lib/tracking";
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { Area, Bar, ComposedChart, Line, ReferenceDot, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis, Cell, BarChart } from "recharts";
 import { Building2, Calculator, Landmark, MessageCircle, FileText, ArrowUpRight, ArrowDownRight, TrendingUp, Handshake, BellRing, UserCheck, Target, Share2 } from "lucide-react";
@@ -100,6 +101,7 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
     [tenant, date],
   );
   const story = useStoryFocus(null, (key) => log("tab_open", `card-${key}`));
+  useEffect(() => track("ViewContent", { content_name: "business-demo" }), []);
   const changeDate = (d: DemoDate) => {
     log("date_change", d);
     onDate(d);
@@ -135,6 +137,7 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
     setOutcome(out);
     setLiveOpen(true);
     log("scenario_run", "message", `${e.kind}:${e.customer.id}`);
+    trackCustom("DemoTried", { kind: e.kind });
     return out;
   };
   const onComposerSend = (text: string): string | null =>

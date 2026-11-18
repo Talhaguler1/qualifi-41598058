@@ -140,6 +140,8 @@ export async function handleListAccounts(request: Request, deps: AccountsDeps): 
         region: (u.app_metadata?.["qualifi_region"] as string | undefined) ?? null,
         banker_no: (u.app_metadata?.["qualifi_banker_no"] as string | undefined) ?? null,
         company: (u.app_metadata?.["qualifi_company"] as string | undefined) ?? null,
+        source: (u.app_metadata?.["qualifi_source"] as string | undefined) ?? null,
+        campaign: (u.app_metadata?.["qualifi_campaign"] as string | undefined) ?? null,
         confirmed: Boolean(u.email_confirmed_at),
         last_sign_in_at: u.last_sign_in_at ?? null,
         created_at: u.created_at ?? null,

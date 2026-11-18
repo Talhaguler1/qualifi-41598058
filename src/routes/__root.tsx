@@ -14,6 +14,8 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { setDemoLang } from "../lib/demo/i18n";
+import { ConsentAndAttribution } from "../components/site/consent";
+import { META_DOMAIN_VERIFICATION } from "../lib/tracking";
 
 function NotFoundComponent() {
   return (
@@ -85,12 +87,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "QualiFi" },
       { name: "description", content: "QualiFi finansal takip ve başvuru yönetimi." },
-      { name: "author", content: "Lovable" },
+      { name: "author", content: "QualiFi" },
       { property: "og:title", content: "QualiFi" },
       { property: "og:description", content: "QualiFi finansal takip ve başvuru yönetimi." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
+      // Meta domain verification (Business Settings → Domains); empty until the code is provided.
+      ...(META_DOMAIN_VERIFICATION ? [{ name: "facebook-domain-verification", content: META_DOMAIN_VERIFICATION }] : []),
     ],
     links: [
       {
@@ -134,6 +137,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
+      <ConsentAndAttribution />
     </QueryClientProvider>
   );
 }

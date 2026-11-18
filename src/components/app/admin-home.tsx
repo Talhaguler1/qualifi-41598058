@@ -13,6 +13,8 @@ interface ListedUser {
   region: string | null;
   banker_no: string | null;
   company: string | null;
+  source?: string | null;
+  campaign?: string | null;
   confirmed: boolean;
   last_sign_in_at: string | null;
 }
@@ -223,13 +225,18 @@ function AccountList({ token }: { token: string }) {
         <button type="button" className="qd-btn qd-btn--sm" onClick={load}><RefreshCw size={13} /> Yenile</button>
         <span style={{ color: "var(--qd-muted)", fontSize: 12.5 }}>{users.length} hesap · {users.filter((u) => u.last_sign_in_at).length} kişi en az bir kez girdi</span>
       </div>
+      <SourceSummary users={users} />
       <div className="qd-table-wrap" style={{ maxHeight: 520, overflowY: "auto" }}>
         <table className="qd-table">
           <thead><tr><th>E-posta</th><th>Tür</th><th>Panel</th><th>Şifre belirledi</th><th>Son giriş</th><th /></tr></thead>
           <tbody>
             {shown.map((u) => (
               <tr key={u.id}>
-                <td>{u.email}{u.company ? <div style={{ color: "var(--qd-muted)", fontSize: 12 }}>{u.company}</div> : null}</td>
+                <td>
+                  {u.email}
+                  {u.company ? <div style={{ color: "var(--qd-muted)", fontSize: 12 }}>{u.company}</div> : null}
+                  {u.source ? <div style={{ color: "var(--qd-muted)", fontSize: 12 }}>Kaynak: {u.source}{u.campaign ? ` · ${u.campaign}` : ""}</div> : null}
+                </td>
                 <td>{u.role === "admin" ? "Admin" : ROLE_LABEL[u.role as keyof typeof ROLE_LABEL] ?? u.role}</td>
                 <td className="qd-num">{u.tenant ? `mockerp${u.tenant}` : u.banker_no ? `${u.region} · ${u.banker_no}` : "—"}</td>
                 <td>{u.confirmed ? <span className="qd-pill qd-pill--good">Evet</span> : <span className="qd-pill qd-pill--muted">Bekliyor</span>}</td>
@@ -322,5 +329,19 @@ function Activity({ token }: { token: string }) {
         </table>
       </div>
     </>
+  );
+}
+
+/** Self sign-ups per first-touch source (utm_source / fbclid), e.g. how many came from Meta ads. */
+function SourceSummary({ users }: { users: ListedUser[] }) {
+  const self = users.filter((u) => u.role === "blank");
+  if (!self.length) return null;
+  const counts = new Map<string, number>();
+  for (const u of self) counts.set(u.source ?? "doğrudan / bilinmiyor", (counts.get(u.source ?? "doğrudan / bilinmiyor") ?? 0) + 1);
+  return (
+    <p style={{ fontSize: 13, color: "var(--qd-ink-2)", margin: "0 0 10px" }}>
+      <b>Kendi kaydolanlar, kaynağa göre:</b>{" "}
+      {[...counts.entries()].sort((a, b) => b[1] - a[1]).map(([k, n]) => `${k} ${n}`).join(" · ")}
+    </p>
   );
 }

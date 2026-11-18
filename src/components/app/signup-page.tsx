@@ -1,3 +1,5 @@
+import { track } from "@/lib/tracking";
+import { readFirstTouch } from "@/lib/attribution";
 import { useState, type FormEvent } from "react";
 import { ArrowRight, MailCheck, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -23,13 +25,18 @@ export function SignupPage() {
     const { data, error: err } = await supabase.auth.signUp({
       email: email.trim(),
       password,
-      options: { emailRedirectTo: `${window.location.origin}/app`, data: { company: company.trim().slice(0, 120) } },
+      options: {
+        emailRedirectTo: `${window.location.origin}/app`,
+        // Where this visitor first came from (e.g. a Meta ad), for counting sign-ups per source.
+        data: { company: company.trim().slice(0, 120), ...sourceData() },
+      },
     });
     setBusy(false);
     if (err) {
       setError(/registered|already/i.test(err.message) ? "Bu e-posta ile zaten bir hesap var. Giriş yapın veya şifrenizi sıfırlayın." : "Hesap açılamadı. Bilgileri kontrol edip tekrar deneyin.");
       return;
     }
+    if (data.user) track("CompleteRegistration", { content_name: "free-account" });
     if (data.session) window.location.assign("/app");
     else setSentTo(email.trim());
   };
@@ -89,4 +96,9 @@ export function SignupPage() {
       </main>
     </div>
   );
+}
+
+function sourceData(): Record<string, string> {
+  const t = readFirstTouch();
+  return t ? { source: t.source, ...(t.campaign ? { campaign: t.campaign } : {}) } : {};
 }
