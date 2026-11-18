@@ -12,6 +12,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { setDemoLang } from "../lib/demo/i18n";
 
 function NotFoundComponent() {
   return (
@@ -120,6 +121,9 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  // The demo language lives in a module variable; on the server reset it for every request
+  // so one visitor's English page never leaks into the next page rendered (demo routes set it again).
+  if (typeof window === "undefined") setDemoLang("tr");
 
   return (
     <QueryClientProvider client={queryClient}>

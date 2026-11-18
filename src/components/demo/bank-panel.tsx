@@ -17,6 +17,13 @@ import {
   bankShareSummary,
   generateBusiness,
   sectorAnalysis,
+  L,
+  pick,
+  pct,
+  count,
+  days,
+  sectorName,
+  messageText,
   type AgentStep,
   type DemoDate,
   type Firm,
@@ -27,9 +34,9 @@ import { ShareSummaryView } from "./share-view";
 import { AnimatedNumber, Kpi, Tabs, TopBar, useMounted } from "./shared";
 
 type Tab = "portfolio" | "sectors" | "signals" | "commitments";
-const STATUS_LABEL = { kept: ["Tutuldu", "qd-pill--good"], late: ["Gecikmeli", "qd-pill--warn"], broken: ["Tutulmadı", "qd-pill--bad"], upcoming: ["Yaklaşıyor", "qd-pill--muted"] } as const;
-const SIGNAL_LABEL = { promise: ["Ödeme sözü", "qd-pill--muted"], deferral: ["Erteleme talebi", "qd-pill--warn"], stress: ["Nakit sıkıntısı", "qd-pill--bad"], positive: ["Olumlu", "qd-pill--good"] } as const;
-const LEVEL = { high: ["Yüksek", "qd-pill--bad"], medium: ["Orta", "qd-pill--warn"], low: ["Düşük", "qd-pill--good"] } as const;
+const STATUS_LABEL = { kept: [["Tutuldu", "Kept"], "qd-pill--good"], late: [["Gecikmeli", "Late"], "qd-pill--warn"], broken: [["Tutulmadı", "Broken"], "qd-pill--bad"], upcoming: [["Yaklaşıyor", "Upcoming"], "qd-pill--muted"] } as const;
+const SIGNAL_LABEL = { promise: [["Ödeme sözü", "Payment promise"], "qd-pill--muted"], deferral: [["Erteleme talebi", "Deferral request"], "qd-pill--warn"], stress: [["Nakit sıkıntısı", "Cash stress"], "qd-pill--bad"], positive: [["Olumlu", "Positive"], "qd-pill--good"] } as const;
+const LEVEL = { high: [["Yüksek", "High"], "qd-pill--bad"], medium: [["Orta", "Medium"], "qd-pill--warn"], low: [["Düşük", "Low"], "qd-pill--good"] } as const;
 
 export function BankPanel({ region, banker, date, onDate, onBanker, sharedTenant, accountSlot, lockBanker }: { region: string; banker: string; date: DemoDate; onDate: (d: DemoDate) => void; onBanker: (b: string) => void; sharedTenant?: string | undefined; accountSlot?: ReactNode; lockBanker?: boolean }) {
   const firms = useMemo(() => (banker === "all" ? generateRegion(region) : generatePortfolio(region, banker)), [region, banker]);
@@ -51,23 +58,23 @@ export function BankPanel({ region, banker, date, onDate, onBanker, sharedTenant
   const newSignals = firms.flatMap((f) => f.signals.filter((s) => s.date > prevDate && s.date <= date));
 
   const steps: AgentStep[] = [
-    { id: "p", tool: "karne", title: `${firms.length.toLocaleString("tr-TR")} firmanın tahsilat verisi tarandı`, detail: `Firmaların kendi müşterilerinden tahsil süreleri ${formatDateTr(date)} itibarıyla güncellendi.` },
-    { id: "w", tool: "whatsapp", title: "WhatsApp yazışmaları okundu", detail: `${newSignals.length} yeni işaret: ${newSignals.filter((s) => s.type === "stress" || s.type === "deferral").length} sıkıntı/erteleme, ${newSignals.filter((s) => s.type === "promise").length} ödeme sözü.` },
-    { id: "t", tool: "takip", title: "Taahhütler kontrol edildi", detail: `${broken.length} tutulmayan, önümüzdeki 7 günde ${upcoming.length} taahhüt.` },
-    { id: "s", tool: "tahmin", title: "Sektör analizi yenilendi", detail: `En riskli sektör: ${sectorAnalysis(firms, date)[0]?.sector ?? "—"}.` },
-    { id: "c", tool: "banka", title: "Bugünün arama listesi hazır", detail: `${briefing.callList.length} firma; gerekçeleriyle birlikte.` },
+    { id: "p", tool: "karne", title: L(`${count(firms.length)} firmanın tahsilat verisi tarandı`, `Scanned collection data for ${count(firms.length)} firms`), detail: L(`Firmaların kendi müşterilerinden tahsil süreleri ${formatDateTr(date)} itibarıyla güncellendi.`, `Updated how fast each firm collects from its own customers, as of ${formatDateTr(date)}.`) },
+    { id: "w", tool: "whatsapp", title: L("WhatsApp yazışmaları okundu", "Read WhatsApp messages"), detail: L(`${newSignals.length} yeni işaret: ${newSignals.filter((s) => s.type === "stress" || s.type === "deferral").length} sıkıntı/erteleme, ${newSignals.filter((s) => s.type === "promise").length} ödeme sözü.`, `${newSignals.length} new signals: ${newSignals.filter((s) => s.type === "stress" || s.type === "deferral").length} stress/deferral, ${newSignals.filter((s) => s.type === "promise").length} payment promises.`) },
+    { id: "t", tool: "takip", title: L("Taahhütler kontrol edildi", "Checked commitments"), detail: L(`${broken.length} tutulmayan, önümüzdeki 7 günde ${upcoming.length} taahhüt.`, `${broken.length} broken; ${upcoming.length} due in the next 7 days.`) },
+    { id: "s", tool: "tahmin", title: L("Sektör analizi yenilendi", "Refreshed the sector analysis"), detail: `${L("En riskli sektör", "Riskiest sector")}: ${sectorName(sectorAnalysis(firms, date)[0]?.sector ?? "—")}.` },
+    { id: "c", tool: "banka", title: L("Bugünün arama listesi hazır", "Today's call list is ready"), detail: L(`${briefing.callList.length} firma; gerekçeleriyle birlikte.`, `${briefing.callList.length} firms, each with its reason.`) },
   ];
 
   return (
     <div className="qd">
-      <TopBar title={`${region} bölge birimi · Kredi risk`} subtitle={banker === "all" ? `Birim yöneticisi görünümü · ${BANKERS_PER_REGION} uzman` : `Uzman ${banker} · ${firms.length} firma`} date={date} onDate={(d) => { log("date_change", d); onDate(d); }}>
+      <TopBar langSwitch title={L(`${region} bölge birimi · Kredi risk`, `${region} regional unit · Credit risk`)} subtitle={banker === "all" ? L(`Birim yöneticisi görünümü · ${BANKERS_PER_REGION} uzman`, `Unit manager view · ${BANKERS_PER_REGION} specialists`) : L(`Uzman ${banker} · ${firms.length} firma`, `Specialist ${banker} · ${firms.length} firms`)} date={date} onDate={(d) => { log("date_change", d); onDate(d); }}>
         {accountSlot}
         {lockBanker ? null : (
-        <select className="qd-select" value={banker} onChange={(e) => onBanker(e.target.value)} aria-label="Uzman">
-          <option value="all">Birimin tamamı (6.000 firma)</option>
+        <select className="qd-select" value={banker} onChange={(e) => onBanker(e.target.value)} aria-label={L("Uzman", "Specialist")}>
+          <option value="all">{L("Birimin tamamı (6.000 firma)", "Whole unit (6,000 firms)")}</option>
           {Array.from({ length: BANKERS_PER_REGION }, (_, i) => String(i + 1).padStart(2, "0")).map((b) => (
             <option key={b} value={b}>
-              Uzman {b} · 300 firma
+              {L(`Uzman ${b} · 300 firma`, `Specialist ${b} · 300 firms`)}
             </option>
           ))}
         </select>
@@ -77,10 +84,10 @@ export function BankPanel({ region, banker, date, onDate, onBanker, sharedTenant
         <div className="qd-col">
           {sharedTenant ? <SharedCard tenant={sharedTenant} date={date} /> : null}
           <section className="qd-kpis" key={`kpi-${date}-${banker}`}>
-            <Kpi tone="accent" label="İzlenen firma" value={<AnimatedNumber value={firms.length} format={(n) => Math.round(n).toLocaleString("tr-TR")} />} sub={`Toplam kredi ${money(firms.reduce((s, f) => s + f.loanAmount, 0))}`} />
-            <Kpi {...(high.length ? { tone: "alert" as const } : {})} label="Yüksek risk" value={<AnimatedNumber value={high.length} format={(n) => Math.round(n).toLocaleString("tr-TR")} />} sub={`${money(high.reduce((s, f) => s + f.loanAmount, 0))} kredi`} />
-            <Kpi label="Tutulmayan taahhüt" value={<AnimatedNumber value={broken.length} format={(n) => String(Math.round(n))} />} sub={`${money(broken.reduce((s, x) => s + x.c.amount, 0))}`} />
-            <Kpi label="7 gün içinde vadesi gelen" value={<AnimatedNumber value={upcoming.length} format={(n) => String(Math.round(n))} />} sub="taahhüt" />
+            <Kpi tone="accent" label={L("İzlenen firma", "Firms monitored")} value={<AnimatedNumber value={firms.length} format={count} />} sub={`${L("Toplam kredi", "Total loans")} ${money(firms.reduce((s, f) => s + f.loanAmount, 0))}`} />
+            <Kpi {...(high.length ? { tone: "alert" as const } : {})} label={L("Yüksek risk", "High risk")} value={<AnimatedNumber value={high.length} format={count} />} sub={`${money(high.reduce((s, f) => s + f.loanAmount, 0))} ${L("kredi", "in loans")}`} />
+            <Kpi label={L("Tutulmayan taahhüt", "Broken commitments")} value={<AnimatedNumber value={broken.length} format={(n) => String(Math.round(n))} />} sub={`${money(broken.reduce((s, x) => s + x.c.amount, 0))}`} />
+            <Kpi label={L("7 gün içinde vadesi gelen", "Due within 7 days")} value={<AnimatedNumber value={upcoming.length} format={(n) => String(Math.round(n))} />} sub={L("taahhüt", "commitments")} />
           </section>
 
           <section className="qd-card">
@@ -88,10 +95,10 @@ export function BankPanel({ region, banker, date, onDate, onBanker, sharedTenant
               value={tab}
               onChange={(t) => { log("tab_open", t); setTab(t); }}
               items={[
-                ["portfolio", "Portföy"],
-                ["sectors", "Sektör analizi"],
-                ["signals", "WhatsApp içgörüleri"],
-                ["commitments", "Taahhüt takibi"],
+                ["portfolio", L("Portföy", "Portfolio")],
+                ["sectors", L("Sektör analizi", "Sector analysis")],
+                ["signals", L("WhatsApp içgörüleri", "WhatsApp insights")],
+                ["commitments", L("Taahhüt takibi", "Commitment tracking")],
               ]}
             />
             <div key={`${tab}-${date}-${banker}`} className="qd-enter">
@@ -109,8 +116,8 @@ export function BankPanel({ region, banker, date, onDate, onBanker, sharedTenant
           </section>
           <section className="qd-card">
             <div className="qd-card__head">
-              <h2>Bugün aranacaklar</h2>
-              <p>Riski en çok artandan başlayarak</p>
+              <h2>{L("Bugün aranacaklar", "Calls for today")}</h2>
+              <p>{L("Riski en çok artandan başlayarak", "Starting with the biggest risk increase")}</p>
             </div>
             <div className="qd-actions">
               {briefing.callList.map((c, i) => (
@@ -121,13 +128,13 @@ export function BankPanel({ region, banker, date, onDate, onBanker, sharedTenant
                       <div className="qd-action__reason">{c.reason}</div>
                     </div>
                     <div style={{ textAlign: "right" }}>
-                      <span className={`qd-pill ${c.score >= 60 ? "qd-pill--bad" : "qd-pill--warn"}`}>Skor {c.score}</span>
-                      {c.change > 0 ? <div className="qd-num" style={{ color: "var(--qd-bad)", fontSize: 12, marginTop: 4 }}>+{c.change} puan</div> : null}
+                      <span className={`qd-pill ${c.score >= 60 ? "qd-pill--bad" : "qd-pill--warn"}`}>{L("Skor", "Score")} {c.score}</span>
+                      {c.change > 0 ? <div className="qd-num" style={{ color: "var(--qd-bad)", fontSize: 12, marginTop: 4 }}>+{c.change} {L("puan", "pts")}</div> : null}
                     </div>
                   </div>
                   <div className="qd-action__buttons">
                     <button type="button" className="qd-btn qd-btn--primary qd-btn--sm" onClick={() => openFirm(c.firm)}>
-                      <Bot size={13} /> Firma kartı
+                      <Bot size={13} /> {L("Firma kartı", "Firm card")}
                     </button>
                     <span className="qd-pill qd-pill--muted"><Phone size={12} /> {c.firm.city}</span>
                   </div>
@@ -148,11 +155,11 @@ function SharedCard({ tenant, date }: { tenant: string; date: string }) {
     <section className="qd-card qd-enter" style={{ borderColor: "#b6dbb8" }}>
       <div className="qd-card__head">
         <div>
-          <span className="qd-eyebrow">İşletmenin paylaştığı ödeme karnesi · yeni</span>
+          <span className="qd-eyebrow">{L("İşletmenin paylaştığı ödeme karnesi · yeni", "Payment scorecard shared by the business · new")}</span>
           <h2>{summary.company.name}</h2>
-          <p>{summary.company.sector} · {summary.company.city} · {formatDateTr(date)} itibarıyla, işletmenin kendi onayıyla</p>
+          <p>{sectorName(summary.company.sector)} · {summary.company.city} · {L(`${formatDateTr(date)} itibarıyla, işletmenin kendi onayıyla`, `as of ${formatDateTr(date)}, with the business's own consent`)}</p>
         </div>
-        <span className="qd-pill qd-pill--good">İşletme paylaştı · demo</span>
+        <span className="qd-pill qd-pill--good">{L("İşletme paylaştı · demo", "Shared by the business · demo")}</span>
       </div>
       <ShareSummaryView summary={summary} audience="bank" />
     </section>
@@ -177,31 +184,31 @@ function Portfolio({ firms, risks, onFirm }: { firms: Firm[]; risks: Risks; onFi
   return (
     <>
       <div className="qd-toolbar">
-        <input className="qd-input" placeholder="Firma ara" value={query} onChange={(e) => setQuery(e.target.value)} aria-label="Firma ara" />
-        <select className="qd-select" value={sector} onChange={(e) => setSector(e.target.value)} aria-label="Sektör">
-          <option value="all">Tüm sektörler</option>
+        <input className="qd-input" placeholder={L("Firma ara", "Search firms")} value={query} onChange={(e) => setQuery(e.target.value)} aria-label={L("Firma ara", "Search firms")} />
+        <select className="qd-select" value={sector} onChange={(e) => setSector(e.target.value)} aria-label={L("Sektör", "Sector")}>
+          <option value="all">{L("Tüm sektörler", "All sectors")}</option>
           {BANK_SECTORS.map((s) => (
-            <option key={s.name} value={s.name}>{s.name}</option>
+            <option key={s.name} value={s.name}>{sectorName(s.name)}</option>
           ))}
         </select>
         <select className="qd-select" value={level} onChange={(e) => setLevel(e.target.value)} aria-label="Risk">
-          <option value="all">Tüm risk seviyeleri</option>
-          <option value="high">Yüksek</option>
-          <option value="medium">Orta</option>
-          <option value="low">Düşük</option>
+          <option value="all">{L("Tüm risk seviyeleri", "All risk levels")}</option>
+          <option value="high">{L("Yüksek", "High")}</option>
+          <option value="medium">{L("Orta", "Medium")}</option>
+          <option value="low">{L("Düşük", "Low")}</option>
         </select>
-        <span style={{ color: "var(--qd-muted)", fontSize: 12.5 }}>{rows.length.toLocaleString("tr-TR")} firma</span>
+        <span style={{ color: "var(--qd-muted)", fontSize: 12.5 }}>{count(rows.length)} {L("firma", "firms")}</span>
       </div>
       <div className="qd-table-wrap" style={{ maxHeight: 560, overflowY: "auto" }}>
         <table className="qd-table">
           <thead>
             <tr>
-              <th>Firma</th>
-              <th>Sektör</th>
-              <th className="qd-right">Kredi</th>
+              <th>{L("Firma", "Firm")}</th>
+              <th>{L("Sektör", "Sector")}</th>
+              <th className="qd-right">{L("Kredi", "Loan")}</th>
               <th>Risk</th>
-              <th className="qd-right">Tahsil süresi</th>
-              <th>En büyük etken</th>
+              <th className="qd-right">{L("Tahsil süresi", "Collection time")}</th>
+              <th>{L("En büyük etken", "Main factor")}</th>
             </tr>
           </thead>
           <tbody>
@@ -214,7 +221,7 @@ function Portfolio({ firms, risks, onFirm }: { firms: Firm[]; risks: Risks; onFi
                     {f.name}
                     <div style={{ color: "var(--qd-muted)", fontSize: 11.5 }}>{f.id} · {f.city}</div>
                   </td>
-                  <td>{f.sector}</td>
+                  <td>{sectorName(f.sector)}</td>
                   <td className="qd-right qd-num">{money(f.loanAmount)}</td>
                   <td>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -225,7 +232,7 @@ function Portfolio({ firms, risks, onFirm }: { firms: Firm[]; risks: Risks; onFi
                     </div>
                   </td>
                   <td className="qd-right qd-num">
-                    {r.delayNow} gün {r.delayChange > 0 ? <span className="qd-pill qd-pill--bad">+{r.delayChange}</span> : null}
+                    {days(r.delayNow)} {r.delayChange > 0 ? <span className="qd-pill qd-pill--bad">+{r.delayChange}</span> : null}
                   </td>
                   <td style={{ color: "var(--qd-muted)", fontSize: 12.5 }}>{top?.label ?? "—"}</td>
                 </tr>
@@ -233,7 +240,7 @@ function Portfolio({ firms, risks, onFirm }: { firms: Firm[]; risks: Risks; onFi
             })}
           </tbody>
         </table>
-        {rows.length > 120 ? <p style={{ color: "var(--qd-muted)", fontSize: 12, padding: 8 }}>En riskli 120 firma gösteriliyor; filtreyle daraltın.</p> : null}
+        {rows.length > 120 ? <p style={{ color: "var(--qd-muted)", fontSize: 12, padding: 8 }}>{L("En riskli 120 firma gösteriliyor; filtreyle daraltın.", "Showing the 120 riskiest firms; use the filters to narrow down.")}</p> : null}
       </div>
     </>
   );
@@ -242,18 +249,18 @@ function Portfolio({ firms, risks, onFirm }: { firms: Firm[]; risks: Risks; onFi
 function Sectors({ firms, date }: { firms: Firm[]; date: string }) {
   const mounted = useMounted();
   const rows = useMemo(() => sectorAnalysis(firms, date), [firms, date]);
-  const data = rows.map((r) => ({ sector: r.sector, high: Math.round(r.highRiskShare * 100), change: r.avgDelayChange }));
+  const data = rows.map((r) => ({ sector: sectorName(r.sector), high: Math.round(r.highRiskShare * 100), change: r.avgDelayChange }));
   return (
     <>
-      <p style={{ color: "var(--qd-muted)", marginBottom: 8 }}>Yüksek riskli firma oranı (%) — sektörlere göre, en riskliden başlayarak</p>
+      <p style={{ color: "var(--qd-muted)", marginBottom: 8 }}>{L("Yüksek riskli firma oranı (%) — sektörlere göre, en riskliden başlayarak", "Share of high-risk firms (%) by sector, riskiest first")}</p>
       <div style={{ height: 260 }}>
         {mounted ? (
           <ResponsiveContainer>
             <BarChart data={data} layout="vertical" margin={{ left: 40, right: 20 }}>
               <CartesianGrid horizontal={false} stroke="#eef1ea" />
-              <XAxis type="number" tickFormatter={(v: number) => `%${v}`} tick={{ fontSize: 11, fill: "#66766a" }} axisLine={false} tickLine={false} />
+              <XAxis type="number" tickFormatter={(v: number) => pct(v)} tick={{ fontSize: 11, fill: "#66766a" }} axisLine={false} tickLine={false} />
               <YAxis type="category" dataKey="sector" tick={{ fontSize: 12, fill: "#203b30" }} width={130} axisLine={false} tickLine={false} />
-              <Tooltip formatter={(v: number) => `%${v}`} />
+              <Tooltip formatter={(v: number) => pct(v)} />
               <Bar dataKey="high" radius={[0, 6, 6, 0]} barSize={16} animationDuration={800}>
                 {data.map((d, i) => (
                   <Cell key={d.sector} fill={i < 2 ? "#b4442f" : i < 5 ? "#d9a14a" : "#8fbf4d"} />
@@ -267,24 +274,24 @@ function Sectors({ firms, date }: { firms: Firm[]; date: string }) {
         <table className="qd-table">
           <thead>
             <tr>
-              <th>Sektör</th>
-              <th className="qd-right">Firma</th>
-              <th className="qd-right">Kredi</th>
-              <th className="qd-right">Ort. tahsil süresi</th>
-              <th className="qd-right">3 ayda değişim</th>
-              <th className="qd-right">Yüksek risk</th>
-              <th className="qd-right">Tutulmayan taahhüt</th>
+              <th>{L("Sektör", "Sector")}</th>
+              <th className="qd-right">{L("Firma", "Firms")}</th>
+              <th className="qd-right">{L("Kredi", "Loans")}</th>
+              <th className="qd-right">{L("Ort. tahsil süresi", "Avg. collection time")}</th>
+              <th className="qd-right">{L("3 ayda değişim", "3-month change")}</th>
+              <th className="qd-right">{L("Yüksek risk", "High risk")}</th>
+              <th className="qd-right">{L("Tutulmayan taahhüt", "Broken commitments")}</th>
             </tr>
           </thead>
           <tbody>
             {rows.map((r) => (
               <tr key={r.sector}>
-                <td>{r.sector}</td>
+                <td>{sectorName(r.sector)}</td>
                 <td className="qd-right qd-num">{r.firms}</td>
                 <td className="qd-right qd-num">{money(r.exposure)}</td>
-                <td className="qd-right qd-num">{r.avgDelay} gün</td>
-                <td className="qd-right qd-num" style={{ color: r.avgDelayChange > 2 ? "var(--qd-bad)" : undefined }}>{r.avgDelayChange > 0 ? "+" : ""}{r.avgDelayChange} gün</td>
-                <td className="qd-right qd-num">%{Math.round(r.highRiskShare * 100)}</td>
+                <td className="qd-right qd-num">{days(r.avgDelay)}</td>
+                <td className="qd-right qd-num" style={{ color: r.avgDelayChange > 2 ? "var(--qd-bad)" : undefined }}>{r.avgDelayChange > 0 ? "+" : ""}{days(r.avgDelayChange)}</td>
+                <td className="qd-right qd-num">{pct(Math.round(r.highRiskShare * 100))}</td>
                 <td className="qd-right qd-num">{r.brokenCommitments}</td>
               </tr>
             ))}
@@ -305,31 +312,31 @@ function Signals({ firms, date, onFirm }: { firms: Firm[]; date: string; onFirm:
   return (
     <>
       <div className="qd-toolbar">
-        <select className="qd-select" value={type} onChange={(e) => setType(e.target.value)} aria-label="İşaret türü">
-          <option value="risk">Sıkıntı ve erteleme</option>
-          <option value="promise">Ödeme sözleri</option>
-          <option value="positive">Olumlu</option>
-          <option value="all">Tümü</option>
+        <select className="qd-select" value={type} onChange={(e) => setType(e.target.value)} aria-label={L("İşaret türü", "Signal type")}>
+          <option value="risk">{L("Sıkıntı ve erteleme", "Stress and deferral")}</option>
+          <option value="promise">{L("Ödeme sözleri", "Payment promises")}</option>
+          <option value="positive">{L("Olumlu", "Positive")}</option>
+          <option value="all">{L("Tümü", "All")}</option>
         </select>
-        <span style={{ color: "var(--qd-muted)", fontSize: 12.5 }}>Her içgörünün yanında kaynak mesaj durur; ajan yorum değil alıntı gösterir.</span>
+        <span style={{ color: "var(--qd-muted)", fontSize: 12.5 }}>{L("Her içgörünün yanında kaynak mesaj durur; ajan yorum değil alıntı gösterir.", "Every insight sits next to its source message; the agent quotes rather than interprets.")}</span>
       </div>
       <div className="qd-table-wrap">
         <table className="qd-table">
           <thead>
             <tr>
-              <th>Tarih</th>
-              <th>Firma</th>
-              <th>İçgörü</th>
-              <th>Kaynak mesaj</th>
+              <th>{L("Tarih", "Date")}</th>
+              <th>{L("Firma", "Firm")}</th>
+              <th>{L("İçgörü", "Insight")}</th>
+              <th>{L("Kaynak mesaj", "Source message")}</th>
             </tr>
           </thead>
           <tbody>
             {rows.map(({ f, s }) => (
               <tr key={s.id} data-clickable onClick={() => onFirm(f)}>
                 <td className="qd-num">{formatDateTr(s.date)}</td>
-                <td>{f.name}<div style={{ color: "var(--qd-muted)", fontSize: 11.5 }}>{f.sector}</div></td>
-                <td><span className={`qd-pill ${SIGNAL_LABEL[s.type][1]}`}>{SIGNAL_LABEL[s.type][0]}</span></td>
-                <td style={{ maxWidth: 360 }}>“{s.text}”</td>
+                <td>{f.name}<div style={{ color: "var(--qd-muted)", fontSize: 11.5 }}>{sectorName(f.sector)}</div></td>
+                <td><span className={`qd-pill ${SIGNAL_LABEL[s.type][1]}`}>{pick(SIGNAL_LABEL[s.type][0])}</span></td>
+                <td style={{ maxWidth: 360 }}>“{messageText(s.text)}”</td>
               </tr>
             ))}
           </tbody>
@@ -348,22 +355,22 @@ function Commitments({ rows, date, onFirm }: { rows: Array<{ f: Firm; c: Firm["c
   return (
     <>
       <div className="qd-toolbar">
-        <select className="qd-select" value={filter} onChange={(e) => setFilter(e.target.value)} aria-label="Durum">
-          <option value="open">Yaklaşan ve tutulmayan</option>
-          <option value="kept">Tutulan</option>
-          <option value="late">Gecikmeli</option>
-          <option value="all">Tümü</option>
+        <select className="qd-select" value={filter} onChange={(e) => setFilter(e.target.value)} aria-label={L("Durum", "Status")}>
+          <option value="open">{L("Yaklaşan ve tutulmayan", "Upcoming and broken")}</option>
+          <option value="kept">{L("Tutulan", "Kept")}</option>
+          <option value="late">{L("Gecikmeli", "Late")}</option>
+          <option value="all">{L("Tümü", "All")}</option>
         </select>
       </div>
       <div className="qd-table-wrap">
         <table className="qd-table">
           <thead>
             <tr>
-              <th>Tarih</th>
-              <th>Firma</th>
-              <th>Tür</th>
-              <th className="qd-right">Tutar</th>
-              <th>Durum</th>
+              <th>{L("Tarih", "Date")}</th>
+              <th>{L("Firma", "Firm")}</th>
+              <th>{L("Tür", "Type")}</th>
+              <th className="qd-right">{L("Tutar", "Amount")}</th>
+              <th>{L("Durum", "Status")}</th>
             </tr>
           </thead>
           <tbody>
@@ -371,9 +378,9 @@ function Commitments({ rows, date, onFirm }: { rows: Array<{ f: Firm; c: Firm["c
               <tr key={c.id} data-clickable onClick={() => onFirm(f)}>
                 <td className="qd-num">{formatDateTr(c.date)}</td>
                 <td>{f.name}</td>
-                <td>{c.kind === "restructuring" ? "Yapılandırma taksiti" : "Ödeme sözü"}</td>
+                <td>{c.kind === "restructuring" ? L("Yapılandırma taksiti", "Restructuring instalment") : L("Ödeme sözü", "Payment promise")}</td>
                 <td className="qd-right qd-num">{money(c.amount)}</td>
-                <td><span className={`qd-pill ${STATUS_LABEL[s][1]}`}>{STATUS_LABEL[s][0]}</span></td>
+                <td><span className={`qd-pill ${STATUS_LABEL[s][1]}`}>{pick(STATUS_LABEL[s][0])}</span></td>
               </tr>
             ))}
           </tbody>
@@ -394,14 +401,14 @@ function FirmSheet({ firm, date, onClose }: { firm: Firm | null; date: string; o
           <>
             <SheetHeader>
               <SheetTitle>{firm.name}</SheetTitle>
-              <SheetDescription>{firm.sector} · {firm.city} · kredi {money(firm.loanAmount)} · {formatDateTr(date)} itibarıyla</SheetDescription>
+              <SheetDescription>{sectorName(firm.sector)} · {firm.city} · {L("kredi", "loan")} {money(firm.loanAmount)} · {L(`${formatDateTr(date)} itibarıyla`, `as of ${formatDateTr(date)}`)}</SheetDescription>
             </SheetHeader>
             <div className="qd-stat-row">
-              <div className="qd-stat"><span>Risk skoru</span><b className="qd-num">{risk.score} · {LEVEL[risk.level][0]}</b></div>
-              <div className="qd-stat"><span>Müşterilerinden tahsil</span><b className="qd-num">{risk.delayNow} gün</b></div>
-              <div className="qd-stat"><span>En büyük müşteri payı</span><b className="qd-num">%{Math.round(firm.topCustomerShare * 100)}</b></div>
+              <div className="qd-stat"><span>{L("Risk skoru", "Risk score")}</span><b className="qd-num">{risk.score} · {pick(LEVEL[risk.level][0])}</b></div>
+              <div className="qd-stat"><span>{L("Müşterilerinden tahsil", "Collects from customers in")}</span><b className="qd-num">{days(risk.delayNow)}</b></div>
+              <div className="qd-stat"><span>{L("En büyük müşteri payı", "Largest customer share")}</span><b className="qd-num">{pct(Math.round(firm.topCustomerShare * 100))}</b></div>
             </div>
-            <span className="qd-eyebrow">Skoru oluşturan etkenler</span>
+            <span className="qd-eyebrow">{L("Skoru oluşturan etkenler", "What drives the score")}</span>
             <div style={{ marginTop: 6 }}>
               {risk.factors.map((f) => (
                 <div key={f.label} className="qd-factor">
@@ -410,17 +417,17 @@ function FirmSheet({ firm, date, onClose }: { firm: Firm | null; date: string; o
                   <b className="qd-num">{f.points > 0 ? "+" : ""}{f.points}</b>
                 </div>
               ))}
-              {!risk.factors.length ? <p style={{ color: "var(--qd-muted)" }}>Belirgin risk etkeni yok.</p> : null}
+              {!risk.factors.length ? <p style={{ color: "var(--qd-muted)" }}>{L("Belirgin risk etkeni yok.", "No notable risk factors.")}</p> : null}
             </div>
             <div style={{ marginTop: 14 }}>
-              <span className="qd-eyebrow">Firmanın kendi müşterilerinden tahsil süresi (gün)</span>
+              <span className="qd-eyebrow">{L("Firmanın kendi müşterilerinden tahsil süresi (gün)", "How fast the firm collects from its own customers (days)")}</span>
               <div style={{ height: 140 }}>
                 {mounted ? (
                   <ResponsiveContainer>
                     <LineChart data={firm.receivableDelay.filter((d) => d.month <= date).map((d) => ({ m: formatDateTr(d.month).replace(/^1 /, ""), days: d.days }))}>
                       <XAxis dataKey="m" tick={{ fontSize: 10, fill: "#66766a" }} axisLine={false} tickLine={false} interval={2} />
                       <YAxis hide domain={[0, "auto"]} />
-                      <Tooltip formatter={(v: number) => `${v} gün`} />
+                      <Tooltip formatter={(v: number) => days(v)} />
                       <ReferenceLine y={30} stroke="#e7b2a5" strokeDasharray="4 4" />
                       <Line dataKey="days" stroke="#203b30" strokeWidth={2} dot={false} />
                     </LineChart>
@@ -430,15 +437,15 @@ function FirmSheet({ firm, date, onClose }: { firm: Firm | null; date: string; o
             </div>
             {firm.commitments.length ? (
               <div style={{ marginTop: 12 }}>
-                <span className="qd-eyebrow">Taahhütler</span>
+                <span className="qd-eyebrow">{L("Taahhütler", "Commitments")}</span>
                 {firm.commitments.map((c) => {
                   const s = commitmentStatus(c, date);
                   return (
                     <div key={c.id} style={{ display: "flex", justifyContent: "space-between", gap: 8, padding: "7px 0", borderBottom: "1px solid #e6ebe0", fontSize: 13 }}>
                       <span className="qd-num">{formatDateTr(c.date)}</span>
-                      <span>{c.kind === "restructuring" ? "Yapılandırma" : "Ödeme sözü"}</span>
+                      <span>{c.kind === "restructuring" ? L("Yapılandırma", "Restructuring") : L("Ödeme sözü", "Payment promise")}</span>
                       <b className="qd-num">{money(c.amount)}</b>
-                      <span className={`qd-pill ${STATUS_LABEL[s][1]}`}>{STATUS_LABEL[s][0]}</span>
+                      <span className={`qd-pill ${STATUS_LABEL[s][1]}`}>{pick(STATUS_LABEL[s][0])}</span>
                     </div>
                   );
                 })}
@@ -446,12 +453,12 @@ function FirmSheet({ firm, date, onClose }: { firm: Firm | null; date: string; o
             ) : null}
             {firm.signals.some((s) => s.date <= date) ? (
               <div style={{ marginTop: 14 }}>
-                <span className="qd-eyebrow">WhatsApp (kaynak mesajlar)</span>
+                <span className="qd-eyebrow">{L("WhatsApp (kaynak mesajlar)", "WhatsApp (source messages)")}</span>
                 <div className="qd-chat" style={{ marginTop: 6 }}>
                   {firm.signals.filter((s) => s.date <= date).map((s) => (
                     <div key={s.id} className="qd-bubble">
-                      {s.text}
-                      <small>{formatDateTr(s.date)} · {SIGNAL_LABEL[s.type][0]}</small>
+                      {messageText(s.text)}
+                      <small>{formatDateTr(s.date)} · {pick(SIGNAL_LABEL[s.type][0])}</small>
                     </div>
                   ))}
                 </div>

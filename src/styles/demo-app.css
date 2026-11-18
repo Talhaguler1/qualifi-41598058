@@ -55,6 +55,10 @@
 .qd-dates button small { color: var(--qd-muted); font-size: 11px; }
 .qd-dates button[aria-pressed="true"] small { color: var(--qd-ink-2); }
 
+.qd-lang { display: inline-flex; padding: 3px; border-radius: 10px; background: var(--qd-soft); border: 1px solid var(--qd-line); }
+.qd-lang a { padding: 5px 9px; border-radius: 7px; font-size: 12px; font-weight: 600; color: var(--qd-muted); text-decoration: none; }
+.qd-lang a[aria-current="true"] { background: var(--qd-card); color: var(--qd-ink); box-shadow: var(--qd-shadow); }
+
 /* ---------- layout ---------- */
 .qd-main { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 20px; padding: 22px clamp(16px, 3vw, 36px) 48px; max-width: 1480px; margin: 0 auto; }
 .qd-col { display: flex; flex-direction: column; gap: 20px; min-width: 0; }

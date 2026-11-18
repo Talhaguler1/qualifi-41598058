@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { BankPanel } from "@/components/demo/bank-panel";
 import { demoHead } from "@/components/demo/head";
 import { DemoLinks } from "@/components/demo/demo-links";
-import { BANKERS_PER_REGION, DEFAULT_DEMO_DATE, isDemoDate, normaliseTenant, type DemoDate } from "@/lib/demo";
+import { BANKERS_PER_REGION, DEFAULT_DEMO_DATE, isDemoDate, langOf, normaliseTenant, setDemoLang, type DemoDate } from "@/lib/demo";
 
 function sharedOf(value: unknown): string | undefined {
   if (value === undefined || value === null || value === "") return undefined;
@@ -20,18 +20,24 @@ function bankerOf(value: unknown): string {
 }
 
 export const Route = createFileRoute("/demo/banka")({
-  validateSearch: (s: Record<string, unknown>): { b: string; d: DemoDate; s?: string } => {
-    const base = { b: bankerOf(s["b"]), d: isDemoDate(s["d"]) ? s["d"] : DEFAULT_DEMO_DATE };
+  validateSearch: (s: Record<string, unknown>): { b: string; d: DemoDate; s?: string; l?: "en" } => {
+    const base: { b: string; d: DemoDate; s?: string; l?: "en" } = { b: bankerOf(s["b"]), d: isDemoDate(s["d"]) ? s["d"] : DEFAULT_DEMO_DATE };
     const shared = sharedOf(s["s"]);
-    return shared ? { ...base, s: shared } : base;
+    if (shared) base.s = shared;
+    if (langOf(s["l"]) === "en") base.l = "en";
+    return base;
   },
-  head: () => demoHead("Bankacı paneli", "QualiFi demo kredi risk paneli: portföy, sektör analizi, WhatsApp içgörüleri ve taahhüt takibi. Tüm veriler demo amaçlıdır."),
+  head: ({ match }) =>
+    (match.search as { l?: string }).l === "en"
+      ? demoHead("Banker panel", "QualiFi demo credit-risk panel: portfolio, sector analysis, WhatsApp insights and commitment tracking. All data is for demo purposes.", "en")
+      : demoHead("Bankacı paneli", "QualiFi demo kredi risk paneli: portföy, sektör analizi, WhatsApp içgörüleri ve taahhüt takibi. Tüm veriler demo amaçlıdır."),
   component: BankDemoPage,
 });
 
 function BankDemoPage() {
-  const { b, d, s } = Route.useSearch();
-  const keep = s ? { s } : {};
+  const { b, d, s, l } = Route.useSearch();
+  setDemoLang(langOf(l));
+  const keep = { ...(s ? { s } : {}), ...(l ? { l } : {}) };
   const navigate = useNavigate({ from: "/demo/banka" });
   return (
     <BankPanel

@@ -3,6 +3,7 @@
 
 import type { BusinessDataset, ChatMessage, Customer, Expense, Receivable } from "./business";
 import { addDays, delayPhrase, diffDays, formatDateTr, maxDate } from "./dates";
+import { L, isEnglish } from "./i18n";
 
 /** What is known on `asOf`: nothing dated later exists yet. */
 export interface Snapshot {
@@ -114,7 +115,7 @@ export function expectedInflows(snap: Snapshot): ExpectedInflow[] {
       const atRisk = overdueDays > 45 && (p.grade === "D" || p.paidCount === 0);
       if (r.kind === "cheque" || r.kind === "note") {
         // Cheques clear on the due date via clearing (takas) or bounce; notes may slip a few days.
-        const label = r.kind === "cheque" ? "Çek" : "Senet";
+        const label = r.kind === "cheque" ? L("Çek", "Cheque") : L("Senet", "Promissory note");
         const risky = p.grade === "C" || p.grade === "D";
         if (overdueDays > 0) {
           return {
@@ -124,7 +125,10 @@ export function expectedInflows(snap: Snapshot): ExpectedInflow[] {
             optimistic: addDays(snap.asOf, 14),
             pessimistic: addDays(snap.asOf, 60),
             atRisk: true,
-            reason: `${label} ${formatDateTr(r.dueDate)} vadesinde ödenmedi (${r.kind === "cheque" ? "karşılıksız" : "protesto riski"}); tahmine dahil edilmedi.`,
+            reason: L(
+              `${label} ${formatDateTr(r.dueDate)} vadesinde ödenmedi (${r.kind === "cheque" ? "karşılıksız" : "protesto riski"}); tahmine dahil edilmedi.`,
+              `${label} due ${formatDateTr(r.dueDate)} was not paid (${r.kind === "cheque" ? "bounced" : "protest risk"}); left out of the forecast.`,
+            ),
           };
         }
         const expected = maxDate(r.kind === "cheque" ? r.dueDate : addDays(r.dueDate, 2), tomorrow);
@@ -135,7 +139,10 @@ export function expectedInflows(snap: Snapshot): ExpectedInflow[] {
           optimistic: maxDate(r.dueDate, tomorrow),
           pessimistic: risky ? addDays(r.dueDate, 30) : addDays(expected, r.kind === "cheque" ? 1 : 7),
           atRisk: false,
-          reason: `${label} vadesi ${formatDateTr(r.dueDate)}${r.kind === "cheque" ? "; takas günü tahsil edilir" : ""}.${risky ? " Keşidecinin ödeme notu düşük, karşılıksız kalma riski var." : ""}`,
+          reason: L(
+            `${label} vadesi ${formatDateTr(r.dueDate)}${r.kind === "cheque" ? "; takas günü tahsil edilir" : ""}.${risky ? " Keşidecinin ödeme notu düşük, karşılıksız kalma riski var." : ""}`,
+            `${label} due ${formatDateTr(r.dueDate)}${r.kind === "cheque" ? "; collected on the clearing day" : ""}.${risky ? " The drawer has a low payer grade, so it may bounce." : ""}`,
+          ),
         };
       }
       // A promise in the chat is used when it is still ahead of us.
@@ -144,17 +151,22 @@ export function expectedInflows(snap: Snapshot): ExpectedInflow[] {
         .at(-1)?.promiseDate;
       let expected = maxDate(addDays(r.dueDate, p.medianDelay), tomorrow);
       let reason = p.paidCount
-        ? `Vade ${formatDateTr(r.dueDate)}; bu müşteri genelde ${delayPhrase(p.medianDelay)} ödüyor.`
-        : "Ödeme geçmişi yok; vade tarihi esas alındı.";
+        ? L(`Vade ${formatDateTr(r.dueDate)}; bu müşteri genelde ${delayPhrase(p.medianDelay)} ödüyor.`, `Due ${formatDateTr(r.dueDate)}; this customer usually pays ${delayPhrase(p.medianDelay)}.`)
+        : L("Ödeme geçmişi yok; vade tarihi esas alındı.", "No payment history; the due date is used.");
       if (overdueDays > 0 && expected <= addDays(snap.asOf, 3)) {
         expected = addDays(snap.asOf, Math.max(7, p.p75Delay - overdueDays));
-        reason = `Vadesi ${overdueDays} gün geçti; geçmişine göre ${diffDays(expected, snap.asOf)} gün içinde bekleniyor.`;
+        reason = L(
+          `Vadesi ${overdueDays} gün geçti; geçmişine göre ${diffDays(expected, snap.asOf)} gün içinde bekleniyor.`,
+          `${overdueDays} days overdue; based on its history, expected within ${diffDays(expected, snap.asOf)} days.`,
+        );
       }
       if (promise) {
         // Promise breakers' promises are discounted by their usual slip.
         const slip = p.grade === "C" || p.grade === "D" ? Math.max(0, p.medianDelay - 7) : 0;
         expected = addDays(promise, slip);
-        reason = slip ? `Mesajda ${formatDateTr(promise)} için söz verdi; sözlerini genelde ${slip} gün kaçırıyor.` : `Mesajda ${formatDateTr(promise)} tarihinde ödeme sözü verdi.`;
+        reason = slip
+          ? L(`Mesajda ${formatDateTr(promise)} için söz verdi; sözlerini genelde ${slip} gün kaçırıyor.`, `Promised ${formatDateTr(promise)} in a message; usually misses promises by ${slip} days.`)
+          : L(`Mesajda ${formatDateTr(promise)} tarihinde ödeme sözü verdi.`, `Promised payment for ${formatDateTr(promise)} in a message.`);
       }
       return {
         receivable: r,
@@ -228,7 +240,7 @@ export interface AgentAction {
   draftMessage: string;
 }
 
-const fmt = (n: number) => `${n.toLocaleString("tr-TR")} TL`;
+const fmt = (n: number) => (isEnglish() ? `TRY ${n.toLocaleString("en-US")}` : `${n.toLocaleString("tr-TR")} TL`);
 
 /** What the agent proposes today. Nothing is sent automatically; the user approves each message. */
 export function agentActions(snap: Snapshot, limit = 12): AgentAction[] {
@@ -239,7 +251,7 @@ export function agentActions(snap: Snapshot, limit = 12): AgentAction[] {
     const dueInDays = diffDays(r.dueDate, snap.asOf);
     const brokenPromise = snap.chats.find((m) => m.receivableId === r.id && m.promiseDate && m.promiseDate <= snap.asOf);
     const instrument = r.kind === "cheque" || r.kind === "note";
-    const label = r.kind === "cheque" ? "çek" : "senet";
+    const label = r.kind === "cheque" ? L("çek", "cheque") : L("senet", "promissory note");
     if (instrument && dueInDays < 0 && dueInDays >= -21) {
       actions.push({
         id: `bounced-${r.id}`,
@@ -247,8 +259,11 @@ export function agentActions(snap: Snapshot, limit = 12): AgentAction[] {
         customer: inflow.customer,
         receivable: r,
         dueInDays,
-        reason: `${formatDateTr(r.dueDate)} vadeli ${label} ödenmedi. Karşılıksız ${label} için hemen görüşme önerilir.`,
-        draftMessage: `Merhaba, ${formatDateTr(r.dueDate)} vadeli ${fmt(r.amount)} tutarlı ${label} ödenmedi. Bugün bir ödeme planı konuşabilir miyiz?`,
+        reason: L(`${formatDateTr(r.dueDate)} vadeli ${label} ödenmedi. Karşılıksız ${label} için hemen görüşme önerilir.`, `The ${label} due ${formatDateTr(r.dueDate)} was not paid. Call about the bounced ${label} right away.`),
+        draftMessage: L(
+          `Merhaba, ${formatDateTr(r.dueDate)} vadeli ${fmt(r.amount)} tutarlı ${label} ödenmedi. Bugün bir ödeme planı konuşabilir miyiz?`,
+          `Hello, the ${fmt(r.amount)} ${label} due ${formatDateTr(r.dueDate)} was not paid. Could we agree a payment plan today?`,
+        ),
       });
       continue;
     }
@@ -259,8 +274,14 @@ export function agentActions(snap: Snapshot, limit = 12): AgentAction[] {
         customer: inflow.customer,
         receivable: r,
         dueInDays,
-        reason: `${label.charAt(0).toUpperCase() + label.slice(1)} ${dueInDays} gün sonra vadede; keşidecinin ödemeleri gecikiyor, karşılıksız riski var.`,
-        draftMessage: `Merhaba, ${formatDateTr(r.dueDate)} vadeli ${fmt(r.amount)} tutarlı ${label} için hesabınızda karşılık bulunacağını teyit edebilir misiniz? Teşekkürler.`,
+        reason: L(
+          `${label.charAt(0).toUpperCase() + label.slice(1)} ${dueInDays} gün sonra vadede; keşidecinin ödemeleri gecikiyor, karşılıksız riski var.`,
+          `${label.charAt(0).toUpperCase() + label.slice(1)} due in ${dueInDays} days; the drawer is paying late, so it may bounce.`,
+        ),
+        draftMessage: L(
+          `Merhaba, ${formatDateTr(r.dueDate)} vadeli ${fmt(r.amount)} tutarlı ${label} için hesabınızda karşılık bulunacağını teyit edebilir misiniz? Teşekkürler.`,
+          `Hello, could you confirm there will be funds in your account for the ${fmt(r.amount)} ${label} due ${formatDateTr(r.dueDate)}? Thank you.`,
+        ),
       });
       continue;
     }
@@ -272,8 +293,11 @@ export function agentActions(snap: Snapshot, limit = 12): AgentAction[] {
         customer: inflow.customer,
         receivable: r,
         dueInDays,
-        reason: `${formatDateTr(brokenPromise.promiseDate as string)} tarihinde ödeme sözü vermişti, ödeme gelmedi.`,
-        draftMessage: `Merhaba, ${r.id} numaralı ${fmt(r.amount)} tutarlı ödeme için ${formatDateTr(brokenPromise.promiseDate as string)} tarihini konuşmuştuk ama henüz ulaşmadı. Bugün gönderebilecek misiniz?`,
+        reason: L(`${formatDateTr(brokenPromise.promiseDate as string)} tarihinde ödeme sözü vermişti, ödeme gelmedi.`, `Promised to pay on ${formatDateTr(brokenPromise.promiseDate as string)}; the payment has not arrived.`),
+        draftMessage: L(
+          `Merhaba, ${r.id} numaralı ${fmt(r.amount)} tutarlı ödeme için ${formatDateTr(brokenPromise.promiseDate as string)} tarihini konuşmuştuk ama henüz ulaşmadı. Bugün gönderebilecek misiniz?`,
+          `Hello, we agreed on ${formatDateTr(brokenPromise.promiseDate as string)} for the ${fmt(r.amount)} payment on ${r.id}, but it hasn't arrived yet. Could you send it today?`,
+        ),
       });
     } else if (dueInDays < -30 && (p.grade === "D" || inflow.atRisk)) {
       actions.push({
@@ -282,8 +306,11 @@ export function agentActions(snap: Snapshot, limit = 12): AgentAction[] {
         customer: inflow.customer,
         receivable: r,
         dueInDays,
-        reason: `Vadesi ${-dueInDays} gün geçti ve müşterinin ödemeleri yavaşlıyor. Telefonla görüşme önerilir.`,
-        draftMessage: `Merhaba, ${r.id} numaralı ${fmt(r.amount)} tutarlı faturanın vadesi ${-dueInDays} gün önce doldu. Bir ödeme planı konuşmak için bu hafta kısa bir görüşme yapabilir miyiz?`,
+        reason: L(`Vadesi ${-dueInDays} gün geçti ve müşterinin ödemeleri yavaşlıyor. Telefonla görüşme önerilir.`, `${-dueInDays} days overdue and the customer is paying more slowly. A phone call is recommended.`),
+        draftMessage: L(
+          `Merhaba, ${r.id} numaralı ${fmt(r.amount)} tutarlı faturanın vadesi ${-dueInDays} gün önce doldu. Bir ödeme planı konuşmak için bu hafta kısa bir görüşme yapabilir miyiz?`,
+          `Hello, invoice ${r.id} for ${fmt(r.amount)} fell due ${-dueInDays} days ago. Could we have a short call this week to agree a payment plan?`,
+        ),
       });
     } else if (dueInDays >= 0 && dueInDays <= 7 && p.grade !== "A" && p.grade !== "-") {
       actions.push({
@@ -292,8 +319,11 @@ export function agentActions(snap: Snapshot, limit = 12): AgentAction[] {
         customer: inflow.customer,
         receivable: r,
         dueInDays,
-        reason: `${dueInDays} gün sonra vadesi doluyor; bu müşteri genelde ${delayPhrase(p.medianDelay)} ödüyor.`,
-        draftMessage: `Merhaba, ${formatDateTr(r.dueDate)} vadeli ${r.id} numaralı ${fmt(r.amount)} tutarlı faturamızı hatırlatmak isteriz. Ödeme tarihini teyit edebilir misiniz? Teşekkürler.`,
+        reason: L(`${dueInDays} gün sonra vadesi doluyor; bu müşteri genelde ${delayPhrase(p.medianDelay)} ödüyor.`, `Due in ${dueInDays} days; this customer usually pays ${delayPhrase(p.medianDelay)}.`),
+        draftMessage: L(
+          `Merhaba, ${formatDateTr(r.dueDate)} vadeli ${r.id} numaralı ${fmt(r.amount)} tutarlı faturamızı hatırlatmak isteriz. Ödeme tarihini teyit edebilir misiniz? Teşekkürler.`,
+          `Hello, a friendly reminder about invoice ${r.id} for ${fmt(r.amount)}, due ${formatDateTr(r.dueDate)}. Could you confirm the payment date? Thank you.`,
+        ),
       });
     }
   }

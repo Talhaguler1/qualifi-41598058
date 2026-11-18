@@ -1,5 +1,7 @@
 // ISO date helpers (YYYY-MM-DD) in UTC, so results never shift by time zone.
 
+import { L, isEnglish } from "./i18n";
+
 const DAY = 86_400_000;
 
 export const toTime = (iso: string): number => Date.parse(`${iso}T00:00:00Z`);
@@ -21,16 +23,19 @@ export function withDay(iso: string, day: number): string {
 }
 
 const MONTHS_TR = ["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"] as const;
+const MONTHS_EN = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"] as const;
 
 /** "3 gün geç", "2 gün erken" or "vadesinde": never a minus sign next to "erken". */
 export function delayPhrase(days: number): string {
-  if (days > 0) return `${days} gün geç`;
-  if (days < 0) return `${-days} gün erken`;
-  return "vadesinde";
+  const n = Math.abs(days);
+  if (days > 0) return L(`${days} gün geç`, `${n} ${n === 1 ? "day" : "days"} late`);
+  if (days < 0) return L(`${-days} gün erken`, `${n} ${n === 1 ? "day" : "days"} early`);
+  return L("vadesinde", "on the due date");
 }
 
 export function formatDateTr(iso: string): string {
-  return `${Number(iso.slice(8, 10))} ${MONTHS_TR.at(Number(iso.slice(5, 7)) - 1) ?? ""} ${iso.slice(0, 4)}`;
+  const months = isEnglish() ? MONTHS_EN : MONTHS_TR;
+  return `${Number(iso.slice(8, 10))} ${months.at(Number(iso.slice(5, 7)) - 1) ?? ""} ${iso.slice(0, 4)}`;
 }
 
 /**
@@ -46,6 +51,12 @@ export const DEMO_DATE_LABELS: Record<DemoDate, string> = {
   "2026-11-10": "2 hafta önce",
   "2026-11-24": "Bugün · sunum günü",
 };
+const DEMO_DATE_LABELS_EN: Record<DemoDate, string> = {
+  "2026-10-27": "4 weeks ago",
+  "2026-11-10": "2 weeks ago",
+  "2026-11-24": "Today · presentation day",
+};
+export const demoDateLabel = (d: DemoDate): string => (isEnglish() ? DEMO_DATE_LABELS_EN[d] : DEMO_DATE_LABELS[d]);
 
 export function isDemoDate(value: unknown): value is DemoDate {
   return typeof value === "string" && (DEMO_DATES as readonly string[]).includes(value);

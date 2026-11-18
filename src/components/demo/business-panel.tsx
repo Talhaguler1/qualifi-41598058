@@ -24,7 +24,15 @@ import {
   scorecard,
   bankShareSummary,
   snapshot,
-  SUGGESTED_QUESTIONS,
+  suggestedQuestions,
+  L,
+  pick,
+  pct,
+  days as dayCount,
+  sectorName,
+  messageText,
+  labelText,
+  isEnglish,
   tightestWeek,
   weeklyForecast,
   whatIfLate,
@@ -39,7 +47,12 @@ import { PromisePlanCard } from "./promise-plan";
 import { AnimatedNumber, Grade, Kpi, SourceChip, Tabs, Toast, TopBar, useMounted } from "./shared";
 
 type Tab = "inflows" | "customers" | "whatsapp" | "sources";
-const DOC_LABEL = { invoice: "Fatura", contract_installment: "Sözleşme taksiti", cheque: "Çek", note: "Senet" } as const;
+const DOC_LABEL = {
+  invoice: ["Fatura", "Invoice"],
+  contract_installment: ["Sözleşme taksiti", "Contract instalment"],
+  cheque: ["Çek", "Cheque"],
+  note: ["Senet", "Promissory note"],
+} as const;
 
 export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: string; date: DemoDate; onDate: (d: DemoDate) => void; accountSlot?: ReactNode }) {
   const dataset = useMemo(() => generateBusiness(tenant), [tenant]);
@@ -82,9 +95,9 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
 
   return (
     <div className="qd">
-      <TopBar title={dataset.company.name} subtitle={`${dataset.company.sector} · ${dataset.company.city} · ${dataset.customers.length} müşteri`} date={date} onDate={changeDate}>
+      <TopBar langSwitch title={dataset.company.name} subtitle={`${sectorName(dataset.company.sector)} · ${dataset.company.city} · ${dataset.customers.length} ${L("müşteri", "customers")}`} date={date} onDate={changeDate}>
         <button type="button" className="qd-btn qd-btn--primary qd-btn--sm" onClick={() => { log("tab_open", "bank-share"); setShareOpen(true); }}>
-          Karnemi bankama göster
+          {L("Karnemi bankama göster", "Show my scorecard to my bank")}
         </button>
         {accountSlot}
       </TopBar>
@@ -98,10 +111,10 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
           </div>
 
           <section className="qd-kpis" key={`kpi-${date}`}>
-            <Kpi tone="accent" label="Bugünkü bakiye" value={<AnimatedNumber value={balance} format={money} />} sub={`${formatDateTr(date)} itibarıyla, ${dataset.sources.banka}`} />
-            <Kpi label="8 hafta sonra (en olası)" value={<AnimatedNumber value={last.balanceBase} format={money} />} sub={`Aralık ${money(last.balanceLow)} – ${money(last.balanceHigh)}`} />
-            <Kpi {...(tight.balanceLow < 0 ? { tone: "alert" as const } : {})} label="En dar hafta" value={<AnimatedNumber value={tight.balanceLow} format={money} />} sub={`${formatDateTr(tight.weekStart)} haftası, kötü senaryo`} />
-            <Kpi label="Vadesi geçen alacak" value={<AnimatedNumber value={overdueSum} format={money} />} sub={`${overdue.length} fatura`} />
+            <Kpi tone="accent" label={L("Bugünkü bakiye", "Balance today")} value={<AnimatedNumber value={balance} format={money} />} sub={L(`${formatDateTr(date)} itibarıyla, ${dataset.sources.banka}`, `As of ${formatDateTr(date)}, ${dataset.sources.banka}`)} />
+            <Kpi label={L("8 hafta sonra (en olası)", "In 8 weeks (most likely)")} value={<AnimatedNumber value={last.balanceBase} format={money} />} sub={`${L("Aralık", "Range")} ${money(last.balanceLow)} – ${money(last.balanceHigh)}`} />
+            <Kpi {...(tight.balanceLow < 0 ? { tone: "alert" as const } : {})} label={L("En dar hafta", "Tightest week")} value={<AnimatedNumber value={tight.balanceLow} format={money} />} sub={L(`${formatDateTr(tight.weekStart)} haftası, kötü senaryo`, `Week of ${formatDateTr(tight.weekStart)}, downside case`)} />
+            <Kpi label={L("Vadesi geçen alacak", "Overdue receivables")} value={<AnimatedNumber value={overdueSum} format={money} />} sub={L(`${overdue.length} fatura`, `${overdue.length} invoices`)} />
           </section>
 
           <CashFlowCard snap={snap} weeks={weeks} accuracy={accuracy} prevDate={prevDate} onScenario={(target, detail) => log("scenario_run", target, detail)} />
@@ -115,10 +128,10 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
               value={tab}
               onChange={changeTab}
               items={[
-                ["inflows", "Beklenen tahsilatlar"],
-                ["customers", "Müşteri ödeme karnesi"],
-                ["whatsapp", "WhatsApp sözleri"],
-                ["sources", "Kaynaklar ve belgeler"],
+                ["inflows", L("Beklenen tahsilatlar", "Expected collections")],
+                ["customers", L("Müşteri ödeme karnesi", "Customer payer scorecard")],
+                ["whatsapp", L("WhatsApp sözleri", "WhatsApp promises")],
+                ["sources", L("Kaynaklar ve belgeler", "Sources and documents")],
               ]}
             />
             <div key={`${tab}-${date}`} className="qd-enter">
@@ -134,19 +147,19 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
           <section className="qd-card qd-agent">
             <AgentFeed steps={steps} runKey={`${tenant}-${date}`} />
             <BriefingBox key={date} briefing={briefing} />
-            <AskAgent ask={ask} suggestions={SUGGESTED_QUESTIONS} resetKey={date} onAsk={(q) => log("agent_question", undefined, q)} />
+            <AskAgent ask={ask} suggestions={suggestedQuestions()} resetKey={date} onAsk={(q) => log("agent_question", undefined, q)} />
           </section>
           <section className="qd-card">
             <div className="qd-card__head">
-              <h2>Ajanın önerileri</h2>
-              <p>Siz onaylamadan hiçbir mesaj gitmez.</p>
+              <h2>{L("Ajanın önerileri", "Agent suggestions")}</h2>
+              <p>{L("Siz onaylamadan hiçbir mesaj gitmez.", "No message goes out without your approval.")}</p>
             </div>
             <ActionQueue key={date} actions={actions} storageKey={`qd-actions-${tenant}-${date}`} onToast={setToast} onAction={(a, id) => log(a, id)} />
           </section>
         </aside>
       </main>
       <CustomerSheet snap={snap} customer={customer} onClose={() => setCustomer(null)} />
-      <ShareSheet open={shareOpen} onClose={() => setShareOpen(false)} dataset={dataset} date={date} onShared={() => { log("tab_open", "bank-share-sent"); setToast("Demo: paylaşım bankacı paneline yansıdı. Gerçekte hiçbir veri gönderilmedi."); }} />
+      <ShareSheet open={shareOpen} onClose={() => setShareOpen(false)} dataset={dataset} date={date} onShared={() => { log("tab_open", "bank-share-sent"); setToast(L("Demo: paylaşım bankacı paneline yansıdı. Gerçekte hiçbir veri gönderilmedi.", "Demo: the share now appears in the banker panel. No data was actually sent.")); }} />
       {toast ? <Toast text={toast} onDone={clearToast} /> : null}
     </div>
   );
@@ -195,21 +208,21 @@ function CashFlowCard({ snap, weeks, accuracy, prevDate, onScenario }: { snap: S
     <section className="qd-card">
       <div className="qd-card__head">
         <div>
-          <span className="qd-eyebrow">Nakit akışı · 8 hafta</span>
-          <h2>Kasa ne zaman daralıyor, ne zaman rahatlıyor</h2>
+          <span className="qd-eyebrow">{L("Nakit akışı · 8 hafta", "Cash flow · 8 weeks")}</span>
+          <h2>{L("Kasa ne zaman daralıyor, ne zaman rahatlıyor", "When cash gets tight, and when it eases")}</h2>
         </div>
         {accuracy && prevDate ? (
-          <span className="qd-pill qd-pill--good" title="Önceki demo tarihinde yapılan tahmin ile o tarihten bugüne gerçekten gelen tahsilatın karşılaştırması">
-            {formatDateTr(prevDate)} tahmini {money(accuracy.predicted)} · gerçekleşen {money(accuracy.actual)} · sapma %{Math.round(accuracy.errorRate * 100)}
+          <span className="qd-pill qd-pill--good" title={L("Önceki demo tarihinde yapılan tahmin ile o tarihten bugüne gerçekten gelen tahsilatın karşılaştırması", "The forecast made on the previous demo date compared with the collections that actually arrived since")}>
+            {L(`${formatDateTr(prevDate)} tahmini`, `${formatDateTr(prevDate)} forecast`)} {money(accuracy.predicted)} · {L("gerçekleşen", "actual")} {money(accuracy.actual)} · {L("sapma", "error")} {pct(Math.round(accuracy.errorRate * 100))}
           </span>
         ) : null}
       </div>
       <div className="qd-legend">
-        <span><i style={{ background: "#dfeccb" }} />İyimser–kötümser aralık</span>
-        <span><i style={{ background: "#203b30" }} />En olası bakiye</span>
-        <span><i style={{ background: "#8fbf4d" }} />Beklenen tahsilat</span>
-        <span><i style={{ background: "#e7b2a5" }} />Planlı ödemeler</span>
-        {scenario ? <span><i style={{ background: "#b4442f" }} />Senaryo</span> : null}
+        <span><i style={{ background: "#dfeccb" }} />{L("İyimser–kötümser aralık", "Upside–downside range")}</span>
+        <span><i style={{ background: "#203b30" }} />{L("En olası bakiye", "Most likely balance")}</span>
+        <span><i style={{ background: "#8fbf4d" }} />{L("Beklenen tahsilat", "Expected collections")}</span>
+        <span><i style={{ background: "#e7b2a5" }} />{L("Planlı ödemeler", "Planned payments")}</span>
+        {scenario ? <span><i style={{ background: "#b4442f" }} />{L("Senaryo", "Scenario")}</span> : null}
       </div>
       <div className="qd-chart" key={snap.asOf}>
         {mounted ? (
@@ -230,15 +243,15 @@ function CashFlowCard({ snap, weeks, accuracy, prevDate, onScenario }: { snap: S
         ) : null}
       </div>
       <div className="qd-toolbar" style={{ marginTop: 12, marginBottom: 0 }}>
-        <span className="qd-eyebrow">Senaryo dene</span>
+        <span className="qd-eyebrow">{L("Senaryo dene", "Try a scenario")}</span>
         <div className="qd-tabs" role="tablist" style={{ marginBottom: 0 }}>
-          <button type="button" role="tab" aria-selected={mode === "late"} onClick={() => setMode("late")}>Müşteri geç öderse</button>
-          <button type="button" role="tab" aria-selected={mode === "project"} onClick={() => { setMode("project"); if (!plan) setPlan(project); }}>Bu işi alırsam</button>
+          <button type="button" role="tab" aria-selected={mode === "late"} onClick={() => setMode("late")}>{L("Müşteri geç öderse", "If a customer pays late")}</button>
+          <button type="button" role="tab" aria-selected={mode === "project"} onClick={() => { setMode("project"); if (!plan) setPlan(project); }}>{L("Bu işi alırsam", "If I take this job")}</button>
         </div>
         {mode === "late" ? (
           <>
-            <select className="qd-select" value={who} onChange={(e) => setWho(e.target.value)} aria-label="Geç ödeyecek müşteri">
-              <option value="">Müşteri seçin…</option>
+            <select className="qd-select" value={who} onChange={(e) => setWho(e.target.value)} aria-label={L("Geç ödeyecek müşteri", "Customer who pays late")}>
+              <option value="">{L("Müşteri seçin…", "Choose a customer…")}</option>
               {candidates.map(({ c, sum }) => (
                 <option key={c.id} value={c.id}>
                   {c.name} ({money(sum)})
@@ -247,7 +260,7 @@ function CashFlowCard({ snap, weeks, accuracy, prevDate, onScenario }: { snap: S
             </select>
             <label style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 13 }}>
               <input type="range" min={7} max={60} step={1} value={days} onChange={(e) => setDays(Number(e.target.value))} disabled={!who} />
-              <span className="qd-num">{days} gün geç öderse</span>
+              <span className="qd-num">{L(`${days} gün geç öderse`, `pays ${days} days late`)}</span>
             </label>
             {scenario ? <ScenarioPill base={weeks} changed={scenario} /> : null}
           </>
@@ -256,30 +269,30 @@ function CashFlowCard({ snap, weeks, accuracy, prevDate, onScenario }: { snap: S
       {mode === "project" ? (
         <div className="qd-project qd-enter">
           <label>
-            <span>İşin bedeli (TL)</span>
+            <span>{L("İşin bedeli (TL)", "Job value (TRY)")}</span>
             <input className="qd-input qd-num" type="number" min={10000} step={10000} value={project.amount} onChange={(e) => setP({ amount: Math.max(0, Number(e.target.value) || 0) })} />
           </label>
           <label>
-            <span>Avans: %{project.advancePct} ({money((project.amount * project.advancePct) / 100)})</span>
+            <span>{L("Avans", "Advance")}: {pct(project.advancePct)} ({money((project.amount * project.advancePct) / 100)})</span>
             <input type="range" min={0} max={60} step={5} value={project.advancePct} onChange={(e) => setP({ advancePct: Number(e.target.value) })} />
           </label>
           <label>
-            <span>Ek maliyet (TL, ekip/dış hizmet)</span>
+            <span>{L("Ek maliyet (TL, ekip/dış hizmet)", "Extra cost (TRY, team/contractors)")}</span>
             <input className="qd-input qd-num" type="number" min={0} step={10000} value={project.cost} onChange={(e) => setP({ cost: Math.max(0, Number(e.target.value) || 0) })} />
           </label>
           <label>
-            <span>Teslim süresi</span>
+            <span>{L("Teslim süresi", "Delivery time")}</span>
             <select className="qd-select" value={project.deliveryWeeks} onChange={(e) => setP({ deliveryWeeks: Number(e.target.value) })}>
               {[2, 3, 4, 6, 8].map((w) => (
-                <option key={w} value={w}>{w} hafta</option>
+                <option key={w} value={w}>{L(`${w} hafta`, `${w} weeks`)}</option>
               ))}
             </select>
           </label>
           <label>
-            <span>Kalan ödemenin vadesi</span>
+            <span>{L("Kalan ödemenin vadesi", "Remaining payment due")}</span>
             <select className="qd-select" value={project.termDays} onChange={(e) => setP({ termDays: Number(e.target.value) })}>
               {[0, 30, 60, 90].map((d) => (
-                <option key={d} value={d}>{d === 0 ? "Teslimde" : `Teslimden ${d} gün sonra`}</option>
+                <option key={d} value={d}>{d === 0 ? L("Teslimde", "On delivery") : L(`Teslimden ${d} gün sonra`, `${d} days after delivery`)}</option>
               ))}
             </select>
           </label>
@@ -291,21 +304,24 @@ function CashFlowCard({ snap, weeks, accuracy, prevDate, onScenario }: { snap: S
 }
 
 const OUTCOME = {
-  on_time: ["Tuttu (±3 gün)", "qd-pill--good"],
-  early: ["Erken geldi", "qd-pill--good"],
-  late: ["Geç geldi", "qd-pill--warn"],
-  unpaid: ["Henüz gelmedi", "qd-pill--bad"],
+  on_time: [["Tuttu (±3 gün)", "On target (±3 days)"], "qd-pill--good"],
+  early: [["Erken geldi", "Arrived early"], "qd-pill--good"],
+  late: [["Geç geldi", "Arrived late"], "qd-pill--warn"],
+  unpaid: [["Henüz gelmedi", "Not yet paid"], "qd-pill--bad"],
 } as const;
-const PROMISE = { kept: ["Söz tutuldu", "qd-pill--good"], late: ["Gecikmeli", "qd-pill--warn"], broken: ["Tutulmadı", "qd-pill--bad"] } as const;
+const PROMISE = { kept: [["Söz tutuldu", "Promise kept"], "qd-pill--good"], late: [["Gecikmeli", "Late"], "qd-pill--warn"], broken: [["Tutulmadı", "Broken"], "qd-pill--bad"] } as const;
 
 function ScorecardCard({ dataset, prevDate, date, onCustomer }: { dataset: ReturnType<typeof generateBusiness>; prevDate: string | undefined; date: string; onCustomer: (c: Customer) => void }) {
   const card = useMemo(() => (prevDate ? scorecard(dataset, prevDate, date) : null), [dataset, prevDate, date]);
   if (!card || !prevDate) {
     return (
       <section className="qd-card qd-enter">
-        <span className="qd-eyebrow">Tahmin ve söz karnesi</span>
+        <span className="qd-eyebrow">{L("Tahmin ve söz karnesi", "Forecast and promise scorecard")}</span>
         <p style={{ marginTop: 6, color: "var(--qd-muted)" }}>
-          Bu ilk tarih. {formatDateTr(DEMO_DATES[1])} veya {formatDateTr(DEMO_DATES[2])} tarihine geçin: ajanın bugün beklediği ödemelerin ve WhatsApp'ta verilen sözlerin o güne kadar nasıl sonuçlandığını burada tek tek göreceksiniz.
+          {L(
+            `Bu ilk tarih. ${formatDateTr(DEMO_DATES[1])} veya ${formatDateTr(DEMO_DATES[2])} tarihine geçin: ajanın bugün beklediği ödemelerin ve WhatsApp'ta verilen sözlerin o güne kadar nasıl sonuçlandığını burada tek tek göreceksiniz.`,
+            `This is the first date. Switch to ${formatDateTr(DEMO_DATES[1])} or ${formatDateTr(DEMO_DATES[2])} to see, one by one, how the payments the agent expects today and the promises made on WhatsApp actually turned out.`,
+          )}
         </p>
       </section>
     );
@@ -319,36 +335,36 @@ function ScorecardCard({ dataset, prevDate, date, onCustomer }: { dataset: Retur
     <section className="qd-card qd-enter" key={date}>
       <div className="qd-card__head">
         <div>
-          <span className="qd-eyebrow">Tahmin ve söz karnesi</span>
-          <h2>{formatDateTr(prevDate)} tarihinde beklenen ödemeler {formatDateTr(date)} tarihine kadar geldi mi?</h2>
+          <span className="qd-eyebrow">{L("Tahmin ve söz karnesi", "Forecast and promise scorecard")}</span>
+          <h2>{L(`${formatDateTr(prevDate)} tarihinde beklenen ödemeler ${formatDateTr(date)} tarihine kadar geldi mi?`, `Did the payments expected on ${formatDateTr(prevDate)} arrive by ${formatDateTr(date)}?`)}</h2>
         </div>
-        <span className="qd-pill qd-pill--muted" title="Sentetik demo verisi üzerinde hesaplandı. Gerçek doğruluk pilotta, gerçek ödeme verisiyle ölçülecek.">Demo verisi · gerçek doğruluk pilotta ölçülecek</span>
+        <span className="qd-pill qd-pill--muted" title={L("Sentetik demo verisi üzerinde hesaplandı. Gerçek doğruluk pilotta, gerçek ödeme verisiyle ölçülecek.", "Computed on synthetic demo data. Real accuracy will be measured in the pilot with real payment data.")}>{L("Demo verisi · gerçek doğruluk pilotta ölçülecek", "Demo data · real accuracy measured in the pilot")}</span>
       </div>
       <div className="qd-stat-row" style={{ marginTop: 0 }}>
         <div className="qd-stat">
-          <span>Zamanında veya erken gelen</span>
-          <b className="qd-num">{hit} / {card.predictions.length} ödeme</b>
+          <span>{L("Zamanında veya erken gelen", "On time or early")}</span>
+          <b className="qd-num">{hit} / {card.predictions.length} {L("ödeme", "payments")}</b>
         </div>
         <div className="qd-stat">
-          <span>Ortalama sapma (gelen ödemeler)</span>
-          <b className="qd-num">Ajan {card.avgErrorQualifi} gün</b>
-          <span>Yalnız vade tarihine bakınca {card.avgErrorDueDate} gün</span>
+          <span>{L("Ortalama sapma (gelen ödemeler)", "Average error (paid items)")}</span>
+          <b className="qd-num">{L("Ajan", "Agent")} {dayCount(card.avgErrorQualifi)}</b>
+          <span>{L(`Yalnız vade tarihine bakınca ${card.avgErrorDueDate} gün`, `Using the due date alone: ${card.avgErrorDueDate} days`)}</span>
         </div>
         <div className="qd-stat">
-          <span>WhatsApp'ta verilen ödeme sözleri</span>
-          <b className="qd-num">{card.promises.length ? `${kept} tutuldu · ${late} gecikti · ${broken} tutulmadı` : "Bu dönemde söz yok"}</b>
+          <span>{L("WhatsApp'ta verilen ödeme sözleri", "Payment promises made on WhatsApp")}</span>
+          <b className="qd-num">{card.promises.length ? L(`${kept} tutuldu · ${late} gecikti · ${broken} tutulmadı`, `${kept} kept · ${late} late · ${broken} broken`) : L("Bu dönemde söz yok", "No promises this period")}</b>
         </div>
       </div>
       <div className="qd-table-wrap">
         <table className="qd-table">
           <thead>
             <tr>
-              <th>Müşteri</th>
-              <th className="qd-right">Tutar</th>
-              <th>Vade</th>
-              <th>Ajanın beklediği</th>
-              <th>Gerçekleşen</th>
-              <th>Sonuç</th>
+              <th>{L("Müşteri", "Customer")}</th>
+              <th className="qd-right">{L("Tutar", "Amount")}</th>
+              <th>{L("Vade", "Due")}</th>
+              <th>{L("Ajanın beklediği", "Agent expected")}</th>
+              <th>{L("Gerçekleşen", "Actual")}</th>
+              <th>{L("Sonuç", "Result")}</th>
             </tr>
           </thead>
           <tbody>
@@ -359,24 +375,27 @@ function ScorecardCard({ dataset, prevDate, date, onCustomer }: { dataset: Retur
                 <td className="qd-num">{formatDateTr(p.receivable.dueDate)}</td>
                 <td className="qd-num">{formatDateTr(p.expected)}</td>
                 <td className="qd-num">{p.paidDate ? formatDateTr(p.paidDate) : "—"}</td>
-                <td><span className={`qd-pill ${OUTCOME[p.outcome][1]}`}>{OUTCOME[p.outcome][0]}{p.errorDays !== null && Math.abs(p.errorDays) > 0 ? ` (${p.errorDays > 0 ? "+" : ""}${p.errorDays} g)` : ""}</span></td>
+                <td><span className={`qd-pill ${OUTCOME[p.outcome][1]}`}>{pick(OUTCOME[p.outcome][0])}{p.errorDays !== null && Math.abs(p.errorDays) > 0 ? ` (${p.errorDays > 0 ? "+" : ""}${p.errorDays} ${L("g", "d")})` : ""}</span></td>
               </tr>
             ))}
             {card.promises.map((p) => (
               <tr key={p.message.id} data-clickable onClick={() => onCustomer(p.customer)}>
-                <td>{p.customer.name}<div style={{ color: "var(--qd-muted)", fontSize: 11.5 }}>WhatsApp: “{p.message.text}”</div></td>
+                <td>{p.customer.name}<div style={{ color: "var(--qd-muted)", fontSize: 11.5 }}>WhatsApp: “{messageText(p.message.text)}”</div></td>
                 <td className="qd-right qd-num">{money(p.amount)}</td>
                 <td className="qd-num">—</td>
-                <td className="qd-num">Söz: {formatDateTr(p.message.promiseDate as string)}</td>
+                <td className="qd-num">{L("Söz", "Promise")}: {formatDateTr(p.message.promiseDate as string)}</td>
                 <td className="qd-num">{p.paidDate ? formatDateTr(p.paidDate) : "—"}</td>
-                <td><span className={`qd-pill ${PROMISE[p.outcome][1]}`}>{PROMISE[p.outcome][0]}</span></td>
+                <td><span className={`qd-pill ${PROMISE[p.outcome][1]}`}>{pick(PROMISE[p.outcome][0])}</span></td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
       <p style={{ color: "var(--qd-muted)", fontSize: 12, marginTop: 10 }}>
-        Yalnız {formatDateTr(date)} itibarıyla sonucu belli olan tahminler değerlendirilir; sonraki haftalar için yapılan tahminler henüz sınanmadı.
+        {L(
+          `Yalnız ${formatDateTr(date)} itibarıyla sonucu belli olan tahminler değerlendirilir; sonraki haftalar için yapılan tahminler henüz sınanmadı.`,
+          `Only forecasts whose outcome is known by ${formatDateTr(date)} are scored; forecasts for later weeks have not been tested yet.`,
+        )}
       </p>
     </section>
   );
@@ -391,12 +410,15 @@ function ProjectVerdict({ base, changed, flows }: { base: Weeks; changed: Weeks;
   const need = negative ? -t1.balanceLow : 0;
   return (
     <div className={`qd-verdict ${negative ? "qd-verdict--bad" : "qd-verdict--good"}`}>
-      <b>{negative ? "Bu iş, kötü senaryoda kasayı eksiye düşürüyor." : "Bu iş nakit açısından taşınabilir."}</b>
+      <b>{negative ? L("Bu iş, kötü senaryoda kasayı eksiye düşürüyor.", "In the downside case this job pushes cash below zero.") : L("Bu iş nakit açısından taşınabilir.", "This job is affordable in cash terms.")}</b>
       <span>
-        En dar hafta {formatDateTr(t1.weekStart)}: beklenen {money(t1.balanceBase)} (bu iş olmadan {money(t0.balanceBase)}), kötü senaryoda {money(t1.balanceLow)}.
-        {negative ? ` Avansı artırmak, maliyeti teslime yaymak ya da yaklaşık ${money(need)} kısa vadeli finansman gerekir.` : ""}
+        {L(
+          `En dar hafta ${formatDateTr(t1.weekStart)}: beklenen ${money(t1.balanceBase)} (bu iş olmadan ${money(t0.balanceBase)}), kötü senaryoda ${money(t1.balanceLow)}.`,
+          `Tightest week ${formatDateTr(t1.weekStart)}: expected ${money(t1.balanceBase)} (${money(t0.balanceBase)} without this job), ${money(t1.balanceLow)} in the downside case.`,
+        )}
+        {negative ? L(` Avansı artırmak, maliyeti teslime yaymak ya da yaklaşık ${money(need)} kısa vadeli finansman gerekir.`, ` You would need a larger advance, costs spread to delivery, or about ${money(need)} of short-term financing.`) : ""}
       </span>
-      {rest ? <span>Kalan {money(rest.amount)} {formatDateTr(rest.date)} tarihinde{rest.date > lastWeek ? "; 8 haftalık görünümün dışında" : ""}.</span> : null}
+      {rest ? <span>{L(`Kalan ${money(rest.amount)} ${formatDateTr(rest.date)} tarihinde${rest.date > lastWeek ? "; 8 haftalık görünümün dışında" : ""}.`, `The remaining ${money(rest.amount)} arrives on ${formatDateTr(rest.date)}${rest.date > lastWeek ? ", outside the 8-week view" : ""}.`)}</span> : null}
     </div>
   );
 }
@@ -408,25 +430,28 @@ function ShareSheet({ open, onClose, dataset, date, onShared }: { open: boolean;
     <Sheet open={open} onOpenChange={(o) => { if (!o) { onClose(); setSent(false); } }}>
       <SheetContent className="qd-sheet qd">
         <SheetHeader>
-          <SheetTitle>Ödeme karnenizi bankanızla paylaşın</SheetTitle>
+          <SheetTitle>{L("Ödeme karnenizi bankanızla paylaşın", "Share your payment scorecard with your bank")}</SheetTitle>
           <SheetDescription>
-            Banka sizi izlemiyor; iyi ödeme karnenizi siz götürüyorsunuz. Daha hızlı limit görüşmesi ve uygun finansman için yalnız aşağıdaki özet gider. Paylaşımı istediğiniz an geri çekebilirsiniz.
+            {L(
+              "Banka sizi izlemiyor; iyi ödeme karnenizi siz götürüyorsunuz. Daha hızlı limit görüşmesi ve uygun finansman için yalnız aşağıdaki özet gider. Paylaşımı istediğiniz an geri çekebilirsiniz.",
+              "The bank is not watching you; you bring your good scorecard to it. Only the summary below is sent, for faster credit-limit talks and better financing. You can withdraw the share at any time.",
+            )}
           </SheetDescription>
         </SheetHeader>
         {summary ? <ShareSummaryView summary={summary} audience="business" /> : null}
         <div className="qd-action__buttons" style={{ marginTop: 16 }}>
           {sent ? (
             <>
-              <span className="qd-pill qd-pill--good">Paylaşıldı · demo</span>
-              <a className="qd-btn qd-btn--primary qd-btn--sm" href={`/demo/banka?b=01&d=${date}&s=${dataset.tenant}`}>Bankacı ekranında gör</a>
+              <span className="qd-pill qd-pill--good">{L("Paylaşıldı · demo", "Shared · demo")}</span>
+              <a className="qd-btn qd-btn--primary qd-btn--sm" href={`/demo/banka?b=01&d=${date}&s=${dataset.tenant}${isEnglish() ? "&l=en" : ""}`}>{L("Bankacı ekranında gör", "See it on the banker screen")}</a>
             </>
           ) : (
             <button type="button" className="qd-btn qd-btn--primary" onClick={() => { setSent(true); onShared(); }}>
-              Bankama gönder (demo)
+              {L("Bankama gönder (demo)", "Send to my bank (demo)")}
             </button>
           )}
         </div>
-        <p style={{ color: "var(--qd-muted)", fontSize: 12, marginTop: 10 }}>Demo: gerçek bir bankaya veri gönderilmez. Banka entegrasyonu pilot ve izin sözleşmesiyle kurulur.</p>
+        <p style={{ color: "var(--qd-muted)", fontSize: 12, marginTop: 10 }}>{L("Demo: gerçek bir bankaya veri gönderilmez. Banka entegrasyonu pilot ve izin sözleşmesiyle kurulur.", "Demo: no data is sent to a real bank. A bank integration is set up through a pilot and a consent agreement.")}</p>
       </SheetContent>
     </Sheet>
   );
@@ -437,8 +462,8 @@ function ScenarioPill({ base, changed }: { base: Weeks; changed: Weeks }) {
   const negative = changed.some((w) => w.balanceBase < 0);
   return (
     <span className={`qd-pill ${negative ? "qd-pill--bad" : "qd-pill--warn"}`}>
-      En büyük etki {formatDateTr(gap.weekStart).replace(/ \d{4}$/, "")}: {money(gap.changed - gap.base)}
-      {negative ? " · kasa ekside" : ""}
+      {L("En büyük etki", "Biggest impact")} {formatDateTr(gap.weekStart).replace(/ \d{4}$/, "")}: {money(gap.changed - gap.base)}
+      {negative ? L(" · kasa ekside", " · cash below zero") : ""}
     </span>
   );
 }
@@ -448,12 +473,12 @@ function ChartTooltip({ active, payload }: { active?: boolean; payload?: Array<{
   if (!p) return null;
   return (
     <div className="qd-tooltip">
-      <b>{formatDateTr(p.weekStart)} haftası</b>
-      <div><span>Tahsilat</span><span className="qd-num">+{money(p.inflow)}</span></div>
-      <div><span>Ödemeler</span><span className="qd-num">{money(p.outflow)}</span></div>
-      <div><span>En olası bakiye</span><b className="qd-num" style={{ margin: 0 }}>{money(p.base)}</b></div>
-      <div><span>Aralık</span><span className="qd-num">{money(p.range[0])} – {money(p.range[1])}</span></div>
-      {p.scenario !== undefined ? <div><span>Senaryo</span><span className="qd-num">{money(p.scenario)}</span></div> : null}
+      <b>{L(`${formatDateTr(p.weekStart)} haftası`, `Week of ${formatDateTr(p.weekStart)}`)}</b>
+      <div><span>{L("Tahsilat", "Collections")}</span><span className="qd-num">+{money(p.inflow)}</span></div>
+      <div><span>{L("Ödemeler", "Payments")}</span><span className="qd-num">{money(p.outflow)}</span></div>
+      <div><span>{L("En olası bakiye", "Most likely balance")}</span><b className="qd-num" style={{ margin: 0 }}>{money(p.base)}</b></div>
+      <div><span>{L("Aralık", "Range")}</span><span className="qd-num">{money(p.range[0])} – {money(p.range[1])}</span></div>
+      {p.scenario !== undefined ? <div><span>{L("Senaryo", "Scenario")}</span><span className="qd-num">{money(p.scenario)}</span></div> : null}
     </div>
   );
 }
@@ -465,12 +490,12 @@ function InflowTable({ snap, onCustomer }: { snap: Snap; onCustomer: (c: Custome
       <table className="qd-table">
         <thead>
           <tr>
-            <th>Müşteri</th>
-            <th>Belge</th>
-            <th>Vade</th>
-            <th>Ajanın beklediği</th>
-            <th className="qd-right">Tutar</th>
-            <th>Neden</th>
+            <th>{L("Müşteri", "Customer")}</th>
+            <th>{L("Belge", "Document")}</th>
+            <th>{L("Vade", "Due")}</th>
+            <th>{L("Ajanın beklediği", "Agent expects")}</th>
+            <th className="qd-right">{L("Tutar", "Amount")}</th>
+            <th>{L("Neden", "Why")}</th>
           </tr>
         </thead>
         <tbody>
@@ -479,10 +504,10 @@ function InflowTable({ snap, onCustomer }: { snap: Snap; onCustomer: (c: Custome
             return (
               <tr key={i.receivable.id} data-clickable onClick={() => onCustomer(i.customer)}>
                 <td>{i.customer.name}</td>
-                <td><span className={`qd-pill ${i.receivable.kind === "cheque" || i.receivable.kind === "note" ? "qd-pill--warn" : "qd-pill--muted"}`}>{DOC_LABEL[i.receivable.kind]}</span></td>
+                <td><span className={`qd-pill ${i.receivable.kind === "cheque" || i.receivable.kind === "note" ? "qd-pill--warn" : "qd-pill--muted"}`}>{pick(DOC_LABEL[i.receivable.kind])}</span></td>
                 <td className="qd-num">{formatDateTr(i.receivable.dueDate)}</td>
                 <td className="qd-num">
-                  {i.atRisk ? <span className="qd-pill qd-pill--bad">Riskli · tahmine dahil değil</span> : <>{formatDateTr(i.expected)} {late > 3 ? <span className="qd-pill qd-pill--warn">+{late} gün</span> : late < -1 ? <span className="qd-pill qd-pill--good">erken</span> : null}</>}
+                  {i.atRisk ? <span className="qd-pill qd-pill--bad">{L("Riskli · tahmine dahil değil", "Risky · not in forecast")}</span> : <>{formatDateTr(i.expected)} {late > 3 ? <span className="qd-pill qd-pill--warn">+{dayCount(late)}</span> : late < -1 ? <span className="qd-pill qd-pill--good">{L("erken", "early")}</span> : null}</>}
                 </td>
                 <td className="qd-right qd-num">{money(i.receivable.amount)}</td>
                 <td style={{ color: "var(--qd-muted)", fontSize: 12.5, maxWidth: 320 }}>{i.reason}</td>
@@ -520,20 +545,20 @@ function CustomerTable({ snap, onCustomer }: { snap: Snap; onCustomer: (c: Custo
   return (
     <>
       <div className="qd-toolbar">
-        <input className="qd-input" placeholder="Müşteri ara" value={query} onChange={(e) => setQuery(e.target.value)} aria-label="Müşteri ara" />
-        <span style={{ color: "var(--qd-muted)", fontSize: 12.5 }}>{rows.length} müşteri · A dakik, D riskli</span>
+        <input className="qd-input" placeholder={L("Müşteri ara", "Search customers")} value={query} onChange={(e) => setQuery(e.target.value)} aria-label={L("Müşteri ara", "Search customers")} />
+        <span style={{ color: "var(--qd-muted)", fontSize: 12.5 }}>{L(`${rows.length} müşteri · A dakik, D riskli`, `${rows.length} customers · A punctual, D risky`)}</span>
       </div>
       <div className="qd-table-wrap" style={{ maxHeight: 520, overflowY: "auto" }}>
         <table className="qd-table">
           <thead>
             <tr>
-              <th>Müşteri</th>
-              <th>Not</th>
-              {th("medianDelay", "Ortanca gecikme")}
-              <th className="qd-right">Zamanında</th>
-              {th("openAmount", "Açık")}
-              {th("overdueAmount", "Vadesi geçen")}
-              {th("trend", "Eğilim")}
+              <th>{L("Müşteri", "Customer")}</th>
+              <th>{L("Not", "Grade")}</th>
+              {th("medianDelay", L("Ortanca gecikme", "Median delay"))}
+              <th className="qd-right">{L("Zamanında", "On time")}</th>
+              {th("openAmount", L("Açık", "Open"))}
+              {th("overdueAmount", L("Vadesi geçen", "Overdue"))}
+              {th("trend", L("Eğilim", "Trend"))}
             </tr>
           </thead>
           <tbody>
@@ -541,15 +566,15 @@ function CustomerTable({ snap, onCustomer }: { snap: Snap; onCustomer: (c: Custo
               <tr key={c.id} data-clickable onClick={() => onCustomer(c)}>
                 <td>
                   {c.name}
-                  <div style={{ color: "var(--qd-muted)", fontSize: 11.5 }}>{c.sector}</div>
+                  <div style={{ color: "var(--qd-muted)", fontSize: 11.5 }}>{sectorName(c.sector)}</div>
                 </td>
                 <td><Grade grade={p.grade} /></td>
-                <td className="qd-right qd-num">{p.paidCount ? `${p.medianDelay > 0 ? "+" : ""}${p.medianDelay} gün` : "—"}</td>
-                <td className="qd-right qd-num">{p.onTimeRate === null ? "—" : `%${Math.round(p.onTimeRate * 100)}`}</td>
+                <td className="qd-right qd-num">{p.paidCount ? `${p.medianDelay > 0 ? "+" : ""}${dayCount(p.medianDelay)}` : "—"}</td>
+                <td className="qd-right qd-num">{p.onTimeRate === null ? "—" : pct(Math.round(p.onTimeRate * 100))}</td>
                 <td className="qd-right qd-num">{money(p.openAmount)}</td>
                 <td className="qd-right qd-num" style={{ color: p.overdueAmount ? "var(--qd-bad)" : undefined }}>{p.overdueAmount ? money(p.overdueAmount) : "—"}</td>
                 <td className="qd-right">
-                  {p.trend > 2 ? <span className="qd-pill qd-pill--bad"><ArrowUpRight size={12} />{p.trend} gün yavaş</span> : p.trend < -2 ? <span className="qd-pill qd-pill--good"><ArrowDownRight size={12} />hızlandı</span> : <span className="qd-pill qd-pill--muted">sabit</span>}
+                  {p.trend > 2 ? <span className="qd-pill qd-pill--bad"><ArrowUpRight size={12} />{L(`${p.trend} gün yavaş`, `${p.trend} days slower`)}</span> : p.trend < -2 ? <span className="qd-pill qd-pill--good"><ArrowDownRight size={12} />{L("hızlandı", "faster")}</span> : <span className="qd-pill qd-pill--muted">{L("sabit", "stable")}</span>}
                 </td>
               </tr>
             ))}
@@ -563,29 +588,29 @@ function CustomerTable({ snap, onCustomer }: { snap: Snap; onCustomer: (c: Custo
 function PromiseList({ snap, onCustomer }: { snap: Snap; onCustomer: (c: Customer) => void }) {
   const customers = new Map(snap.dataset.customers.map((c) => [c.id, c]));
   const promises = snap.chats.filter((m) => m.promiseDate || /zor|süre rica/i.test(m.text)).slice().reverse();
-  if (!promises.length) return <p style={{ color: "var(--qd-muted)" }}>Bu tarihe kadar WhatsApp'ta ödeme konuşması yok.</p>;
+  if (!promises.length) return <p style={{ color: "var(--qd-muted)" }}>{L("Bu tarihe kadar WhatsApp'ta ödeme konuşması yok.", "No payment conversations on WhatsApp up to this date.")}</p>;
   return (
     <div className="qd-table-wrap">
       <table className="qd-table">
         <thead>
           <tr>
-            <th>Tarih</th>
-            <th>Müşteri</th>
-            <th>Mesaj</th>
-            <th>Söz</th>
-            <th>Durum</th>
+            <th>{L("Tarih", "Date")}</th>
+            <th>{L("Müşteri", "Customer")}</th>
+            <th>{L("Mesaj", "Message")}</th>
+            <th>{L("Söz", "Promise")}</th>
+            <th>{L("Durum", "Status")}</th>
           </tr>
         </thead>
         <tbody>
           {promises.map((m) => {
             const paid = snap.receivables.find((r) => r.id === m.receivableId)?.paidDate;
-            const state = !m.promiseDate ? ["Nakit sıkıntısı işareti", "qd-pill--bad"] : paid ? ["Ödendi", "qd-pill--good"] : m.promiseDate < snap.asOf ? ["Tutulmadı", "qd-pill--bad"] : ["Bekleniyor", "qd-pill--warn"];
+            const state = !m.promiseDate ? [L("Nakit sıkıntısı işareti", "Cash-stress signal"), "qd-pill--bad"] : paid ? [L("Ödendi", "Paid"), "qd-pill--good"] : m.promiseDate < snap.asOf ? [L("Tutulmadı", "Broken"), "qd-pill--bad"] : [L("Bekleniyor", "Pending"), "qd-pill--warn"];
             const c = customers.get(m.customerId)!;
             return (
               <tr key={m.id} data-clickable onClick={() => onCustomer(c)}>
                 <td className="qd-num">{formatDateTr(m.date)}</td>
                 <td>{c.name}</td>
-                <td style={{ maxWidth: 320 }}>“{m.text}”</td>
+                <td style={{ maxWidth: 320 }}>“{messageText(m.text)}”</td>
                 <td className="qd-num">{m.promiseDate ? formatDateTr(m.promiseDate) : "—"}</td>
                 <td><span className={`qd-pill ${state[1]}`}>{state[0]}</span></td>
               </tr>
@@ -602,10 +627,10 @@ function SourcesView({ snap }: { snap: Snap }) {
   const invoices = snap.receivables.filter((r) => r.kind === "invoice");
   const paid = snap.receivables.filter((r) => r.paidDate);
   const items = [
-    { icon: <Building2 size={16} />, name: d.sources.erp, kind: "ERP (demo)", lines: [`${d.customers.length} müşteri kartı`, `${invoices.length} sipariş`, `${snap.pastExpenses.filter((e) => e.source === "mockerp").length + snap.plannedExpenses.filter((e) => e.source === "mockerp").length} planlı/gerçek gider`] },
-    { icon: <Calculator size={16} />, name: d.sources.onMuhasebe, kind: "Ön muhasebe (demo)", lines: [`${invoices.length} fatura`, `${paid.length} tahsilat kaydı`, `${snap.receivables.filter((r) => r.kind === "cheque").length} çek, ${snap.receivables.filter((r) => r.kind === "note").length} senet kaydı`] },
-    { icon: <Landmark size={16} />, name: d.sources.banka, kind: "Banka hesabı (demo)", lines: [`Bakiye ${money(currentBalance(snap))}`, `${paid.length + snap.pastExpenses.length} hesap hareketi`, "Günlük eşleştirme"] },
-    { icon: <MessageCircle size={16} />, name: "WhatsApp Business", kind: "Sohbet dışa aktarımı (demo)", lines: [`${snap.chats.length} mesaj`, `${snap.chats.filter((m) => m.promiseDate).length} ödeme sözü`, "Kaynak mesaj her zaman gösterilir"] },
+    { icon: <Building2 size={16} />, name: d.sources.erp, kind: "ERP (demo)", lines: [L(`${d.customers.length} müşteri kartı`, `${d.customers.length} customer records`), L(`${invoices.length} sipariş`, `${invoices.length} orders`), L(`${snap.pastExpenses.filter((e) => e.source === "mockerp").length + snap.plannedExpenses.filter((e) => e.source === "mockerp").length} planlı/gerçek gider`, `${snap.pastExpenses.filter((e) => e.source === "mockerp").length + snap.plannedExpenses.filter((e) => e.source === "mockerp").length} planned/actual expenses`)] },
+    { icon: <Calculator size={16} />, name: d.sources.onMuhasebe, kind: L("Ön muhasebe (demo)", "Bookkeeping (demo)"), lines: [L(`${invoices.length} fatura`, `${invoices.length} invoices`), L(`${paid.length} tahsilat kaydı`, `${paid.length} collections`), L(`${snap.receivables.filter((r) => r.kind === "cheque").length} çek, ${snap.receivables.filter((r) => r.kind === "note").length} senet kaydı`, `${snap.receivables.filter((r) => r.kind === "cheque").length} cheques, ${snap.receivables.filter((r) => r.kind === "note").length} promissory notes`)] },
+    { icon: <Landmark size={16} />, name: d.sources.banka, kind: L("Banka hesabı (demo)", "Bank account (demo)"), lines: [`${L("Bakiye", "Balance")} ${money(currentBalance(snap))}`, L(`${paid.length + snap.pastExpenses.length} hesap hareketi`, `${paid.length + snap.pastExpenses.length} transactions`), L("Günlük eşleştirme", "Daily reconciliation")] },
+    { icon: <MessageCircle size={16} />, name: "WhatsApp Business", kind: L("Sohbet dışa aktarımı (demo)", "Chat export (demo)"), lines: [L(`${snap.chats.length} mesaj`, `${snap.chats.length} messages`), L(`${snap.chats.filter((m) => m.promiseDate).length} ödeme sözü`, `${snap.chats.filter((m) => m.promiseDate).length} payment promises`), L("Kaynak mesaj her zaman gösterilir", "The source message is always shown")] },
   ];
   return (
     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12 }}>
@@ -626,12 +651,12 @@ function SourcesView({ snap }: { snap: Snap }) {
         </div>
       ))}
       <div className="qd-card" style={{ boxShadow: "none", gridColumn: "1 / -1" }}>
-        <b>Sözleşmeler</b>
+        <b>{L("Sözleşmeler", "Contracts")}</b>
         <ul style={{ margin: "8px 0 0", padding: 0, listStyle: "none" }}>
           {d.contracts.filter((c) => c.signedDate <= snap.asOf).map((c) => (
             <li key={c.id} style={{ display: "flex", gap: 10, alignItems: "center", padding: "6px 0", borderBottom: "1px solid #eef1ea" }}>
               <FileText size={15} />
-              <span style={{ flex: 1 }}>{c.title} · {d.customers.find((x) => x.id === c.customerId)?.name}</span>
+              <span style={{ flex: 1 }}>{labelText(c.title)} · {d.customers.find((x) => x.id === c.customerId)?.name}</span>
               <span className="qd-num">{money(c.total)}</span>
               <span className="qd-pill qd-pill--muted">{formatDateTr(c.signedDate)}</span>
             </li>
@@ -662,21 +687,21 @@ function CustomerSheet({ snap, customer, onClose }: { snap: Snap; customer: Cust
               <SheetTitle style={{ display: "flex", alignItems: "center", gap: 10 }}>
                 <Grade grade={p.grade} /> {customer.name}
               </SheetTitle>
-              <SheetDescription>{customer.sector} · {p.paidCount} ödeme geçmişi · {formatDateTr(snap.asOf)} itibarıyla</SheetDescription>
+              <SheetDescription>{L(`${sectorName(customer.sector)} · ${p.paidCount} ödeme geçmişi · ${formatDateTr(snap.asOf)} itibarıyla`, `${sectorName(customer.sector)} · ${p.paidCount} past payments · as of ${formatDateTr(snap.asOf)}`)}</SheetDescription>
             </SheetHeader>
             <div className="qd-stat-row">
-              <div className="qd-stat"><span>Ortanca gecikme</span><b className="qd-num">{p.medianDelay} gün</b></div>
-              <div className="qd-stat"><span>Zamanında ödeme</span><b className="qd-num">{p.onTimeRate === null ? "—" : `%${Math.round(p.onTimeRate * 100)}`}</b></div>
-              <div className="qd-stat"><span>Açık alacak</span><b className="qd-num">{money(p.openAmount)}</b></div>
+              <div className="qd-stat"><span>{L("Ortanca gecikme", "Median delay")}</span><b className="qd-num">{dayCount(p.medianDelay)}</b></div>
+              <div className="qd-stat"><span>{L("Zamanında ödeme", "Paid on time")}</span><b className="qd-num">{p.onTimeRate === null ? "—" : pct(Math.round(p.onTimeRate * 100))}</b></div>
+              <div className="qd-stat"><span>{L("Açık alacak", "Open receivables")}</span><b className="qd-num">{money(p.openAmount)}</b></div>
             </div>
-            <span className="qd-eyebrow">Son ödemeler: vadeye göre kaç gün geç</span>
+            <span className="qd-eyebrow">{L("Son ödemeler: vadeye göre kaç gün geç", "Recent payments: days late versus the due date")}</span>
             <div style={{ height: 140, marginTop: 6 }}>
               {mounted ? (
                 <ResponsiveContainer>
                   <BarChart data={history}>
                     <XAxis dataKey="label" tick={{ fontSize: 10, fill: "#66766a" }} axisLine={false} tickLine={false} />
                     <YAxis hide />
-                    <Tooltip formatter={(v: number) => `${v} gün`} />
+                    <Tooltip formatter={(v: number) => dayCount(v)} />
                     <ReferenceLine y={0} stroke="#cfd8c7" />
                     <Bar dataKey="delay" radius={[4, 4, 4, 4]}>
                       {history.map((h, i) => (
@@ -688,15 +713,15 @@ function CustomerSheet({ snap, customer, onClose }: { snap: Snap; customer: Cust
               ) : null}
             </div>
             <div style={{ marginTop: 14 }}>
-              <span className="qd-eyebrow">Açık belgeler</span>
+              <span className="qd-eyebrow">{L("Açık belgeler", "Open documents")}</span>
               {open.map((r) => (
                 <div key={r.id} style={{ display: "flex", justifyContent: "space-between", padding: "7px 0", borderBottom: "1px solid #e6ebe0", fontSize: 13 }}>
                   <span>{r.id}</span>
-                  <span className="qd-num">vade {formatDateTr(r.dueDate)}</span>
+                  <span className="qd-num">{L("vade", "due")} {formatDateTr(r.dueDate)}</span>
                   <b className="qd-num">{money(r.amount)}</b>
                 </div>
               ))}
-              {!open.length ? <p style={{ color: "var(--qd-muted)", fontSize: 13 }}>Açık belge yok.</p> : null}
+              {!open.length ? <p style={{ color: "var(--qd-muted)", fontSize: 13 }}>{L("Açık belge yok.", "No open documents.")}</p> : null}
             </div>
             {chats.length ? (
               <div style={{ marginTop: 16 }}>
@@ -704,8 +729,8 @@ function CustomerSheet({ snap, customer, onClose }: { snap: Snap; customer: Cust
                 <div className="qd-chat" style={{ marginTop: 6 }}>
                   {chats.map((m) => (
                     <div key={m.id} className={`qd-bubble${m.from === "us" ? " qd-bubble--us" : ""}`}>
-                      {m.text}
-                      <small>{formatDateTr(m.date)}{m.promiseDate ? ` · söz: ${formatDateTr(m.promiseDate)}` : ""}</small>
+                      {messageText(m.text)}
+                      <small>{formatDateTr(m.date)}{m.promiseDate ? ` · ${L("söz", "promise")}: ${formatDateTr(m.promiseDate)}` : ""}</small>
                     </div>
                   ))}
                 </div>

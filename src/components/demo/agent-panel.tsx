@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Bot, Check, Loader2, Send, Pencil, Clock3, PhoneCall, MessageCircle } from "lucide-react";
 import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { formatDateTr, money, type AgentAction, type AgentAnswer, type AgentStep, type Briefing } from "@/lib/demo";
+import { formatDateTr, L, money, pick, type AgentAction, type AgentAnswer, type AgentStep, type Briefing } from "@/lib/demo";
 import { TOOL_ICONS, useLocalState, useMounted } from "./shared";
 
 /** Plays the agent's round step by step, like watching it work. Replays when `runKey` changes. */
@@ -31,11 +31,11 @@ export function AgentFeed({ steps, runKey }: { steps: AgentStep[]; runKey: strin
             <Bot size={18} />
           </span>
           <span>
-            <b>QualiFi ajanı</b>
-            <small>Kaynakları tarar, tahmini yeniler, takip önerir</small>
+            <b>{L("QualiFi ajanı", "QualiFi agent")}</b>
+            <small>{L("Kaynakları tarar, tahmini yeniler, takip önerir", "Scans sources, refreshes the forecast, suggests follow-ups")}</small>
           </span>
         </div>
-        <span className="qd-agent__status" aria-live="polite">{working ? "Çalışıyor" : "Güncel"}</span>
+        <span className="qd-agent__status" aria-live="polite">{working ? L("Çalışıyor", "Working") : L("Güncel", "Up to date")}</span>
       </div>
       <ol className="qd-feed">
         {steps.map((s, i) => {
@@ -110,8 +110,8 @@ export function AskAgent({ ask, suggestions, resetKey, onAsk }: { ask: (q: strin
         ))}
       </div>
       <form onSubmit={submit}>
-        <input value={text} onChange={(e) => setText(e.target.value)} placeholder="Ajana sorun: Aralık nasıl görünüyor?" aria-label="Ajana soru" />
-        <button className="qd-btn qd-btn--primary" type="submit" aria-label="Gönder">
+        <input value={text} onChange={(e) => setText(e.target.value)} placeholder={L("Ajana sorun: Aralık nasıl görünüyor?", "Ask the agent: how does December look?")} aria-label={L("Ajana soru", "Question for the agent")} />
+        <button className="qd-btn qd-btn--primary" type="submit" aria-label={L("Gönder", "Send")}>
           <Send size={14} />
         </button>
       </form>
@@ -120,7 +120,7 @@ export function AskAgent({ ask, suggestions, resetKey, onAsk }: { ask: (q: strin
           <div key={t.id} style={{ display: "contents" }}>
             <div className="qd-msg qd-msg--me">{t.question}</div>
             <div className="qd-msg qd-msg--agent">
-              {t.answer ? <AnswerBody answer={t.answer} /> : <span className="qd-typing" aria-label="Ajan yazıyor"><i /><i /><i /></span>}
+              {t.answer ? <AnswerBody answer={t.answer} /> : <span className="qd-typing" aria-label={L("Ajan yazıyor", "Agent is typing")}><i /><i /><i /></span>}
             </div>
           </div>
         ))}
@@ -149,7 +149,7 @@ function AnswerBody({ answer }: { answer: AgentAnswer }) {
               <XAxis dataKey="week" tick={{ fill: "#c3d4bd", fontSize: 10 }} axisLine={false} tickLine={false} />
               <YAxis hide />
               <Tooltip formatter={(v: number) => money(v)} contentStyle={{ borderRadius: 10, fontSize: 12 }} />
-              <Line type="monotone" dataKey="base" name="Bugünkü tahmin" stroke="#d8eea6" strokeWidth={2} dot={false} />
+              <Line type="monotone" dataKey="base" name={L("Bugünkü tahmin", "Current forecast")} stroke="#d8eea6" strokeWidth={2} dot={false} />
               <Line type="monotone" dataKey="changed" name={answer.scenario.label} stroke="#f2a48f" strokeWidth={2} strokeDasharray="5 4" dot={false} />
             </LineChart>
           </ResponsiveContainer>
@@ -161,7 +161,12 @@ function AnswerBody({ answer }: { answer: AgentAnswer }) {
 
 type ActionState = Record<string, { state?: "sent" | "snoozed"; text?: string }>;
 
-const KIND_LABEL = { reminder: "Vadeden önce hatırlat", promise_check: "Söz kontrolü", escalate: "Görüşme öner", instrument_check: "Çek/senet teyidi" } as const;
+const KIND_LABEL = {
+  reminder: ["Vadeden önce hatırlat", "Pre-due reminder"],
+  promise_check: ["Söz kontrolü", "Promise check"],
+  escalate: ["Görüşme öner", "Suggest a call"],
+  instrument_check: ["Çek/senet teyidi", "Cheque/note check"],
+} as const;
 const KIND_TONE = { reminder: "qd-pill--warn", promise_check: "qd-pill--bad", escalate: "qd-pill--bad", instrument_check: "qd-pill--warn" } as const;
 
 /** The agent's proposals. Approving only simulates sending: nothing leaves the demo. */
@@ -182,37 +187,37 @@ export function ActionQueue({ actions, storageKey, onToast, onAction }: { action
                 <div className="qd-action__reason">{a.reason}</div>
               </div>
               <div style={{ textAlign: "right" }}>
-                <span className={`qd-pill ${KIND_TONE[a.kind]}`}>{KIND_LABEL[a.kind]}</span>
+                <span className={`qd-pill ${KIND_TONE[a.kind]}`}>{pick(KIND_LABEL[a.kind])}</span>
                 <div className="qd-num" style={{ fontWeight: 700, marginTop: 6 }}>{money(a.receivable.amount)}</div>
               </div>
             </div>
             {editing === a.id ? (
-              <textarea value={draft} onChange={(e) => setDraft(e.target.value)} aria-label="Mesaj taslağı" />
+              <textarea value={draft} onChange={(e) => setDraft(e.target.value)} aria-label={L("Mesaj taslağı", "Message draft")} />
             ) : (
               <div className="qd-action__draft">{text}</div>
             )}
             <div className="qd-action__buttons">
               {s?.state === "sent" ? (
                 <span className="qd-pill qd-pill--good">
-                  <Check size={12} /> Onaylandı · demo gönderimi
+                  <Check size={12} /> {L("Onaylandı · demo gönderimi", "Approved · demo send")}
                 </span>
               ) : editing === a.id ? (
                 <>
-                  <button type="button" className="qd-btn qd-btn--primary qd-btn--sm" onClick={() => { setState({ ...state, [a.id]: { ...s, text: draft } }); setEditing(null); onAction?.("agent_edit", a.receivable.id); onToast("Taslak güncellendi."); }}>
-                    Kaydet
+                  <button type="button" className="qd-btn qd-btn--primary qd-btn--sm" onClick={() => { setState({ ...state, [a.id]: { ...s, text: draft } }); setEditing(null); onAction?.("agent_edit", a.receivable.id); onToast(L("Taslak güncellendi.", "Draft updated.")); }}>
+                    {L("Kaydet", "Save")}
                   </button>
-                  <button type="button" className="qd-btn qd-btn--sm" onClick={() => setEditing(null)}>Vazgeç</button>
+                  <button type="button" className="qd-btn qd-btn--sm" onClick={() => setEditing(null)}>{L("Vazgeç", "Cancel")}</button>
                 </>
               ) : (
                 <>
-                  <button type="button" className="qd-btn qd-btn--primary qd-btn--sm" onClick={() => { setState({ ...state, [a.id]: { state: "sent", text } }); onAction?.("agent_approve", a.receivable.id); onToast(`${a.customer.name} için WhatsApp mesajı onaylandı (demo, gönderilmedi).`); }}>
-                    {a.kind === "escalate" ? <PhoneCall size={13} /> : <MessageCircle size={13} />} Onayla
+                  <button type="button" className="qd-btn qd-btn--primary qd-btn--sm" onClick={() => { setState({ ...state, [a.id]: { state: "sent", text } }); onAction?.("agent_approve", a.receivable.id); onToast(L(`${a.customer.name} için WhatsApp mesajı onaylandı (demo, gönderilmedi).`, `WhatsApp message to ${a.customer.name} approved (demo, not sent).`)); }}>
+                    {a.kind === "escalate" ? <PhoneCall size={13} /> : <MessageCircle size={13} />} {L("Onayla", "Approve")}
                   </button>
                   <button type="button" className="qd-btn qd-btn--sm" onClick={() => { setDraft(text); setEditing(a.id); }}>
-                    <Pencil size={13} /> Düzenle
+                    <Pencil size={13} /> {L("Düzenle", "Edit")}
                   </button>
-                  <button type="button" className="qd-btn qd-btn--ghost qd-btn--sm" onClick={() => { setState({ ...state, [a.id]: { state: "snoozed", text } }); onAction?.("agent_snooze", a.receivable.id); onToast("3 gün sonra tekrar hatırlatılacak."); }}>
-                    <Clock3 size={13} /> Ertele
+                  <button type="button" className="qd-btn qd-btn--ghost qd-btn--sm" onClick={() => { setState({ ...state, [a.id]: { state: "snoozed", text } }); onAction?.("agent_snooze", a.receivable.id); onToast(L("3 gün sonra tekrar hatırlatılacak.", "You'll be reminded again in 3 days.")); }}>
+                    <Clock3 size={13} /> {L("Ertele", "Snooze")}
                   </button>
                 </>
               )}
@@ -220,7 +225,7 @@ export function ActionQueue({ actions, storageKey, onToast, onAction }: { action
           </article>
         );
       })}
-      {actions.length === 0 ? <p style={{ color: "var(--qd-muted)" }}>Bugün takip gereken ödeme yok.</p> : null}
+      {actions.length === 0 ? <p style={{ color: "var(--qd-muted)" }}>{L("Bugün takip gereken ödeme yok.", "No payments need follow-up today.")}</p> : null}
     </div>
   );
 }

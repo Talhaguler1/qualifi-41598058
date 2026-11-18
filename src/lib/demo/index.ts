@@ -5,3 +5,4 @@ export * from "./bank";
 export { createRng, hashSeed } from "./rng";
 export * from "./agent";
 export * from "./share";
+export * from "./i18n";

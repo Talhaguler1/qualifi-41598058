@@ -5,6 +5,7 @@
 import { firmRisk, commitmentStatus, type Firm } from "./bank";
 import type { BusinessDataset } from "./business";
 import { addDays, delayPhrase, diffDays, formatDateTr } from "./dates";
+import { L, isEnglish, labelText } from "./i18n";
 import {
   agentActions,
   currentBalance,
@@ -21,6 +22,11 @@ import {
 export const money = (n: number): string => {
   const abs = Math.abs(n);
   const sign = n < 0 ? "−" : "";
+  if (isEnglish()) {
+    if (abs >= 1_000_000) return `${sign}₺${(abs / 1_000_000).toLocaleString("en-US", { maximumFractionDigits: 2 })}M`;
+    if (abs >= 10_000) return `${sign}₺${Math.round(abs / 1000).toLocaleString("en-US")}K`;
+    return `${sign}₺${Math.round(abs).toLocaleString("en-US")}`;
+  }
   if (abs >= 1_000_000) return `${sign}₺${(abs / 1_000_000).toLocaleString("tr-TR", { maximumFractionDigits: 2 })} mn`;
   if (abs >= 10_000) return `${sign}₺${Math.round(abs / 1000).toLocaleString("tr-TR")} bin`;
   return `${sign}₺${Math.round(abs).toLocaleString("tr-TR")}`;
@@ -58,35 +64,46 @@ export function agentRun(dataset: BusinessDataset, asOf: string, since = addDays
   const portfolio = instrumentsInPortfolio(now);
 
   const steps: AgentStep[] = [
-    { id: "erp", tool: "erp", title: `${dataset.sources.erp} okundu`, detail: `${orders.length} yeni sipariş${contractNew.length ? `, ${contractNew.length} sözleşme taksiti` : ""} eklendi.` },
+    { id: "erp", tool: "erp", title: L(`${dataset.sources.erp} okundu`, `Read ${dataset.sources.erp}`), detail: L(`${orders.length} yeni sipariş${contractNew.length ? `, ${contractNew.length} sözleşme taksiti` : ""} eklendi.`, `Added ${orders.length} new orders${contractNew.length ? ` and ${contractNew.length} contract instalments` : ""}.`) },
     {
       id: "muhasebe",
       tool: "muhasebe",
-      title: `${dataset.sources.onMuhasebe} okundu`,
-      detail: `${orders.length} fatura, ${payments.length} tahsilat kaydı (${money(payments.reduce((s, r) => s + r.amount, 0))}); portföyde ${portfolio.length} çek/senet (${money(portfolio.reduce((s, r) => s + r.amount, 0))}).`,
+      title: L(`${dataset.sources.onMuhasebe} okundu`, `Read ${dataset.sources.onMuhasebe}`),
+      detail: L(
+        `${orders.length} fatura, ${payments.length} tahsilat kaydı (${money(payments.reduce((s, r) => s + r.amount, 0))}); portföyde ${portfolio.length} çek/senet (${money(portfolio.reduce((s, r) => s + r.amount, 0))}).`,
+        `${orders.length} invoices, ${payments.length} collections (${money(payments.reduce((s, r) => s + r.amount, 0))}); ${portfolio.length} cheques/notes in the portfolio (${money(portfolio.reduce((s, r) => s + r.amount, 0))}).`,
+      ),
     },
-    { id: "banka", tool: "banka", title: `${dataset.sources.banka} okundu`, detail: `Güncel bakiye ${money(currentBalance(now))}.` },
+    { id: "banka", tool: "banka", title: L(`${dataset.sources.banka} okundu`, `Read ${dataset.sources.banka}`), detail: L(`Güncel bakiye ${money(currentBalance(now))}.`, `Current balance ${money(currentBalance(now))}.`) },
     {
       id: "whatsapp",
       tool: "whatsapp",
-      title: "WhatsApp sohbetleri tarandı",
+      title: L("WhatsApp sohbetleri tarandı", "Scanned WhatsApp chats"),
       detail: messages.length
-        ? `${messages.length} yeni mesaj; ${promises.length} ödeme sözü${stress.length ? `, ${stress.length} nakit sıkıntısı işareti` : ""} bulundu.`
-        : "Yeni ödeme konuşması yok.",
+        ? L(
+            `${messages.length} yeni mesaj; ${promises.length} ödeme sözü${stress.length ? `, ${stress.length} nakit sıkıntısı işareti` : ""} bulundu.`,
+            `${messages.length} new messages; found ${promises.length} payment promises${stress.length ? ` and ${stress.length} cash-stress signals` : ""}.`,
+          )
+        : L("Yeni ödeme konuşması yok.", "No new payment conversations."),
     },
     {
       id: "karne",
       tool: "karne",
-      title: "Ödeme karneleri güncellendi",
-      detail: slower.length ? `${slower.length} müşteri yavaşladı: ${slower.slice(0, 2).map((c) => c.name).join(", ")}${slower.length > 2 ? "…" : ""}` : "Notu düşen müşteri yok.",
+      title: L("Ödeme karneleri güncellendi", "Updated payer scorecards"),
+      detail: slower.length
+        ? L(`${slower.length} müşteri yavaşladı: `, `${slower.length} customers slowed down: `) + `${slower.slice(0, 2).map((c) => c.name).join(", ")}${slower.length > 2 ? "…" : ""}`
+        : L("Notu düşen müşteri yok.", "No customer was downgraded."),
     },
     {
       id: "tahmin",
       tool: "tahmin",
-      title: "8 haftalık nakit tahmini yenilendi",
-      detail: `En dar hafta ${formatDateTr(tight.weekStart)}: beklenen ${money(tight.balanceBase)}, kötü senaryoda ${money(tight.balanceLow)}.`,
+      title: L("8 haftalık nakit tahmini yenilendi", "Refreshed the 8-week cash forecast"),
+      detail: L(
+        `En dar hafta ${formatDateTr(tight.weekStart)}: beklenen ${money(tight.balanceBase)}, kötü senaryoda ${money(tight.balanceLow)}.`,
+        `Tightest week ${formatDateTr(tight.weekStart)}: expected ${money(tight.balanceBase)}, ${money(tight.balanceLow)} in the downside case.`,
+      ),
     },
-    { id: "takip", tool: "takip", title: `${actions.length} takip önerisi hazırlandı`, detail: "Hiçbiri gönderilmedi; her mesaj sizin onayınızı bekliyor." },
+    { id: "takip", tool: "takip", title: L(`${actions.length} takip önerisi hazırlandı`, `Prepared ${actions.length} follow-up suggestions`), detail: L("Hiçbiri gönderilmedi; her mesaj sizin onayınızı bekliyor.", "Nothing was sent; every message waits for your approval.") },
   ];
   return steps;
 }
@@ -119,19 +136,19 @@ export function businessBriefing(snap: Snapshot): Briefing {
   const tone: Briefing["tone"] = tight.balanceLow < 0 ? "alert" : tight.balanceLow < monthlyCost * 0.25 ? "watch" : "calm";
   const headline =
     tone === "alert"
-      ? `${formatDateTr(tight.weekStart)} haftasında kötü senaryoda kasa ekside. Şimdi tahsilata odaklanmak gerekiyor.`
+      ? L(`${formatDateTr(tight.weekStart)} haftasında kötü senaryoda kasa ekside. Şimdi tahsilata odaklanmak gerekiyor.`, `In the downside case cash goes negative in the week of ${formatDateTr(tight.weekStart)}. Time to focus on collections.`)
       : tone === "watch"
-        ? `Nakit yeterli ama ${formatDateTr(tight.weekStart)} haftası dar. Birkaç tahsilat öne çekilirse rahatlar.`
-        : `Önümüzdeki 8 hafta rahat görünüyor; 8. hafta sonunda beklenen bakiye ${money(last.balanceBase)}.`;
+        ? L(`Nakit yeterli ama ${formatDateTr(tight.weekStart)} haftası dar. Birkaç tahsilat öne çekilirse rahatlar.`, `Cash is sufficient, but the week of ${formatDateTr(tight.weekStart)} is tight. Pulling a few collections forward would ease it.`)
+        : L(`Önümüzdeki 8 hafta rahat görünüyor; 8. hafta sonunda beklenen bakiye ${money(last.balanceBase)}.`, `The next 8 weeks look comfortable; expected balance at the end of week 8 is ${money(last.balanceBase)}.`);
   return {
     headline,
     tone,
     points: [
-      `8 hafta sonunda bakiye ${money(last.balanceLow)} ile ${money(last.balanceHigh)} arasında, en olası ${money(last.balanceBase)}.`,
-      `Vadesi geçmiş ${overdue.length} alacak var, toplam ${money(overdue.reduce((s, i) => s + i.receivable.amount, 0))}.`,
+      L(`8 hafta sonunda bakiye ${money(last.balanceLow)} ile ${money(last.balanceHigh)} arasında, en olası ${money(last.balanceBase)}.`, `Balance after 8 weeks: between ${money(last.balanceLow)} and ${money(last.balanceHigh)}, most likely ${money(last.balanceBase)}.`),
+      L(`Vadesi geçmiş ${overdue.length} alacak var, toplam ${money(overdue.reduce((s, i) => s + i.receivable.amount, 0))}.`, `${overdue.length} receivables are overdue, ${money(overdue.reduce((s, i) => s + i.receivable.amount, 0))} in total.`),
       atRisk.length
-        ? `${atRisk.length} alacak (${money(atRisk.reduce((s, i) => s + i.receivable.amount, 0))}) tahsil edilemeyebilir; tahmine dahil edilmedi.`
-        : "Tahsil edilemeyecek görünen alacak yok.",
+        ? L(`${atRisk.length} alacak (${money(atRisk.reduce((s, i) => s + i.receivable.amount, 0))}) tahsil edilemeyebilir; tahmine dahil edilmedi.`, `${atRisk.length} receivables (${money(atRisk.reduce((s, i) => s + i.receivable.amount, 0))}) may not be collected; left out of the forecast.`)
+        : L("Tahsil edilemeyecek görünen alacak yok.", "No receivable looks uncollectable."),
       instrumentPoint(snap),
     ],
   };
@@ -144,7 +161,10 @@ function instrumentPoint(snap: Snapshot): string {
     return g === "C" || g === "D";
   });
   const bounced = snap.receivables.filter((r) => (r.kind === "cheque" || r.kind === "note") && r.paidDate === null && r.dueDate < snap.asOf && r.dueDate >= addDays(snap.asOf, -60));
-  return `Portföyde ${portfolio.length} çek/senet (${money(portfolio.reduce((s, r) => s + r.amount, 0))}); ${risky.length} tanesi ödeme notu düşük müşteriden${bounced.length ? `; son 60 günde ${bounced.length} tanesi vadesinde ödenmedi` : ""}.`;
+  return L(
+    `Portföyde ${portfolio.length} çek/senet (${money(portfolio.reduce((s, r) => s + r.amount, 0))}); ${risky.length} tanesi ödeme notu düşük müşteriden${bounced.length ? `; son 60 günde ${bounced.length} tanesi vadesinde ödenmedi` : ""}.`,
+    `${portfolio.length} cheques/notes in the portfolio (${money(portfolio.reduce((s, r) => s + r.amount, 0))}); ${risky.length} from customers with a low payer grade${bounced.length ? `; ${bounced.length} were not paid on the due date in the last 60 days` : ""}.`,
+  );
 }
 
 export const SUGGESTED_QUESTIONS = [
@@ -157,6 +177,18 @@ export const SUGGESTED_QUESTIONS = [
   "WhatsApp'ta kimler ödeme sözü verdi?",
 ] as const;
 
+export const SUGGESTED_QUESTIONS_EN = [
+  "How do the next 4 weeks look?",
+  "What happens if I take on a new ₺1.5 million project?",
+  "When is cash tightest?",
+  "Who should I call today?",
+  "Who is my riskiest customer?",
+  "What if my biggest customer pays 30 days late?",
+  "Who promised payment on WhatsApp?",
+] as const;
+
+export const suggestedQuestions = (): readonly string[] => (isEnglish() ? SUGGESTED_QUESTIONS_EN : SUGGESTED_QUESTIONS);
+
 export type AgentIntent = "project" | "outlook" | "tight" | "call" | "risky" | "whatif" | "promises" | "overdue" | "unknown";
 
 export interface AgentAnswer {
@@ -168,14 +200,14 @@ export interface AgentAnswer {
 }
 
 const INTENTS: ReadonlyArray<[AgentIntent, RegExp]> = [
-  ["project", /proje|iş alırsam|işi alırsam|yeni iş|teklif/i],
-  ["whatif", /\bya\b|eğer|geç öderse|ödemezse|senaryo|olursa/i],
-  ["promises", /söz|whatsapp|mesaj/i],
-  ["tight", /dar|sıkış|en düşük|açık ver|eksi/i],
-  ["call", /ara(malı|yayım|yalım)|kimi|takip|hatırlat/i],
-  ["risky", /risk|en kötü|en geç|güvenme/i],
-  ["overdue", /ödeme(di|yen)|gecik|vadesi geç/i],
-  ["outlook", /nasıl|görün|önümüzdeki|gelecek|tahmin|nakit|hafta|ay/i],
+  ["project", /proje|iş alırsam|işi alırsam|yeni iş|teklif|project|new (job|deal|contract)|take on/i],
+  ["whatif", /\bya\b|eğer|geç öderse|ödemezse|senaryo|olursa|what if|pays? late|scenario/i],
+  ["promises", /söz|whatsapp|mesaj|promise/i],
+  ["tight", /dar|sıkış|en düşük|açık ver|eksi|tight|lowest|squeeze|negative/i],
+  ["call", /ara(malı|yayım|yalım)|kimi|takip|hatırlat|\bcall\b|follow.?up|remind/i],
+  ["risky", /risk|en kötü|en geç|güvenme|worst|slowest/i],
+  ["overdue", /ödeme(di|yen)|gecik|vadesi geç|overdue|unpaid/i],
+  ["outlook", /nasıl|görün|önümüzdeki|gelecek|tahmin|nakit|hafta|ay|look|next|forecast|cash|week|month/i],
 ];
 
 export function detectIntent(question: string): AgentIntent {
@@ -194,8 +226,11 @@ export function askAgent(snap: Snapshot, question: string): AgentAnswer {
       const outSum = four.reduce((s, w) => s + w.outflow, 0);
       return {
         intent,
-        text: `4 hafta içinde ${money(inSum)} tahsilat ve ${money(outSum)} ödeme bekliyorum. 4. hafta sonunda bakiye büyük olasılıkla ${money(four.at(-1)?.balanceBase ?? 0)}.`,
-        bullets: four.map((w) => `${formatDateTr(w.weekStart)} haftası: +${money(w.inflowBase)} / −${money(w.outflow)} → ${money(w.balanceBase)}`),
+        text: L(
+          `4 hafta içinde ${money(inSum)} tahsilat ve ${money(outSum)} ödeme bekliyorum. 4. hafta sonunda bakiye büyük olasılıkla ${money(four.at(-1)?.balanceBase ?? 0)}.`,
+          `Over 4 weeks I expect ${money(inSum)} in collections and ${money(outSum)} in payments. The balance at the end of week 4 will most likely be ${money(four.at(-1)?.balanceBase ?? 0)}.`,
+        ),
+        bullets: four.map((w) => `${L(`${formatDateTr(w.weekStart)} haftası`, `Week of ${formatDateTr(w.weekStart)}`)}: +${money(w.inflowBase)} / −${money(w.outflow)} → ${money(w.balanceBase)}`),
       };
     }
     case "tight": {
@@ -203,10 +238,10 @@ export function askAgent(snap: Snapshot, question: string): AgentAnswer {
       const exp = snap.plannedExpenses.filter((e) => e.date >= t.weekStart && e.date < addDays(t.weekStart, 7));
       return {
         intent,
-        text: `En dar hafta ${formatDateTr(t.weekStart)}. Kötü senaryoda bakiye ${money(t.balanceLow)} seviyesine iniyor.`,
+        text: L(`En dar hafta ${formatDateTr(t.weekStart)}. Kötü senaryoda bakiye ${money(t.balanceLow)} seviyesine iniyor.`, `The tightest week is ${formatDateTr(t.weekStart)}. In the downside case the balance falls to ${money(t.balanceLow)}.`),
         bullets: [
-          ...exp.map((e) => `${formatDateTr(e.date)}: ${e.label} ${money(e.amount)}`),
-          `O haftadan önce tahsil edilebilecek en büyük 3 alacak öne çekilirse risk azalır.`,
+          ...exp.map((e) => `${formatDateTr(e.date)}: ${labelText(e.label)} ${money(e.amount)}`),
+          L(`O haftadan önce tahsil edilebilecek en büyük 3 alacak öne çekilirse risk azalır.`, `Pulling forward the 3 largest receivables collectable before that week reduces the risk.`),
         ],
       };
     }
@@ -215,7 +250,9 @@ export function askAgent(snap: Snapshot, question: string): AgentAnswer {
       const actions = agentActions(snap, 5);
       return {
         intent,
-        text: actions.length ? `Bugün öncelikli ${actions.length} kişi var. Mesaj taslakları hazır; onaylarsanız gönderilir.` : "Bugün acil takip gereken müşteri yok.",
+        text: actions.length
+          ? L(`Bugün öncelikli ${actions.length} kişi var. Mesaj taslakları hazır; onaylarsanız gönderilir.`, `${actions.length} customers are a priority today. Message drafts are ready and go out only if you approve them.`)
+          : L("Bugün acil takip gereken müşteri yok.", "No customer needs urgent follow-up today."),
         bullets: actions.map((a) => `${a.customer.name} — ${money(a.receivable.amount)}: ${a.reason}`),
       };
     }
@@ -228,8 +265,15 @@ export function askAgent(snap: Snapshot, question: string): AgentAnswer {
       const top = worst[0];
       return {
         intent,
-        text: top ? `En riskli müşteri ${top.c.name}: ${money(top.p.overdueAmount)} vadesi geçmiş, genelde ${delayPhrase(top.p.medianDelay)} ödüyor.` : "Riskli görünen müşteri yok.",
-        bullets: worst.map((w) => `${w.c.name}: not ${w.p.grade}, açık ${money(w.p.openAmount)}, eğilim ${w.p.trend > 0 ? `+${w.p.trend} gün yavaşlıyor` : "sabit"}`),
+        text: top
+          ? L(`En riskli müşteri ${top.c.name}: ${money(top.p.overdueAmount)} vadesi geçmiş, genelde ${delayPhrase(top.p.medianDelay)} ödüyor.`, `Riskiest customer: ${top.c.name}, with ${money(top.p.overdueAmount)} overdue; usually pays ${delayPhrase(top.p.medianDelay)}.`)
+          : L("Riskli görünen müşteri yok.", "No customer looks risky."),
+        bullets: worst.map((w) =>
+          L(
+            `${w.c.name}: not ${w.p.grade}, açık ${money(w.p.openAmount)}, eğilim ${w.p.trend > 0 ? `+${w.p.trend} gün yavaşlıyor` : "sabit"}`,
+            `${w.c.name}: grade ${w.p.grade}, open ${money(w.p.openAmount)}, trend ${w.p.trend > 0 ? `slowing by ${w.p.trend} days` : "stable"}`,
+          ),
+        ),
       };
     }
     case "promises": {
@@ -237,10 +281,10 @@ export function askAgent(snap: Snapshot, question: string): AgentAnswer {
       const names = new Map(snap.dataset.customers.map((c) => [c.id, c.name]));
       return {
         intent,
-        text: promises.length ? `Son ${promises.length} ödeme sözü:` : "WhatsApp'ta kayıtlı ödeme sözü yok.",
+        text: promises.length ? L(`Son ${promises.length} ödeme sözü:`, `Latest ${promises.length} payment promises:`) : L("WhatsApp'ta kayıtlı ödeme sözü yok.", "No payment promises recorded on WhatsApp."),
         bullets: promises.map((m) => {
           const paid = snap.receivables.find((r) => r.id === m.receivableId)?.paidDate;
-          const state = paid ? "ödendi" : (m.promiseDate as string) < snap.asOf ? "tutulmadı" : "bekleniyor";
+          const state = paid ? L("ödendi", "paid") : (m.promiseDate as string) < snap.asOf ? L("tutulmadı", "broken") : L("bekleniyor", "pending");
           return `${names.get(m.customerId)}: ${formatDateTr(m.promiseDate as string)} — ${state}`;
         }),
       };
@@ -253,13 +297,23 @@ export function askAgent(snap: Snapshot, question: string): AgentAnswer {
       const rest = result.flows.find((f) => f.label === "Kalan ödeme");
       return {
         intent,
-        text: `${money(plan.amount)} tutarlı işi alırsanız en dar haftada beklenen bakiye ${money(t0.balanceBase)} yerine ${money(t1.balanceBase)} olur (${formatDateTr(t1.weekStart)} haftası).`,
+        text: L(
+          `${money(plan.amount)} tutarlı işi alırsanız en dar haftada beklenen bakiye ${money(t0.balanceBase)} yerine ${money(t1.balanceBase)} olur (${formatDateTr(t1.weekStart)} haftası).`,
+          `If you take the ${money(plan.amount)} job, the expected balance in the tightest week becomes ${money(t1.balanceBase)} instead of ${money(t0.balanceBase)} (week of ${formatDateTr(t1.weekStart)}).`,
+        ),
         bullets: [
-          `Varsayım: %${plan.advancePct} avans 3 gün içinde, ${money(plan.cost)} ek maliyet ${plan.deliveryWeeks} haftaya yayılı, kalan ödeme teslimden ${plan.termDays} gün sonra.`,
-          rest && rest.date > (result.base.at(-1)?.weekStart ?? "") ? `Kalan ${money(rest.amount)} ${formatDateTr(rest.date)} tarihinde, yani 8 haftalık görünümün dışında.` : `Kalan ${money(rest?.amount ?? 0)} 8 hafta içinde geliyor.`,
-          t1.balanceLow < 0 ? `Kötü senaryoda ${formatDateTr(t1.weekStart)} haftası ${money(t1.balanceLow)}; avansı artırmak veya kısa vadeli finansman gerekir.` : "Kötü senaryoda bile kasa artıda kalıyor; iş nakit açısından taşınabilir.",
+          L(
+            `Varsayım: %${plan.advancePct} avans 3 gün içinde, ${money(plan.cost)} ek maliyet ${plan.deliveryWeeks} haftaya yayılı, kalan ödeme teslimden ${plan.termDays} gün sonra.`,
+            `Assumptions: ${plan.advancePct}% advance within 3 days, ${money(plan.cost)} extra cost spread over ${plan.deliveryWeeks} weeks, the rest paid ${plan.termDays} days after delivery.`,
+          ),
+          rest && rest.date > (result.base.at(-1)?.weekStart ?? "")
+            ? L(`Kalan ${money(rest.amount)} ${formatDateTr(rest.date)} tarihinde, yani 8 haftalık görünümün dışında.`, `The remaining ${money(rest.amount)} arrives on ${formatDateTr(rest.date)}, outside the 8-week view.`)
+            : L(`Kalan ${money(rest?.amount ?? 0)} 8 hafta içinde geliyor.`, `The remaining ${money(rest?.amount ?? 0)} arrives within 8 weeks.`),
+          t1.balanceLow < 0
+            ? L(`Kötü senaryoda ${formatDateTr(t1.weekStart)} haftası ${money(t1.balanceLow)}; avansı artırmak veya kısa vadeli finansman gerekir.`, `In the downside case the week of ${formatDateTr(t1.weekStart)} is at ${money(t1.balanceLow)}; you would need a larger advance or short-term financing.`)
+            : L("Kötü senaryoda bile kasa artıda kalıyor; iş nakit açısından taşınabilir.", "Cash stays positive even in the downside case; the job is affordable."),
         ],
-        scenario: { label: `Yeni iş ${money(plan.amount)}`, base: result.base, changed: result.changed },
+        scenario: { label: L(`Yeni iş ${money(plan.amount)}`, `New job ${money(plan.amount)}`), base: result.base, changed: result.changed },
       };
     }
     case "whatif": {
@@ -267,22 +321,27 @@ export function askAgent(snap: Snapshot, question: string): AgentAnswer {
       for (const i of inflows) if (!i.atRisk) byCustomer.set(i.customer.id, (byCustomer.get(i.customer.id) ?? 0) + i.receivable.amount);
       const [biggestId, amount] = [...byCustomer.entries()].sort((a, b) => b[1] - a[1])[0] ?? ["", 0];
       const customer = snap.dataset.customers.find((c) => c.id === biggestId);
-      if (!customer) return { intent, text: "Açık alacak olmadığı için senaryo çalıştıramadım.", bullets: [] };
+      if (!customer) return { intent, text: L("Açık alacak olmadığı için senaryo çalıştıramadım.", "There are no open receivables, so I couldn't run the scenario."), bullets: [] };
       const result = whatIfLate(snap, customer.id, 30);
       const gap = scenarioGap(result.base, result.changed);
       const t1 = tightestWeek(result.changed);
       return {
         intent,
-        text: `${customer.name} (${money(amount)} açık alacak) 30 gün geç öderse en büyük etki ${formatDateTr(gap.weekStart)} haftasında: bakiye ${money(gap.base)} yerine ${money(gap.changed)}.`,
+        text: L(
+          `${customer.name} (${money(amount)} açık alacak) 30 gün geç öderse en büyük etki ${formatDateTr(gap.weekStart)} haftasında: bakiye ${money(gap.base)} yerine ${money(gap.changed)}.`,
+          `If ${customer.name} (${money(amount)} open) pays 30 days late, the biggest impact is in the week of ${formatDateTr(gap.weekStart)}: a balance of ${money(gap.changed)} instead of ${money(gap.base)}.`,
+        ),
         bullets: [
-          `Fark ${money(gap.changed - gap.base)}; kötü senaryoda en dar hafta ${formatDateTr(t1.weekStart)} (${money(t1.balanceLow)}).`,
-          t1.balanceLow < 0 ? "Bu senaryoda kasa ekside; kısa vadeli finansman veya ödeme erteleme gerekir." : "Bu senaryoda bile kasa artıda kalıyor.",
+          L(`Fark ${money(gap.changed - gap.base)}; kötü senaryoda en dar hafta ${formatDateTr(t1.weekStart)} (${money(t1.balanceLow)}).`, `Difference ${money(gap.changed - gap.base)}; tightest week in the downside case: ${formatDateTr(t1.weekStart)} (${money(t1.balanceLow)}).`),
+          t1.balanceLow < 0
+            ? L("Bu senaryoda kasa ekside; kısa vadeli finansman veya ödeme erteleme gerekir.", "Cash goes negative in this scenario; you would need short-term financing or to defer payments.")
+            : L("Bu senaryoda bile kasa artıda kalıyor.", "Cash stays positive even in this scenario."),
         ],
-        scenario: { label: `${customer.name} +30 gün`, base: result.base, changed: result.changed },
+        scenario: { label: L(`${customer.name} +30 gün`, `${customer.name} +30 days`), base: result.base, changed: result.changed },
       };
     }
     default:
-      return { intent, text: "Bu demo ajanı nakit, tahsilat ve müşteri sorularını yanıtlıyor. Şunlardan birini deneyin:", bullets: [...SUGGESTED_QUESTIONS] };
+      return { intent, text: L("Bu demo ajanı nakit, tahsilat ve müşteri sorularını yanıtlıyor. Şunlardan birini deneyin:", "This demo agent answers questions about cash, collections and customers. Try one of these:"), bullets: [...suggestedQuestions()] };
   }
 }
 
@@ -306,12 +365,12 @@ export interface ProjectPlan {
 
 /** "500 bin", "1,2 milyon", "250.000" → TL. */
 export function parseAmount(text: string): number | null {
-  const m = text.toLocaleLowerCase("tr").match(/(\d+(?:[.,]\d+)*)\s*(milyon|mn|bin|k)?/);
+  const m = text.toLocaleLowerCase("tr").match(/(\d+(?:[.,]\d+)*)\s*(milyon|million|mn|bin|k)?/);
   if (!m?.[1]) return null;
   const unit = m[2];
   const raw = unit ? Number(m[1].replace(",", ".")) : Number(m[1].replace(/[.,]/g, ""));
   if (!Number.isFinite(raw) || raw <= 0) return null;
-  return Math.round(raw * (unit === "milyon" || unit === "mn" ? 1_000_000 : unit === "bin" || unit === "k" ? 1_000 : 1));
+  return Math.round(raw * (unit === "milyon" || unit === "million" || unit === "mn" ? 1_000_000 : unit === "bin" || unit === "k" ? 1_000 : 1));
 }
 
 export function defaultProject(snap: Snapshot, amount?: number | null): ProjectPlan {
@@ -375,12 +434,12 @@ export function bankBriefing(firms: Firm[], asOf: string, since = addDays(asOf, 
     .map((r) => ({ firm: r.firm, score: r.now.score, change: r.change, reason: r.now.factors.slice().sort((a, b) => b.points - a.points)[0]?.label ?? "" }));
   return {
     headline: risers.length
-      ? `Son 2 haftada ${risers.length} firmanın riski belirgin arttı. Öncelik: ${risers[0]?.firm.name}.`
-      : "Son 2 haftada portföyde belirgin bir kötüleşme yok.",
+      ? L(`Son 2 haftada ${risers.length} firmanın riski belirgin arttı. Öncelik: ${risers[0]?.firm.name}.`, `Risk rose sharply for ${risers.length} firms in the last 2 weeks. Priority: ${risers[0]?.firm.name}.`)
+      : L("Son 2 haftada portföyde belirgin bir kötüleşme yok.", "No clear deterioration in the portfolio over the last 2 weeks."),
     points: [
-      `${high.length} firma yüksek riskte; kredi tutarı ${money(high.reduce((s, r) => s + r.firm.loanAmount, 0))}.`,
-      `${brokenNew.length} taahhüt bu dönemde tutulmadı, ${upcoming.length} taahhüdün vadesi önümüzdeki 7 günde.`,
-      `${stressNew.length} firmanın WhatsApp yazışmasında yeni nakit sıkıntısı işareti var.`,
+      L(`${high.length} firma yüksek riskte; kredi tutarı ${money(high.reduce((s, r) => s + r.firm.loanAmount, 0))}.`, `${high.length} firms are high risk; loan exposure ${money(high.reduce((s, r) => s + r.firm.loanAmount, 0))}.`),
+      L(`${brokenNew.length} taahhüt bu dönemde tutulmadı, ${upcoming.length} taahhüdün vadesi önümüzdeki 7 günde.`, `${brokenNew.length} commitments were broken this period; ${upcoming.length} fall due in the next 7 days.`),
+      L(`${stressNew.length} firmanın WhatsApp yazışmasında yeni nakit sıkıntısı işareti var.`, `${stressNew.length} firms show new cash-stress signals in their WhatsApp messages.`),
     ],
     callList,
   };
@@ -388,5 +447,5 @@ export function bankBriefing(firms: Firm[], asOf: string, since = addDays(asOf, 
 
 export const daysBetweenLabel = (later: string, earlier: string) => {
   const d = diffDays(later, earlier);
-  return d === 0 ? "bugün" : d > 0 ? `${d} gün sonra` : `${-d} gün önce`;
+  return d === 0 ? L("bugün", "today") : d > 0 ? L(`${d} gün sonra`, `in ${d} days`) : L(`${-d} gün önce`, `${-d} days ago`);
 };

@@ -3,6 +3,7 @@
 
 import { addDays, addMonths, diffDays, withDay } from "./dates";
 import { brandWord, createRng, type Rng } from "./rng";
+import { L, pct } from "./i18n";
 
 export const BANKERS_PER_REGION = 20;
 export const FIRMS_PER_BANKER = 300;
@@ -154,18 +155,18 @@ export function firmRisk(firm: Firm, asOf: string): FirmRisk {
   const before = known.at(-4)?.days ?? now;
   const change = now - before;
   const factors: RiskFactor[] = [];
-  if (change > 2) factors.push({ label: `Alacak tahsil süresi 3 ayda ${change} gün uzadı`, points: Math.min(30, Math.round(change * 1.6)) });
-  if (now > 30) factors.push({ label: `Müşterileri ortalama ${now} gün geç ödüyor`, points: Math.min(15, Math.round((now - 30) / 2)) });
+  if (change > 2) factors.push({ label: L(`Alacak tahsil süresi 3 ayda ${change} gün uzadı`, `Collection time grew by ${change} days in 3 months`), points: Math.min(30, Math.round(change * 1.6)) });
+  if (now > 30) factors.push({ label: L(`Müşterileri ortalama ${now} gün geç ödüyor`, `Its customers pay ${now} days late on average`), points: Math.min(15, Math.round((now - 30) / 2)) });
   const statuses = firm.commitments.map((c) => commitmentStatus(c, asOf));
   const broken = statuses.filter((s) => s === "broken").length;
   const late = statuses.filter((s) => s === "late").length;
-  if (broken) factors.push({ label: `${broken} taahhüt tutulmadı`, points: Math.min(28, broken * 14) });
-  if (late) factors.push({ label: `${late} taahhüt gecikmeli ödendi`, points: Math.min(10, late * 4) });
+  if (broken) factors.push({ label: L(`${broken} taahhüt tutulmadı`, `${broken} commitments broken`), points: Math.min(28, broken * 14) });
+  if (late) factors.push({ label: L(`${late} taahhüt gecikmeli ödendi`, `${late} commitments paid late`), points: Math.min(10, late * 4) });
   const visible = firm.signals.filter((s) => s.date <= asOf);
   const stress = visible.filter((s) => s.type === "stress" || s.type === "deferral").length;
-  if (stress) factors.push({ label: `WhatsApp'ta ${stress} nakit sıkışıklığı işareti`, points: Math.min(18, stress * 9) });
-  if (visible.some((s) => s.type === "positive")) factors.push({ label: "Olumlu gelişme mesajı", points: -8 });
-  if (firm.topCustomerShare > 0.45) factors.push({ label: `Gelirin %${Math.round(firm.topCustomerShare * 100)}'i tek müşteriden`, points: 10 });
+  if (stress) factors.push({ label: L(`WhatsApp'ta ${stress} nakit sıkışıklığı işareti`, `${stress} cash-stress signals on WhatsApp`), points: Math.min(18, stress * 9) });
+  if (visible.some((s) => s.type === "positive")) factors.push({ label: L("Olumlu gelişme mesajı", "Positive news message"), points: -8 });
+  if (firm.topCustomerShare > 0.45) factors.push({ label: L(`Gelirin ${pct(Math.round(firm.topCustomerShare * 100))}'i tek müşteriden`, `${pct(Math.round(firm.topCustomerShare * 100))} of revenue from one customer`), points: 10 });
   const score = Math.max(3, Math.min(97, Math.round(8 + factors.reduce((s, f) => s + f.points, 0))));
   return { score, level: score >= 62 ? "high" : score >= 38 ? "medium" : "low", factors, delayNow: now, delayChange: change };
 }

@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from "react";
 import { Building2, Calculator, FileText, Landmark, MessageCircle, Sparkles, TrendingUp, UserCheck, BellRing } from "lucide-react";
-import { DEMO_DATES, DEMO_DATE_LABELS, formatDateTr, type AgentTool, type DemoDate } from "@/lib/demo";
+import { DEMO_DATES, demoDateLabel, demoLang, formatDateTr, L, type AgentTool, type DemoDate } from "@/lib/demo";
 
 export function useMounted() {
   const [mounted, setMounted] = useState(false);
@@ -42,7 +42,7 @@ export function AnimatedNumber({ value, format }: { value: number; format: (n: n
 
 export function Brand() {
   return (
-    <a className="qd-brand" href="/" aria-label="QualiFi ana sayfa">
+    <a className="qd-brand" href="/" aria-label={L("QualiFi ana sayfa", "QualiFi home page")}>
       <img src="/favicon.svg" alt="" />
       QualiFi<span>.</span>
     </a>
@@ -52,19 +52,49 @@ export function Brand() {
 export function DateSwitcher({ value, onChange }: { value: DemoDate; onChange: (d: DemoDate) => void }) {
   const index = DEMO_DATES.indexOf(value);
   return (
-    <div className="qd-dates" role="group" aria-label="Demo tarihi">
+    <div className="qd-dates" role="group" aria-label={L("Demo tarihi", "Demo date")}>
       <span className="qd-dates__thumb" style={{ width: `calc((100% - 8px) / ${DEMO_DATES.length})`, transform: `translateX(${index * 100}%)` }} />
       {DEMO_DATES.map((d) => (
         <button key={d} type="button" aria-pressed={d === value} onClick={() => onChange(d)}>
           <b>{formatDateTr(d)}</b>
-          <small>{DEMO_DATE_LABELS[d]}</small>
+          <small>{demoDateLabel(d)}</small>
         </button>
       ))}
     </div>
   );
 }
 
-export function TopBar({ title, subtitle, date, onDate, children, badge = "Demo verisi" }: { title: string; subtitle: string; date?: DemoDate; onDate?: (d: DemoDate) => void; children?: ReactNode; badge?: string | null }) {
+/** TR / EN switch. A full page load, so every computed text is rebuilt in the new language. */
+export function LangSwitch() {
+  const [href, setHref] = useState<{ tr: string; en: string } | null>(null);
+  useEffect(() => {
+    const build = (lang: "tr" | "en") => {
+      const url = new URL(window.location.href);
+      if (lang === "en") url.searchParams.set("l", "en");
+      else url.searchParams.delete("l");
+      return url.pathname + url.search;
+    };
+    setHref({ tr: build("tr"), en: build("en") });
+  }, []);
+  const lang = demoLang();
+  // Read the URL at click time: the date or specialist may have changed since the page loaded.
+  const go = (to: "tr" | "en") => (e: MouseEvent) => {
+    e.preventDefault();
+    const url = new URL(window.location.href);
+    if (to === "en") url.searchParams.set("l", "en");
+    else url.searchParams.delete("l");
+    window.location.assign(url.pathname + url.search);
+  };
+  return (
+    <div className="qd-lang" role="group" aria-label={L("Dil", "Language")}>
+      <a href={href?.tr ?? "?"} onClick={go("tr")} aria-current={lang === "tr" ? "true" : undefined} lang="tr">TR</a>
+      <a href={href?.en ?? "?l=en"} onClick={go("en")} aria-current={lang === "en" ? "true" : undefined} lang="en">EN</a>
+    </div>
+  );
+}
+
+export function TopBar({ title, subtitle, date, onDate, children, badge, langSwitch = false }: { title: string; subtitle: string; date?: DemoDate; onDate?: (d: DemoDate) => void; children?: ReactNode; badge?: string | null; langSwitch?: boolean }) {
+  const shownBadge = badge === undefined ? L("Demo verisi", "Demo data") : badge;
   return (
     <header className="qd-top">
       <Brand />
@@ -72,13 +102,14 @@ export function TopBar({ title, subtitle, date, onDate, children, badge = "Demo 
         <h1>{title}</h1>
         <small>{subtitle}</small>
       </div>
-      {badge ? (
-        <span className="qd-badge" title="Bu hesaptaki tüm kaynaklar ve kayıtlar demo amaçlı üretilmiştir.">
-          <Sparkles size={12} /> {badge}
+      {shownBadge ? (
+        <span className="qd-badge" title={L("Bu hesaptaki tüm kaynaklar ve kayıtlar demo amaçlı üretilmiştir.", "Every source and record in this account was generated for the demo.")}>
+          <Sparkles size={12} /> {shownBadge}
         </span>
       ) : null}
       <div className="qd-spacer" />
       {children}
+      {langSwitch ? <LangSwitch /> : null}
       {date && onDate ? <DateSwitcher value={date} onChange={onDate} /> : null}
     </header>
   );
@@ -113,7 +144,7 @@ export function SourceChip({ icon, name }: { icon: ReactNode; name: string }) {
     <span className="qd-source">
       <i>{icon}</i>
       {name}
-      <em>demo bağlantı</em>
+      <em>{L("demo bağlantı", "demo connection")}</em>
     </span>
   );
 }

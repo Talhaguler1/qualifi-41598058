@@ -5,6 +5,7 @@ import type { BusinessDataset } from "./business";
 import { addDays, diffDays } from "./dates";
 import { payerProfile, snapshot, weeklyForecast } from "./forecast";
 import { tightestWeek } from "./agent";
+import { L } from "./i18n";
 
 export interface BankShareSummary {
   tenant: string;
@@ -91,6 +92,11 @@ export function bankShareSummary(dataset: BusinessDataset, asOf: string): BankSh
       endLow: end?.balanceLow ?? 0,
       endHigh: end?.balanceHigh ?? 0,
     },
-    notShared: ["Müşteri isimleri ve vergi numaraları", "WhatsApp mesajlarının metni", "Tek tek fatura ve çek bilgileri", "Banka hesap hareketleri"],
+    notShared: [
+      L("Müşteri isimleri ve vergi numaraları", "Customer names and tax numbers"),
+      L("WhatsApp mesajlarının metni", "The text of WhatsApp messages"),
+      L("Tek tek fatura ve çek bilgileri", "Individual invoice and cheque details"),
+      L("Banka hesap hareketleri", "Bank account transactions"),
+    ],
   };
 }
