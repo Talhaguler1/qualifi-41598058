@@ -15,6 +15,10 @@ function DemoChooser() {
       <header className="qd-top">
         <Brand />
         <span className="qd-badge">Demo verisi</span>
+        <div className="qd-spacer" />
+        <a className="qd-btn qd-btn--ghost qd-btn--sm" href="/isletmeler">Ana sayfa</a>
+        <a className="qd-btn qd-btn--ghost qd-btn--sm" href="/app/giris">Giriş</a>
+        <a className="qd-btn qd-btn--sm" href="/app/kayit">Ücretsiz hesap aç</a>
       </header>
       <section className="qd-hero">
         <span className="qd-eyebrow">QualiFi canlı demo</span>

@@ -3,7 +3,7 @@ import { servePage } from "@/lib/qualifi-serve";
 
 // QualiFi pages are pre-rendered HTML served directly.
 export const Route = createFileRoute("/")({
-  server: { handlers: { GET: ({ request }) => servePage(new URL(request.url).pathname) } },
+  server: { handlers: { GET: ({ request }) => servePage(new URL(request.url).pathname, request) } },
   head: () => ({
     meta: [
       { title: "QualiFi" },

@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { BusinessPanel } from "@/components/demo/business-panel";
 import { demoHead } from "@/components/demo/head";
+import { DemoLinks } from "@/components/demo/demo-links";
 import { DEFAULT_DEMO_DATE, isDemoDate, normaliseTenant, type DemoDate } from "@/lib/demo";
 
 function tenantOf(value: unknown): string {
@@ -20,5 +21,12 @@ export const Route = createFileRoute("/demo/isletme")({
 function BusinessDemoPage() {
   const { t, d } = Route.useSearch();
   const navigate = useNavigate({ from: "/demo/isletme" });
-  return <BusinessPanel tenant={t} date={d} onDate={(next) => void navigate({ search: { t, d: next }, replace: true, resetScroll: false })} />;
+  return (
+    <BusinessPanel
+      tenant={t}
+      date={d}
+      onDate={(next) => void navigate({ search: { t, d: next }, replace: true, resetScroll: false })}
+      accountSlot={<DemoLinks />}
+    />
+  );
 }

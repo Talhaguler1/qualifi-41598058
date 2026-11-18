@@ -38,12 +38,15 @@ export function LoginPage() {
     <div className="qd">
       <header className="qd-top">
         <Brand />
+        <div className="qd-spacer" />
+        <a className="qd-btn qd-btn--ghost qd-btn--sm" href="/demo">Canlı demo</a>
+        <a className="qd-btn qd-btn--primary qd-btn--sm" href="/app/kayit">Ücretsiz başla</a>
       </header>
       <main className="qd-login">
         <section className="qd-card qd-enter">
           <span className="qd-agent__avatar"><KeyRound size={18} /></span>
           <h1>QualiFi hesabınıza giriş yapın</h1>
-          <p>Hesaplar davetle açılır. Davet e-postasındaki bağlantıyla şifrenizi belirledikten sonra buradan girebilirsiniz.</p>
+          <p>Kayıt sayfasından açtığınız ya da davetle gelen hesabınızla giriş yapın. Davet aldıysanız önce e-postadaki bağlantıyla şifrenizi belirleyin.</p>
           <form onSubmit={signIn}>
             <label>
               <span>E-posta</span>
@@ -62,7 +65,7 @@ export function LoginPage() {
           </form>
           {message ? <p role={message.tone === "error" ? "alert" : "status"} className={`qd-login__msg qd-login__msg--${message.tone}`}>{message.text}</p> : null}
           <p className="qd-login__alt">
-            Hesabınız yok mu? <a href="/demo">Demo panelleri</a> giriş gerektirmez.
+            Hesabınız yok mu? <a href="/app/kayit">Ücretsiz hesap açın</a> · <a href="/demo">Canlı demo</a> giriş gerektirmez.
           </p>
         </section>
       </main>

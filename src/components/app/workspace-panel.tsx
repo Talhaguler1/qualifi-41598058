@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { Bar, ComposedChart, Line, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { Check, FileUp, Loader2, Plus, ShieldAlert, Trash2, Undo2 } from "lucide-react";
+import { Building2, Calculator, Check, FileText, FileUp, Landmark, Loader2, MessageCircle, Plus, ShieldAlert, Sparkles, Trash2, Undo2 } from "lucide-react";
+import { trackDemo } from "@/lib/demo/track";
 import { supabase } from "@/integrations/supabase/client";
 import { formatDateTr, money } from "@/lib/demo";
 import { FILE_KIND_LABEL, KIND_BY_EXTENSION, workspaceOutlook, type WorkspaceCommitment } from "@/lib/workspace-forecast";
@@ -133,6 +134,7 @@ export function WorkspacePanel({ userId, title, token, readOnly, accountSlot }: 
       <main className="qd-main">
         <div className="qd-col">
           {loadError ? <div className="qd-alert" role="alert">{loadError}</div> : null}
+          {!readOnly && !files.length && !items.length && !loadError ? <Onboarding onPick={(target) => document.getElementById(target)?.scrollIntoView({ behavior: "smooth", block: "center" })} /> : null}
           <section className="qd-kpis">
             <Kpi tone="accent" label="Bugünkü bakiye (sizin girdiğiniz)" value={money(balance)} sub={readOnly ? "Yalnız kullanıcının tarayıcısında" : "Aşağıdan değiştirebilirsiniz"} />
             <Kpi label="Beklenen tahsilat" value={money(outlook.openIn)} sub={`${items.filter((c) => c.direction === "in" && c.status !== "paid").length} kalem`} />
@@ -192,7 +194,7 @@ export function WorkspacePanel({ userId, title, token, readOnly, accountSlot }: 
 
         <aside className="qd-side">
           {!readOnly ? (
-            <section className="qd-card qd-agent">
+            <section className="qd-card qd-agent" id="qd-upload">
               <div className="qd-card__head" style={{ marginBottom: 6 }}>
                 <div className="qd-agent__title">
                   <span className="qd-agent__avatar"><FileUp size={18} /></span>
@@ -218,6 +220,7 @@ export function WorkspacePanel({ userId, title, token, readOnly, accountSlot }: 
               </p>
             </section>
           ) : null}
+          {!readOnly ? <Integrations onRequest={(name) => setToast(`${name} talebiniz alındı. Pilot kapsamında kurulumu sizinle planlayacağız.`)} /> : null}
           <section className="qd-card">
             <div className="qd-card__head"><h2>Yüklenen dosyalar</h2></div>
             {files.length ? (
@@ -252,6 +255,78 @@ export function WorkspacePanel({ userId, title, token, readOnly, accountSlot }: 
       </main>
       {toast ? <Toast text={toast} onDone={clearToast} /> : null}
     </div>
+  );
+}
+
+function Onboarding({ onPick }: { onPick: (target: string) => void }) {
+  return (
+    <section className="qd-card qd-enter qd-onboard">
+      <span className="qd-eyebrow">Hoş geldiniz · ilk adım</span>
+      <h2>Ajanınız nasıl başlasın?</h2>
+      <p>Üç yoldan biriyle başlayın. Daha sonra diğerlerini de ekleyebilirsiniz.</p>
+      <div className="qd-onboard__grid">
+        <button type="button" className="qd-onboard__opt" onClick={() => onPick("qd-upload")}>
+          <FileUp size={18} />
+          <b>Belge yükle</b>
+          <span>Sözleşme, fatura görseli, Excel veya WhatsApp sohbeti. Ajan tutar ve vadeyi çıkarır.</span>
+        </button>
+        <button type="button" className="qd-onboard__opt" onClick={() => onPick("qd-integrations")}>
+          <Building2 size={18} />
+          <b>Bağlantı kur</b>
+          <span>ERP, ön muhasebe, e-fatura, banka hesabı veya WhatsApp Business. Pilotta birlikte kuruyoruz.</span>
+        </button>
+        <a className="qd-onboard__opt" href="/demo/isletme">
+          <Sparkles size={18} />
+          <b>Örnek verilerle dene</b>
+          <span>Hiçbir şey yüklemeden, 185 müşterili örnek bir şirketin panelini gezin.</span>
+        </a>
+      </div>
+    </section>
+  );
+}
+
+const INTEGRATIONS = [
+  { key: "efatura", name: "E-fatura / e-arşiv", icon: <FileText size={15} />, note: "Kesilen faturalar ve vadeler" },
+  { key: "onmuhasebe", name: "Ön muhasebe", icon: <Calculator size={15} />, note: "Cari hesaplar, tahsilatlar, çek/senet" },
+  { key: "erp", name: "ERP", icon: <Building2 size={15} />, note: "Müşteriler, siparişler, sözleşmeler" },
+  { key: "banka", name: "Banka hesabı (açık bankacılık)", icon: <Landmark size={15} />, note: "Gelen/giden ödemeler, bakiye · salt okunur" },
+  { key: "whatsapp", name: "WhatsApp Business", icon: <MessageCircle size={15} />, note: "Ödeme sözleri; ham mesajlar sizde kalır" },
+] as const;
+
+function Integrations({ onRequest }: { onRequest: (name: string) => void }) {
+  const [asked, setAsked] = useState<string[]>([]);
+  return (
+    <section className="qd-card" id="qd-integrations">
+      <div className="qd-card__head">
+        <div>
+          <h2>Bağlantılar</h2>
+          <p>Canlı bağlantılar pilotta, sizin izninizle kurulur. Şimdilik dosya dışa aktarımıyla (Excel/CSV) başlayabilirsiniz.</p>
+        </div>
+      </div>
+      <ul className="qd-integrations">
+        {INTEGRATIONS.map((i) => (
+          <li key={i.key}>
+            <span className="qd-agent__avatar" style={{ width: 30, height: 30 }}>{i.icon}</span>
+            <span><b>{i.name}</b><small>{i.note}</small></span>
+            {asked.includes(i.key) ? (
+              <span className="qd-pill qd-pill--good">Talep alındı</span>
+            ) : (
+              <button
+                type="button"
+                className="qd-btn qd-btn--sm"
+                onClick={() => {
+                  setAsked([...asked, i.key]);
+                  trackDemo({ panel: "business", tenant: "self", demo_date: new Date().toISOString().slice(0, 10), action: "tab_open", target: `integration-${i.key}` });
+                  onRequest(i.name);
+                }}
+              >
+                Bağlanmak istiyorum
+              </button>
+            )}
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }
 

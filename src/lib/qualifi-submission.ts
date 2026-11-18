@@ -27,7 +27,7 @@ export function parseEvent(value: unknown) {
   const input = z.object({ id: z.string().uuid(), event: z.enum(events), context: contextSchema, properties: z.record(z.unknown()).default({}) }).parse(value);
   const { context, page } = parseContext(input.context);
   if (!context.analyticsConsent || !context.visitorId) throw new Error('analytics_consent_required');
-  const allowed: Record<string, readonly string[]> = { solution: page.solutions, position: ['hero','nav','dialog','bottom','1','2'], cta: ['agent','pilot','meeting','waitlist'], fileMode: ['upload','sample'], channel: ['email','whatsapp','both','none'] };
+  const allowed: Record<string, readonly string[]> = { solution: page.solutions, position: ['hero','nav','dialog','bottom','journey','price','footer','offer','1','2'], cta: ['agent','pilot','meeting','waitlist'], fileMode: ['upload','sample'], channel: ['email','whatsapp','both','none','undecided'] };
   const properties: Record<string,string> = {};
   for (const [key,value] of Object.entries(input.properties)) {
     if (typeof value !== 'string' || !allowed[key]?.includes(value)) throw new Error('invalid_submission');

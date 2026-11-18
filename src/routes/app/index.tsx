@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { createFileRoute } from "@tanstack/react-router";
 import { AccountChip, useAppSession } from "@/components/app/session";
 import { AdminHome } from "@/components/app/admin-home";
@@ -26,11 +27,26 @@ function AppHome() {
     if (state.status === "signed_out") window.location.replace("/app/giris");
   }, [state.status]);
 
-  if (state.status !== "signed_in") {
+  // Self sign-up: a confirmed account without a role asks the server for the workspace role once.
+  const claimed = useRef(false);
+  const [claimFailed, setClaimFailed] = useState(false);
+  const needsClaim = state.status === "signed_in" && state.identity.role === "none";
+  useEffect(() => {
+    if (!needsClaim || claimed.current || state.status !== "signed_in") return;
+    claimed.current = true;
+    void fetch("/api/account/claim", { method: "POST", headers: { Authorization: `Bearer ${state.session.access_token}` } })
+      .then(async (res) => {
+        if (!res.ok) throw new Error(String(res.status));
+        await supabase.auth.refreshSession();
+      })
+      .catch(() => setClaimFailed(true));
+  }, [needsClaim, state]);
+
+  if (state.status !== "signed_in" || (needsClaim && !claimFailed)) {
     return (
       <div className="qd">
         <header className="qd-top"><Brand /></header>
-        <div className="qd-loading" role="status">Hesabınız açılıyor…</div>
+        <div className="qd-loading" role="status">{needsClaim ? "Çalışma alanınız hazırlanıyor…" : "Hesabınız açılıyor…"}</div>
       </div>
     );
   }

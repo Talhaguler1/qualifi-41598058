@@ -10,6 +10,6 @@ export const Route = createFileRoute("/$")({
     { property: 'og:type', content: 'website' },
     { name: 'twitter:card', content: 'summary' },
   ] }),
-  server: { handlers: { GET: ({ request }) => servePage(new URL(request.url).pathname) } },
+  server: { handlers: { GET: ({ request }) => servePage(new URL(request.url).pathname, request) } },
   component: () => null,
 });

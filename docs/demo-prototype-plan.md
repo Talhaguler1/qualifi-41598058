@@ -88,8 +88,9 @@ birleşse bile bu üçü yok.
       taahhüt takibi, firma kartı, uzman/birim seçimi, arama listesi hazırlayan ajan
 - [x] C — Admin: CSV ile hesap açma (davet e-postası veya kopyalanabilir davet bağlantısı), hesap listesi, "onun gözünden gör", demo etkinliği (17 Kas)
 - [x] C — Boş hesap çalışma alanı: yükle → ajan okur → kontrol/düzelt → 8 haftalık görünüm → tümünü sil (17 Kas)
-- [ ] C — Ana sayfa yeni anlatım, tek birincil buton, salt okunur "Demo işletmeyi incele"
-- [ ] C — Site düzeltmeleri: dosya yükleme vaadi, kaybolan CTA ölçümleri, sitemap
+- [x] C — Ana sayfa: "İşinizi siz büyütün. Finansal takibi biz halledelim.", Ücretsiz hesap aç + Canlı demo; menü/alt bilgide site haritası (18 Kas)
+- [x] C — Herkese açık kayıt (`/app/kayit`), ilk girişte boş çalışma alanı rolü, ilk adımlar ve bağlantı ekranları, günlük AI okuma sınırı (18 Kas)
+- [x] C — Site düzeltmeleri: yükleme vaadi ve "AI'ya gönderilmez" metinleri, CTA ölçümleri, sitemap, TR yönlendirme (18 Kas)
 - [ ] L — **L2** isteği: belgeden taahhüt çıkarma
 - [ ] L — **L3** isteği: görsel cila (yalnız stil, mantık değişmez)
 

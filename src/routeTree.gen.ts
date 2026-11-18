@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SplatRouteImport } from './routes/$'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as AdminLeadsRouteImport } from './routes/admin/leads'
 import { Route as ApiConfigRouteImport } from './routes/api/config'
 import { Route as ApiDemoInteractionsRouteImport } from './routes/api/demo-interactions'
@@ -19,9 +20,11 @@ import { Route as ApiEventsRouteImport } from './routes/api/events'
 import { Route as ApiLeadsRouteImport } from './routes/api/leads'
 import { Route as AppIndexRouteImport } from './routes/app/index'
 import { Route as AppGirisRouteImport } from './routes/app/giris'
+import { Route as AppKayitRouteImport } from './routes/app/kayit'
 import { Route as DemoIndexRouteImport } from './routes/demo/index'
 import { Route as DemoBankaRouteImport } from './routes/demo/banka'
 import { Route as DemoIsletmeRouteImport } from './routes/demo/isletme'
+import { Route as ApiAccountClaimRouteImport } from './routes/api/account/claim'
 import { Route as ApiAdminAccountsRouteImport } from './routes/api/admin/accounts'
 import { Route as ApiAdminDemoActivityRouteImport } from './routes/api/admin/demo-activity'
 import { Route as ApiAdminLeadsRouteImport } from './routes/api/admin/leads'
@@ -44,6 +47,11 @@ const SplatRoute = SplatRouteImport.update({
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminLeadsRoute = AdminLeadsRouteImport.update({
@@ -81,6 +89,11 @@ const AppGirisRoute = AppGirisRouteImport.update({
   path: '/app/giris',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppKayitRoute = AppKayitRouteImport.update({
+  id: '/app/kayit',
+  path: '/app/kayit',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DemoIndexRoute = DemoIndexRouteImport.update({
   id: '/demo/',
   path: '/demo/',
@@ -94,6 +107,11 @@ const DemoBankaRoute = DemoBankaRouteImport.update({
 const DemoIsletmeRoute = DemoIsletmeRouteImport.update({
   id: '/demo/isletme',
   path: '/demo/isletme',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAccountClaimRoute = ApiAccountClaimRouteImport.update({
+  id: '/api/account/claim',
+  path: '/api/account/claim',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAdminAccountsRoute = ApiAdminAccountsRouteImport.update({
@@ -142,16 +160,19 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/leads': typeof AdminLeadsRoute
   '/api/config': typeof ApiConfigRoute
   '/api/demo-interactions': typeof ApiDemoInteractionsRoute
   '/api/events': typeof ApiEventsRoute
   '/api/leads': typeof ApiLeadsRoute
   '/app/giris': typeof AppGirisRoute
+  '/app/kayit': typeof AppKayitRoute
   '/demo/banka': typeof DemoBankaRoute
   '/demo/isletme': typeof DemoIsletmeRoute
   '/app/': typeof AppIndexRoute
   '/demo/': typeof DemoIndexRoute
+  '/api/account/claim': typeof ApiAccountClaimRoute
   '/api/admin/accounts': typeof ApiAdminAccountsRoute
   '/api/admin/demo-activity': typeof ApiAdminDemoActivityRoute
   '/api/admin/leads': typeof ApiAdminLeadsRouteWithChildren
@@ -165,16 +186,19 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/leads': typeof AdminLeadsRoute
   '/api/config': typeof ApiConfigRoute
   '/api/demo-interactions': typeof ApiDemoInteractionsRoute
   '/api/events': typeof ApiEventsRoute
   '/api/leads': typeof ApiLeadsRoute
   '/app/giris': typeof AppGirisRoute
+  '/app/kayit': typeof AppKayitRoute
   '/demo/banka': typeof DemoBankaRoute
   '/demo/isletme': typeof DemoIsletmeRoute
   '/app': typeof AppIndexRoute
   '/demo': typeof DemoIndexRoute
+  '/api/account/claim': typeof ApiAccountClaimRoute
   '/api/admin/accounts': typeof ApiAdminAccountsRoute
   '/api/admin/demo-activity': typeof ApiAdminDemoActivityRoute
   '/api/admin/leads': typeof ApiAdminLeadsRouteWithChildren
@@ -189,16 +213,19 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/leads': typeof AdminLeadsRoute
   '/api/config': typeof ApiConfigRoute
   '/api/demo-interactions': typeof ApiDemoInteractionsRoute
   '/api/events': typeof ApiEventsRoute
   '/api/leads': typeof ApiLeadsRoute
   '/app/giris': typeof AppGirisRoute
+  '/app/kayit': typeof AppKayitRoute
   '/demo/banka': typeof DemoBankaRoute
   '/demo/isletme': typeof DemoIsletmeRoute
   '/app/': typeof AppIndexRoute
   '/demo/': typeof DemoIndexRoute
+  '/api/account/claim': typeof ApiAccountClaimRoute
   '/api/admin/accounts': typeof ApiAdminAccountsRoute
   '/api/admin/demo-activity': typeof ApiAdminDemoActivityRoute
   '/api/admin/leads': typeof ApiAdminLeadsRouteWithChildren
@@ -214,16 +241,19 @@ export interface FileRouteTypes {
     | '/'
     | '/$'
     | '/reset-password'
+    | '/sitemap.xml'
     | '/admin/leads'
     | '/api/config'
     | '/api/demo-interactions'
     | '/api/events'
     | '/api/leads'
     | '/app/giris'
+    | '/app/kayit'
     | '/demo/banka'
     | '/demo/isletme'
     | '/app/'
     | '/demo/'
+    | '/api/account/claim'
     | '/api/admin/accounts'
     | '/api/admin/demo-activity'
     | '/api/admin/leads'
@@ -237,16 +267,19 @@ export interface FileRouteTypes {
     | '/'
     | '/$'
     | '/reset-password'
+    | '/sitemap.xml'
     | '/admin/leads'
     | '/api/config'
     | '/api/demo-interactions'
     | '/api/events'
     | '/api/leads'
     | '/app/giris'
+    | '/app/kayit'
     | '/demo/banka'
     | '/demo/isletme'
     | '/app'
     | '/demo'
+    | '/api/account/claim'
     | '/api/admin/accounts'
     | '/api/admin/demo-activity'
     | '/api/admin/leads'
@@ -260,16 +293,19 @@ export interface FileRouteTypes {
     | '/'
     | '/$'
     | '/reset-password'
+    | '/sitemap.xml'
     | '/admin/leads'
     | '/api/config'
     | '/api/demo-interactions'
     | '/api/events'
     | '/api/leads'
     | '/app/giris'
+    | '/app/kayit'
     | '/demo/banka'
     | '/demo/isletme'
     | '/app/'
     | '/demo/'
+    | '/api/account/claim'
     | '/api/admin/accounts'
     | '/api/admin/demo-activity'
     | '/api/admin/leads'
@@ -284,16 +320,19 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SplatRoute: typeof SplatRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   AdminLeadsRoute: typeof AdminLeadsRoute
   ApiConfigRoute: typeof ApiConfigRoute
   ApiDemoInteractionsRoute: typeof ApiDemoInteractionsRoute
   ApiEventsRoute: typeof ApiEventsRoute
   ApiLeadsRoute: typeof ApiLeadsRoute
   AppGirisRoute: typeof AppGirisRoute
+  AppKayitRoute: typeof AppKayitRoute
   DemoBankaRoute: typeof DemoBankaRoute
   DemoIsletmeRoute: typeof DemoIsletmeRoute
   AppIndexRoute: typeof AppIndexRoute
   DemoIndexRoute: typeof DemoIndexRoute
+  ApiAccountClaimRoute: typeof ApiAccountClaimRoute
   ApiAdminAccountsRoute: typeof ApiAdminAccountsRoute
   ApiAdminDemoActivityRoute: typeof ApiAdminDemoActivityRoute
   ApiAdminLeadsRoute: typeof ApiAdminLeadsRouteWithChildren
@@ -324,6 +363,13 @@ declare module '@tanstack/react-router' {
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/leads': {
@@ -375,6 +421,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppGirisRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app/kayit': {
+      id: '/app/kayit'
+      path: '/app/kayit'
+      fullPath: '/app/kayit'
+      preLoaderRoute: typeof AppKayitRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/demo/': {
       id: '/demo/'
       path: '/demo'
@@ -394,6 +447,13 @@ declare module '@tanstack/react-router' {
       path: '/demo/isletme'
       fullPath: '/demo/isletme'
       preLoaderRoute: typeof DemoIsletmeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/account/claim': {
+      id: '/api/account/claim'
+      path: '/api/account/claim'
+      fullPath: '/api/account/claim'
+      preLoaderRoute: typeof ApiAccountClaimRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/admin/accounts': {
@@ -471,16 +531,19 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   AdminLeadsRoute: AdminLeadsRoute,
   ApiConfigRoute: ApiConfigRoute,
   ApiDemoInteractionsRoute: ApiDemoInteractionsRoute,
   ApiEventsRoute: ApiEventsRoute,
   ApiLeadsRoute: ApiLeadsRoute,
   AppGirisRoute: AppGirisRoute,
+  AppKayitRoute: AppKayitRoute,
   DemoBankaRoute: DemoBankaRoute,
   DemoIsletmeRoute: DemoIsletmeRoute,
   AppIndexRoute: AppIndexRoute,
   DemoIndexRoute: DemoIndexRoute,
+  ApiAccountClaimRoute: ApiAccountClaimRoute,
   ApiAdminAccountsRoute: ApiAdminAccountsRoute,
   ApiAdminDemoActivityRoute: ApiAdminDemoActivityRoute,
   ApiAdminLeadsRoute: ApiAdminLeadsRouteWithChildren,

@@ -144,7 +144,7 @@
         }
       } catch {}
       const restart = document.createElement('button'); restart.className = 'text-link restart-request'; restart.type = 'button'; restart.textContent = t('Yeni bir talep bırak', 'Create another request');
-      restart.addEventListener('click', () => { requestId = uuid(); started = false; form.reset(); form.hidden = false; success.hidden = true; if (goal === 'contract') { $('#campaign-file-field').hidden = false; $('#campaign-file-status').textContent = ''; } $('#campaign-email').focus(); });
+      restart.addEventListener('click', () => { requestId = uuid(); started = false; form.reset(); form.hidden = false; success.hidden = true; if (goal === 'contract') { $('#campaign-file-field').hidden = true; $('#campaign-file-status').textContent = ''; } $('#campaign-email').focus(); });
       success.append(restart); success.tabIndex = -1; success.focus();
     } catch (err) { showError(errorMessage(err.message)); }
     finally { submit.disabled = false; form.removeAttribute('aria-busy'); }
