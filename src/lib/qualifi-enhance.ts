@@ -75,8 +75,8 @@ function navActions(tr: boolean, bank: boolean, language: string): string {
 
 function footerLinks(tr: boolean): string {
   return tr
-    ? '<nav class="footer-links" aria-label="Site haritası"><a href="/isletmeler">İşletmeler</a><a href="/bankalar">Bankalar</a><a href="/demo">Canlı demo</a><a href="/app/kayit">Ücretsiz hesap aç</a><a href="/app/giris">Giriş</a><a href="/kampanyalar">Kampanyalar</a></nav>'
-    : '<nav class="footer-links" aria-label="Site map"><a href="/en/business">Businesses</a><a href="/en/banks">Banks</a><a href="/demo">Live demo</a><a href="/app/kayit">Open a free account</a><a href="/app/giris">Sign in</a><a href="/en/campaigns">Campaigns</a></nav>';
+    ? '<nav class="footer-links" aria-label="Site haritası"><a href="/isletmeler">İşletmeler</a><a href="/bankalar">Bankalar</a><a href="/demo">Canlı demo</a><a href="/app/kayit">Ücretsiz hesap aç</a><a href="/app/giris">Giriş</a></nav>'
+    : '<nav class="footer-links" aria-label="Site map"><a href="/en/business">Businesses</a><a href="/en/banks">Banks</a><a href="/demo">Live demo</a><a href="/app/kayit">Open a free account</a><a href="/app/giris">Sign in</a></nav>';
 }
 
 function businessHero(html: string, tr: boolean): string {

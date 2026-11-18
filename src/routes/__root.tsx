@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
   type ErrorComponentProps,
@@ -106,8 +107,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 });
 
 function RootShell({ children }: { children: ReactNode }) {
+  // Turkish unless the page is under /en or asks for English (?l=en), so uppercase "i" becomes "İ".
+  const lang = useRouterState({
+    select: (s) => (s.location.pathname.startsWith("/en") || (s.location.search as { l?: string }).l === "en" ? "en" : "tr"),
+  });
   return (
-    <html lang="en">
+    <html lang={lang}>
       <head>
         <HeadContent />
       </head>

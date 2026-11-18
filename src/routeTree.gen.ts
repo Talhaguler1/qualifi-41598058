@@ -11,8 +11,13 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SplatRouteImport } from './routes/$'
+import { Route as BankalarRouteImport } from './routes/bankalar'
+import { Route as FinansEkipleriRouteImport } from './routes/finans-ekipleri'
+import { Route as FreelancerlarRouteImport } from './routes/freelancerlar'
+import { Route as IsletmelerRouteImport } from './routes/isletmeler'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as TrRouteImport } from './routes/tr'
 import { Route as AdminLeadsRouteImport } from './routes/admin/leads'
 import { Route as ApiConfigRouteImport } from './routes/api/config'
 import { Route as ApiDemoInteractionsRouteImport } from './routes/api/demo-interactions'
@@ -24,6 +29,11 @@ import { Route as AppKayitRouteImport } from './routes/app/kayit'
 import { Route as DemoIndexRouteImport } from './routes/demo/index'
 import { Route as DemoBankaRouteImport } from './routes/demo/banka'
 import { Route as DemoIsletmeRouteImport } from './routes/demo/isletme'
+import { Route as EnIndexRouteImport } from './routes/en/index'
+import { Route as EnBanksRouteImport } from './routes/en/banks'
+import { Route as EnBusinessRouteImport } from './routes/en/business'
+import { Route as EnFinanceTeamsRouteImport } from './routes/en/finance-teams'
+import { Route as EnFreelancersRouteImport } from './routes/en/freelancers'
 import { Route as ApiAccountClaimRouteImport } from './routes/api/account/claim'
 import { Route as ApiAdminAccountsRouteImport } from './routes/api/admin/accounts'
 import { Route as ApiAdminDemoActivityRouteImport } from './routes/api/admin/demo-activity'
@@ -44,6 +54,26 @@ const SplatRoute = SplatRouteImport.update({
   path: '/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BankalarRoute = BankalarRouteImport.update({
+  id: '/bankalar',
+  path: '/bankalar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FinansEkipleriRoute = FinansEkipleriRouteImport.update({
+  id: '/finans-ekipleri',
+  path: '/finans-ekipleri',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FreelancerlarRoute = FreelancerlarRouteImport.update({
+  id: '/freelancerlar',
+  path: '/freelancerlar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IsletmelerRoute = IsletmelerRouteImport.update({
+  id: '/isletmeler',
+  path: '/isletmeler',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
@@ -52,6 +82,11 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TrRoute = TrRouteImport.update({
+  id: '/tr',
+  path: '/tr',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminLeadsRoute = AdminLeadsRouteImport.update({
@@ -109,6 +144,31 @@ const DemoIsletmeRoute = DemoIsletmeRouteImport.update({
   path: '/demo/isletme',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EnIndexRoute = EnIndexRouteImport.update({
+  id: '/en/',
+  path: '/en/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnBanksRoute = EnBanksRouteImport.update({
+  id: '/en/banks',
+  path: '/en/banks',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnBusinessRoute = EnBusinessRouteImport.update({
+  id: '/en/business',
+  path: '/en/business',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnFinanceTeamsRoute = EnFinanceTeamsRouteImport.update({
+  id: '/en/finance-teams',
+  path: '/en/finance-teams',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnFreelancersRoute = EnFreelancersRouteImport.update({
+  id: '/en/freelancers',
+  path: '/en/freelancers',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAccountClaimRoute = ApiAccountClaimRouteImport.update({
   id: '/api/account/claim',
   path: '/api/account/claim',
@@ -159,8 +219,13 @@ const LovableEmailTransactionalPreviewRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/bankalar': typeof BankalarRoute
+  '/finans-ekipleri': typeof FinansEkipleriRoute
+  '/freelancerlar': typeof FreelancerlarRoute
+  '/isletmeler': typeof IsletmelerRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/tr': typeof TrRoute
   '/admin/leads': typeof AdminLeadsRoute
   '/api/config': typeof ApiConfigRoute
   '/api/demo-interactions': typeof ApiDemoInteractionsRoute
@@ -170,8 +235,13 @@ export interface FileRoutesByFullPath {
   '/app/kayit': typeof AppKayitRoute
   '/demo/banka': typeof DemoBankaRoute
   '/demo/isletme': typeof DemoIsletmeRoute
+  '/en/banks': typeof EnBanksRoute
+  '/en/business': typeof EnBusinessRoute
+  '/en/finance-teams': typeof EnFinanceTeamsRoute
+  '/en/freelancers': typeof EnFreelancersRoute
   '/app/': typeof AppIndexRoute
   '/demo/': typeof DemoIndexRoute
+  '/en/': typeof EnIndexRoute
   '/api/account/claim': typeof ApiAccountClaimRoute
   '/api/admin/accounts': typeof ApiAdminAccountsRoute
   '/api/admin/demo-activity': typeof ApiAdminDemoActivityRoute
@@ -185,8 +255,13 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/bankalar': typeof BankalarRoute
+  '/finans-ekipleri': typeof FinansEkipleriRoute
+  '/freelancerlar': typeof FreelancerlarRoute
+  '/isletmeler': typeof IsletmelerRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/tr': typeof TrRoute
   '/admin/leads': typeof AdminLeadsRoute
   '/api/config': typeof ApiConfigRoute
   '/api/demo-interactions': typeof ApiDemoInteractionsRoute
@@ -196,8 +271,13 @@ export interface FileRoutesByTo {
   '/app/kayit': typeof AppKayitRoute
   '/demo/banka': typeof DemoBankaRoute
   '/demo/isletme': typeof DemoIsletmeRoute
+  '/en/banks': typeof EnBanksRoute
+  '/en/business': typeof EnBusinessRoute
+  '/en/finance-teams': typeof EnFinanceTeamsRoute
+  '/en/freelancers': typeof EnFreelancersRoute
   '/app': typeof AppIndexRoute
   '/demo': typeof DemoIndexRoute
+  '/en': typeof EnIndexRoute
   '/api/account/claim': typeof ApiAccountClaimRoute
   '/api/admin/accounts': typeof ApiAdminAccountsRoute
   '/api/admin/demo-activity': typeof ApiAdminDemoActivityRoute
@@ -212,8 +292,13 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/bankalar': typeof BankalarRoute
+  '/finans-ekipleri': typeof FinansEkipleriRoute
+  '/freelancerlar': typeof FreelancerlarRoute
+  '/isletmeler': typeof IsletmelerRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/tr': typeof TrRoute
   '/admin/leads': typeof AdminLeadsRoute
   '/api/config': typeof ApiConfigRoute
   '/api/demo-interactions': typeof ApiDemoInteractionsRoute
@@ -223,8 +308,13 @@ export interface FileRoutesById {
   '/app/kayit': typeof AppKayitRoute
   '/demo/banka': typeof DemoBankaRoute
   '/demo/isletme': typeof DemoIsletmeRoute
+  '/en/banks': typeof EnBanksRoute
+  '/en/business': typeof EnBusinessRoute
+  '/en/finance-teams': typeof EnFinanceTeamsRoute
+  '/en/freelancers': typeof EnFreelancersRoute
   '/app/': typeof AppIndexRoute
   '/demo/': typeof DemoIndexRoute
+  '/en/': typeof EnIndexRoute
   '/api/account/claim': typeof ApiAccountClaimRoute
   '/api/admin/accounts': typeof ApiAdminAccountsRoute
   '/api/admin/demo-activity': typeof ApiAdminDemoActivityRoute
@@ -240,8 +330,13 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/$'
+    | '/bankalar'
+    | '/finans-ekipleri'
+    | '/freelancerlar'
+    | '/isletmeler'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/tr'
     | '/admin/leads'
     | '/api/config'
     | '/api/demo-interactions'
@@ -251,8 +346,13 @@ export interface FileRouteTypes {
     | '/app/kayit'
     | '/demo/banka'
     | '/demo/isletme'
+    | '/en/banks'
+    | '/en/business'
+    | '/en/finance-teams'
+    | '/en/freelancers'
     | '/app/'
     | '/demo/'
+    | '/en/'
     | '/api/account/claim'
     | '/api/admin/accounts'
     | '/api/admin/demo-activity'
@@ -266,8 +366,13 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/$'
+    | '/bankalar'
+    | '/finans-ekipleri'
+    | '/freelancerlar'
+    | '/isletmeler'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/tr'
     | '/admin/leads'
     | '/api/config'
     | '/api/demo-interactions'
@@ -277,8 +382,13 @@ export interface FileRouteTypes {
     | '/app/kayit'
     | '/demo/banka'
     | '/demo/isletme'
+    | '/en/banks'
+    | '/en/business'
+    | '/en/finance-teams'
+    | '/en/freelancers'
     | '/app'
     | '/demo'
+    | '/en'
     | '/api/account/claim'
     | '/api/admin/accounts'
     | '/api/admin/demo-activity'
@@ -292,8 +402,13 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/$'
+    | '/bankalar'
+    | '/finans-ekipleri'
+    | '/freelancerlar'
+    | '/isletmeler'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/tr'
     | '/admin/leads'
     | '/api/config'
     | '/api/demo-interactions'
@@ -303,8 +418,13 @@ export interface FileRouteTypes {
     | '/app/kayit'
     | '/demo/banka'
     | '/demo/isletme'
+    | '/en/banks'
+    | '/en/business'
+    | '/en/finance-teams'
+    | '/en/freelancers'
     | '/app/'
     | '/demo/'
+    | '/en/'
     | '/api/account/claim'
     | '/api/admin/accounts'
     | '/api/admin/demo-activity'
@@ -319,8 +439,13 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SplatRoute: typeof SplatRoute
+  BankalarRoute: typeof BankalarRoute
+  FinansEkipleriRoute: typeof FinansEkipleriRoute
+  FreelancerlarRoute: typeof FreelancerlarRoute
+  IsletmelerRoute: typeof IsletmelerRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  TrRoute: typeof TrRoute
   AdminLeadsRoute: typeof AdminLeadsRoute
   ApiConfigRoute: typeof ApiConfigRoute
   ApiDemoInteractionsRoute: typeof ApiDemoInteractionsRoute
@@ -330,8 +455,13 @@ export interface RootRouteChildren {
   AppKayitRoute: typeof AppKayitRoute
   DemoBankaRoute: typeof DemoBankaRoute
   DemoIsletmeRoute: typeof DemoIsletmeRoute
+  EnBanksRoute: typeof EnBanksRoute
+  EnBusinessRoute: typeof EnBusinessRoute
+  EnFinanceTeamsRoute: typeof EnFinanceTeamsRoute
+  EnFreelancersRoute: typeof EnFreelancersRoute
   AppIndexRoute: typeof AppIndexRoute
   DemoIndexRoute: typeof DemoIndexRoute
+  EnIndexRoute: typeof EnIndexRoute
   ApiAccountClaimRoute: typeof ApiAccountClaimRoute
   ApiAdminAccountsRoute: typeof ApiAdminAccountsRoute
   ApiAdminDemoActivityRoute: typeof ApiAdminDemoActivityRoute
@@ -358,6 +488,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/bankalar': {
+      id: '/bankalar'
+      path: '/bankalar'
+      fullPath: '/bankalar'
+      preLoaderRoute: typeof BankalarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/finans-ekipleri': {
+      id: '/finans-ekipleri'
+      path: '/finans-ekipleri'
+      fullPath: '/finans-ekipleri'
+      preLoaderRoute: typeof FinansEkipleriRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/freelancerlar': {
+      id: '/freelancerlar'
+      path: '/freelancerlar'
+      fullPath: '/freelancerlar'
+      preLoaderRoute: typeof FreelancerlarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/isletmeler': {
+      id: '/isletmeler'
+      path: '/isletmeler'
+      fullPath: '/isletmeler'
+      preLoaderRoute: typeof IsletmelerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/reset-password': {
       id: '/reset-password'
       path: '/reset-password'
@@ -370,6 +528,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tr': {
+      id: '/tr'
+      path: '/tr'
+      fullPath: '/tr'
+      preLoaderRoute: typeof TrRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/leads': {
@@ -447,6 +612,41 @@ declare module '@tanstack/react-router' {
       path: '/demo/isletme'
       fullPath: '/demo/isletme'
       preLoaderRoute: typeof DemoIsletmeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/': {
+      id: '/en/'
+      path: '/en'
+      fullPath: '/en/'
+      preLoaderRoute: typeof EnIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/banks': {
+      id: '/en/banks'
+      path: '/en/banks'
+      fullPath: '/en/banks'
+      preLoaderRoute: typeof EnBanksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/business': {
+      id: '/en/business'
+      path: '/en/business'
+      fullPath: '/en/business'
+      preLoaderRoute: typeof EnBusinessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/finance-teams': {
+      id: '/en/finance-teams'
+      path: '/en/finance-teams'
+      fullPath: '/en/finance-teams'
+      preLoaderRoute: typeof EnFinanceTeamsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/freelancers': {
+      id: '/en/freelancers'
+      path: '/en/freelancers'
+      fullPath: '/en/freelancers'
+      preLoaderRoute: typeof EnFreelancersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/account/claim': {
@@ -530,8 +730,13 @@ const ApiAdminLeadsRouteWithChildren = ApiAdminLeadsRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
+  BankalarRoute: BankalarRoute,
+  FinansEkipleriRoute: FinansEkipleriRoute,
+  FreelancerlarRoute: FreelancerlarRoute,
+  IsletmelerRoute: IsletmelerRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  TrRoute: TrRoute,
   AdminLeadsRoute: AdminLeadsRoute,
   ApiConfigRoute: ApiConfigRoute,
   ApiDemoInteractionsRoute: ApiDemoInteractionsRoute,
@@ -541,8 +746,13 @@ const rootRouteChildren: RootRouteChildren = {
   AppKayitRoute: AppKayitRoute,
   DemoBankaRoute: DemoBankaRoute,
   DemoIsletmeRoute: DemoIsletmeRoute,
+  EnBanksRoute: EnBanksRoute,
+  EnBusinessRoute: EnBusinessRoute,
+  EnFinanceTeamsRoute: EnFinanceTeamsRoute,
+  EnFreelancersRoute: EnFreelancersRoute,
   AppIndexRoute: AppIndexRoute,
   DemoIndexRoute: DemoIndexRoute,
+  EnIndexRoute: EnIndexRoute,
   ApiAccountClaimRoute: ApiAccountClaimRoute,
   ApiAdminAccountsRoute: ApiAdminAccountsRoute,
   ApiAdminDemoActivityRoute: ApiAdminDemoActivityRoute,
