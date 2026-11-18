@@ -159,14 +159,14 @@ export function WorkspacePanel({ userId, title, token, readOnly, accountSlot }: 
               {mounted ? (
                 <ResponsiveContainer>
                   <ComposedChart data={outlook.weeks.map((w) => ({ ...w, label: formatDateTr(w.weekStart).replace(/ \d{4}$/, ""), out: -w.outflow }))} margin={{ top: 16, right: 8, left: 8, bottom: 0 }}>
-                    <XAxis dataKey="label" tick={{ fill: "#66766a", fontSize: 12 }} axisLine={false} tickLine={false} />
-                    <YAxis tickFormatter={(v: number) => money(v)} tick={{ fill: "#66766a", fontSize: 12 }} axisLine={false} tickLine={false} width={78} />
+                    <XAxis dataKey="label" tick={{ fill: "#5d6c61", fontSize: 12 }} axisLine={false} tickLine={false} />
+                    <YAxis tickFormatter={(v: number) => money(v)} tick={{ fill: "#5d6c61", fontSize: 12 }} axisLine={false} tickLine={false} width={78} />
                     <Tooltip formatter={(v: number) => money(v)} />
-                    <ReferenceLine y={0} stroke="#b4442f" strokeDasharray="4 4" />
+                    <ReferenceLine y={0} stroke="#c0503a" strokeDasharray="4 4" />
                     <Bar dataKey="inflow" name="Tahsilat" fill="#8fbf4d" radius={[6, 6, 0, 0]} barSize={14} />
                     <Bar dataKey="out" name="Ödeme" fill="#e7b2a5" radius={[0, 0, 6, 6]} barSize={14} />
-                    <Line dataKey="balance" name="Bakiye" stroke="#203b30" strokeWidth={2.5} dot={{ r: 3 }} />
-                    <Line dataKey="balanceCautious" name="Temkinli bakiye" stroke="#b4442f" strokeWidth={2} strokeDasharray="6 4" dot={false} />
+                    <Line dataKey="balance" name="Bakiye" stroke="#16302a" strokeWidth={2.5} dot={{ r: 3 }} />
+                    <Line dataKey="balanceCautious" name="Temkinli bakiye" stroke="#c0503a" strokeWidth={2} strokeDasharray="6 4" dot={false} />
                   </ComposedChart>
                 </ResponsiveContainer>
               ) : null}

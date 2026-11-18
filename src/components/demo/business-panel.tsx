@@ -374,25 +374,25 @@ function CashFlowCard({ snap, weeks, accuracy, prevDate, onScenario }: { snap: S
       </div>
       <div className="qd-legend">
         <span><i style={{ background: "#dfeccb" }} />{L("İyimser–kötümser aralık", "Upside–downside range")}</span>
-        <span><i style={{ background: "#203b30" }} />{L("En olası bakiye", "Most likely balance")}</span>
+        <span><i style={{ background: "#16302a" }} />{L("En olası bakiye", "Most likely balance")}</span>
         <span><i style={{ background: "#8fbf4d" }} />{L("Beklenen tahsilat", "Expected collections")}</span>
         <span><i style={{ background: "#e7b2a5" }} />{L("Planlı ödemeler", "Planned payments")}</span>
-        {scenario ? <span><i style={{ background: "#b4442f" }} />{L("Senaryo", "Scenario")}</span> : null}
+        {scenario ? <span><i style={{ background: "#c0503a" }} />{L("Senaryo", "Scenario")}</span> : null}
       </div>
       <div className="qd-chart" key={snap.asOf}>
         {mounted ? (
           <ResponsiveContainer>
             <ComposedChart data={data} margin={{ top: 16, right: 8, left: 8, bottom: 0 }}>
-              <XAxis dataKey="label" tick={{ fill: "#66766a", fontSize: 12 }} axisLine={false} tickLine={false} />
-              <YAxis tickFormatter={(v: number) => money(v)} tick={{ fill: "#66766a", fontSize: 12 }} axisLine={false} tickLine={false} width={78} />
+              <XAxis dataKey="label" tick={{ fill: "#5d6c61", fontSize: 12 }} axisLine={false} tickLine={false} />
+              <YAxis tickFormatter={(v: number) => money(v)} tick={{ fill: "#5d6c61", fontSize: 12 }} axisLine={false} tickLine={false} width={78} />
               <Tooltip content={<ChartTooltip />} />
-              <ReferenceLine y={0} stroke="#b4442f" strokeDasharray="4 4" />
+              <ReferenceLine y={0} stroke="#c0503a" strokeDasharray="4 4" />
               <Bar dataKey="inflow" fill="#8fbf4d" radius={[6, 6, 0, 0]} barSize={14} animationDuration={700} />
               <Bar dataKey="outflow" fill="#e7b2a5" radius={[0, 0, 6, 6]} barSize={14} animationDuration={700} />
               <Area dataKey="range" stroke="none" fill="#dfeccb" fillOpacity={0.9} animationDuration={900} />
-              <Line dataKey="base" stroke="#203b30" strokeWidth={2.5} dot={{ r: 3, fill: "#203b30" }} animationDuration={900} />
-              {scenario ? <Line dataKey="scenario" stroke="#b4442f" strokeWidth={2} strokeDasharray="6 4" dot={false} animationDuration={500} /> : null}
-              <ReferenceDot x={formatDateTr(tight.weekStart).replace(/ \d{4}$/, "")} y={tight.balanceLow} r={6} fill="#b4442f" stroke="#fff" strokeWidth={2} />
+              <Line dataKey="base" stroke="#16302a" strokeWidth={2.5} dot={{ r: 3, fill: "#16302a" }} animationDuration={900} />
+              {scenario ? <Line dataKey="scenario" stroke="#c0503a" strokeWidth={2} strokeDasharray="6 4" dot={false} animationDuration={500} /> : null}
+              <ReferenceDot x={formatDateTr(tight.weekStart).replace(/ \d{4}$/, "")} y={tight.balanceLow} r={6} fill="#c0503a" stroke="#fff" strokeWidth={2} />
             </ComposedChart>
           </ResponsiveContainer>
         ) : null}
@@ -854,13 +854,13 @@ function CustomerSheet({ snap, customer, onClose }: { snap: Snap; customer: Cust
               {mounted ? (
                 <ResponsiveContainer>
                   <BarChart data={history}>
-                    <XAxis dataKey="label" tick={{ fontSize: 12, fill: "#66766a" }} axisLine={false} tickLine={false} />
+                    <XAxis dataKey="label" tick={{ fontSize: 12, fill: "#5d6c61" }} axisLine={false} tickLine={false} />
                     <YAxis hide />
                     <Tooltip formatter={(v: number) => dayCount(v)} />
                     <ReferenceLine y={0} stroke="#cfd8c7" />
                     <Bar dataKey="delay" radius={[4, 4, 4, 4]}>
                       {history.map((h, i) => (
-                        <Cell key={i} fill={h.delay > 7 ? "#b4442f" : h.delay > 2 ? "#d9a14a" : "#2f7d4f"} />
+                        <Cell key={i} fill={h.delay > 7 ? "#c0503a" : h.delay > 2 ? "#d9a14a" : "#2f7d4f"} />
                       ))}
                     </Bar>
                   </BarChart>

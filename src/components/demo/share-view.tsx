@@ -5,7 +5,7 @@ const GRADES = [
   ["A", ["Dakik", "Punctual"], "#2f7d4f"],
   ["B", ["Hafif gecikmeli", "Slightly late"], "#8fbf4d"],
   ["C", ["Gecikmeli", "Late"], "#d9a14a"],
-  ["D", ["Riskli", "Risky"], "#b4442f"],
+  ["D", ["Riskli", "Risky"], "#c0503a"],
   ["-", ["Geçmişi yok", "No history"], "#c9d2c2"],
 ] as const;
 

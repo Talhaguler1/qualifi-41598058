@@ -327,7 +327,7 @@ function Portfolio({ firms, risks, onFirm }: { firms: Firm[]; risks: Risks; onFi
                   <td>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                       <div className="qd-bar" style={{ width: 70 }}>
-                        <i style={{ width: `${r.score}%`, background: r.level === "high" ? "#b4442f" : r.level === "medium" ? "#d9a14a" : "#2f7d4f" }} />
+                        <i style={{ width: `${r.score}%`, background: r.level === "high" ? "#c0503a" : r.level === "medium" ? "#d9a14a" : "#2f7d4f" }} />
                       </div>
                       <span className="qd-num" style={{ fontWeight: 600 }}>{r.score}</span>
                     </div>
@@ -359,12 +359,12 @@ function Sectors({ firms, date }: { firms: Firm[]; date: string }) {
           <ResponsiveContainer>
             <BarChart data={data} layout="vertical" margin={{ left: 40, right: 20 }}>
               <CartesianGrid horizontal={false} stroke="#eef1ea" />
-              <XAxis type="number" tickFormatter={(v: number) => pct(v)} tick={{ fontSize: 12, fill: "#66766a" }} axisLine={false} tickLine={false} />
-              <YAxis type="category" dataKey="sector" tick={{ fontSize: 12, fill: "#203b30" }} width={130} axisLine={false} tickLine={false} />
+              <XAxis type="number" tickFormatter={(v: number) => pct(v)} tick={{ fontSize: 12, fill: "#5d6c61" }} axisLine={false} tickLine={false} />
+              <YAxis type="category" dataKey="sector" tick={{ fontSize: 12, fill: "#16302a" }} width={130} axisLine={false} tickLine={false} />
               <Tooltip formatter={(v: number) => pct(v)} />
               <Bar dataKey="high" radius={[0, 6, 6, 0]} barSize={16} animationDuration={800}>
                 {data.map((d, i) => (
-                  <Cell key={d.sector} fill={i < 2 ? "#b4442f" : i < 5 ? "#d9a14a" : "#8fbf4d"} />
+                  <Cell key={d.sector} fill={i < 2 ? "#c0503a" : i < 5 ? "#d9a14a" : "#8fbf4d"} />
                 ))}
               </Bar>
             </BarChart>
@@ -528,11 +528,11 @@ function FirmSheet({ firm, date, onClose }: { firm: Firm | null; date: string; o
                 {mounted ? (
                   <ResponsiveContainer>
                     <LineChart data={firm.receivableDelay.filter((d) => d.month <= date).map((d) => ({ m: formatDateTr(d.month).replace(/^1 /, ""), days: d.days }))}>
-                      <XAxis dataKey="m" tick={{ fontSize: 12, fill: "#66766a" }} axisLine={false} tickLine={false} interval={2} />
+                      <XAxis dataKey="m" tick={{ fontSize: 12, fill: "#5d6c61" }} axisLine={false} tickLine={false} interval={2} />
                       <YAxis hide domain={[0, "auto"]} />
                       <Tooltip formatter={(v: number) => days(v)} />
                       <ReferenceLine y={30} stroke="#e7b2a5" strokeDasharray="4 4" />
-                      <Line dataKey="days" stroke="#203b30" strokeWidth={2} dot={false} />
+                      <Line dataKey="days" stroke="#16302a" strokeWidth={2} dot={false} />
                     </LineChart>
                   </ResponsiveContainer>
                 ) : null}

@@ -139,7 +139,7 @@ const TR: SiteCopy = {
     oldSteps: ["Telefonda söz alınır", "Muhasebeciye iletilir", "ERP'de vade düzeltilir", "Excel tahmini elle güncellenir"],
     newLabel: "QualiFi ile",
     newSteps: ["Mesaj gelir", "Tarih kendiliğinden kayar, tahmin yeniden çizilir"],
-    time: ["≈ 30 dk, çoğu zaman unutulur", "≈ 3 saniye, her seferinde"],
+    time: ["Yaklaşık 30 dakika, çoğu zaman unutulur", "Yaklaşık 3 saniye, her seferinde"],
   },
   how: {
     title: "Dört adımda nakit görünürlüğü.",
@@ -275,7 +275,7 @@ const EN: SiteCopy = {
     oldSteps: ["Promise taken on the phone", "Passed on to the accountant", "Due date fixed in the ERP", "Excel forecast updated by hand"],
     newLabel: "With QualiFi",
     newSteps: ["The message arrives", "The date moves and the forecast redraws itself"],
-    time: ["≈ 30 min, often forgotten", "≈ 3 seconds, every time"],
+    time: ["About 30 minutes, often forgotten", "About 3 seconds, every time"],
   },
   how: {
     title: "Cash visibility in four steps.",

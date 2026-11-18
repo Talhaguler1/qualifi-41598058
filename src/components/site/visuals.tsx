@@ -18,15 +18,16 @@ function useLoop(max: number, stepMs: number, holdMs: number) {
       setStep(max);
       return;
     }
-    let s = 0;
-    setStep(0);
+    // Start from the finished story (what the server rendered) and begin looping a moment later,
+    // so the first paint is complete and the page is not busy while it loads.
+    let s = max;
     let timer: ReturnType<typeof setTimeout>;
     const tick = () => {
       s = s >= max ? 0 : s + 1;
       setStep(s);
       timer = setTimeout(tick, s === max ? holdMs : stepMs);
     };
-    timer = setTimeout(tick, stepMs);
+    timer = setTimeout(tick, 1600);
     return () => clearTimeout(timer);
   }, [inView, reduce, max, stepMs, holdMs]);
   return { ref, step };

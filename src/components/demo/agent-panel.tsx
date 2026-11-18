@@ -153,7 +153,7 @@ function AnswerBody({ answer }: { answer: AgentAnswer }) {
               <XAxis dataKey="week" tick={{ fill: "#c3d4bd", fontSize: 12 }} axisLine={false} tickLine={false} />
               <YAxis hide />
               <Tooltip formatter={(v: number) => money(v)} contentStyle={{ borderRadius: 10, fontSize: 12 }} />
-              <Line type="monotone" dataKey="base" name={L("Bugünkü tahmin", "Current forecast")} stroke="#d8eea6" strokeWidth={2} dot={false} />
+              <Line type="monotone" dataKey="base" name={L("Bugünkü tahmin", "Current forecast")} stroke="#d6ee9e" strokeWidth={2} dot={false} />
               <Line type="monotone" dataKey="changed" name={answer.scenario.label} stroke="#f2a48f" strokeWidth={2} strokeDasharray="5 4" dot={false} />
             </LineChart>
           </ResponsiveContainer>

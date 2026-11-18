@@ -50,6 +50,19 @@ function Reveal({ children, className, delay = 0 }: { children: ReactNode; class
   );
 }
 
+/** Adds "is-visible" while the element is on screen, to pause decorative CSS loops off-screen. */
+function useVisibleClass<T extends HTMLElement>() {
+  const ref = useRef<T>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => el.classList.toggle("is-visible", Boolean(e?.isIntersecting)));
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return ref;
+}
+
 function LangSwitch({ lang, audience }: { lang: SiteLang; audience: Audience }) {
   const navigate = useNavigate();
   const go = (to: SiteLang) => (e: MouseEvent) => {
@@ -218,6 +231,7 @@ const SOURCE_ICONS = [Building2, Calculator, Landmark, MessageCircle, Mail, File
 
 function Sources({ lang }: { lang: SiteLang }) {
   const s = COPY[lang].sources;
+  const flowRef = useVisibleClass<HTMLDivElement>();
   return (
     <section className="section">
       <div className="wrap">
@@ -225,6 +239,7 @@ function Sources({ lang }: { lang: SiteLang }) {
           <h2>{s.title}</h2>
           <p>{s.sub}</p>
         </Reveal>
+        <div ref={flowRef} className="flow-wrap">
         <Reveal className="flow">
           <ul className="flow__sources">
             {s.items.map((item, i) => {
@@ -261,6 +276,7 @@ function Sources({ lang }: { lang: SiteLang }) {
             ))}
           </ul>
         </Reveal>
+        </div>
       </div>
     </section>
   );
@@ -442,13 +458,14 @@ function Bento({ lang }: { lang: SiteLang }) {
     </div>,
   ];
   const icons = [MessageCircle, BellRing, ChartLine, UserCheck, TriangleAlert, Landmark];
+  const bentoRef = useVisibleClass<HTMLDivElement>();
   return (
     <section className="section section--soft" id="urun">
       <div className="wrap">
         <Reveal className="section__head">
           <h2>{b.title}</h2>
         </Reveal>
-        <div className="bento">
+        <div ref={bentoRef} className="bento">
           {b.tiles.map((t, i) => {
             const Icon = icons[i] ?? Sparkles;
             return (

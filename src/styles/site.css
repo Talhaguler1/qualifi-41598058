@@ -324,3 +324,6 @@
 @media (prefers-reduced-motion: reduce) {
   .site *, .site *::before, .site *::after, ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }
+
+/* Continuous decorative animations run only while visible (see useVisibleClass in landing.tsx). */
+.flow-wrap:not(.is-visible) .flow__beam, .bento:not(.is-visible) .mini-move--anim { animation-play-state: paused; }
