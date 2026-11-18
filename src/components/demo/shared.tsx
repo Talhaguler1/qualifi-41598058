@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from "react";
 import { Building2, Calculator, FileText, Landmark, MessageCircle, Sparkles, TrendingUp, UserCheck, BellRing } from "lucide-react";
+import { Logo } from "@/components/brand/logo";
 import { DEMO_DATES, demoDateLabel, demoLang, formatDateTr, L, type AgentTool, type DemoDate } from "@/lib/demo";
 
 export function useMounted() {
@@ -41,12 +42,7 @@ export function AnimatedNumber({ value, format }: { value: number; format: (n: n
 }
 
 export function Brand() {
-  return (
-    <a className="qd-brand" href="/" aria-label={L("QualiFi ana sayfa", "QualiFi home page")}>
-      <img src="/favicon.svg" alt="" />
-      QualiFi<span>.</span>
-    </a>
-  );
+  return <Logo className="qd-brand" label={L("QualiFi ana sayfa", "QualiFi home page")} />;
 }
 
 export function DateSwitcher({ value, onChange }: { value: DemoDate; onChange: (d: DemoDate) => void }) {

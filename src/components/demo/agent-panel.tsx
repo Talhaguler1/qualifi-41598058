@@ -94,7 +94,11 @@ export function AskAgent({ ask, suggestions, resetKey, onAsk }: { ask: (q: strin
     setTurns((t) => [...t.slice(-3), { id, question, answer: null }]);
     setText("");
     // A short pause reads as the agent thinking; the answer itself is computed instantly.
-    setTimeout(() => setTurns((t) => t.map((x) => (x.id === id ? { ...x, answer: ask(question) } : x))), 650);
+    setTimeout(() => {
+      // Compute outside the state updater: an answer may update the parent panel (live update).
+      const answer = ask(question);
+      setTurns((t) => t.map((x) => (x.id === id ? { ...x, answer } : x)));
+    }, 650);
   };
   const submit = (e: FormEvent) => {
     e.preventDefault();

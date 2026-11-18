@@ -35,6 +35,12 @@ import {
   isEnglish,
   tightestWeek,
   weeklyForecast,
+  explainEvent,
+  forecastWithEvents,
+  readChatMessage,
+  pivotalCustomer,
+  type ChatEvent,
+  type EventOutcome,
   whatIfLate,
   type Customer,
   type DemoDate,
@@ -44,6 +50,7 @@ import { trackDemo, type DemoAction } from "@/lib/demo/track";
 import { ActionQueue, AskAgent } from "./agent-panel";
 import { ShareSummaryView } from "./share-view";
 import { featuredPromise, PromisePlanCard } from "./promise-plan";
+import { LiveUpdate, MessageComposer } from "./live-update";
 import { AgentHero, FocusSheet, StoryGrid, useStoryFocus, type StoryCard } from "./home";
 import { AnimatedNumber, Grade, SHARE_KEY, SourceChip, Tabs, Toast, TopBar, useMounted } from "./shared";
 
@@ -60,7 +67,16 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
   const dataset = useMemo(() => generateBusiness(tenant), [tenant]);
   const snap = useMemo(() => snapshot(dataset, date), [dataset, date]);
   const prevDate = DEMO_DATES[DEMO_DATES.indexOf(date) - 1];
-  const weeks = useMemo(() => weeklyForecast(snap), [snap]);
+  // Customer messages processed in this session move dates; every number below follows them.
+  const [events, setEvents] = useState<ChatEvent[]>([]);
+  const [outcome, setOutcome] = useState<EventOutcome | null>(null);
+  const [liveOpen, setLiveOpen] = useState(false);
+  useEffect(() => {
+    setEvents([]);
+    setOutcome(null);
+    setLiveOpen(false);
+  }, [tenant, date]);
+  const weeks = useMemo(() => forecastWithEvents(snap, events), [snap, events]);
   const inflows = useMemo(() => expectedInflows(snap), [snap]);
   const actions = useMemo(() => agentActions(snap, 8), [snap]);
   const steps = useMemo(() => agentRun(dataset, date, prevDate ?? addDays(date, -14)), [dataset, date, prevDate]);
@@ -68,7 +84,7 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
   const accuracy = useMemo(() => (prevDate ? forecastAccuracy(dataset, prevDate, date) : null), [dataset, prevDate, date]);
   const card = useMemo(() => (prevDate ? scorecard(dataset, prevDate, date) : null), [dataset, prevDate, date]);
   const featured = useMemo(() => featuredPromise(snap), [snap]);
-  const ask = useCallback((q: string) => askAgent(snap, q), [snap]);
+
   const [tab, setTab] = useState<Tab>("inflows");
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [toast, setToast] = useState<string | null>(null);
@@ -102,6 +118,25 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
   const overdueSum = overdue.reduce((s, i) => s + i.receivable.amount, 0);
   const hit = card ? card.predictions.filter((p) => p.outcome === "on_time" || p.outcome === "early").length : 0;
   const featuredName = featured ? snap.dataset.customers.find((c) => c.id === featured.r.customerId)?.name : undefined;
+  const processMessage = (text: string): EventOutcome | null => {
+    const e = readChatMessage(snap, text, `ev-${events.length + 1}`);
+    if (!e) return null;
+    const out = explainEvent(snap, events, e);
+    setEvents((prev) => [...prev, e]);
+    setOutcome(out);
+    setLiveOpen(true);
+    log("scenario_run", "message", `${e.kind}:${e.customer.id}`);
+    return out;
+  };
+  const onComposerSend = (text: string): string | null =>
+    processMessage(text) ? null : L("Bu mesajda bir ödeme bilgisi bulamadım. Örneğin tarih, erteleme ya da \"ödedik\" içeren bir mesaj deneyin.", "I couldn't find payment information in that message. Try one with a date, a delay or \"we paid\".");
+  // Questions that are really customer messages ("Dazen texted: they'll pay 2 weeks later") run the live update.
+  const ask = (q: string) => {
+    const looksLikeMessage = /whatsapp|mesaj|yazdı|dedi|texted|message|said|wrote|:/i.test(q);
+    const out = looksLikeMessage ? processMessage(q) : null;
+    if (out) return { intent: "promises" as const, text: out.summary, bullets: out.advice.map((a) => a.title) };
+    return askAgent(snap, q);
+  };
 
   const cards: StoryCard[] = [
     {
@@ -196,6 +231,17 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
           <AskAgent ask={ask} suggestions={suggestedQuestions().slice(0, 4)} resetKey={date} onAsk={(q) => log("agent_question", undefined, q)} />
         </AgentHero>
 
+        <MessageComposer
+          customerName={featuredName ?? dataset.customers[0]?.name ?? "Dazen"}
+          delayCustomerName={pivotalCustomer(snap)?.name ?? featuredName ?? dataset.customers[0]?.name ?? "Dazen"}
+          onSend={onComposerSend}
+          processed={events.length}
+          onUndo={() => {
+            setEvents([]);
+            setOutcome(null);
+          }}
+        />
+
         <div className="qd-home__sources">
           <span>{L("Bağlı kaynaklar:", "Connected sources:")}</span>
           <SourceChip icon={<Building2 size={12} />} name={dataset.sources.erp} />
@@ -241,6 +287,9 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
             {shown === "scorecard" ? <ScorecardCard dataset={dataset} prevDate={prevDate} date={date} onCustomer={openCustomer} /> : null}
         </FocusSheet>
       </main>
+      <FocusSheet open={liveOpen} title={L("Canlı güncelleme", "Live update")} subtitle={L("Ajan mesajı okudu ve tahmini yeniden çizdi.", "The agent read the message and redrew the forecast.")} onClose={() => setLiveOpen(false)}>
+        {outcome ? <LiveUpdate outcome={outcome} asOf={date} onAdvice={(a) => { log("agent_approve", a.id); setToast(L(`Demo: "${a.title}" onaylandı. Gerçekte hiçbir şey gönderilmedi.`, `Demo: "${a.title}" approved. Nothing was actually sent.`)); }} /> : null}
+      </FocusSheet>
       <CustomerSheet snap={snap} customer={customer} onClose={() => setCustomer(null)} />
       <ShareSheet open={shareOpen} onClose={() => setShareOpen(false)} dataset={dataset} date={date} onShared={() => { log("tab_open", "bank-share-sent"); try { window.localStorage.setItem(SHARE_KEY, JSON.stringify({ tenant, date })); } catch { /* storage blocked: the link in the sheet still works */ } setToast(L("Demo: paylaşım bankacı paneline yansıdı. Gerçekte hiçbir veri gönderilmedi.", "Demo: the share now appears in the banker panel. No data was actually sent.")); }} />
       {toast ? <Toast text={toast} onDone={clearToast} /> : null}
