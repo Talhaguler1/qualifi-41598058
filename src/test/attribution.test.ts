@@ -23,8 +23,9 @@ describe("first-touch attribution", () => {
     expect(sourceFromMetadata(undefined)).toEqual({});
   });
 
-  it("does nothing until a pixel id is configured", () => {
-    expect(trackingEnabled()).toBe(false);
-    expect(() => track("Lead")).not.toThrow();
+  it("never sends an event before the visitor consents", () => {
+    expect(trackingEnabled()).toBe(true);
+    track("Lead");
+    expect((globalThis as { fbq?: unknown }).fbq).toBeUndefined();
   });
 });

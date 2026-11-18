@@ -127,7 +127,7 @@
 .sv-read, .sv-reminder { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; background: var(--soft); font-size: 13px; font-weight: 600; color: var(--ink-2); }
 .sv-track { position: relative; height: 64px; border: 1px solid var(--line); border-radius: 14px; background: var(--paper); }
 .sv-axis { display: flex; justify-content: space-between; padding: 6px 12px 0; font-size: 12px; color: var(--muted); }
-.sv-ghost { position: absolute; left: 58%; top: 28px; transform: translateX(-50%); width: 34px; height: 26px; border: 1px dashed #b9c4b3; border-radius: 8px; display: grid; place-items: center; font-size: 12px; color: var(--muted); }
+.sv-ghost { position: absolute; left: 58%; top: 28px; transform: translateX(-50%); padding: 0 6px; white-space: nowrap; height: 26px; border: 1px dashed #b9c4b3; border-radius: 8px; display: grid; place-items: center; font-size: 12px; color: var(--muted); }
 .sv-chip { position: absolute; top: 26px; transform: translateX(-50%); display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 10px; background: var(--ink); color: #f3f7ec; font-size: 12px; font-weight: 600; white-space: nowrap; box-shadow: var(--shadow-md); font-variant-numeric: tabular-nums; }
 .sv-chart { position: relative; border: 1px solid var(--line); border-radius: 14px; padding: 26px 12px 10px; }
 .sv-chart svg { width: 100%; height: auto; display: block; overflow: visible; }

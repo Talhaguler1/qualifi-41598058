@@ -2,7 +2,7 @@
 // does nothing: no banner, no third-party request.
 
 /** Meta Events Manager → Data sources → dataset (pixel) ID for qualifilab.com. Not a secret. */
-export const META_PIXEL_ID = "";
+export const META_PIXEL_ID = "3395936513942879";
 /** Business Settings → Brand safety → Domains → qualifilab.com → meta-tag `content` value. */
 export const META_DOMAIN_VERIFICATION = "";
 
