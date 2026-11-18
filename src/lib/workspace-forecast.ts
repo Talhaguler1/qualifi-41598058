@@ -13,6 +13,30 @@ export interface WorkspaceCommitment {
   kind: string;
   status: string; // "open" | "paid"
   needs_review: boolean;
+  /** ISO code from extraction; missing means TRY. */
+  currency?: string | null;
+}
+
+/** Only Turkish lira amounts are added up; other currencies are listed separately, never converted silently. */
+export function isLira(c: Pick<WorkspaceCommitment, "currency">): boolean {
+  const cur = (c.currency ?? "TRY").trim().toUpperCase();
+  return cur === "TRY" || cur === "TL" || cur === "";
+}
+
+/**
+ * Items that look like the same money seen in two documents (same direction, amount, currency
+ * and due date). The first one stays; the rest are flagged for the user to remove.
+ */
+export function possibleDuplicates(items: WorkspaceCommitment[]): Set<string> {
+  const seen = new Set<string>();
+  const dup = new Set<string>();
+  for (const c of items) {
+    if (c.status === "paid" || !c.due_date) continue;
+    const key = `${c.direction}|${Math.round(c.amount)}|${(c.currency ?? "TRY").toUpperCase()}|${c.due_date}`;
+    if (seen.has(key)) dup.add(c.id);
+    else seen.add(key);
+  }
+  return dup;
 }
 
 export interface WorkspaceWeek {
@@ -28,12 +52,19 @@ export interface WorkspaceOutlook {
   weeks: WorkspaceWeek[];
   undated: WorkspaceCommitment[];
   overdue: WorkspaceCommitment[];
+  /** Open items in other currencies, left out of every total. */
+  foreign: WorkspaceCommitment[];
+  /** Possible repeats, left out of every total until the user decides. */
+  duplicates: Set<string>;
   openIn: number;
   openOut: number;
 }
 
 export function workspaceOutlook(items: WorkspaceCommitment[], startBalance: number, asOf: string, weeks = 8): WorkspaceOutlook {
-  const open = items.filter((c) => c.status !== "paid");
+  const duplicates = possibleDuplicates(items);
+  const openAll = items.filter((c) => c.status !== "paid");
+  const foreign = openAll.filter((c) => !isLira(c));
+  const open = openAll.filter((c) => isLira(c) && !duplicates.has(c.id));
   const undated = open.filter((c) => !c.due_date);
   const dated = open.filter((c) => c.due_date);
   const overdue = dated.filter((c) => c.direction === "in" && (c.due_date as string) < asOf);
@@ -62,6 +93,8 @@ export function workspaceOutlook(items: WorkspaceCommitment[], startBalance: num
     weeks: result,
     undated,
     overdue,
+    foreign,
+    duplicates,
     openIn: open.filter((c) => c.direction === "in").reduce((s, c) => s + c.amount, 0),
     openOut: open.filter((c) => c.direction === "out").reduce((s, c) => s + c.amount, 0),
   };

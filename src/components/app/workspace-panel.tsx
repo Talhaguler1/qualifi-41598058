@@ -4,7 +4,7 @@ import { Building2, Calculator, Check, FileText, FileUp, Landmark, Loader2, Mess
 import { trackDemo } from "@/lib/demo/track";
 import { supabase } from "@/integrations/supabase/client";
 import { formatDateTr, money } from "@/lib/demo";
-import { FILE_KIND_LABEL, KIND_BY_EXTENSION, workspaceOutlook, type WorkspaceCommitment } from "@/lib/workspace-forecast";
+import { FILE_KIND_LABEL, isLira, KIND_BY_EXTENSION, workspaceOutlook, type WorkspaceCommitment } from "@/lib/workspace-forecast";
 import { Kpi, Toast, TopBar, useLocalState, useMounted } from "@/components/demo/shared";
 
 interface FileRow {
@@ -40,7 +40,7 @@ export function WorkspacePanel({ userId, title, token, readOnly, accountSlot }: 
   const load = useCallback(async () => {
     const [f, c] = await Promise.all([
       supabase.from("qualifi_workspace_files").select("id,kind,original_name,status,error,created_at").eq("user_id", userId).order("created_at", { ascending: false }),
-      supabase.from("qualifi_commitments").select("id,counterparty,direction,amount,due_date,kind,status,needs_review,evidence,confidence,file_id,paid_at").eq("user_id", userId).order("due_date", { ascending: true }),
+      supabase.from("qualifi_commitments").select("id,counterparty,direction,amount,currency,due_date,kind,status,needs_review,evidence,confidence,file_id,paid_at").eq("user_id", userId).order("due_date", { ascending: true }),
     ]);
     if (f.error || c.error) {
       setLoadError("Veriler okunamadı. Sayfayı yenileyin; sorun sürerse yöneticinize haber verin.");
@@ -137,8 +137,8 @@ export function WorkspacePanel({ userId, title, token, readOnly, accountSlot }: 
           {!readOnly && !files.length && !items.length && !loadError ? <Onboarding onPick={(target) => document.getElementById(target)?.scrollIntoView({ behavior: "smooth", block: "center" })} /> : null}
           <section className="qd-kpis">
             <Kpi tone="accent" label="Bugünkü bakiye (sizin girdiğiniz)" value={money(balance)} sub={readOnly ? "Yalnız kullanıcının tarayıcısında" : "Aşağıdan değiştirebilirsiniz"} />
-            <Kpi label="Beklenen tahsilat" value={money(outlook.openIn)} sub={`${items.filter((c) => c.direction === "in" && c.status !== "paid").length} kalem`} />
-            <Kpi label="Planlı ödeme" value={money(outlook.openOut)} sub={`${items.filter((c) => c.direction === "out" && c.status !== "paid").length} kalem`} />
+            <Kpi label="Beklenen tahsilat (TL)" value={money(outlook.openIn)} sub={`${items.filter((c) => c.direction === "in" && c.status !== "paid" && isLira(c) && !outlook.duplicates.has(c.id)).length} kalem${outlook.foreign.some((c) => c.direction === "in") ? " · döviz ayrı" : ""}`} />
+            <Kpi label="Planlı ödeme (TL)" value={money(outlook.openOut)} sub={`${items.filter((c) => c.direction === "out" && c.status !== "paid" && isLira(c) && !outlook.duplicates.has(c.id)).length} kalem${outlook.foreign.some((c) => c.direction === "out") ? " · döviz ayrı" : ""}`} />
             <Kpi {...(lowest && lowest.balanceCautious < 0 ? { tone: "alert" as const } : {})} label="En dar hafta (temkinli)" value={money(lowest?.balanceCautious ?? 0)} sub={lowest ? `${formatDateTr(lowest.weekStart)} haftası` : ""} />
           </section>
 
@@ -175,6 +175,8 @@ export function WorkspacePanel({ userId, title, token, readOnly, accountSlot }: 
               Temkinli çizgi, kontrol bekleyen ve vadesi geçmiş tahsilatları saymaz. Ödeme geçmişiniz biriktikçe ajan her müşterinin gerçek ödeme gününü öğrenir; şimdilik vade tarihleri esas alınıyor.
               {end ? ` 8. hafta sonunda: ${money(end.balance)}.` : ""}
               {outlook.undated.length ? ` ${outlook.undated.length} kalemin tarihi yok; tarih girince takvime eklenir.` : ""}
+              {outlook.foreign.length ? ` ${outlook.foreign.length} döviz kalemi (${[...new Set(outlook.foreign.map((c) => (c.currency ?? "").toUpperCase()))].join(", ")}) TL toplamlarına katılmadı; kur netleşince TL karşılığını yazabilirsiniz.` : ""}
+              {outlook.duplicates.size ? ` ${outlook.duplicates.size} kalem başka bir belgede de geçiyor gibi görünüyor; "Olası tekrar" satırlarını kontrol edip fazlasını silin.` : ""}
             </p>
           </section>
 
@@ -187,7 +189,7 @@ export function WorkspacePanel({ userId, title, token, readOnly, accountSlot }: 
               </div>
               <span className="qd-pill qd-pill--warn">{review.length} kontrol bekliyor</span>
             </div>
-            <CommitmentTable items={items} readOnly={Boolean(readOnly)} onUpdate={update} onRemove={remove} />
+            <CommitmentTable items={items} duplicates={outlook.duplicates} readOnly={Boolean(readOnly)} onUpdate={update} onRemove={remove} />
             {!readOnly ? <ManualAdd onAdd={addManual} /> : null}
           </section>
         </div>
@@ -330,7 +332,7 @@ function Integrations({ onRequest }: { onRequest: (name: string) => void }) {
   );
 }
 
-function CommitmentTable({ items, readOnly, onUpdate, onRemove }: { items: CommitmentRow[]; readOnly: boolean; onUpdate: (id: string, p: Partial<CommitmentRow>) => void; onRemove: (id: string) => void }) {
+function CommitmentTable({ items, duplicates, readOnly, onUpdate, onRemove }: { items: CommitmentRow[]; duplicates: Set<string>; readOnly: boolean; onUpdate: (id: string, p: Partial<CommitmentRow>) => void; onRemove: (id: string) => void }) {
   if (!items.length) return <p style={{ color: "var(--qd-muted)" }}>Henüz taahhüt yok. Belge yükleyin veya aşağıdan elle ekleyin.</p>;
   return (
     <div className="qd-table-wrap" style={{ maxHeight: 520, overflowY: "auto" }}>
@@ -342,10 +344,11 @@ function CommitmentTable({ items, readOnly, onUpdate, onRemove }: { items: Commi
               <td>{readOnly ? c.counterparty : <input className="qd-cell" defaultValue={c.counterparty} onBlur={(e) => e.target.value.trim() && e.target.value !== c.counterparty && onUpdate(c.id, { counterparty: e.target.value.trim() })} aria-label="Karşı taraf" />}</td>
               <td>{COMMITMENT_KIND[c.kind as keyof typeof COMMITMENT_KIND] ?? c.kind}</td>
               <td>{c.direction === "in" ? <span className="qd-pill qd-pill--good">Gelecek</span> : <span className="qd-pill qd-pill--muted">Ödenecek</span>}</td>
-              <td className="qd-right qd-num">{readOnly ? money(c.amount) : <input className="qd-cell qd-num" type="number" min={0} defaultValue={c.amount} onBlur={(e) => { const v = Number(e.target.value); if (Number.isFinite(v) && v >= 0 && v !== c.amount) onUpdate(c.id, { amount: v }); }} aria-label="Tutar" style={{ textAlign: "right", width: 110 }} />}</td>
+              <td className="qd-right qd-num">{!isLira(c) ? <><span>{c.amount.toLocaleString("tr-TR")} {(c.currency ?? "").toUpperCase()}</span><div><span className="qd-pill qd-pill--warn">Döviz · toplama katılmadı</span></div></> : readOnly ? money(c.amount) : <input className="qd-cell qd-num" type="number" min={0} defaultValue={c.amount} onBlur={(e) => { const v = Number(e.target.value); if (Number.isFinite(v) && v >= 0 && v !== c.amount) onUpdate(c.id, { amount: v }); }} aria-label="Tutar" style={{ textAlign: "right", width: 110 }} />}</td>
               <td className="qd-num">{readOnly ? (c.due_date ? formatDateTr(c.due_date) : "—") : <input className="qd-cell qd-num" type="date" defaultValue={c.due_date ?? ""} onBlur={(e) => e.target.value !== (c.due_date ?? "") && onUpdate(c.id, { due_date: e.target.value || null })} aria-label="Vade" />}</td>
               <td style={{ maxWidth: 240, color: "var(--qd-muted)", fontSize: 12 }}>{c.evidence ? `“${c.evidence}”` : "—"}{c.confidence !== null ? <div>güven %{Math.round(c.confidence * 100)}</div> : null}</td>
               <td>
+                {duplicates.has(c.id) ? <span className="qd-pill qd-pill--bad" title="Aynı tutar, para birimi ve vadeyle başka bir satır daha var; toplamlara katılmadı.">Olası tekrar</span> : null}
                 {c.status === "paid" ? <span className="qd-pill qd-pill--good">Ödendi</span> : c.needs_review ? <span className="qd-pill qd-pill--warn">Kontrol bekliyor</span> : <span className="qd-pill qd-pill--muted">Açık</span>}
               </td>
               {readOnly ? null : (

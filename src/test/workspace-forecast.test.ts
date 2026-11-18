@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { workspaceOutlook, type WorkspaceCommitment } from "@/lib/workspace-forecast";
+import { possibleDuplicates, workspaceOutlook, type WorkspaceCommitment } from "@/lib/workspace-forecast";
 
 const c = (over: Partial<WorkspaceCommitment>): WorkspaceCommitment => ({
   id: Math.random().toString(36),
@@ -39,5 +39,20 @@ describe("empty-account outlook", () => {
     const week = o.weeks.find((w) => w.inflow > 0);
     expect((week?.weekStart ?? "9999") <= "2026-12-01").toBe(true);
     expect(o.weeks.at(-1)).toMatchObject({ balance: 400, balanceCautious: 0 });
+  });
+
+  it("keeps dollar amounts out of TL totals and lists them separately", () => {
+    const o = workspaceOutlook([c({ amount: 12000, currency: "USD" }), c({ amount: 500, currency: "TRY" }), c({ amount: 300, currency: null })], 0, "2026-11-24");
+    expect(o.openIn).toBe(800);
+    expect(o.foreign).toHaveLength(1);
+    expect(o.weeks[0]?.inflow).toBe(800);
+  });
+
+  it("flags the same money seen in two documents and counts it once", () => {
+    const a = c({ id: "a", direction: "out", amount: 90000, due_date: "2026-12-01" });
+    const b = c({ id: "b", direction: "out", amount: 90000, due_date: "2026-12-01" });
+    const other = c({ id: "x", direction: "out", amount: 90000, due_date: "2026-12-02" });
+    expect([...possibleDuplicates([a, b, other])]).toEqual(["b"]);
+    expect(workspaceOutlook([a, b, other], 0, "2026-11-24").openOut).toBe(180000);
   });
 });
