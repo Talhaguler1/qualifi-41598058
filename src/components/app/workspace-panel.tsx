@@ -129,6 +129,7 @@ export function WorkspacePanel({ userId, title, token, readOnly, accountSlot }: 
   return (
     <div className="qd">
       <TopBar title={title} subtitle={readOnly ? "Yönetici görünümü · salt okunur" : "Kendi belgelerinizle nakit görünümü"} badge={null}>
+        <a className="qd-btn qd-btn--ghost qd-btn--sm" href="/demo/isletme">Örnek panel (demo)</a>
         {accountSlot}
       </TopBar>
       <main className="qd-main">
