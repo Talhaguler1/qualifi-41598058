@@ -421,3 +421,26 @@
   .qd-story { min-height: 0; }
   .qd-ticker__label { display: none; }
 }
+
+/* Detail sheet opened from a story card: wide on desktop, bottom sheet on phones. */
+.qd-sheet.qd-sheet--focus { width: min(920px, 100vw) !important; padding: 0 !important; display: flex; flex-direction: column; min-height: 0; }
+.qd-sheet--focus .qd-sheet__head { padding: 20px 24px 12px; border-bottom: 1px solid var(--qd-line); text-align: left; }
+.qd-sheet--focus .qd-sheet__head h2 { font-size: 18px; letter-spacing: -0.2px; }
+.qd-sheet--focus .qd-sheet__body { padding: 18px 24px 32px; overflow-y: auto; flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 14px; }
+.qd-sheet.qd-sheet--bottom { width: 100vw !important; height: 88vh; border-radius: 20px 20px 0 0; }
+.qd-sheet--bottom .qd-sheet__head { padding: 16px 18px 10px; }
+.qd-sheet--bottom .qd-sheet__body { padding: 14px 14px 28px; }
+
+/* Date switcher caption + compact demo header on phones (one row of controls, no wrapping chaos). */
+.qd-dates__label { position: absolute; top: -9px; left: 12px; z-index: 2; padding: 0 6px; border-radius: 6px; background: var(--qd-paper); color: var(--qd-muted); font-size: 10.5px; font-weight: 600; letter-spacing: 0.4px; text-transform: uppercase; line-height: 1.4; }
+@media (max-width: 720px) {
+  .qd-top { gap: 8px 10px; padding: 10px 16px 12px; }
+  .qd-company { padding-left: 10px; min-width: 0; flex: 1; }
+  .qd-company h1 { font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .qd-company small, .qd-top .qd-badge, .qd-top .qd-btn--ghost { display: none; }
+  .qd-top .qd-spacer { display: none; }
+  .qd-dates { order: 10; width: 100%; margin-top: 8px; }
+  .qd-dates button { min-width: 0; padding: 6px 8px; }
+  .qd-dates button small { display: none; }
+  .qd-brand { font-size: 17px; }
+}

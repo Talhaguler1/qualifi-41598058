@@ -32,15 +32,18 @@ import {
 } from "@/lib/demo";
 import { trackDemo, type DemoAction } from "@/lib/demo/track";
 import { ShareSummaryView } from "./share-view";
-import { AgentHero, FocusArea, StoryGrid, useStoryFocus, type StoryCard } from "./home";
-import { AnimatedNumber, TopBar, useMounted } from "./shared";
+import { AgentHero, FocusSheet, StoryGrid, useStoryFocus, type StoryCard } from "./home";
+import { AnimatedNumber, SHARE_KEY, TopBar, useLocalState, useMounted } from "./shared";
 
 type Story = "calls" | "portfolio" | "sectors" | "signals" | "commitments" | "shared";
 const STATUS_LABEL = { kept: [["Tutuldu", "Kept"], "qd-pill--good"], late: [["Gecikmeli", "Late"], "qd-pill--warn"], broken: [["Tutulmadı", "Broken"], "qd-pill--bad"], upcoming: [["Yaklaşıyor", "Upcoming"], "qd-pill--muted"] } as const;
 const SIGNAL_LABEL = { promise: [["Ödeme sözü", "Payment promise"], "qd-pill--muted"], deferral: [["Erteleme talebi", "Deferral request"], "qd-pill--warn"], stress: [["Nakit sıkıntısı", "Cash stress"], "qd-pill--bad"], positive: [["Olumlu", "Positive"], "qd-pill--good"] } as const;
 const LEVEL = { high: [["Yüksek", "High"], "qd-pill--bad"], medium: [["Orta", "Medium"], "qd-pill--warn"], low: [["Düşük", "Low"], "qd-pill--good"] } as const;
 
-export function BankPanel({ region, banker, date, onDate, onBanker, sharedTenant, accountSlot, lockBanker }: { region: string; banker: string; date: DemoDate; onDate: (d: DemoDate) => void; onBanker: (b: string) => void; sharedTenant?: string | undefined; accountSlot?: ReactNode; lockBanker?: boolean }) {
+export function BankPanel({ region, banker, date, onDate, onBanker, sharedTenant: sharedFromUrl, accountSlot, lockBanker }: { region: string; banker: string; date: DemoDate; onDate: (d: DemoDate) => void; onBanker: (b: string) => void; sharedTenant?: string | undefined; accountSlot?: ReactNode; lockBanker?: boolean }) {
+  // A scorecard shared from the business panel arrives either in the URL or through this browser's storage.
+  const [stored] = useLocalState<{ tenant: string } | null>(SHARE_KEY, null);
+  const sharedTenant = sharedFromUrl ?? stored?.tenant;
   const firms = useMemo(() => (banker === "all" ? generateRegion(region) : generatePortfolio(region, banker)), [region, banker]);
   const prevDate = DEMO_DATES[DEMO_DATES.indexOf(date) - 1] ?? addDays(date, -14);
   const risks = useMemo(() => new Map(firms.map((f) => [f.id, firmRisk(f, date)])), [firms, date]);
@@ -48,7 +51,7 @@ export function BankPanel({ region, banker, date, onDate, onBanker, sharedTenant
   const sectors = useMemo(() => sectorAnalysis(firms, date), [firms, date]);
   const [firm, setFirm] = useState<Firm | null>(null);
   const log = (action: DemoAction, target?: string) => trackDemo({ panel: "bank", tenant: banker, demo_date: date, action, target: target ?? null });
-  const story = useStoryFocus(sharedTenant ? "shared" : null, (key) => log("tab_open", `card-${key}`));
+  const story = useStoryFocus(sharedFromUrl ? "shared" : null, (key) => log("tab_open", `card-${key}`));
   const openFirm = (f: Firm) => {
     log("firm_open", f.id);
     setFirm(f);
@@ -115,7 +118,7 @@ export function BankPanel({ region, banker, date, onDate, onBanker, sharedTenant
       icon: <CalendarClock size={15} />,
       eyebrow: L("Taahhüt takibi", "Commitment tracking"),
       value: L(`${brokenNow.length} tutulmadı`, `${brokenNow.length} broken`),
-      text: L(`Son 2 haftada. ${upcoming.length} taahhüdün vadesi önümüzdeki 7 günde; toplamda ${broken.length} tutulmayan (${money(broken.reduce((s, x) => s + x.c.amount, 0))}).`, `In the last 2 weeks. ${upcoming.length} commitments fall due in the next 7 days; ${broken.length} broken in total (${money(broken.reduce((s, x) => s + x.c.amount, 0))}).`),
+      text: L(`Son 2 haftada. ${upcoming.length} taahhüdün vadesi önümüzdeki 7 günde.`, `In the last 2 weeks. ${upcoming.length} commitments fall due in the next 7 days.`),
     },
     {
       key: "shared",
@@ -137,6 +140,7 @@ export function BankPanel({ region, banker, date, onDate, onBanker, sharedTenant
     shared: L("İşletmenin paylaştığı karne", "Scorecard shared by a business"),
   };
   const open = story.open as Story | null;
+  const shown = story.last as Story | null;
 
   return (
     <div className="qd">
@@ -158,25 +162,23 @@ export function BankPanel({ region, banker, date, onDate, onBanker, sharedTenant
           title={L("QualiFi risk ajanı", "QualiFi risk agent")}
           headline={briefing.headline}
           tone={high.length > firms.length * 0.15 ? "alert" : "watch"}
-          points={briefing.points}
+          points={[]}
           runKey={`${banker}-${date}`}
           steps={steps}
           stats={[
-            { label: L("İzlenen firma", "Firms monitored"), value: <AnimatedNumber value={firms.length} format={count} />, sub: `${L("Toplam kredi", "Total loans")} ${money(totalLoans)}` },
             { label: L("Yüksek risk", "High risk"), value: <AnimatedNumber value={high.length} format={count} />, sub: `${money(highLoans)} ${L("kredi", "in loans")}` },
           ]}
         />
 
         <StoryGrid cards={cards} open={open} onToggle={story.toggle} />
 
-        {open ? (
-          <FocusArea openKey={`${open}-${date}-${banker}`} title={titles[open]} onClose={story.close}>
-            {open === "calls" ? <CallList briefing={briefing} onFirm={openFirm} /> : null}
-            {open === "portfolio" ? <section className="qd-card"><Portfolio firms={firms} risks={risks} onFirm={openFirm} /></section> : null}
-            {open === "sectors" ? <section className="qd-card"><Sectors firms={firms} date={date} /></section> : null}
-            {open === "signals" ? <section className="qd-card"><Signals firms={firms} date={date} onFirm={openFirm} /></section> : null}
-            {open === "commitments" ? <section className="qd-card"><Commitments rows={allCommitments} date={date} onFirm={openFirm} /></section> : null}
-            {open === "shared" ? (
+        <FocusSheet open={open !== null} title={shown ? titles[shown] : ""} onClose={story.close}>
+            {shown === "calls" ? <CallList briefing={briefing} onFirm={openFirm} /> : null}
+            {shown === "portfolio" ? <section className="qd-card"><Portfolio firms={firms} risks={risks} onFirm={openFirm} /></section> : null}
+            {shown === "sectors" ? <section className="qd-card"><Sectors firms={firms} date={date} /></section> : null}
+            {shown === "signals" ? <section className="qd-card"><Signals firms={firms} date={date} onFirm={openFirm} /></section> : null}
+            {shown === "commitments" ? <section className="qd-card"><Commitments rows={allCommitments} date={date} onFirm={openFirm} /></section> : null}
+            {shown === "shared" ? (
               sharedTenant ? (
                 <SharedCard tenant={sharedTenant} date={date} />
               ) : (
@@ -193,8 +195,7 @@ export function BankPanel({ region, banker, date, onDate, onBanker, sharedTenant
                 </section>
               )
             ) : null}
-          </FocusArea>
-        ) : null}
+        </FocusSheet>
       </main>
       <FirmSheet firm={firm} date={date} onClose={() => setFirm(null)} />
     </div>

@@ -44,8 +44,8 @@ import { trackDemo, type DemoAction } from "@/lib/demo/track";
 import { ActionQueue, AskAgent } from "./agent-panel";
 import { ShareSummaryView } from "./share-view";
 import { featuredPromise, PromisePlanCard } from "./promise-plan";
-import { AgentHero, FocusArea, StoryGrid, useStoryFocus, type StoryCard } from "./home";
-import { AnimatedNumber, Grade, SourceChip, Tabs, Toast, TopBar, useMounted } from "./shared";
+import { AgentHero, FocusSheet, StoryGrid, useStoryFocus, type StoryCard } from "./home";
+import { AnimatedNumber, Grade, SHARE_KEY, SourceChip, Tabs, Toast, TopBar, useMounted } from "./shared";
 
 type Tab = "inflows" | "customers" | "whatsapp" | "sources";
 type Story = "cash" | "promise" | "actions" | "customers" | "scorecard";
@@ -68,14 +68,6 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
   const accuracy = useMemo(() => (prevDate ? forecastAccuracy(dataset, prevDate, date) : null), [dataset, prevDate, date]);
   const card = useMemo(() => (prevDate ? scorecard(dataset, prevDate, date) : null), [dataset, prevDate, date]);
   const featured = useMemo(() => featuredPromise(snap), [snap]);
-  const risky = useMemo(
-    () =>
-      snap.dataset.customers.filter((c) => {
-        const p = payerProfile(snap, c.id);
-        return p.openAmount > 0 && (p.grade === "C" || p.grade === "D");
-      }).length,
-    [snap],
-  );
   const ask = useCallback((q: string) => askAgent(snap, q), [snap]);
   const [tab, setTab] = useState<Tab>("inflows");
   const [customer, setCustomer] = useState<Customer | null>(null);
@@ -105,7 +97,6 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
   };
 
   const balance = currentBalance(snap);
-  const last = weeks.at(-1)!;
   const tight = tightestWeek(weeks);
   const overdue = inflows.filter((i) => i.receivable.dueDate < date);
   const overdueSum = overdue.reduce((s, i) => s + i.receivable.amount, 0);
@@ -145,8 +136,8 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
       key: "customers",
       icon: <UserCheck size={15} />,
       eyebrow: L("Müşteri ödeme karnesi", "Customer payer scorecard"),
-      value: L(`${risky} müşteri geç ödüyor`, `${risky} customers pay late`),
-      text: L(`${money(overdueSum)} vadesi geçmiş, ${overdue.length} fatura. Kim ne zaman öder, WhatsApp sözleri, kaynaklar.`, `${money(overdueSum)} overdue across ${overdue.length} invoices. Who pays when, WhatsApp promises, sources.`),
+      value: money(overdueSum),
+      text: L(`Vadesi geçmiş ${overdue.length} fatura. Kim ne zaman öder, WhatsApp sözleri ve kaynak belgeler burada.`, `Overdue across ${overdue.length} invoices. Who pays when, WhatsApp promises and source documents.`),
       ...(overdue.length ? { tone: "alert" as const } : {}),
     },
     {
@@ -179,6 +170,7 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
     scorecard: L("Tahmin ve söz karnesi", "Forecast and promise scorecard"),
   };
   const open = story.open as Story | null;
+  const shown = story.last as Story | null;
 
   return (
     <div className="qd">
@@ -190,7 +182,7 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
           title={L("QualiFi ajanı", "QualiFi agent")}
           headline={briefing.headline}
           tone={briefing.tone}
-          points={briefing.points.slice(0, 2)}
+          points={[]}
           runKey={`${tenant}-${date}`}
           steps={steps}
           stats={[
@@ -198,11 +190,6 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
               label: L("Bugünkü bakiye", "Balance today"),
               value: <AnimatedNumber value={balance} format={money} />,
               sub: L(`${formatDateTr(date)} · ${dataset.sources.banka}`, `${formatDateTr(date)} · ${dataset.sources.banka}`),
-            },
-            {
-              label: L("8 hafta sonra", "In 8 weeks"),
-              value: <AnimatedNumber value={last.balanceBase} format={money} />,
-              sub: `${L("Aralık", "Range")} ${money(last.balanceLow)} – ${money(last.balanceHigh)}`,
             },
           ]}
         >
@@ -219,11 +206,10 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
 
         <StoryGrid cards={cards} open={open} onToggle={story.toggle} />
 
-        {open ? (
-          <FocusArea openKey={`${open}-${date}`} title={titles[open]} onClose={story.close}>
-            {open === "cash" ? <CashFlowCard snap={snap} weeks={weeks} accuracy={accuracy} prevDate={prevDate} onScenario={(target, detail) => log("scenario_run", target, detail)} /> : null}
-            {open === "promise" ? <PromisePlanCard key={`plan-${date}`} snap={snap} onLog={(step) => log("scenario_run", "promise-plan", step)} /> : null}
-            {open === "actions" ? (
+        <FocusSheet open={open !== null} title={shown ? titles[shown] : ""} onClose={story.close}>
+            {shown === "cash" ? <CashFlowCard snap={snap} weeks={weeks} accuracy={accuracy} prevDate={prevDate} onScenario={(target, detail) => log("scenario_run", target, detail)} /> : null}
+            {shown === "promise" ? <PromisePlanCard key={`plan-${date}`} snap={snap} onLog={(step) => log("scenario_run", "promise-plan", step)} /> : null}
+            {shown === "actions" ? (
               <section className="qd-card">
                 <div className="qd-card__head">
                   <h2>{L("Ajanın önerileri", "Agent suggestions")}</h2>
@@ -232,7 +218,7 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
                 <ActionQueue key={date} actions={actions} storageKey={`qd-actions-${tenant}-${date}`} onToast={setToast} onAction={(a, id) => log(a, id)} />
               </section>
             ) : null}
-            {open === "customers" ? (
+            {shown === "customers" ? (
               <section className="qd-card">
                 <Tabs<Tab>
                   value={tab}
@@ -252,12 +238,11 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
                 </div>
               </section>
             ) : null}
-            {open === "scorecard" ? <ScorecardCard dataset={dataset} prevDate={prevDate} date={date} onCustomer={openCustomer} /> : null}
-          </FocusArea>
-        ) : null}
+            {shown === "scorecard" ? <ScorecardCard dataset={dataset} prevDate={prevDate} date={date} onCustomer={openCustomer} /> : null}
+        </FocusSheet>
       </main>
       <CustomerSheet snap={snap} customer={customer} onClose={() => setCustomer(null)} />
-      <ShareSheet open={shareOpen} onClose={() => setShareOpen(false)} dataset={dataset} date={date} onShared={() => { log("tab_open", "bank-share-sent"); setToast(L("Demo: paylaşım bankacı paneline yansıdı. Gerçekte hiçbir veri gönderilmedi.", "Demo: the share now appears in the banker panel. No data was actually sent.")); }} />
+      <ShareSheet open={shareOpen} onClose={() => setShareOpen(false)} dataset={dataset} date={date} onShared={() => { log("tab_open", "bank-share-sent"); try { window.localStorage.setItem(SHARE_KEY, JSON.stringify({ tenant, date })); } catch { /* storage blocked: the link in the sheet still works */ } setToast(L("Demo: paylaşım bankacı paneline yansıdı. Gerçekte hiçbir veri gönderilmedi.", "Demo: the share now appears in the banker panel. No data was actually sent.")); }} />
       {toast ? <Toast text={toast} onDone={clearToast} /> : null}
     </div>
   );

@@ -52,7 +52,8 @@ export function Brand() {
 export function DateSwitcher({ value, onChange }: { value: DemoDate; onChange: (d: DemoDate) => void }) {
   const index = DEMO_DATES.indexOf(value);
   return (
-    <div className="qd-dates" role="group" aria-label={L("Demo tarihi", "Demo date")}>
+    <div className="qd-dates" role="group" aria-label={L("Zamanda yolculuk: tahmin nasıl değişti", "Time travel: how the forecast changed")} title={L("Zamanda yolculuk: geçmiş bir tarihe dönüp tahminin nasıl değiştiğini görün", "Time travel: go back to an earlier date and see how the forecast changed")}>
+      <span className="qd-dates__label">{L("Zamanda yolculuk", "Time travel")}</span>
       <span className="qd-dates__thumb" style={{ width: `calc((100% - 8px) / ${DEMO_DATES.length})`, transform: `translateX(${index * 100}%)` }} />
       {DEMO_DATES.map((d) => (
         <button key={d} type="button" aria-pressed={d === value} onClick={() => onChange(d)}>
@@ -176,6 +177,9 @@ export function Toast({ text, onDone }: { text: string; onDone: () => void }) {
 export function FileIcon() {
   return <FileText size={14} />;
 }
+
+/** Where the business panel leaves its shared scorecard for the banker panel (same browser, demo only). */
+export const SHARE_KEY = "qd-shared-scorecard";
 
 /** Per-viewer memory for demo clicks (approved messages etc.). Safe when storage is blocked. */
 export function useLocalState<T>(key: string, initial: T): [T, (v: T) => void] {

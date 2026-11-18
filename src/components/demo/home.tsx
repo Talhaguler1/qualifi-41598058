@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { Bot, Check, ChevronDown, ChevronRight, Loader2, X } from "lucide-react";
+import { Bot, Check, ChevronDown, ChevronRight, Loader2 } from "lucide-react";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { L, type AgentStep } from "@/lib/demo";
 import { TOOL_ICONS } from "./shared";
 
 /**
  * Demo home layout: the agent speaks first (one sentence + a question box), then a grid of
- * story cards with one number and one sentence each. A card opens its detail right below the
- * grid, so the screen starts calm and the depth is one click away.
+ * story cards with one number and one sentence each. A card opens its detail in a side panel
+ * (bottom sheet on phones), so the screen starts calm and the depth is one click away.
  */
 
 /** The agent's round as a row of icons that light up one by one; the full log opens on demand. */
@@ -104,11 +105,13 @@ export function AgentHero({
           </span>
         </div>
         <h2 key={runKey}>{headline}</h2>
-        <ul className="qd-ahero__points">
-          {points.slice(0, 3).map((p) => (
-            <li key={p}>{p}</li>
-          ))}
-        </ul>
+        {points.length ? (
+          <ul className="qd-ahero__points">
+            {points.slice(0, 2).map((p) => (
+              <li key={p}>{p}</li>
+            ))}
+          </ul>
+        ) : null}
       </div>
       <div className="qd-ahero__stats">
         {stats.map((s) => (
@@ -151,8 +154,7 @@ export function StoryGrid({ cards, open, onToggle }: { cards: StoryCard[]; open:
           style={{ animationDelay: `${i * 50}ms` }}
           data-tone={c.tone}
           aria-expanded={c.onActivate ? undefined : open === c.key}
-          aria-controls={c.onActivate ? undefined : "qd-focus"}
-          onClick={() => (c.onActivate ? c.onActivate() : onToggle(c.key))}
+                    onClick={() => (c.onActivate ? c.onActivate() : onToggle(c.key))}
         >
           <span className="qd-story__top">
             <i>{c.icon}</i>
@@ -161,7 +163,7 @@ export function StoryGrid({ cards, open, onToggle }: { cards: StoryCard[]; open:
           <span className="qd-story__value qd-num">{c.value}</span>
           <span className="qd-story__text">{c.text}</span>
           <span className="qd-story__more">
-            {open === c.key ? L("Kapat", "Close") : (c.cta ?? L("Aç", "Open"))} <ChevronRight size={14} />
+            {c.cta ?? L("Aç", "Open")} <ChevronRight size={14} />
           </span>
         </button>
       ))}
@@ -169,43 +171,51 @@ export function StoryGrid({ cards, open, onToggle }: { cards: StoryCard[]; open:
   );
 }
 
-/** The opened card's detail, placed under the grid and scrolled into view. */
-export function FocusArea({ openKey, title, onClose, children }: { openKey: string; title: string; onClose: () => void; children: ReactNode }) {
-  const ref = useRef<HTMLElement>(null);
+/** True on phone widths, where details open as a bottom sheet instead of a side panel. */
+function useNarrow(): boolean {
+  const [narrow, setNarrow] = useState(false);
   useEffect(() => {
-    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    ref.current?.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
-  }, [openKey]);
+    const mq = window.matchMedia("(max-width: 720px)");
+    const update = () => setNarrow(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+  return narrow;
+}
+
+/**
+ * The opened card's detail: a wide side panel on desktop, a bottom sheet on phones, so the
+ * user never has to scroll to find what they clicked and the cards stay in place behind it.
+ */
+export function FocusSheet({ open, title, subtitle, onClose, children }: { open: boolean; title: string; subtitle?: string; onClose: () => void; children: ReactNode }) {
+  const narrow = useNarrow();
   return (
-    <section id="qd-focus" ref={ref} className="qd-focus qd-enter" key={openKey} aria-label={title}>
-      <div className="qd-focus__bar">
-        <span className="qd-eyebrow">{title}</span>
-        <button
-          type="button"
-          className="qd-btn qd-btn--ghost qd-btn--sm"
-          onClick={() => {
-            onClose();
-            document.querySelector(".qd-stories")?.scrollIntoView({ behavior: "smooth", block: "center" });
-          }}
-        >
-          <X size={13} /> {L("Kartlara dön", "Back to cards")}
-        </button>
-      </div>
-      {children}
-    </section>
+    <Sheet open={open} onOpenChange={(o) => (!o ? onClose() : undefined)}>
+      <SheetContent side={narrow ? "bottom" : "right"} className={`qd qd-sheet qd-sheet--focus${narrow ? " qd-sheet--bottom" : ""}`}>
+        <SheetHeader className="qd-sheet__head">
+          <SheetTitle>{title}</SheetTitle>
+          <SheetDescription className={subtitle ? undefined : "sr-only"}>{subtitle ?? title}</SheetDescription>
+        </SheetHeader>
+        <div className="qd-sheet__body">{children}</div>
+      </SheetContent>
+    </Sheet>
   );
 }
 
 /** Opens a card by key, logs it, and closes it when tapped again. */
 export function useStoryFocus(initial: string | null, log: (key: string) => void) {
   const [open, setOpen] = useState<string | null>(initial);
+  // The last opened card stays rendered while the sheet animates out.
+  const [last, setLast] = useState<string | null>(initial);
   const toggle = (key: string) => {
     if (open === key) {
       setOpen(null);
       return;
     }
     log(key);
+    setLast(key);
     setOpen(key);
   };
-  return { open, toggle, close: () => setOpen(null) };
+  return { open, last, toggle, close: () => setOpen(null) };
 }
