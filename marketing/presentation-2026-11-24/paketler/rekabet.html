@@ -62,6 +62,14 @@ h1 em { font-style: normal; color: var(--green); }
 .legend { position: absolute; right: 40px; top: 4px; display: flex; gap: 22px; font-size: 17px; color: var(--muted); background: var(--paper); padding: 6px 10px; border-radius: 10px; }
 .legend span { display: inline-flex; align-items: center; gap: 8px; }
 .legend i { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
+
+/* fixed row structure */
+.rowc p .lbl { display: inline-block; width: 82px; font-weight: 600; color: var(--muted); font-size: 18px; }
+.rowc p { line-height: 1.6; }
+/* one market in focus, the other blurred and faded */
+.markets[data-focus] .market { transition: none; }
+.markets[data-focus="tr"] .market:nth-child(2), .markets[data-focus="world"] .market:nth-child(1) { opacity: .32; filter: blur(3px) grayscale(1); }
+.markets[data-focus="tr"] .market:nth-child(1), .markets[data-focus="world"] .market:nth-child(2) { border: 2px solid var(--ink); box-shadow: 0 20px 50px #16302a1f; }
 </style>
 </head>
 <body>
@@ -78,30 +86,134 @@ h1 em { font-style: normal; color: var(--green); }
       <h2>Türkiye'de <span>Bugün kullanılanlar</span></h2>
       <div class="rowc">
         <div class="cat">Ön muhasebe ve ERP<small>Paraşüt · Logo</small></div>
-        <p>Faturayı ve tahsilatı kaydeder; Paraşüt vadesi geleni <b>e-postayla</b> hatırlatır. Nakit raporu yalnız sisteme girilen kayda bakar; müşterinin “cuma öderiz” sözünü bilmez.</p>
+        <p><span class="lbl">Yapar:</span>Faturayı kaydeder, e-postayla hatırlatır.<br><span class="lbl">Sınırı:</span>Rapor yalnız <b>sisteme girilen kayda</b> bakar.</p>
       </div>
       <div class="rowc">
         <div class="cat">KOBİ finansmanı<small>Figopara</small></div>
-        <p>Ticari risk skoru ve finansman sunar. İşletmenin <b>kendi müşterileriyle konuşmasını</b> görmez.</p>
+        <p><span class="lbl">Yapar:</span>Ticari risk skoru ve finansman sunar.<br><span class="lbl">Sınırı:</span>İşletmenin <b>müşterileriyle konuşmasını</b> görmez.</p>
       </div>
       <div class="rowc">
         <div class="cat">Excel ve telefon<small>Çoğu KOBİ</small></div>
-        <p>Söz telefonda alınır, muhasebeciye iletilir, tablo elle güncellenir. <b>Çoğu zaman unutulur.</b></p>
+        <p><span class="lbl">Yapar:</span>Söz telefonda alınır, tablo elle güncellenir.<br><span class="lbl">Sınırı:</span><b>Çoğu zaman unutulur.</b></p>
       </div>
     </div>
     <div class="market">
       <h2>Yurt dışında <span>Benzer işi yapanlar</span></h2>
       <div class="rowc">
         <div class="cat">Nakit tahmini<small>Agicap</small></div>
-        <p>ERP ve bankayı bağlayıp tahmin yapar. Tahmin <b>kayıtlı faturalara</b> dayanır.</p>
+        <p><span class="lbl">Yapar:</span>ERP ve bankadan nakit tahmini çıkarır.<br><span class="lbl">Sınırı:</span>Tahmin <b>kayıtlı faturalara</b> dayanır.</p>
       </div>
       <div class="rowc">
         <div class="cat">Alacak hatırlatma<small>Chaser · Upflow</small></div>
-        <p>Hatırlatma <b>gönderir</b>: e-posta, SMS, telefon; Chaser bir entegrasyonla WhatsApp'tan da. Odak, mesajı göndermek.</p>
+        <p><span class="lbl">Yapar:</span>Hatırlatma gönderir; Chaser WhatsApp'tan da.<br><span class="lbl">Sınırı:</span>Odak <b>mesaj göndermek</b>.</p>
       </div>
       <div class="rowc">
         <div class="cat">Ödeme sözü okuma<small>Tesorio</small></div>
-        <p>Müşterinin verdiği sözü <b>e-postadan</b> okuyup tahmine katar. Büyük şirketler için.</p>
+        <p><span class="lbl">Yapar:</span>Ödeme sözünü okuyup tahmine katar.<br><span class="lbl">Sınırı:</span>Yalnız <b>e-posta</b>, büyük şirketler için.</p>
+      </div>
+    </div>
+  </div>
+  <div class="band">
+    <div class="who">QualiFi<small>Çek · senet · açık bankacılık (ÖHVPS)</small></div>
+    <div class="steps">
+      <span class="tr">Gelen WhatsApp'ı okur</span><i>→</i>
+      <span>Faturayla eşleştirir</span><i>→</i>
+      <span>Ödeme tarihini kaydırır</span><i>→</i>
+      <span>Nakit tahminini günceller</span><i>→</i>
+      <span>Bankayla izinle paylaşır</span>
+    </div>
+  </div>
+  <div class="src">Kaynak: şirketlerin kendi ürün sayfaları ve kılavuzları, Kasım 2026.</div>
+</section>
+
+<!-- ============ A. Türkiye + yurt dışı + QualiFi ============ -->
+<section class="slide" id="ra-1">
+  <div class="top">
+    <div class="logo"><svg width="40" height="40" viewBox="0 0 40 40"><rect width="40" height="40" rx="11" fill="#16302a"/><circle cx="17.5" cy="19" r="7" fill="none" stroke="#d6ee9e" stroke-width="4.5"/><rect x="22.25" y="12" width="4.5" height="20" rx="2.25" fill="#d6ee9e"/><circle cx="31" cy="9.5" r="2.75" fill="#d6ee9e"/></svg>QualiFi</div>
+    <span class="eyebrow">Rekabet · 1 / 2 · Türkiye</span>
+  </div>
+  <h1>Türkiye'de ödeme tarihi e-postada değil, <em>WhatsApp'ta</em> konuşulur.</h1>
+  <div class="markets" data-focus="tr">
+    <div class="market">
+      <h2>Türkiye'de <span>Bugün kullanılanlar</span></h2>
+      <div class="rowc">
+        <div class="cat">Ön muhasebe ve ERP<small>Paraşüt · Logo</small></div>
+        <p><span class="lbl">Yapar:</span>Faturayı kaydeder, e-postayla hatırlatır.<br><span class="lbl">Sınırı:</span>Rapor yalnız <b>sisteme girilen kayda</b> bakar.</p>
+      </div>
+      <div class="rowc">
+        <div class="cat">KOBİ finansmanı<small>Figopara</small></div>
+        <p><span class="lbl">Yapar:</span>Ticari risk skoru ve finansman sunar.<br><span class="lbl">Sınırı:</span>İşletmenin <b>müşterileriyle konuşmasını</b> görmez.</p>
+      </div>
+      <div class="rowc">
+        <div class="cat">Excel ve telefon<small>Çoğu KOBİ</small></div>
+        <p><span class="lbl">Yapar:</span>Söz telefonda alınır, tablo elle güncellenir.<br><span class="lbl">Sınırı:</span><b>Çoğu zaman unutulur.</b></p>
+      </div>
+    </div>
+    <div class="market">
+      <h2>Yurt dışında <span>Benzer işi yapanlar</span></h2>
+      <div class="rowc">
+        <div class="cat">Nakit tahmini<small>Agicap</small></div>
+        <p><span class="lbl">Yapar:</span>ERP ve bankadan nakit tahmini çıkarır.<br><span class="lbl">Sınırı:</span>Tahmin <b>kayıtlı faturalara</b> dayanır.</p>
+      </div>
+      <div class="rowc">
+        <div class="cat">Alacak hatırlatma<small>Chaser · Upflow</small></div>
+        <p><span class="lbl">Yapar:</span>Hatırlatma gönderir; Chaser WhatsApp'tan da.<br><span class="lbl">Sınırı:</span>Odak <b>mesaj göndermek</b>.</p>
+      </div>
+      <div class="rowc">
+        <div class="cat">Ödeme sözü okuma<small>Tesorio</small></div>
+        <p><span class="lbl">Yapar:</span>Ödeme sözünü okuyup tahmine katar.<br><span class="lbl">Sınırı:</span>Yalnız <b>e-posta</b>, büyük şirketler için.</p>
+      </div>
+    </div>
+  </div>
+  <div class="band">
+    <div class="who">QualiFi<small>Çek · senet · açık bankacılık (ÖHVPS)</small></div>
+    <div class="steps">
+      <span class="tr">Gelen WhatsApp'ı okur</span><i>→</i>
+      <span>Faturayla eşleştirir</span><i>→</i>
+      <span>Ödeme tarihini kaydırır</span><i>→</i>
+      <span>Nakit tahminini günceller</span><i>→</i>
+      <span>Bankayla izinle paylaşır</span>
+    </div>
+  </div>
+  <div class="src">Kaynak: şirketlerin kendi ürün sayfaları ve kılavuzları, Kasım 2026.</div>
+</section>
+
+<!-- ============ A. Türkiye + yurt dışı + QualiFi ============ -->
+<section class="slide" id="ra-2">
+  <div class="top">
+    <div class="logo"><svg width="40" height="40" viewBox="0 0 40 40"><rect width="40" height="40" rx="11" fill="#16302a"/><circle cx="17.5" cy="19" r="7" fill="none" stroke="#d6ee9e" stroke-width="4.5"/><rect x="22.25" y="12" width="4.5" height="20" rx="2.25" fill="#d6ee9e"/><circle cx="31" cy="9.5" r="2.75" fill="#d6ee9e"/></svg>QualiFi</div>
+    <span class="eyebrow">Rekabet · 2 / 2 · Yurt dışı</span>
+  </div>
+  <h1>Türkiye'de ödeme tarihi e-postada değil, <em>WhatsApp'ta</em> konuşulur.</h1>
+  <div class="markets" data-focus="world">
+    <div class="market">
+      <h2>Türkiye'de <span>Bugün kullanılanlar</span></h2>
+      <div class="rowc">
+        <div class="cat">Ön muhasebe ve ERP<small>Paraşüt · Logo</small></div>
+        <p><span class="lbl">Yapar:</span>Faturayı kaydeder, e-postayla hatırlatır.<br><span class="lbl">Sınırı:</span>Rapor yalnız <b>sisteme girilen kayda</b> bakar.</p>
+      </div>
+      <div class="rowc">
+        <div class="cat">KOBİ finansmanı<small>Figopara</small></div>
+        <p><span class="lbl">Yapar:</span>Ticari risk skoru ve finansman sunar.<br><span class="lbl">Sınırı:</span>İşletmenin <b>müşterileriyle konuşmasını</b> görmez.</p>
+      </div>
+      <div class="rowc">
+        <div class="cat">Excel ve telefon<small>Çoğu KOBİ</small></div>
+        <p><span class="lbl">Yapar:</span>Söz telefonda alınır, tablo elle güncellenir.<br><span class="lbl">Sınırı:</span><b>Çoğu zaman unutulur.</b></p>
+      </div>
+    </div>
+    <div class="market">
+      <h2>Yurt dışında <span>Benzer işi yapanlar</span></h2>
+      <div class="rowc">
+        <div class="cat">Nakit tahmini<small>Agicap</small></div>
+        <p><span class="lbl">Yapar:</span>ERP ve bankadan nakit tahmini çıkarır.<br><span class="lbl">Sınırı:</span>Tahmin <b>kayıtlı faturalara</b> dayanır.</p>
+      </div>
+      <div class="rowc">
+        <div class="cat">Alacak hatırlatma<small>Chaser · Upflow</small></div>
+        <p><span class="lbl">Yapar:</span>Hatırlatma gönderir; Chaser WhatsApp'tan da.<br><span class="lbl">Sınırı:</span>Odak <b>mesaj göndermek</b>.</p>
+      </div>
+      <div class="rowc">
+        <div class="cat">Ödeme sözü okuma<small>Tesorio</small></div>
+        <p><span class="lbl">Yapar:</span>Ödeme sözünü okuyup tahmine katar.<br><span class="lbl">Sınırı:</span>Yalnız <b>e-posta</b>, büyük şirketler için.</p>
       </div>
     </div>
   </div>
