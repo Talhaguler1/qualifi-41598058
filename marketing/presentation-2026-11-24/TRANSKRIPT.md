@@ -32,27 +32,29 @@ QualiFi ajanı bu kaynakları tek yerde okur ve üç somut çıktı üretir: **g
 
 ## 5 · Tek bir akışta nasıl çalışır · 1:00 (2:50)
 
-[Telefonları soldan sağa göster.]
+[Tık 1 · giriş ekranı] Faturayı kestiniz. Peki müşteriniz ne zaman ödeyecek? QualiFi'nin cevapladığı soru bu.
 
-Ekrandakiler canlı demomuzdan, veriler örnek veridir.
+[Tık 2 · ajan özeti] İşletme sahibi paneli açtığında ajan önce özeti verir: nakit yeterli ama aralık sonu haftası dar, birkaç tahsilat öne çekilirse rahatlar.
 
-İşletme sahibi paneli açtığında ajan önce özeti verir: "Nakit yeterli ama aralık sonu haftası dar. Birkaç tahsilat öne çekilirse rahatlar."
+[Tık 3 · sözden ödemeye] Müşteri WhatsApp'tan yazıyor: "Onay süreci uzadı, cuma günü gönderiyoruz." QualiFi sözü doğru faturayla eşleştirir, "cuma"yı gerçek bir tarihe çevirir ve nakit planını kaydırır.
 
-Şimdi bir müşteri WhatsApp'tan yazıyor: "Onay süreci uzadı, cuma günü gönderiyoruz." QualiFi bu mesajı okur. Sözün hangi faturaya ait olduğunu bulur. Belirsiz "cuma" ifadesini gerçek bir tarihe çevirir ve nakit planını o tarihe göre kaydırır.
+[Tık 4 · bugün takip] Ödeme gelmezse ajan takip mesajını hazırlar. İşletme onaylamadan hiçbir mesaj gitmez; karar her zaman insanda kalır.
 
-Ödeme gelmezse ajan takip mesajını hazırlar. Ama **işletme onaylamadan hiçbir mesaj gitmez.** Karar her zaman insanda kalır.
-
-Son ekranda işletme kendi ödeme karnesini görür. İsterse, yalnızca kendi izniyle, bu karneyi bankasıyla paylaşabilir.
+[Tık 5 · bankalarım] İşletme nakit ihtiyacını görür, bankalardan teklif isteyebilir ve isterse ödeme karnesini yalnız kendi izniyle bankasına gösterir.
 
 ## 6 · Banka temsilcisi nasıl görür · 0:50 (3:40)
 
 Peki aynı sinyal bankada neye dönüşür?
 
-Müşteri temsilcisi güne bir öncelik listesiyle başlar: "Son iki haftada riski belirgin artan firmalar şunlar, önce bununla konuş."
+[Tık 1 · bankacı asistanı] Müşteri temsilcisi güne bir öncelik listesiyle başlar: son iki haftada riski belirgin artan firmalar şunlar, önce bununla konuş.
 
-Sektör analizinde riskin nerede yoğunlaştığını görür. İşletmelerin izin verdiği sohbet sinyallerini, yani ödeme sözlerini, kaynağıyla birlikte görür. Burada önemli bir nokta var: **banka mesajın kendisini değil, işletmenin paylaştığı özeti görür.** Müşteri isimleri, vergi numaraları ve ham konuşmalar paylaşılmaz.
+[Tık 2 · sektör analizi] Riskin hangi sektörde yoğunlaştığını görür.
 
-Temsilci, bilançodan aylar önce erken bir uyarı alır. İşletme isterse buradan doğrudan teklif bile gönderebilir.
+[Tık 3 · izinli sohbet sinyalleri] İşletmelerin izin verdiği ödeme sözlerini kaynağıyla birlikte görür. Banka mesajın kendisini değil, işletmenin paylaştığı özeti görür.
+
+[Tık 4 · paylaşılan karne] İşletmenin ödeme karnesini görür; müşteri isimleri, vergi numaraları ve ham konuşmalar paylaşılmaz.
+
+[Tık 5 · teklif] Böylece temsilci, bilançodan aylar önce erken uyarı alır ve doğru zamanda doğru teklifi gönderir.
 
 ## 7 · Pazar ve hedef · 0:30 (4:10)
 
