@@ -202,6 +202,7 @@ const TR: SiteCopy = {
       { label: "Ücretsiz hesap aç", href: "/app/kayit" },
       { label: "Giriş", href: "/app/giris" },
       { label: "Bankalar için pilot", href: "/bankalar#pilot" },
+      { label: "Gizlilik", href: "/gizlilik" },
     ],
   },
 };
@@ -340,6 +341,7 @@ const EN: SiteCopy = {
       { label: "Open a free account", href: "/app/kayit" },
       { label: "Sign in", href: "/app/giris" },
       { label: "Bank pilot", href: "/en/banks#pilot" },
+      { label: "Privacy (TR)", href: "/gizlilik" },
     ],
   },
 };

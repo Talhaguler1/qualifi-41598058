@@ -14,6 +14,7 @@ import { Route as SplatRouteImport } from './routes/$'
 import { Route as BankalarRouteImport } from './routes/bankalar'
 import { Route as FinansEkipleriRouteImport } from './routes/finans-ekipleri'
 import { Route as FreelancerlarRouteImport } from './routes/freelancerlar'
+import { Route as GizlilikRouteImport } from './routes/gizlilik'
 import { Route as IsletmelerRouteImport } from './routes/isletmeler'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
@@ -67,6 +68,11 @@ const FinansEkipleriRoute = FinansEkipleriRouteImport.update({
 const FreelancerlarRoute = FreelancerlarRouteImport.update({
   id: '/freelancerlar',
   path: '/freelancerlar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GizlilikRoute = GizlilikRouteImport.update({
+  id: '/gizlilik',
+  path: '/gizlilik',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IsletmelerRoute = IsletmelerRouteImport.update({
@@ -222,6 +228,7 @@ export interface FileRoutesByFullPath {
   '/bankalar': typeof BankalarRoute
   '/finans-ekipleri': typeof FinansEkipleriRoute
   '/freelancerlar': typeof FreelancerlarRoute
+  '/gizlilik': typeof GizlilikRoute
   '/isletmeler': typeof IsletmelerRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -258,6 +265,7 @@ export interface FileRoutesByTo {
   '/bankalar': typeof BankalarRoute
   '/finans-ekipleri': typeof FinansEkipleriRoute
   '/freelancerlar': typeof FreelancerlarRoute
+  '/gizlilik': typeof GizlilikRoute
   '/isletmeler': typeof IsletmelerRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -295,6 +303,7 @@ export interface FileRoutesById {
   '/bankalar': typeof BankalarRoute
   '/finans-ekipleri': typeof FinansEkipleriRoute
   '/freelancerlar': typeof FreelancerlarRoute
+  '/gizlilik': typeof GizlilikRoute
   '/isletmeler': typeof IsletmelerRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -333,6 +342,7 @@ export interface FileRouteTypes {
     | '/bankalar'
     | '/finans-ekipleri'
     | '/freelancerlar'
+    | '/gizlilik'
     | '/isletmeler'
     | '/reset-password'
     | '/sitemap.xml'
@@ -369,6 +379,7 @@ export interface FileRouteTypes {
     | '/bankalar'
     | '/finans-ekipleri'
     | '/freelancerlar'
+    | '/gizlilik'
     | '/isletmeler'
     | '/reset-password'
     | '/sitemap.xml'
@@ -405,6 +416,7 @@ export interface FileRouteTypes {
     | '/bankalar'
     | '/finans-ekipleri'
     | '/freelancerlar'
+    | '/gizlilik'
     | '/isletmeler'
     | '/reset-password'
     | '/sitemap.xml'
@@ -442,6 +454,7 @@ export interface RootRouteChildren {
   BankalarRoute: typeof BankalarRoute
   FinansEkipleriRoute: typeof FinansEkipleriRoute
   FreelancerlarRoute: typeof FreelancerlarRoute
+  GizlilikRoute: typeof GizlilikRoute
   IsletmelerRoute: typeof IsletmelerRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -507,6 +520,13 @@ declare module '@tanstack/react-router' {
       path: '/freelancerlar'
       fullPath: '/freelancerlar'
       preLoaderRoute: typeof FreelancerlarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gizlilik': {
+      id: '/gizlilik'
+      path: '/gizlilik'
+      fullPath: '/gizlilik'
+      preLoaderRoute: typeof GizlilikRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/isletmeler': {
@@ -733,6 +753,7 @@ const rootRouteChildren: RootRouteChildren = {
   BankalarRoute: BankalarRoute,
   FinansEkipleriRoute: FinansEkipleriRoute,
   FreelancerlarRoute: FreelancerlarRoute,
+  GizlilikRoute: GizlilikRoute,
   IsletmelerRoute: IsletmelerRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
