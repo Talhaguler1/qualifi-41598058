@@ -8,11 +8,11 @@ Köşeli parantez içindekiler sahne notudur, okunmaz. Her bölümün yanında s
 
 ## 1 · Kapak · 0:10 (toplam 0:10)
 
-Herkese merhaba. Ben QualiFi'yi anlatacağım. Sloganımız tek cümle: **bir sonraki ödemene netlik.**
+Merhaba, ben Talha. Projem QualiFi. QualiFi, KOBİ'nin müşterileriyle WhatsApp'ta konuştuğu ödeme sözlerini okur, faturayla eşleştirir ve nakit planını kendiliğinden günceller. Kısacası: **bir sonraki ödemene netlik.**
 
 ## 2 · Ben · 0:20 (0:30)
 
-Ben Muhammed Talha Güler. Özyeğin Üniversitesi'nde Yönetim Bilişim Sistemleri ve Bilgisayar Mühendisliği okuyorum. QualiFi'yi Qualifilab altında geliştiriyorum. Porsuk, Endgame Arena ve Ozu Ventures'ta edindiğim deneyimle bu probleme odaklandım.
+Özyeğin Üniversitesi'nde Yönetim Bilişim Sistemleri ve Bilgisayar Mühendisliği okuyorum. QualiFi'yi Qualifilab altında geliştiriyorum. Porsuk, Endgame Arena ve Ozu Ventures'ta edindiğim deneyimle bu probleme odaklandım.
 
 ## 3 · Sorun · 0:45 (1:15)
 
@@ -34,7 +34,7 @@ QualiFi ajanı bu kaynakları tek yerde okur ve üç somut çıktı üretir: **g
 
 [Telefonları soldan sağa göster.]
 
-Bunu canlı demomuzdan anlatayım. Ekrandaki veriler örnek veridir.
+Ekrandakiler canlı demomuzdan, veriler örnek veridir.
 
 İşletme sahibi paneli açtığında ajan önce özeti verir: "Nakit yeterli ama aralık sonu haftası dar. Birkaç tahsilat öne çekilirse rahatlar."
 
@@ -99,8 +99,6 @@ Gelecekte aynı sinyal, bankaların yapay zekâ ajanlarıyla finansmana dönüş
 İki dönemde de değişmeyen kurallar var: veri işletmenindir, paylaşım yalnızca izinle yapılır, her aksiyon onaylanır ve her öneri gerekçelidir. **Yapay zekâ önerir, karar insanda kalır.**
 
 ## 16 · Taleplerim · 0:30 (6:50)
-
-Talebimizi üç cümleyle söyleyeyim.
 
 Tohum yatırımı ve bir bankayla **pilot ortaklığı** istiyoruz.
 
