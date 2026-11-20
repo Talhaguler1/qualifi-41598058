@@ -39,6 +39,8 @@ import { Route as ApiAccountClaimRouteImport } from './routes/api/account/claim'
 import { Route as ApiAdminAccountsRouteImport } from './routes/api/admin/accounts'
 import { Route as ApiAdminDemoActivityRouteImport } from './routes/api/admin/demo-activity'
 import { Route as ApiAdminLeadsRouteImport } from './routes/api/admin/leads'
+import { Route as ApiWhatsappReplyRouteImport } from './routes/api/whatsapp/reply'
+import { Route as ApiWhatsappWebhookRouteImport } from './routes/api/whatsapp/webhook'
 import { Route as ApiWorkspaceExtractRouteImport } from './routes/api/workspace/extract'
 import { Route as ApiAdminLeadsExportRouteImport } from './routes/api/admin/leads/export'
 import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
@@ -195,6 +197,16 @@ const ApiAdminLeadsRoute = ApiAdminLeadsRouteImport.update({
   path: '/api/admin/leads',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiWhatsappReplyRoute = ApiWhatsappReplyRouteImport.update({
+  id: '/api/whatsapp/reply',
+  path: '/api/whatsapp/reply',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiWhatsappWebhookRoute = ApiWhatsappWebhookRouteImport.update({
+  id: '/api/whatsapp/webhook',
+  path: '/api/whatsapp/webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiWorkspaceExtractRoute = ApiWorkspaceExtractRouteImport.update({
   id: '/api/workspace/extract',
   path: '/api/workspace/extract',
@@ -253,6 +265,8 @@ export interface FileRoutesByFullPath {
   '/api/admin/accounts': typeof ApiAdminAccountsRoute
   '/api/admin/demo-activity': typeof ApiAdminDemoActivityRoute
   '/api/admin/leads': typeof ApiAdminLeadsRouteWithChildren
+  '/api/whatsapp/reply': typeof ApiWhatsappReplyRoute
+  '/api/whatsapp/webhook': typeof ApiWhatsappWebhookRoute
   '/api/workspace/extract': typeof ApiWorkspaceExtractRoute
   '/api/admin/leads/export': typeof ApiAdminLeadsExportRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
@@ -290,6 +304,8 @@ export interface FileRoutesByTo {
   '/api/admin/accounts': typeof ApiAdminAccountsRoute
   '/api/admin/demo-activity': typeof ApiAdminDemoActivityRoute
   '/api/admin/leads': typeof ApiAdminLeadsRouteWithChildren
+  '/api/whatsapp/reply': typeof ApiWhatsappReplyRoute
+  '/api/whatsapp/webhook': typeof ApiWhatsappWebhookRoute
   '/api/workspace/extract': typeof ApiWorkspaceExtractRoute
   '/api/admin/leads/export': typeof ApiAdminLeadsExportRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
@@ -328,6 +344,8 @@ export interface FileRoutesById {
   '/api/admin/accounts': typeof ApiAdminAccountsRoute
   '/api/admin/demo-activity': typeof ApiAdminDemoActivityRoute
   '/api/admin/leads': typeof ApiAdminLeadsRouteWithChildren
+  '/api/whatsapp/reply': typeof ApiWhatsappReplyRoute
+  '/api/whatsapp/webhook': typeof ApiWhatsappWebhookRoute
   '/api/workspace/extract': typeof ApiWorkspaceExtractRoute
   '/api/admin/leads/export': typeof ApiAdminLeadsExportRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
@@ -367,6 +385,8 @@ export interface FileRouteTypes {
     | '/api/admin/accounts'
     | '/api/admin/demo-activity'
     | '/api/admin/leads'
+    | '/api/whatsapp/reply'
+    | '/api/whatsapp/webhook'
     | '/api/workspace/extract'
     | '/api/admin/leads/export'
     | '/lovable/email/auth/preview'
@@ -404,6 +424,8 @@ export interface FileRouteTypes {
     | '/api/admin/accounts'
     | '/api/admin/demo-activity'
     | '/api/admin/leads'
+    | '/api/whatsapp/reply'
+    | '/api/whatsapp/webhook'
     | '/api/workspace/extract'
     | '/api/admin/leads/export'
     | '/lovable/email/auth/preview'
@@ -441,6 +463,8 @@ export interface FileRouteTypes {
     | '/api/admin/accounts'
     | '/api/admin/demo-activity'
     | '/api/admin/leads'
+    | '/api/whatsapp/reply'
+    | '/api/whatsapp/webhook'
     | '/api/workspace/extract'
     | '/api/admin/leads/export'
     | '/lovable/email/auth/preview'
@@ -479,6 +503,8 @@ export interface RootRouteChildren {
   ApiAdminAccountsRoute: typeof ApiAdminAccountsRoute
   ApiAdminDemoActivityRoute: typeof ApiAdminDemoActivityRoute
   ApiAdminLeadsRoute: typeof ApiAdminLeadsRouteWithChildren
+  ApiWhatsappReplyRoute: typeof ApiWhatsappReplyRoute
+  ApiWhatsappWebhookRoute: typeof ApiWhatsappWebhookRoute
   ApiWorkspaceExtractRoute: typeof ApiWorkspaceExtractRoute
   LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
   LovableEmailAuthWebhookRoute: typeof LovableEmailAuthWebhookRoute
@@ -697,6 +723,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAdminLeadsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/whatsapp/reply': {
+      id: '/api/whatsapp/reply'
+      path: '/api/whatsapp/reply'
+      fullPath: '/api/whatsapp/reply'
+      preLoaderRoute: typeof ApiWhatsappReplyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/whatsapp/webhook': {
+      id: '/api/whatsapp/webhook'
+      path: '/api/whatsapp/webhook'
+      fullPath: '/api/whatsapp/webhook'
+      preLoaderRoute: typeof ApiWhatsappWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/workspace/extract': {
       id: '/api/workspace/extract'
       path: '/api/workspace/extract'
@@ -778,6 +818,8 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAdminAccountsRoute: ApiAdminAccountsRoute,
   ApiAdminDemoActivityRoute: ApiAdminDemoActivityRoute,
   ApiAdminLeadsRoute: ApiAdminLeadsRouteWithChildren,
+  ApiWhatsappReplyRoute: ApiWhatsappReplyRoute,
+  ApiWhatsappWebhookRoute: ApiWhatsappWebhookRoute,
   ApiWorkspaceExtractRoute: ApiWorkspaceExtractRoute,
   LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
   LovableEmailAuthWebhookRoute: LovableEmailAuthWebhookRoute,

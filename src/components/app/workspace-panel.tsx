@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { formatDateTr, money } from "@/lib/demo";
 import { FILE_KIND_LABEL, isLira, KIND_BY_EXTENSION, workspaceOutlook, type WorkspaceCommitment } from "@/lib/workspace-forecast";
 import { Kpi, Toast, TopBar, useLocalState, useMounted } from "@/components/demo/shared";
+import { WhatsAppInbox } from "@/components/app/whatsapp-inbox";
 
 interface FileRow {
   id: string;
@@ -141,6 +142,8 @@ export function WorkspacePanel({ userId, title, token, readOnly, accountSlot }: 
             <Kpi label="Planlı ödeme (TL)" value={money(outlook.openOut)} sub={`${items.filter((c) => c.direction === "out" && c.status !== "paid" && isLira(c) && !outlook.duplicates.has(c.id)).length} kalem${outlook.foreign.some((c) => c.direction === "out") ? " · döviz ayrı" : ""}`} />
             <Kpi {...(lowest && lowest.balanceCautious < 0 ? { tone: "alert" as const } : {})} label="En dar hafta (temkinli)" value={money(lowest?.balanceCautious ?? 0)} sub={lowest ? `${formatDateTr(lowest.weekStart)} haftası` : ""} />
           </section>
+
+          <WhatsAppInbox userId={userId} token={token} readOnly={Boolean(readOnly)} onChange={() => void load()} />
 
           <section className="qd-card">
             <div className="qd-card__head">
