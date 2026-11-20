@@ -5,7 +5,7 @@
 ---
 
 **Slayt 1 · Kapak**
-Merhaba, ben Talha. Projem QualiFi. QualiFi, KOBİ'nin müşterileriyle WhatsApp'ta konuştuğu ödeme sözlerini okur, faturayla eşleştirir ve nakit planını kendiliğinden günceller. Kısacası: bir sonraki ödemene netlik.
+Merhaba, ben Talha. Projem QualiFi. QualiFi, işletmelerin müşterileriyle WhatsApp'ta konuştuğu ödeme sözlerini okur, faturayla eşleştirir ve nakit planını kendiliğinden günceller. Kısacası: bir sonraki ödemene netlik.
 
 **Slayt 2 · Ben**
 Özyeğin Üniversitesi'nde Yönetim Bilişim Sistemleri ve Bilgisayar Mühendisliği okuyorum. QualiFi'yi Qualifilab altında geliştiriyorum. Porsuk ve Endgame Arena'da ürün geliştirdim; Ozu Ventures'ta girişimcilerle ve işletme sahipleriyle görüştüm. Bu görüşmelerde hep aynı cümleyi duydum: **"Faturayı kestik, ama para ne zaman gelecek bilmiyoruz."**
@@ -14,7 +14,7 @@ Merhaba, ben Talha. Projem QualiFi. QualiFi, KOBİ'nin müşterileriyle WhatsApp
 Bu cümlenin arkasında üç şey var: **alacaklar, ödenecekler ve insan ilişkileri.**
 Neredeyse hiçbir işletme alacağını tam zamanında alamıyor, bu yüzden gelecekteki nakit akışını güvenle tahmin edemiyor.
 Sebebi şu: finansal bilgi tek bir yerde durmuyor. Bir kısmı muhasebe programında, bir kısmı bankada, **en önemli kısmı ise müşteriyle yapılan konuşmada.** "Cuma öderiz", "iki hafta sonra yatırırız" gibi sözler hiçbir tabloya girmiyor.
-Bu problemi yaşayan tek taraf işletme değil. **Bankalar da yaşıyor;** KOBİ'nin nakit sıkıntısını çoğu zaman iş işten geçtikten sonra görüyorlar.
+Bu problemi yaşayan tek taraf işletme değil. **Bankalar da yaşıyor;** işletmelerin nakit sıkıntısını çoğu zaman iş işten geçtikten sonra görüyorlar.
 
 **Slayt 4 · Veriler zaten var**
 Aslında veri eksik değil. ERP, ön muhasebe, banka, WhatsApp Business, e-posta, sözleşme ve fatura zaten var. Sorun, bunların birbirine bağlanmaması.
@@ -35,7 +35,7 @@ QualiFi ajanı bu kaynakları tek yerde okur ve üç çıktı üretir: güncel �
 [Tık 5] Böylece temsilci bilançodan aylar önce erken uyarı alır ve doğru zamanda doğru teklifi gönderir.
 
 **Slayt 7 · Pazar ve hedeflemem**
-Pazarımız tüm KOBİ'ler ve onlara hizmet veren bankalar. Odaklandığımız kesim, nakit hareketi yüksek ve sürekli yüzden fazla alacağı olan firmalar. İlk hedefimiz bu kesimden teknolojiyi aktif kullanan 1.000 firma; sorunu en çok hisseden ve en hızlı benimseyecek olanlar onlar.
+Pazarımız tüm işletmeler ve onlara hizmet veren bankalar. Odaklandığımız kesim, nakit hareketi yüksek ve sürekli yüzden fazla alacağı olan firmalar. İlk hedefimiz bu kesimden teknolojiyi aktif kullanan 1.000 firma; sorunu en çok hisseden ve en hızlı benimseyecek olanlar onlar.
 
 **Slayt 8 · Gelir modeli · Başlangıç**
 Gelir modelimiz bir büyüme merdiveni. Başlangıç paketi ücretsiz: bir WhatsApp hesabı, on sohbet ve bir Google Drive. Amacı ürünü denemek.
@@ -47,7 +47,7 @@ KOBİ paketi aylık 390 lira. WhatsApp, Drive, ERP, ön muhasebe ve bankadan bir
 Büyüme paketi aylık 3.990 lira: 25 WhatsApp numarası, 10 sistem bağlantısı ve 25 kullanıcı. Fiyatlar KDV hariç.
 
 **Slayt 11 · Banka**
-Son basamak bankalar: on binlerce KOBİ'yi ve yüzlerce müşteri temsilcisini kapsayan, portföye göre fiyatlanan kurumsal paket. Yani iki taraftan kazanıyoruz: işletme abonelikle, banka kurumsal lisansla ödüyor.
+Son basamak bankalar: on binlerce işletmeyi ve yüzlerce müşteri temsilcisini kapsayan, portföye göre fiyatlanan kurumsal paket. Yani iki taraftan kazanıyoruz: işletme abonelikle, banka kurumsal lisansla ödüyor.
 
 **Slayt 12 · Rekabet · Türkiye**
 Türkiye'deki araçlar faturayı kaydeder; QualiFi müşterinin verdiği ödeme sözünü de kaydeder. Paraşüt ve Logo yalnız sisteme girilen kayda bakar, Figopara işletmenin müşterileriyle konuşmasını görmez, Excel ve telefonda verilen söz ise çoğu zaman unutulur.
@@ -62,7 +62,7 @@ Bugün bir WhatsApp mesajı nakit planını anında günceller. Ajan mesajı oku
 Yarın aynı sinyal, bankaların yapay zekâ ajanlarıyla finansmana dönüşecek. İşletmenin finansal dijital ikizi kararı önce senaryoda sınayacak, ödeme davranışı bir güven pasaportu gibi izinle bankalara taşınacak ve banka ajanları maliyet ile koşulları karşılaştıracak. İki dönemde de kural aynı: veri işletmenin, paylaşım yalnız izinle, her aksiyon onayla. Yapay zekâ önerir, karar insanda kalır.
 
 **Slayt 16 · Taleplerim ve sebepleri**
-Tohum yatırımı ve bir bankayla pilot ortaklığı istiyoruz. Çünkü ürün çalışıyor; şimdi tahmini gerçek ve izinli KOBİ verisiyle kanıtlamamız gerekiyor. On iki ay içindeki hedefimiz, banka pilotunu tamamlamak ve ilk ödeme yapan KOBİ'leri kazanmak.
+Tohum yatırımı ve bir bankayla pilot ortaklığı istiyoruz. Çünkü ürün çalışıyor; şimdi tahmini gerçek ve izinli işletme verisiyle kanıtlamamız gerekiyor. On iki ay içindeki hedefimiz, banka pilotunu tamamlamak ve ilk ödeme yapan işletmeleri kazanmak.
 
 **Slayt 17 · Kapanış**
 Artık bir işletme "para ne zaman gelecek?" diye sorduğunda cevabı tahmin değil, kayıt olacak. Gelin, dağınık veriyi finansal öngörüye birlikte dönüştürelim. Teşekkür ederim, sorularınızı bekliyorum.
