@@ -8,20 +8,20 @@
 Merhaba, ben Talha. Projem QualiFi. QualiFi, KOBİ'nin müşterileriyle WhatsApp'ta konuştuğu ödeme sözlerini okur, faturayla eşleştirir ve nakit planını kendiliğinden günceller. Kısacası: bir sonraki ödemene netlik.
 
 **Slayt 2 · Ben**
-Özyeğin Üniversitesi'nde Yönetim Bilişim Sistemleri ve Bilgisayar Mühendisliği okuyorum. QualiFi'yi Qualifilab altında geliştiriyorum. Porsuk ve Endgame Arena'da ürün geliştirdim; Ozu Ventures'ta girişimcilerle ve işletme sahipleriyle görüştüm. Bu görüşmelerde hep aynı cümleyi duydum: "Faturayı kestik, ama para ne zaman gelecek bilmiyoruz."
+Özyeğin Üniversitesi'nde Yönetim Bilişim Sistemleri ve Bilgisayar Mühendisliği okuyorum. QualiFi'yi Qualifilab altında geliştiriyorum. Porsuk ve Endgame Arena'da ürün geliştirdim; Ozu Ventures'ta girişimcilerle ve işletme sahipleriyle görüştüm. Bu görüşmelerde hep aynı cümleyi duydum: **"Faturayı kestik, ama para ne zaman gelecek bilmiyoruz."**
 
 **Slayt 3 · Alacaklar, ödenecekler ve insan ilişkileri**
-Çünkü bir işletmenin parası üç şeyin arasında sıkışır: alacaklar, ödenecekler ve insan ilişkileri.
-Neredeyse hiçbir işletme alacağını tam zamanında alamıyor. Bu yüzden gelecekteki nakit akışını güvenle tahmin edemiyor.
-Çünkü finansal bilgi tek bir yerde durmuyor. Bir kısmı muhasebe programında, bir kısmı bankada, en önemli kısmı ise müşteriyle yapılan konuşmada. "Cuma öderiz", "iki hafta sonra yatırırız" gibi sözler hiçbir tabloya girmiyor.
-Bu problemi yaşayan tek taraf işletme değil. Bankalar da yaşıyor; KOBİ'nin nakit sıkıntısını çoğu zaman iş işten geçtikten sonra görüyorlar.
+Bu cümlenin arkasında üç şey var: **alacaklar, ödenecekler ve insan ilişkileri.**
+Neredeyse hiçbir işletme alacağını tam zamanında alamıyor, bu yüzden gelecekteki nakit akışını güvenle tahmin edemiyor.
+Sebebi şu: finansal bilgi tek bir yerde durmuyor. Bir kısmı muhasebe programında, bir kısmı bankada, **en önemli kısmı ise müşteriyle yapılan konuşmada.** "Cuma öderiz", "iki hafta sonra yatırırız" gibi sözler hiçbir tabloya girmiyor.
+Bu problemi yaşayan tek taraf işletme değil. **Bankalar da yaşıyor;** KOBİ'nin nakit sıkıntısını çoğu zaman iş işten geçtikten sonra görüyorlar.
 
 **Slayt 4 · Veriler zaten var**
 Aslında veri eksik değil. ERP, ön muhasebe, banka, WhatsApp Business, e-posta, sözleşme ve fatura zaten var. Sorun, bunların birbirine bağlanmaması.
 QualiFi ajanı bu kaynakları tek yerde okur ve üç çıktı üretir: güncel ödeme tarihleri, 8 haftalık nakit tahmini ve onaylı hatırlatmalar. İşletmeye yeni bir alışkanlık öğretmiyoruz; zaten nerede çalışıyorsa oradan okuyoruz.
 
 **Slayt 5 · Tek bir akışta nasıl çalışır**
-[Tık 1] Faturayı kestiniz. Peki müşteriniz ne zaman ödeyecek? QualiFi'nin cevapladığı soru bu.
+[Tık 1] Başta duyduğum o soruyu hatırlayın: **"Faturayı kestik, para ne zaman gelecek?"** QualiFi tam olarak bu soruyu cevaplıyor.
 [Tık 2] İşletme sahibi paneli açtığında ajan önce özeti verir: nakit yeterli ama aralık sonu haftası dar, birkaç tahsilat öne çekilirse rahatlar.
 [Tık 3] Müşteri WhatsApp'tan yazıyor: "Onay süreci uzadı, cuma günü gönderiyoruz." QualiFi sözü doğru faturayla eşleştirir, "cuma"yı gerçek bir tarihe çevirir ve nakit planını kaydırır.
 [Tık 4] Ödeme gelmezse ajan takip mesajını hazırlar. İşletme onaylamadan hiçbir mesaj gitmez; karar her zaman insanda kalır.
@@ -65,4 +65,4 @@ Yarın aynı sinyal, bankaların yapay zekâ ajanlarıyla finansmana dönüşece
 Tohum yatırımı ve bir bankayla pilot ortaklığı istiyoruz. Çünkü ürün çalışıyor; şimdi tahmini gerçek ve izinli KOBİ verisiyle kanıtlamamız gerekiyor. On iki ay içindeki hedefimiz, banka pilotunu tamamlamak ve ilk ödeme yapan KOBİ'leri kazanmak.
 
 **Slayt 17 · Kapanış**
-Gelin, dağınık veriyi finansal öngörüye birlikte dönüştürelim. Teşekkür ederim, sorularınızı bekliyorum.
+Artık bir işletme "para ne zaman gelecek?" diye sorduğunda cevabı tahmin değil, kayıt olacak. Gelin, dağınık veriyi finansal öngörüye birlikte dönüştürelim. Teşekkür ederim, sorularınızı bekliyorum.
