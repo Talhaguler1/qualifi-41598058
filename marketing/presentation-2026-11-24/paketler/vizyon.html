@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>QualiFi bugün ve gelecek</title>
+<style>
+@font-face { font-family: "Onest"; src: url(fonts/onest-latin-wght-normal.woff2) format("woff2"); font-weight: 100 900; unicode-range: U+0000-00FF, U+0131, U+2000-206F, U+20AC, U+2122, U+2190-2193; }
+@font-face { font-family: "Onest"; src: url(fonts/onest-latin-ext-wght-normal.woff2) format("woff2"); font-weight: 100 900; unicode-range: U+0100-02AF, U+20A0-20C0; }
+@font-face { font-family: "Schibsted"; src: url(fonts/schibsted-grotesk-latin-wght-normal.woff2) format("woff2"); font-weight: 400 900; unicode-range: U+0000-00FF, U+0131, U+2000-206F, U+2190-2193; }
+@font-face { font-family: "Schibsted"; src: url(fonts/schibsted-grotesk-latin-ext-wght-normal.woff2) format("woff2"); font-weight: 400 900; unicode-range: U+0100-02AF, U+20A0-20C0; }
+:root { --ink: #16302a; --ink2: #34524a; --lime: #d6ee9e; --lime-ink: #2c4712; --paper: #f7f6f1; --surface: #fff; --line: #e2e6db; --muted: #5d6c61; --green: #2f7d4f;
+  --display: "Schibsted", "Onest", Arial, sans-serif; --text: "Onest", Arial, sans-serif; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scrollbar-width: none; } html::-webkit-scrollbar { display: none; }
+body { background: #ccc; font-family: var(--text); color: var(--ink); -webkit-font-smoothing: antialiased; }
+.slide { width: 1920px; height: 1080px; background: var(--paper); padding: 72px 96px; position: relative; overflow: hidden; display: flex; flex-direction: column; margin-bottom: 40px; }
+.top { display: flex; align-items: center; justify-content: space-between; }
+.logo { display: flex; align-items: center; gap: 12px; font: 700 28px var(--display); letter-spacing: -0.02em; }
+.eyebrow { font: 600 18px var(--text); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h1 { font: 700 54px/1.08 var(--display); letter-spacing: -0.03em; margin-top: 26px; }
+h1 em { font-style: normal; color: var(--green); }
+.src { position: absolute; left: 96px; bottom: 30px; font-size: 15px; color: var(--muted); }
+
+.eras { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 52px; }
+.era { border-radius: 26px; padding: 30px 34px 26px; display: flex; flex-direction: column; }
+.era.now { background: var(--surface); border: 2px solid var(--line); }
+.era.next { background: var(--ink); color: #eef5e6; border: 2px solid var(--ink); }
+.era h2 { font: 700 34px var(--display); display: flex; align-items: center; gap: 14px; letter-spacing: -0.02em; }
+.tag { font: 600 15px var(--text); letter-spacing: .06em; text-transform: uppercase; padding: 6px 12px; border-radius: 999px; }
+.now .tag { background: #e6f2d6; color: var(--lime-ink); }
+.next .tag { background: #ffffff14; color: var(--lime); border: 1px solid #d6ee9e55; }
+
+/* flow visual */
+.flow { display: flex; align-items: center; height: 200px; margin: 26px 0 14px; }
+.quote { width: 236px; flex: none; border-radius: 16px; padding: 16px 18px; background: var(--lime); color: var(--ink); }
+.quote small { display: block; font: 600 14px var(--text); color: var(--lime-ink); margin-bottom: 6px; }
+.quote b { font: 700 20px/1.25 var(--display); }
+.wire { height: 3px; flex: 1; min-width: 24px; }
+.now .wire { background: #9fb48f; }
+.next .wire { background: #d6ee9e88; }
+.node { width: 104px; height: 104px; flex: none; border-radius: 50%; display: grid; place-items: center; font: 800 21px var(--display); letter-spacing: .04em; }
+.now .node { background: var(--ink); color: var(--lime); }
+.next .node { background: var(--lime); color: var(--ink); box-shadow: 0 0 0 12px #d6ee9e22; }
+.tl { position: relative; width: 300px; flex: none; height: 3px; background: #9fb48f; }
+.tl .d { position: absolute; top: 50%; transform: translate(-50%, -50%); border-radius: 50%; }
+.tl .d.a { left: 18%; width: 16px; height: 16px; background: #b7c4b0; }
+.tl .d.b { left: 88%; width: 26px; height: 26px; background: var(--ink); box-shadow: 0 0 0 7px #d6ee9e; }
+.tl .lab { position: absolute; top: 24px; transform: translateX(-50%); white-space: nowrap; font: 600 20px var(--display); }
+.tl .lab.a { left: 18%; color: #8a9a8e; text-decoration: line-through; }
+.tl .lab.b { left: 88%; }
+.tl .gap { position: absolute; bottom: 40px; left: 53%; transform: translateX(-50%); white-space: nowrap; font: 600 16px var(--text); color: var(--muted); }
+.tl .arc { position: absolute; bottom: 10px; left: 18%; width: 70%; height: 22px; border: 2px dashed #9fb48f; border-bottom: 0; border-radius: 14px 14px 0 0; }
+.link { position: relative; flex: 1; height: 3px; background: #d6ee9e88; min-width: 150px; }
+.link span { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); white-space: nowrap; font: 600 15px var(--text); color: var(--lime); }
+.banks { display: flex; flex-direction: column; gap: 12px; position: relative; padding-left: 26px; flex: none; }
+.banks::before { content: ""; position: absolute; left: 0; top: 22px; bottom: 22px; width: 3px; background: #d6ee9e88; }
+.banks span { position: relative; font: 700 18px var(--display); padding: 10px 18px; border: 1.5px solid #d6ee9e88; border-radius: 12px; background: #ffffff0d; white-space: nowrap; }
+.banks span::before { content: ""; position: absolute; left: -27px; top: 50%; width: 26px; height: 3px; background: #d6ee9e88; }
+
+/* capability rows */
+.caps { display: grid; grid-template-columns: 1fr 1fr; column-gap: 30px; margin-top: 14px; }
+.cap { padding: 24px 0; border-top: 1px solid var(--line); }
+.next .cap { border-top-color: #ffffff1f; }
+.cap b { display: flex; align-items: center; gap: 10px; font: 700 22px var(--display); }
+.cap b i { width: 10px; height: 10px; border-radius: 50%; flex: none; background: var(--green); }
+.next .cap b i { background: var(--lime); }
+.cap p { font-size: 19px; line-height: 1.45; color: var(--ink2); margin-top: 6px; padding-left: 20px; }
+.next .cap p { color: #c4d4bf; }
+
+/* constant rules band */
+.band { margin-top: 32px; background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 20px 30px; display: flex; align-items: center; gap: 26px; }
+.band .who { font: 700 22px var(--display); white-space: nowrap; }
+.band .who small { display: block; font: 500 15px var(--text); color: var(--muted); margin-top: 2px; }
+.rules { display: flex; gap: 12px; flex: 1; justify-content: flex-end; }
+.rules span { font: 600 18px var(--text); padding: 10px 16px; border-radius: 12px; background: #eef2e6; white-space: nowrap; }
+
+/* focus */
+.eras[data-focus="now"] .next, .eras[data-focus="next"] .now { opacity: .3; filter: blur(3px) grayscale(1); }
+.eras[data-focus="now"] .now { border: 2px solid var(--ink); box-shadow: 0 20px 50px #16302a1f; }
+.eras[data-focus="next"] .next { box-shadow: 0 0 0 4px var(--lime), 0 20px 50px #16302a33; }
+</style>
+</head>
+<body>
+
+<section class="slide" id="v-1">
+  <div class="top">
+    <div class="logo"><svg width="40" height="40" viewBox="0 0 40 40"><rect width="40" height="40" rx="11" fill="#16302a"/><circle cx="17.5" cy="19" r="7" fill="none" stroke="#d6ee9e" stroke-width="4.5"/><rect x="22.25" y="12" width="4.5" height="20" rx="2.25" fill="#d6ee9e"/><circle cx="31" cy="9.5" r="2.75" fill="#d6ee9e"/></svg>QualiFi</div>
+    <span class="eyebrow">Vizyon · 1 / 2 · Bugün</span>
+  </div>
+  <h1>Bugün bir WhatsApp mesajı, <em>nakit planını</em> anında günceller.</h1>
+  <div class="eras" data-focus="now">
+    <div class="era now">
+      <h2>Bugün <span class="tag">Çalışıyor · canlı demo</span></h2>
+      <div class="flow">
+        <div class="quote"><small>WhatsApp ödeme sözü</small><b>“Ödemeyi iki hafta sonra yapacağız.”</b></div>
+        <div class="wire"></div>
+        <div class="node">AJAN</div>
+        <div class="wire"></div>
+        <div class="tl"><div class="arc"></div><span class="gap">+14 gün</span><i class="d a"></i><i class="d b"></i><span class="lab a">27 Kas</span><span class="lab b">11 Ara</span></div>
+      </div>
+      <div class="caps">
+        <div class="cap"><b><i></i>Mesajı okur</b><p>WhatsApp'taki sözü faturayla eşleştirir.</p></div>
+        <div class="cap"><b><i></i>Tahmini günceller</b><p>8 haftalık nakit planı anında değişir.</p></div>
+        <div class="cap"><b><i></i>Ajanla konuşursun</b><p>Senaryoyu sor, ödeme karnesini gör.</p></div>
+        <div class="cap"><b><i></i>Takibi hazırlar</b><p>Mesaj taslağı ve bankacıya erken uyarı.</p></div>
+      </div>
+    </div>
+    <div class="era next">
+      <h2>Gelecek <span class="tag">Hedef · yapay zekâ çağında bankacılık</span></h2>
+      <div class="flow">
+        <div class="quote"><small>WhatsApp ödeme sözü</small><b>“Ödemeyi iki hafta sonra yapacağız.”</b></div>
+        <div class="wire"></div>
+        <div class="node">İKİZ</div>
+        <div class="link"><span>izinli güven profili</span></div>
+        <div class="banks"><span>Banka A ajanı</span><span>Banka B ajanı</span><span>Banka C ajanı</span></div>
+      </div>
+      <div class="caps">
+        <div class="cap"><b><i></i>Finansal dijital ikiz</b><p>Kararı önce senaryoda sınar.</p></div>
+        <div class="cap"><b><i></i>Güven pasaportu</b><p>Ödeme davranışını gerekçesiyle taşır.</p></div>
+        <div class="cap"><b><i></i>Banka ajanları</b><p>Maliyet ve koşulları karşılaştırır.</p></div>
+        <div class="cap"><b><i></i>Kontrollü aksiyon</b><p>Teyit ve ödeme adımı onayla yürür.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="band">
+    <div class="who">İki dönemde de değişmeyen<small>Yapay zekâ önerir, karar insanda kalır.</small></div>
+    <div class="rules"><span>Veri işletmenin</span><span>Paylaşım yalnız izinle</span><span>Her aksiyon onayla</span><span>Her öneri gerekçeli</span></div>
+  </div>
+  <div class="src">Akış temsilidir; örnek veri. “Gelecek” paneli ürün yol haritasıdır, bugün sunulan bir hizmet değildir.</div>
+</section>
+
+<section class="slide" id="v-2">
+  <div class="top">
+    <div class="logo"><svg width="40" height="40" viewBox="0 0 40 40"><rect width="40" height="40" rx="11" fill="#16302a"/><circle cx="17.5" cy="19" r="7" fill="none" stroke="#d6ee9e" stroke-width="4.5"/><rect x="22.25" y="12" width="4.5" height="20" rx="2.25" fill="#d6ee9e"/><circle cx="31" cy="9.5" r="2.75" fill="#d6ee9e"/></svg>QualiFi</div>
+    <span class="eyebrow">Vizyon · 2 / 2 · Gelecek</span>
+  </div>
+  <h1>Yarın aynı sinyal, bankaların ajanlarıyla <em>finansmana</em> dönüşür.</h1>
+  <div class="eras" data-focus="next">
+    <div class="era now">
+      <h2>Bugün <span class="tag">Çalışıyor · canlı demo</span></h2>
+      <div class="flow">
+        <div class="quote"><small>WhatsApp ödeme sözü</small><b>“Ödemeyi iki hafta sonra yapacağız.”</b></div>
+        <div class="wire"></div>
+        <div class="node">AJAN</div>
+        <div class="wire"></div>
+        <div class="tl"><div class="arc"></div><span class="gap">+14 gün</span><i class="d a"></i><i class="d b"></i><span class="lab a">27 Kas</span><span class="lab b">11 Ara</span></div>
+      </div>
+      <div class="caps">
+        <div class="cap"><b><i></i>Mesajı okur</b><p>WhatsApp'taki sözü faturayla eşleştirir.</p></div>
+        <div class="cap"><b><i></i>Tahmini günceller</b><p>8 haftalık nakit planı anında değişir.</p></div>
+        <div class="cap"><b><i></i>Ajanla konuşursun</b><p>Senaryoyu sor, ödeme karnesini gör.</p></div>
+        <div class="cap"><b><i></i>Takibi hazırlar</b><p>Mesaj taslağı ve bankacıya erken uyarı.</p></div>
+      </div>
+    </div>
+    <div class="era next">
+      <h2>Gelecek <span class="tag">Hedef · yapay zekâ çağında bankacılık</span></h2>
+      <div class="flow">
+        <div class="quote"><small>WhatsApp ödeme sözü</small><b>“Ödemeyi iki hafta sonra yapacağız.”</b></div>
+        <div class="wire"></div>
+        <div class="node">İKİZ</div>
+        <div class="link"><span>izinli güven profili</span></div>
+        <div class="banks"><span>Banka A ajanı</span><span>Banka B ajanı</span><span>Banka C ajanı</span></div>
+      </div>
+      <div class="caps">
+        <div class="cap"><b><i></i>Finansal dijital ikiz</b><p>Kararı önce senaryoda sınar.</p></div>
+        <div class="cap"><b><i></i>Güven pasaportu</b><p>Ödeme davranışını gerekçesiyle taşır.</p></div>
+        <div class="cap"><b><i></i>Banka ajanları</b><p>Maliyet ve koşulları karşılaştırır.</p></div>
+        <div class="cap"><b><i></i>Kontrollü aksiyon</b><p>Teyit ve ödeme adımı onayla yürür.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="band">
+    <div class="who">İki dönemde de değişmeyen<small>Yapay zekâ önerir, karar insanda kalır.</small></div>
+    <div class="rules"><span>Veri işletmenin</span><span>Paylaşım yalnız izinle</span><span>Her aksiyon onayla</span><span>Her öneri gerekçeli</span></div>
+  </div>
+  <div class="src">Akış temsilidir; örnek veri. “Gelecek” paneli ürün yol haritasıdır, bugün sunulan bir hizmet değildir.</div>
+</section>
+
+</body>
+</html>
