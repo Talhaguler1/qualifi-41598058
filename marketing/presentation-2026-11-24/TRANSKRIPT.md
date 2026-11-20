@@ -8,10 +8,10 @@
 Merhaba, ben Talha. Projem QualiFi. QualiFi, KOBİ'nin müşterileriyle WhatsApp'ta konuştuğu ödeme sözlerini okur, faturayla eşleştirir ve nakit planını kendiliğinden günceller. Kısacası: bir sonraki ödemene netlik.
 
 **Slayt 2 · Ben**
-Özyeğin Üniversitesi'nde Yönetim Bilişim Sistemleri ve Bilgisayar Mühendisliği okuyorum. QualiFi'yi Qualifilab altında geliştiriyorum. Porsuk, Endgame Arena ve Ozu Ventures'ta edindiğim deneyimle bu probleme odaklandım.
+Özyeğin Üniversitesi'nde Yönetim Bilişim Sistemleri ve Bilgisayar Mühendisliği okuyorum. QualiFi'yi Qualifilab altında geliştiriyorum. Porsuk ve Endgame Arena'da ürün geliştirdim; Ozu Ventures'ta girişimcilerle ve işletme sahipleriyle görüştüm. Bu görüşmelerde hep aynı cümleyi duydum: "Faturayı kestik, ama para ne zaman gelecek bilmiyoruz."
 
 **Slayt 3 · Alacaklar, ödenecekler ve insan ilişkileri**
-Bir işletmenin parası üç şeyin arasında sıkışır: alacaklar, ödenecekler ve insan ilişkileri.
+Çünkü bir işletmenin parası üç şeyin arasında sıkışır: alacaklar, ödenecekler ve insan ilişkileri.
 Neredeyse hiçbir işletme alacağını tam zamanında alamıyor. Bu yüzden gelecekteki nakit akışını güvenle tahmin edemiyor.
 Çünkü finansal bilgi tek bir yerde durmuyor. Bir kısmı muhasebe programında, bir kısmı bankada, en önemli kısmı ise müşteriyle yapılan konuşmada. "Cuma öderiz", "iki hafta sonra yatırırız" gibi sözler hiçbir tabloya girmiyor.
 Bu problemi yaşayan tek taraf işletme değil. Bankalar da yaşıyor; KOBİ'nin nakit sıkıntısını çoğu zaman iş işten geçtikten sonra görüyorlar.
