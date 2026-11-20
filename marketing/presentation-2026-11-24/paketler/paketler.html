@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>QualiFi paketleri</title>
+<style>
+@font-face { font-family: "Onest"; src: url(fonts/onest-latin-wght-normal.woff2) format("woff2"); font-weight: 100 900; unicode-range: U+0000-00FF, U+0131, U+2000-206F, U+20AC, U+2122, U+2190-2193; }
+@font-face { font-family: "Onest"; src: url(fonts/onest-latin-ext-wght-normal.woff2) format("woff2"); font-weight: 100 900; unicode-range: U+0100-02AF, U+20A0-20C0; }
+@font-face { font-family: "Schibsted"; src: url(fonts/schibsted-grotesk-latin-wght-normal.woff2) format("woff2"); font-weight: 400 900; unicode-range: U+0000-00FF, U+0131, U+2000-206F, U+2190-2193; }
+@font-face { font-family: "Schibsted"; src: url(fonts/schibsted-grotesk-latin-ext-wght-normal.woff2) format("woff2"); font-weight: 400 900; unicode-range: U+0100-02AF, U+20A0-20C0; }
+:root {
+  --ink: #16302a; --ink2: #34524a; --lime: #d6ee9e; --lime-ink: #2c4712; --paper: #f7f6f1; --surface: #fff;
+  --soft: #eef2e6; --line: #e2e6db; --muted: #5d6c61; --green: #2f7d4f;
+  --display: "Schibsted", "Onest", Arial, sans-serif; --text: "Onest", Arial, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scrollbar-width: none; }
+html::-webkit-scrollbar { display: none; }
+body { background: #ccc; font-family: var(--text); color: var(--ink); -webkit-font-smoothing: antialiased; }
+.slide { width: 1920px; height: 1080px; background: var(--paper); padding: 80px 96px; position: relative; overflow: hidden; display: flex; flex-direction: column; margin-bottom: 40px; }
+.top { display: flex; align-items: center; justify-content: space-between; }
+.logo { display: flex; align-items: center; gap: 12px; font: 700 28px var(--display); letter-spacing: -0.02em; }
+.eyebrow { font: 600 18px var(--text); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h1 { font: 700 60px/1.05 var(--display); letter-spacing: -0.03em; margin-top: 28px; max-width: 1728px; }
+.sub { font-size: 24px; color: var(--ink2); margin-top: 14px; }
+.foot { position: absolute; left: 96px; right: 96px; bottom: 40px; display: flex; justify-content: space-between; font-size: 18px; color: var(--muted); }
+.num { font-variant-numeric: tabular-nums; }
+svg.i { width: 26px; height: 26px; stroke: currentColor; fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+
+/* 1: four vertical cards */
+.cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 48px; flex: 1; padding-bottom: 60px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 28px; padding: 36px 32px; display: flex; flex-direction: column; box-shadow: 0 1px 2px #16302a12, 0 16px 40px #16302a10; }
+.card--hi { border: 2px solid var(--ink); position: relative; }
+.card--dark { background: var(--ink); color: #eef5e6; border-color: var(--ink); }
+.badge { position: absolute; top: -18px; left: 32px; background: var(--lime); color: var(--lime-ink); font: 700 16px var(--text); padding: 7px 14px; border-radius: 999px; }
+.card .name { font: 700 34px var(--display); letter-spacing: -0.02em; }
+.card .who { font-size: 20px; color: var(--muted); margin-top: 6px; min-height: 56px; }
+.card--dark .who { color: #b9ccb4; }
+.price { margin-top: 26px; display: flex; align-items: baseline; gap: 8px; }
+.price b { font: 700 64px var(--text); letter-spacing: -0.03em; }
+.price span { font-size: 22px; color: var(--muted); }
+.card--dark .price b { font-size: 44px; color: var(--lime); }
+.card--dark .price span { color: #b9ccb4; }
+.vat { font-size: 16px; color: var(--muted); margin-top: 2px; min-height: 22px; }
+.card--dark .vat { color: #b9ccb4; }
+.rule { height: 1px; background: var(--line); margin: 26px 0; }
+.card--dark .rule { background: #ffffff22; }
+.list { list-style: none; display: flex; flex-direction: column; gap: 16px; font-size: 21px; line-height: 1.35; }
+.list li { display: flex; gap: 12px; align-items: flex-start; }
+.list li svg { color: var(--green); margin-top: 1px; }
+.card--dark .list li svg { color: var(--lime); }
+
+/* 2: matrix */
+.matrix { table-layout: fixed; margin-top: 44px; border-collapse: separate; border-spacing: 0; width: 100%; font-size: 22px; background: var(--surface); border-radius: 26px; overflow: hidden; box-shadow: 0 1px 2px #16302a12, 0 16px 40px #16302a10; }
+.matrix th, .matrix td { padding: 20px 26px; text-align: left; border-bottom: 1px solid var(--line); }
+.matrix thead th { background: var(--soft); vertical-align: bottom; }
+.matrix thead th .n { font: 700 28px var(--display); display: block; }
+.matrix thead th .p { font: 700 30px var(--text); display: block; margin-top: 6px; }
+.matrix thead th .p small { display: block; font-size: 17px; font-weight: 500; color: var(--muted); margin-top: 2px; }
+.matrix thead th.hi { background: var(--ink); color: #eef5e6; }
+.matrix thead th.hi .p small { color: #b9ccb4; }
+.matrix td.k { font-weight: 600; color: var(--ink2); width: 330px; }
+.matrix td.hi { background: #f1f8ec; font-weight: 600; }
+.matrix tr:last-child td { border-bottom: 0; }
+.dash { color: #a7b2a2; }
+
+/* 3: staircase */
+.stairs { position: relative; flex: 1; margin-top: 36px; }
+.step { position: absolute; bottom: 70px; width: 400px; border-radius: 26px 26px 0 0; padding: 30px 30px 0; color: var(--ink); }
+.step .name { font: 700 32px var(--display); }
+.step .price { margin-top: 10px; }
+.step .price b { font-size: 46px; }
+.step .price span { font-size: 19px; }
+.step .list { margin-top: 20px; font-size: 19px; gap: 12px; }
+.s1 { left: 0; height: 330px; background: #e8efdc; }
+.s2 { left: 424px; height: 450px; background: #d9eac2; }
+.s3 { left: 848px; height: 570px; background: var(--lime); }
+.s4 { left: 1272px; height: 690px; background: var(--ink); color: #eef5e6; width: 456px; }
+.s4 .price b { color: var(--lime); font-size: 40px; }
+.s4 .price span, .s4 .who { color: #b9ccb4; }
+.s4 .list li svg { color: var(--lime); }
+.ground { position: absolute; left: 0; right: 0; bottom: 68px; height: 4px; background: var(--ink); border-radius: 2px; }
+.axis { position: absolute; left: 0; right: 0; bottom: 20px; height: 30px; font-size: 19px; color: var(--muted); }
+.axis span { position: absolute; text-align: center; }
+
+/* 4: two-sided */
+.two { display: grid; grid-template-columns: 1.35fr 1fr; gap: 28px; margin-top: 44px; flex: 1; padding-bottom: 60px; }
+.side { border-radius: 30px; padding: 40px; display: flex; flex-direction: column; }
+.side--sme { background: var(--surface); border: 1px solid var(--line); }
+.side--bank { background: var(--ink); color: #eef5e6; }
+.side h2 { font: 700 38px var(--display); letter-spacing: -0.02em; }
+.side .lead { font-size: 21px; color: var(--muted); margin-top: 8px; }
+.side--bank .lead { color: #b9ccb4; }
+.rows { display: flex; flex-direction: column; gap: 16px; margin-top: 30px; }
+.row { display: grid; grid-template-columns: 190px 170px 1fr; align-items: center; gap: 20px; padding: 20px 24px; border: 1px solid var(--line); border-radius: 20px; }
+.row--hi { border: 2px solid var(--ink); background: #f8fbf3; }
+.row .n { font: 700 28px var(--display); }
+.row .p { font: 700 32px var(--text); }
+.row .p small { font-size: 17px; color: var(--muted); font-weight: 500; }
+.row .d { font-size: 19px; color: var(--ink2); line-height: 1.4; }
+.bigprice { font: 700 46px var(--text); color: var(--lime); margin-top: 26px; }
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 26px; }
+.stat { background: #ffffff10; border: 1px solid #ffffff1f; border-radius: 18px; padding: 20px; }
+.stat b { display: block; font: 700 34px var(--text); color: #fff; }
+.stat span { font-size: 18px; color: #b9ccb4; }
+.side--bank .list { margin-top: 26px; font-size: 20px; }
+.side--bank .list li svg { color: var(--lime); }
+.flow { display: flex; align-items: center; gap: 12px; margin-top: auto; padding-top: 24px; font-size: 18px; color: #b9ccb4; }
+.flow b { color: var(--lime); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<!-- reusable icons -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+    <symbol id="chat" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></symbol>
+  </defs>
+</svg>
+
+<!-- ============ 1. Four vertical cards ============ -->
+<section class="slide" id="s1">
+  <div class="top">
+    <div class="logo"><svg width="40" height="40" viewBox="0 0 40 40"><rect width="40" height="40" rx="11" fill="#16302a"/><circle cx="17.5" cy="19" r="7" fill="none" stroke="#d6ee9e" stroke-width="4.5"/><rect x="22.25" y="12" width="4.5" height="20" rx="2.25" fill="#d6ee9e"/><circle cx="31" cy="9.5" r="2.75" fill="#d6ee9e"/></svg>QualiFi</div>
+    <span class="eyebrow">Paketler</span>
+  </div>
+  <h1>Ücretsiz başlayın, işletmenizle birlikte büyüyün.</h1>
+  <div class="cards">
+    <div class="card">
+      <div class="name">Başlangıç</div>
+      <div class="who">Denemek isteyen her işletme</div>
+      <div class="price"><b class="num">₺0</b><span>/ ay</span></div>
+      <div class="vat">Ücretsiz</div>
+      <div class="rule"></div>
+      <ul class="list">
+        <li><svg class="i"><use href="#check"/></svg>1 WhatsApp hesabı</li>
+        <li><svg class="i"><use href="#check"/></svg>10 sohbete kadar</li>
+        <li><svg class="i"><use href="#check"/></svg>1 Google Drive hesabı</li>
+      </ul>
+    </div>
+    <div class="card card--hi">
+      <span class="badge">Küçük işletmeler için</span>
+      <div class="name">KOBİ</div>
+      <div class="who">Tek numara ve tek sistemle çalışan işletmeler</div>
+      <div class="price"><b class="num">₺390</b><span>/ ay</span></div>
+      <div class="vat">KDV hariç</div>
+      <div class="rule"></div>
+      <ul class="list">
+        <li><svg class="i"><use href="#check"/></svg>Her kaynaktan 1 hesap: WhatsApp, Google Drive, ERP, ön muhasebe, banka</li>
+        <li><svg class="i"><use href="#check"/></svg>Sınırsız sohbet</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="name">Büyüme</div>
+      <div class="who">Birden fazla numara ve sistemi olan orta ölçekli işletmeler</div>
+      <div class="price"><b class="num">₺3.990</b><span>/ ay</span></div>
+      <div class="vat">KDV hariç</div>
+      <div class="rule"></div>
+      <ul class="list">
+        <li><svg class="i"><use href="#check"/></svg>25 WhatsApp numarasına kadar</li>
+        <li><svg class="i"><use href="#check"/></svg>10 sistem bağlantısına kadar: ERP, ön muhasebe, banka, Google Drive</li>
+        <li><svg class="i"><use href="#check"/></svg>25 kullanıcıya kadar</li>
+        <li><svg class="i"><use href="#check"/></svg>Sınırsız sohbet</li>
+      </ul>
+    </div>
+    <div class="card card--dark">
+      <div class="name">Banka</div>
+      <div class="who">KOBİ portföyünü yöneten bankalar</div>
+      <div class="price"><b>Kuruma özel</b></div>
+      <div class="vat">Fiyat, portföy büyüklüğüne göre belirlenir</div>
+      <div class="rule"></div>
+      <ul class="list">
+        <li><svg class="i"><use href="#check"/></svg>On binlerce KOBİ</li>
+        <li><svg class="i"><use href="#check"/></svg>Yüzlerce müşteri temsilcisi</li>
+        <li><svg class="i"><use href="#check"/></svg>KOBİ'lerle iletişim tek yerden</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. Comparison matrix ============ -->
+<section class="slide" id="s2">
+  <div class="top">
+    <div class="logo"><svg width="40" height="40" viewBox="0 0 40 40"><rect width="40" height="40" rx="11" fill="#16302a"/><circle cx="17.5" cy="19" r="7" fill="none" stroke="#d6ee9e" stroke-width="4.5"/><rect x="22.25" y="12" width="4.5" height="20" rx="2.25" fill="#d6ee9e"/><circle cx="31" cy="9.5" r="2.75" fill="#d6ee9e"/></svg>QualiFi</div>
+    <span class="eyebrow">Paketleri karşılaştırın</span>
+  </div>
+  <h1>Hangi paket kime göre?</h1>
+  <table class="matrix">
+    <colgroup><col style="width:300px"><col><col><col><col></colgroup>
+    <thead>
+      <tr>
+        <th></th>
+        <th><span class="n">Başlangıç</span><span class="p num">₺0 <small>Ücretsiz</small></span></th>
+        <th><span class="n">KOBİ</span><span class="p num">₺390 <small>/ ay · KDV hariç</small></span></th>
+        <th><span class="n">Büyüme</span><span class="p num">₺3.990 <small>/ ay · KDV hariç</small></span></th>
+        <th class="hi"><span class="n">Banka</span><span class="p">Kuruma özel <small>Portföy büyüklüğüne göre</small></span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="k">Kimin için</td><td>Denemek isteyen her işletme</td><td>Küçük işletmeler</td><td>Orta ölçekli işletmeler</td><td class="hi">KOBİ portföyü olan bankalar</td></tr>
+      <tr><td class="k">WhatsApp</td><td>1 hesap</td><td>1 hesap</td><td>25 numaraya kadar</td><td class="hi">Kuruma özel</td></tr>
+      <tr><td class="k">Sohbet</td><td>10 sohbete kadar</td><td>Sınırsız</td><td>Sınırsız</td><td class="hi">Kuruma özel</td></tr>
+      <tr><td class="k">Google Drive</td><td>1 hesap</td><td>1 hesap</td><td rowspan="2">10 sistem bağlantısına kadar</td><td class="hi">Kuruma özel</td></tr>
+      <tr><td class="k">ERP · ön muhasebe · banka</td><td class="dash">Dahil değil</td><td>Her birinden 1 hesap</td><td class="hi">Kuruma özel</td></tr>
+      <tr><td class="k">Kapsam</td><td>1 işletme</td><td>1 işletme</td><td>1 işletme · 25 kullanıcıya kadar</td><td class="hi">On binlerce KOBİ · yüzlerce müşteri temsilcisi</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============ 3. Staircase ============ -->
+<section class="slide" id="s3">
+  <div class="top">
+    <div class="logo"><svg width="40" height="40" viewBox="0 0 40 40"><rect width="40" height="40" rx="11" fill="#16302a"/><circle cx="17.5" cy="19" r="7" fill="none" stroke="#d6ee9e" stroke-width="4.5"/><rect x="22.25" y="12" width="4.5" height="20" rx="2.25" fill="#d6ee9e"/><circle cx="31" cy="9.5" r="2.75" fill="#d6ee9e"/></svg>QualiFi</div>
+    <span class="eyebrow">İşletmeniz büyüdükçe</span>
+  </div>
+  <h1>Tek bir sohbetten on binlerce KOBİ'ye.</h1>
+  <div class="stairs">
+    <div class="step s1">
+      <div class="name">Başlangıç</div>
+      <div class="price"><b class="num">₺0</b><span>Ücretsiz</span></div>
+      <ul class="list">
+        <li><svg class="i"><use href="#check"/></svg>1 WhatsApp hesabı, 10 sohbet</li>
+        <li><svg class="i"><use href="#check"/></svg>1 Google Drive hesabı</li>
+      </ul>
+    </div>
+    <div class="step s2">
+      <div class="name">KOBİ</div>
+      <div class="price"><b class="num">₺390</b><span>/ ay · KDV hariç</span></div>
+      <ul class="list">
+        <li><svg class="i"><use href="#check"/></svg>Her kaynaktan 1 hesap: WhatsApp, Drive, ERP, ön muhasebe, banka</li>
+        <li><svg class="i"><use href="#check"/></svg>Sınırsız sohbet</li>
+      </ul>
+    </div>
+    <div class="step s3">
+      <div class="name">Büyüme</div>
+      <div class="price"><b class="num">₺3.990</b><span>/ ay · KDV hariç</span></div>
+      <ul class="list">
+        <li><svg class="i"><use href="#check"/></svg>25 WhatsApp numarasına kadar</li>
+        <li><svg class="i"><use href="#check"/></svg>10 sistem bağlantısına kadar</li>
+        <li><svg class="i"><use href="#check"/></svg>25 kullanıcıya kadar</li>
+        <li><svg class="i"><use href="#check"/></svg>Sınırsız sohbet</li>
+      </ul>
+    </div>
+    <div class="step s4">
+      <div class="name">Banka</div>
+      <div class="price"><b>Kuruma özel</b></div>
+      <ul class="list">
+        <li><svg class="i"><use href="#check"/></svg>On binlerce KOBİ</li>
+        <li><svg class="i"><use href="#check"/></svg>Yüzlerce müşteri temsilcisi</li>
+        <li><svg class="i"><use href="#check"/></svg>KOBİ'lerle iletişim tek yerden</li>
+        <li><svg class="i"><use href="#check"/></svg>Fiyat, portföy büyüklüğüne göre</li>
+      </ul>
+    </div>
+    <div class="ground"></div>
+    <div class="axis"><span style="left:0;width:400px">Denemek isteyen işletme</span><span style="left:424px;width:400px">Küçük işletme</span><span style="left:848px;width:400px">Orta ölçekli işletme</span><span style="left:1272px;width:456px">Banka</span></div>
+  </div>
+</section>
+
+<!-- ============ 4. Two-sided ============ -->
+<section class="slide" id="s4">
+  <div class="top">
+    <div class="logo"><svg width="40" height="40" viewBox="0 0 40 40"><rect width="40" height="40" rx="11" fill="#16302a"/><circle cx="17.5" cy="19" r="7" fill="none" stroke="#d6ee9e" stroke-width="4.5"/><rect x="22.25" y="12" width="4.5" height="20" rx="2.25" fill="#d6ee9e"/><circle cx="31" cy="9.5" r="2.75" fill="#d6ee9e"/></svg>QualiFi</div>
+    <span class="eyebrow">İki taraflı model</span>
+  </div>
+  <h1>İşletmeler aylık abonelikle, bankalar kuruma özel.</h1>
+  <div class="two">
+    <div class="side side--sme">
+      <h2>İşletmeler</h2>
+      <p class="lead">Ücretsiz başlar, bağladığı hesap sayısına göre büyür.</p>
+      <div class="rows">
+        <div class="row"><span class="n">Başlangıç</span><span class="p num">₺0 <small>ücretsiz</small></span><span class="d">1 WhatsApp hesabı (10 sohbete kadar) · 1 Google Drive hesabı</span></div>
+        <div class="row row--hi"><span class="n">KOBİ</span><span class="p num">₺390 <small>/ ay</small></span><span class="d">Her kaynaktan 1 hesap: WhatsApp, Drive, ERP, ön muhasebe, banka · sınırsız sohbet</span></div>
+        <div class="row"><span class="n">Büyüme</span><span class="p num">₺3.990 <small>/ ay</small></span><span class="d">25 WhatsApp numarası · 10 sistem bağlantısı · 25 kullanıcıya kadar · sınırsız sohbet</span></div>
+      </div>
+      <p class="lead" style="margin-top:auto;padding-top:20px;font-size:18px">Fiyatlar KDV hariçtir.</p>
+    </div>
+    <div class="side side--bank">
+      <h2>Bankalar</h2>
+      <p class="lead">KOBİ portföyünü tek yerden yöneten kurumlar için.</p>
+      <div class="bigprice">Kuruma özel fiyat</div>
+      <div class="stats">
+        <div class="stat"><b>On binlerce</b><span>KOBİ</span></div>
+        <div class="stat"><b>Yüzlerce</b><span>müşteri temsilcisi</span></div>
+      </div>
+      <ul class="list">
+        <li><svg class="i"><use href="#check"/></svg>KOBİ'lerle iletişim tek yerden</li>
+        <li><svg class="i"><use href="#check"/></svg>Fiyat, portföy büyüklüğüne göre belirlenir</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>
