@@ -38,7 +38,7 @@ QualiFi ajanı bu kaynakları tek yerde okur ve üç çıktı üretir: güncel �
 Pazarımız tüm işletmeler ve onlara hizmet veren bankalar. Odaklandığımız kesim, nakit hareketi yüksek ve sürekli yüzden fazla alacağı olan firmalar. İlk hedefimiz bu kesimden teknolojiyi aktif kullanan 1.000 firma; sorunu en çok hisseden ve en hızlı benimseyecek olanlar onlar.
 
 **Slayt 8 · Gelir modeli · Başlangıç**
-Gelir modelimiz bir büyüme merdiveni. Başlangıç paketi ücretsiz: bir WhatsApp hesabı, on sohbet ve bir Google Drive. Amacı ürünü denemek.
+Gelir modelimiz bir büyüme merdiveni. Başlangıç paketi ücretsiz: bir WhatsApp hesabı, on sohbet ve bir Google Drive. Bunu bilerek ücretsiz tutuyoruz; çünkü freelancer'ları ve şahıs şirketlerini de veri havuzumuza katmak ve insanların ürünü hiçbir engel olmadan denemesini istiyoruz.
 
 **Slayt 9 · KOBİ**
 KOBİ paketi aylık 390 lira. WhatsApp, Drive, ERP, ön muhasebe ve bankadan birer hesap bağlanır, sohbet sınırı yoktur.
