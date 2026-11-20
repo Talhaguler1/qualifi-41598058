@@ -107,6 +107,13 @@ svg.i { width: 26px; height: 26px; stroke: currentColor; fill: none; stroke-widt
 .side--bank .list li svg { color: var(--lime); }
 .flow { display: flex; align-items: center; gap: 12px; margin-top: auto; padding-top: 24px; font-size: 18px; color: #b9ccb4; }
 .flow b { color: var(--lime); font-weight: 600; }
+
+/* one tier per page: the others are dimmed */
+.stairs[data-active] .step { opacity: .28; transition: none; }
+.stairs[data-active="1"] .s1, .stairs[data-active="2"] .s2, .stairs[data-active="3"] .s3, .stairs[data-active="4"] .s4 { opacity: 1; box-shadow: 0 -2px 0 0 var(--ink) inset, 0 20px 50px #16302a26; }
+.stairs[data-active="4"] .s4 { box-shadow: 0 20px 50px #16302a40; }
+.stairs[data-active] .axis span { opacity: .45; }
+.stairs[data-active="1"] .axis span:nth-child(1), .stairs[data-active="2"] .axis span:nth-child(2), .stairs[data-active="3"] .axis span:nth-child(3), .stairs[data-active="4"] .axis span:nth-child(4) { opacity: 1; color: var(--ink); font-weight: 600; }
 </style>
 </head>
 <body>
@@ -216,6 +223,202 @@ svg.i { width: 26px; height: 26px; stroke: currentColor; fill: none; stroke-widt
   </div>
   <h1>Tek bir sohbetten on binlerce KOBİ'ye.</h1>
   <div class="stairs">
+    <div class="step s1">
+      <div class="name">Başlangıç</div>
+      <div class="price"><b class="num">₺0</b><span>Ücretsiz</span></div>
+      <ul class="list">
+        <li><svg class="i"><use href="#check"/></svg>1 WhatsApp hesabı, 10 sohbet</li>
+        <li><svg class="i"><use href="#check"/></svg>1 Google Drive hesabı</li>
+      </ul>
+    </div>
+    <div class="step s2">
+      <div class="name">KOBİ</div>
+      <div class="price"><b class="num">₺390</b><span>/ ay · KDV hariç</span></div>
+      <ul class="list">
+        <li><svg class="i"><use href="#check"/></svg>Her kaynaktan 1 hesap: WhatsApp, Drive, ERP, ön muhasebe, banka</li>
+        <li><svg class="i"><use href="#check"/></svg>Sınırsız sohbet</li>
+      </ul>
+    </div>
+    <div class="step s3">
+      <div class="name">Büyüme</div>
+      <div class="price"><b class="num">₺3.990</b><span>/ ay · KDV hariç</span></div>
+      <ul class="list">
+        <li><svg class="i"><use href="#check"/></svg>25 WhatsApp numarasına kadar</li>
+        <li><svg class="i"><use href="#check"/></svg>10 sistem bağlantısına kadar</li>
+        <li><svg class="i"><use href="#check"/></svg>25 kullanıcıya kadar</li>
+        <li><svg class="i"><use href="#check"/></svg>Sınırsız sohbet</li>
+      </ul>
+    </div>
+    <div class="step s4">
+      <div class="name">Banka</div>
+      <div class="price"><b>Kuruma özel</b></div>
+      <ul class="list">
+        <li><svg class="i"><use href="#check"/></svg>On binlerce KOBİ</li>
+        <li><svg class="i"><use href="#check"/></svg>Yüzlerce müşteri temsilcisi</li>
+        <li><svg class="i"><use href="#check"/></svg>KOBİ'lerle iletişim tek yerden</li>
+        <li><svg class="i"><use href="#check"/></svg>Fiyat, portföy büyüklüğüne göre</li>
+      </ul>
+    </div>
+    <div class="ground"></div>
+    <div class="axis"><span style="left:0;width:400px">Denemek isteyen işletme</span><span style="left:424px;width:400px">Küçük işletme</span><span style="left:848px;width:400px">Orta ölçekli işletme</span><span style="left:1272px;width:456px">Banka</span></div>
+  </div>
+</section>
+
+<!-- ============ 3.1 Staircase, Başlangıç highlighted ============ -->
+<section class="slide" id="s3-1">
+  <div class="top">
+    <div class="logo"><svg width="40" height="40" viewBox="0 0 40 40"><rect width="40" height="40" rx="11" fill="#16302a"/><circle cx="17.5" cy="19" r="7" fill="none" stroke="#d6ee9e" stroke-width="4.5"/><rect x="22.25" y="12" width="4.5" height="20" rx="2.25" fill="#d6ee9e"/><circle cx="31" cy="9.5" r="2.75" fill="#d6ee9e"/></svg>QualiFi</div>
+    <span class="eyebrow">Paketler · 1 / 4 · Başlangıç</span>
+  </div>
+  <h1>Ücretsiz başlayın.</h1>
+  <div class="stairs" data-active="1">
+    <div class="step s1">
+      <div class="name">Başlangıç</div>
+      <div class="price"><b class="num">₺0</b><span>Ücretsiz</span></div>
+      <ul class="list">
+        <li><svg class="i"><use href="#check"/></svg>1 WhatsApp hesabı, 10 sohbet</li>
+        <li><svg class="i"><use href="#check"/></svg>1 Google Drive hesabı</li>
+      </ul>
+    </div>
+    <div class="step s2">
+      <div class="name">KOBİ</div>
+      <div class="price"><b class="num">₺390</b><span>/ ay · KDV hariç</span></div>
+      <ul class="list">
+        <li><svg class="i"><use href="#check"/></svg>Her kaynaktan 1 hesap: WhatsApp, Drive, ERP, ön muhasebe, banka</li>
+        <li><svg class="i"><use href="#check"/></svg>Sınırsız sohbet</li>
+      </ul>
+    </div>
+    <div class="step s3">
+      <div class="name">Büyüme</div>
+      <div class="price"><b class="num">₺3.990</b><span>/ ay · KDV hariç</span></div>
+      <ul class="list">
+        <li><svg class="i"><use href="#check"/></svg>25 WhatsApp numarasına kadar</li>
+        <li><svg class="i"><use href="#check"/></svg>10 sistem bağlantısına kadar</li>
+        <li><svg class="i"><use href="#check"/></svg>25 kullanıcıya kadar</li>
+        <li><svg class="i"><use href="#check"/></svg>Sınırsız sohbet</li>
+      </ul>
+    </div>
+    <div class="step s4">
+      <div class="name">Banka</div>
+      <div class="price"><b>Kuruma özel</b></div>
+      <ul class="list">
+        <li><svg class="i"><use href="#check"/></svg>On binlerce KOBİ</li>
+        <li><svg class="i"><use href="#check"/></svg>Yüzlerce müşteri temsilcisi</li>
+        <li><svg class="i"><use href="#check"/></svg>KOBİ'lerle iletişim tek yerden</li>
+        <li><svg class="i"><use href="#check"/></svg>Fiyat, portföy büyüklüğüne göre</li>
+      </ul>
+    </div>
+    <div class="ground"></div>
+    <div class="axis"><span style="left:0;width:400px">Denemek isteyen işletme</span><span style="left:424px;width:400px">Küçük işletme</span><span style="left:848px;width:400px">Orta ölçekli işletme</span><span style="left:1272px;width:456px">Banka</span></div>
+  </div>
+</section>
+
+<!-- ============ 3.2 Staircase, KOBİ highlighted ============ -->
+<section class="slide" id="s3-2">
+  <div class="top">
+    <div class="logo"><svg width="40" height="40" viewBox="0 0 40 40"><rect width="40" height="40" rx="11" fill="#16302a"/><circle cx="17.5" cy="19" r="7" fill="none" stroke="#d6ee9e" stroke-width="4.5"/><rect x="22.25" y="12" width="4.5" height="20" rx="2.25" fill="#d6ee9e"/><circle cx="31" cy="9.5" r="2.75" fill="#d6ee9e"/></svg>QualiFi</div>
+    <span class="eyebrow">Paketler · 2 / 4 · KOBİ</span>
+  </div>
+  <h1>Küçük işletmenin her hesabı tek yerde.</h1>
+  <div class="stairs" data-active="2">
+    <div class="step s1">
+      <div class="name">Başlangıç</div>
+      <div class="price"><b class="num">₺0</b><span>Ücretsiz</span></div>
+      <ul class="list">
+        <li><svg class="i"><use href="#check"/></svg>1 WhatsApp hesabı, 10 sohbet</li>
+        <li><svg class="i"><use href="#check"/></svg>1 Google Drive hesabı</li>
+      </ul>
+    </div>
+    <div class="step s2">
+      <div class="name">KOBİ</div>
+      <div class="price"><b class="num">₺390</b><span>/ ay · KDV hariç</span></div>
+      <ul class="list">
+        <li><svg class="i"><use href="#check"/></svg>Her kaynaktan 1 hesap: WhatsApp, Drive, ERP, ön muhasebe, banka</li>
+        <li><svg class="i"><use href="#check"/></svg>Sınırsız sohbet</li>
+      </ul>
+    </div>
+    <div class="step s3">
+      <div class="name">Büyüme</div>
+      <div class="price"><b class="num">₺3.990</b><span>/ ay · KDV hariç</span></div>
+      <ul class="list">
+        <li><svg class="i"><use href="#check"/></svg>25 WhatsApp numarasına kadar</li>
+        <li><svg class="i"><use href="#check"/></svg>10 sistem bağlantısına kadar</li>
+        <li><svg class="i"><use href="#check"/></svg>25 kullanıcıya kadar</li>
+        <li><svg class="i"><use href="#check"/></svg>Sınırsız sohbet</li>
+      </ul>
+    </div>
+    <div class="step s4">
+      <div class="name">Banka</div>
+      <div class="price"><b>Kuruma özel</b></div>
+      <ul class="list">
+        <li><svg class="i"><use href="#check"/></svg>On binlerce KOBİ</li>
+        <li><svg class="i"><use href="#check"/></svg>Yüzlerce müşteri temsilcisi</li>
+        <li><svg class="i"><use href="#check"/></svg>KOBİ'lerle iletişim tek yerden</li>
+        <li><svg class="i"><use href="#check"/></svg>Fiyat, portföy büyüklüğüne göre</li>
+      </ul>
+    </div>
+    <div class="ground"></div>
+    <div class="axis"><span style="left:0;width:400px">Denemek isteyen işletme</span><span style="left:424px;width:400px">Küçük işletme</span><span style="left:848px;width:400px">Orta ölçekli işletme</span><span style="left:1272px;width:456px">Banka</span></div>
+  </div>
+</section>
+
+<!-- ============ 3.3 Staircase, Büyüme highlighted ============ -->
+<section class="slide" id="s3-3">
+  <div class="top">
+    <div class="logo"><svg width="40" height="40" viewBox="0 0 40 40"><rect width="40" height="40" rx="11" fill="#16302a"/><circle cx="17.5" cy="19" r="7" fill="none" stroke="#d6ee9e" stroke-width="4.5"/><rect x="22.25" y="12" width="4.5" height="20" rx="2.25" fill="#d6ee9e"/><circle cx="31" cy="9.5" r="2.75" fill="#d6ee9e"/></svg>QualiFi</div>
+    <span class="eyebrow">Paketler · 3 / 4 · Büyüme</span>
+  </div>
+  <h1>Birden fazla numara ve sistem, tek ekranda.</h1>
+  <div class="stairs" data-active="3">
+    <div class="step s1">
+      <div class="name">Başlangıç</div>
+      <div class="price"><b class="num">₺0</b><span>Ücretsiz</span></div>
+      <ul class="list">
+        <li><svg class="i"><use href="#check"/></svg>1 WhatsApp hesabı, 10 sohbet</li>
+        <li><svg class="i"><use href="#check"/></svg>1 Google Drive hesabı</li>
+      </ul>
+    </div>
+    <div class="step s2">
+      <div class="name">KOBİ</div>
+      <div class="price"><b class="num">₺390</b><span>/ ay · KDV hariç</span></div>
+      <ul class="list">
+        <li><svg class="i"><use href="#check"/></svg>Her kaynaktan 1 hesap: WhatsApp, Drive, ERP, ön muhasebe, banka</li>
+        <li><svg class="i"><use href="#check"/></svg>Sınırsız sohbet</li>
+      </ul>
+    </div>
+    <div class="step s3">
+      <div class="name">Büyüme</div>
+      <div class="price"><b class="num">₺3.990</b><span>/ ay · KDV hariç</span></div>
+      <ul class="list">
+        <li><svg class="i"><use href="#check"/></svg>25 WhatsApp numarasına kadar</li>
+        <li><svg class="i"><use href="#check"/></svg>10 sistem bağlantısına kadar</li>
+        <li><svg class="i"><use href="#check"/></svg>25 kullanıcıya kadar</li>
+        <li><svg class="i"><use href="#check"/></svg>Sınırsız sohbet</li>
+      </ul>
+    </div>
+    <div class="step s4">
+      <div class="name">Banka</div>
+      <div class="price"><b>Kuruma özel</b></div>
+      <ul class="list">
+        <li><svg class="i"><use href="#check"/></svg>On binlerce KOBİ</li>
+        <li><svg class="i"><use href="#check"/></svg>Yüzlerce müşteri temsilcisi</li>
+        <li><svg class="i"><use href="#check"/></svg>KOBİ'lerle iletişim tek yerden</li>
+        <li><svg class="i"><use href="#check"/></svg>Fiyat, portföy büyüklüğüne göre</li>
+      </ul>
+    </div>
+    <div class="ground"></div>
+    <div class="axis"><span style="left:0;width:400px">Denemek isteyen işletme</span><span style="left:424px;width:400px">Küçük işletme</span><span style="left:848px;width:400px">Orta ölçekli işletme</span><span style="left:1272px;width:456px">Banka</span></div>
+  </div>
+</section>
+
+<!-- ============ 3.4 Staircase, Banka highlighted ============ -->
+<section class="slide" id="s3-4">
+  <div class="top">
+    <div class="logo"><svg width="40" height="40" viewBox="0 0 40 40"><rect width="40" height="40" rx="11" fill="#16302a"/><circle cx="17.5" cy="19" r="7" fill="none" stroke="#d6ee9e" stroke-width="4.5"/><rect x="22.25" y="12" width="4.5" height="20" rx="2.25" fill="#d6ee9e"/><circle cx="31" cy="9.5" r="2.75" fill="#d6ee9e"/></svg>QualiFi</div>
+    <span class="eyebrow">Paketler · 4 / 4 · Banka</span>
+  </div>
+  <h1>On binlerce KOBİ, tek yerden.</h1>
+  <div class="stairs" data-active="4">
     <div class="step s1">
       <div class="name">Başlangıç</div>
       <div class="price"><b class="num">₺0</b><span>Ücretsiz</span></div>
