@@ -28,7 +28,7 @@ QualiFi ajanı bu kaynakları tek yerde okur ve üç çıktı üretir: güncel �
 [Tık 5] İşletme nakit ihtiyacını görür, bankalardan teklif isteyebilir ve isterse ödeme karnesini yalnız kendi izniyle bankasına gösterir.
 
 **Slayt 6 · Peki banka temsilcisi nasıl görür**
-[Tık 1] Müşteri temsilcisi güne bir öncelik listesiyle başlar: son iki haftada riski belirgin artan firmalar şunlar, önce bununla konuş.
+[Tık 1] Müşteri temsilcisi güne hazır bir öncelik listesiyle başlar. Son iki haftada riski artan firmaları ve hangisini önce araması gerektiğini görür.
 [Tık 2] Riskin hangi sektörde yoğunlaştığını görür.
 [Tık 3] İşletmelerin izin verdiği ödeme sözlerini kaynağıyla birlikte görür. Mesajın kendisini değil, işletmenin paylaştığı özeti görür.
 [Tık 4] İşletmenin ödeme karnesini görür; müşteri isimleri, vergi numaraları ve ham konuşmalar paylaşılmaz.
