@@ -1,6 +1,6 @@
 # QualiFi · 7 dakikalık sunum metni
 
-24 Kasım 2026 · 17 slayt · yaklaşık 950 kelime (dakikada ~135 kelime)
+24 Kasım 2026 · 17 slayt · yaklaşık 730 kelime (Türkçe sakin tempoda dakikada ~110 kelime, slayt geçişleriyle ~7 dk)
 
 Köşeli parantez içindekiler sahne notudur, okunmaz. Her bölümün yanında süre ve slayt değişene kadar geçen toplam süre var.
 
