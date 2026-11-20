@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>QualiFi rekabet</title>
+<style>
+@font-face { font-family: "Onest"; src: url(fonts/onest-latin-wght-normal.woff2) format("woff2"); font-weight: 100 900; unicode-range: U+0000-00FF, U+0131, U+2000-206F, U+20AC, U+2122, U+2190-2193; }
+@font-face { font-family: "Onest"; src: url(fonts/onest-latin-ext-wght-normal.woff2) format("woff2"); font-weight: 100 900; unicode-range: U+0100-02AF, U+20A0-20C0; }
+@font-face { font-family: "Schibsted"; src: url(fonts/schibsted-grotesk-latin-wght-normal.woff2) format("woff2"); font-weight: 400 900; unicode-range: U+0000-00FF, U+0131, U+2000-206F, U+2190-2193; }
+@font-face { font-family: "Schibsted"; src: url(fonts/schibsted-grotesk-latin-ext-wght-normal.woff2) format("woff2"); font-weight: 400 900; unicode-range: U+0100-02AF, U+20A0-20C0; }
+:root { --ink: #16302a; --ink2: #34524a; --lime: #d6ee9e; --lime-ink: #2c4712; --paper: #f7f6f1; --surface: #fff; --soft: #eef2e6; --line: #e2e6db; --muted: #5d6c61; --green: #2f7d4f; --risk: #c0503a;
+  --display: "Schibsted", "Onest", Arial, sans-serif; --text: "Onest", Arial, sans-serif; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scrollbar-width: none; } html::-webkit-scrollbar { display: none; }
+body { background: #ccc; font-family: var(--text); color: var(--ink); -webkit-font-smoothing: antialiased; }
+.slide { width: 1920px; height: 1080px; background: var(--paper); padding: 72px 96px; position: relative; overflow: hidden; display: flex; flex-direction: column; margin-bottom: 40px; }
+.top { display: flex; align-items: center; justify-content: space-between; }
+.logo { display: flex; align-items: center; gap: 12px; font: 700 28px var(--display); letter-spacing: -0.02em; }
+.eyebrow { font: 600 18px var(--text); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h1 { font: 700 54px/1.08 var(--display); letter-spacing: -0.03em; margin-top: 26px; max-width: 1728px; }
+h1 em { font-style: normal; color: var(--green); }
+.src { position: absolute; left: 96px; bottom: 30px; font-size: 15px; color: var(--muted); }
+
+/* A: two markets + QualiFi band */
+.markets { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 40px; }
+.market { display: flex; flex-direction: column; }
+.market { background: var(--surface); border: 1px solid var(--line); border-radius: 26px; padding: 30px 32px; }
+.market h2 { font: 700 30px var(--display); display: flex; align-items: center; gap: 12px; }
+.market h2 span { font: 600 16px var(--text); color: var(--muted); letter-spacing: .04em; text-transform: uppercase; }
+.rowc { display: grid; grid-template-columns: 250px 1fr; gap: 18px; padding: 24px 0; border-top: 1px solid var(--line); }
+.rowc:first-of-type { border-top: 0; margin-top: 10px; }
+.rowc .cat { font: 700 21px/1.25 var(--display); }
+.rowc .cat small { display: block; font: 500 17px var(--text); color: var(--muted); margin-top: 4px; }
+.rowc p { font-size: 20px; line-height: 1.42; color: var(--ink2); }
+.rowc p b { color: var(--ink); }
+.band { margin-top: 28px; background: var(--ink); color: #eef5e6; border-radius: 26px; padding: 26px 32px; display: grid; grid-template-columns: 260px 1fr; gap: 26px; align-items: center; }
+.band .who { font: 700 34px var(--display); color: var(--lime); }
+.band .who small { display: block; font: 500 17px var(--text); color: #b9ccb4; margin-top: 4px; }
+.steps { display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; font-size: 20px; white-space: nowrap; }
+.steps span { background: #ffffff12; border: 1px solid #ffffff22; padding: 10px 16px; border-radius: 14px; }
+.steps i { font-style: normal; color: var(--lime); font-size: 22px; }
+.steps .tr { background: var(--lime); color: var(--lime-ink); border-color: var(--lime); font-weight: 600; }
+
+/* B: positioning map */
+.map { position: relative; flex: 1; margin-top: 30px; margin-bottom: 40px; }
+.plot { position: absolute; left: 120px; right: 40px; top: 0; bottom: 70px; border-left: 3px solid var(--ink); border-bottom: 3px solid var(--ink); }
+.plot .q { position: absolute; width: 50%; height: 50%; }
+.plot .q.tr { right: 0; top: 0; background: #eaf5dc; border-radius: 0 24px 0 0; }
+.ax { position: absolute; font: 600 19px var(--text); color: var(--muted); }
+.ax b { color: var(--ink); }
+.ax-x0 { left: 120px; bottom: 30px; }
+.ax-x1 { right: 40px; bottom: 30px; text-align: right; }
+.ax-y0 { left: 0; bottom: 74px; width: 110px; }
+.ax-y1 { left: 0; top: 0; width: 110px; }
+.dot { position: absolute; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
+.dot i { width: 22px; height: 22px; border-radius: 50%; background: #9fae9a; border: 3px solid #fff; box-shadow: 0 2px 6px #16302a33; }
+.dot b { font: 700 20px var(--display); }
+.dot small { font-size: 16px; color: var(--muted); max-width: 230px; line-height: 1.3; }
+.dot.tr i { background: #d9a14a; }
+.dot.qf i { width: 34px; height: 34px; background: var(--ink); box-shadow: 0 0 0 10px #d6ee9e; }
+.dot.qf b { font-size: 28px; }
+.legend { position: absolute; right: 40px; top: 4px; display: flex; gap: 22px; font-size: 17px; color: var(--muted); background: var(--paper); padding: 6px 10px; border-radius: 10px; }
+.legend span { display: inline-flex; align-items: center; gap: 8px; }
+.legend i { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
+</style>
+</head>
+<body>
+
+<!-- ============ A. Türkiye + yurt dışı + QualiFi ============ -->
+<section class="slide" id="ra">
+  <div class="top">
+    <div class="logo"><svg width="40" height="40" viewBox="0 0 40 40"><rect width="40" height="40" rx="11" fill="#16302a"/><circle cx="17.5" cy="19" r="7" fill="none" stroke="#d6ee9e" stroke-width="4.5"/><rect x="22.25" y="12" width="4.5" height="20" rx="2.25" fill="#d6ee9e"/><circle cx="31" cy="9.5" r="2.75" fill="#d6ee9e"/></svg>QualiFi</div>
+    <span class="eyebrow">Rekabet ve farklılaşma</span>
+  </div>
+  <h1>Türkiye'de ödeme tarihi e-postada değil, <em>WhatsApp'ta</em> konuşulur.</h1>
+  <div class="markets">
+    <div class="market">
+      <h2>Türkiye'de <span>Bugün kullanılanlar</span></h2>
+      <div class="rowc">
+        <div class="cat">Ön muhasebe ve ERP<small>Paraşüt · Logo</small></div>
+        <p>Faturayı ve tahsilatı kaydeder; Paraşüt vadesi geleni <b>e-postayla</b> hatırlatır. Nakit raporu yalnız sisteme girilen kayda bakar; müşterinin “cuma öderiz” sözünü bilmez.</p>
+      </div>
+      <div class="rowc">
+        <div class="cat">KOBİ finansmanı<small>Figopara</small></div>
+        <p>Ticari risk skoru ve finansman sunar. İşletmenin <b>kendi müşterileriyle konuşmasını</b> görmez.</p>
+      </div>
+      <div class="rowc">
+        <div class="cat">Excel ve telefon<small>Çoğu KOBİ</small></div>
+        <p>Söz telefonda alınır, muhasebeciye iletilir, tablo elle güncellenir. <b>Çoğu zaman unutulur.</b></p>
+      </div>
+    </div>
+    <div class="market">
+      <h2>Yurt dışında <span>Benzer işi yapanlar</span></h2>
+      <div class="rowc">
+        <div class="cat">Nakit tahmini<small>Agicap</small></div>
+        <p>ERP ve bankayı bağlayıp tahmin yapar. Tahmin <b>kayıtlı faturalara</b> dayanır.</p>
+      </div>
+      <div class="rowc">
+        <div class="cat">Alacak hatırlatma<small>Chaser · Upflow</small></div>
+        <p>Hatırlatma <b>gönderir</b>: e-posta, SMS, telefon; Chaser bir entegrasyonla WhatsApp'tan da. Odak, mesajı göndermek.</p>
+      </div>
+      <div class="rowc">
+        <div class="cat">Ödeme sözü okuma<small>Tesorio</small></div>
+        <p>Müşterinin verdiği sözü <b>e-postadan</b> okuyup tahmine katar. Büyük şirketler için.</p>
+      </div>
+    </div>
+  </div>
+  <div class="band">
+    <div class="who">QualiFi<small>Çek · senet · açık bankacılık (ÖHVPS)</small></div>
+    <div class="steps">
+      <span class="tr">Gelen WhatsApp'ı okur</span><i>→</i>
+      <span>Faturayla eşleştirir</span><i>→</i>
+      <span>Ödeme tarihini kaydırır</span><i>→</i>
+      <span>Nakit tahminini günceller</span><i>→</i>
+      <span>Bankayla izinle paylaşır</span>
+    </div>
+  </div>
+  <div class="src">Kaynak: şirketlerin kendi ürün sayfaları ve kılavuzları, Kasım 2026.</div>
+</section>
+
+<!-- ============ B. Konum haritası ============ -->
+<section class="slide" id="rb">
+  <div class="top">
+    <div class="logo"><svg width="40" height="40" viewBox="0 0 40 40"><rect width="40" height="40" rx="11" fill="#16302a"/><circle cx="17.5" cy="19" r="7" fill="none" stroke="#d6ee9e" stroke-width="4.5"/><rect x="22.25" y="12" width="4.5" height="20" rx="2.25" fill="#d6ee9e"/><circle cx="31" cy="9.5" r="2.75" fill="#d6ee9e"/></svg>QualiFi</div>
+    <span class="eyebrow">Rekabet haritası</span>
+  </div>
+  <h1>Diğerleri kayda bakar. QualiFi <em>konuşmaya</em> bakar ve harekete geçer.</h1>
+  <div class="map">
+    <div class="plot"><div class="q tr"></div></div>
+    <div class="ax ax-y1"><b>Yapar</b><br>tahmin, öneri, banka</div>
+    <div class="ax ax-y0"><b>Gösterir</b><br>kayıt, rapor</div>
+    <div class="ax ax-x0">Veri: <b>sisteme girilen kayıt</b></div>
+    <div class="ax ax-x1">Veri: <b>gerçek konuşma</b> (WhatsApp)</div>
+    <div class="legend"><span><i style="background:#d9a14a"></i>Türkiye</span><span><i style="background:#9fae9a"></i>Yurt dışı</span></div>
+
+    <div class="dot tr" style="left: 23%; top: 78%"><i></i><b>Paraşüt · Logo</b><small>Kayıt ve rapor</small></div>
+    <div class="dot tr" style="left: 27%; top: 30%"><i></i><b>Figopara</b><small>Risk skoru ve finansman</small></div>
+    <div class="dot" style="left: 42%; top: 40%"><i></i><b>Agicap</b><small>Kayıtlardan nakit tahmini</small></div>
+    <div class="dot" style="left: 52%; top: 72%"><i></i><b>Chaser · Upflow</b><small>Hatırlatma gönderir</small></div>
+    <div class="dot" style="left: 64%; top: 48%"><i></i><b>Tesorio</b><small>Sözü e-postadan okur, büyük şirket</small></div>
+    <div class="dot qf" style="left: 84%; top: 20%"><i></i><b>QualiFi</b><small>WhatsApp'tan okur, tahmini günceller, bankaya bağlar</small></div>
+  </div>
+  <div class="src">Konumlar, şirketlerin kendi ürün sayfalarındaki özelliklere göre QualiFi'nin değerlendirmesidir, Kasım 2026.</div>
+</section>
+
+</body>
+</html>
