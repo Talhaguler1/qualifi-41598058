@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>QualiFi çözüm animasyonu</title>
+<style>
+@font-face { font-family: "Onest"; src: url(fonts/onest-latin-wght-normal.woff2) format("woff2"); font-weight: 100 900; unicode-range: U+0000-00FF, U+0131, U+2000-206F, U+20AC, U+2122, U+2190-2193; }
+@font-face { font-family: "Onest"; src: url(fonts/onest-latin-ext-wght-normal.woff2) format("woff2"); font-weight: 100 900; unicode-range: U+0100-02AF, U+20A0-20C0; }
+@font-face { font-family: "Schibsted"; src: url(fonts/schibsted-grotesk-latin-wght-normal.woff2) format("woff2"); font-weight: 400 900; unicode-range: U+0000-00FF, U+0131, U+2000-206F, U+2190-2193; }
+@font-face { font-family: "Schibsted"; src: url(fonts/schibsted-grotesk-latin-ext-wght-normal.woff2) format("woff2"); font-weight: 400 900; unicode-range: U+0100-02AF, U+20A0-20C0; }
+:root { --bg: #d3ffb3; --ink: #16302a; --muted: #5d6c61; --green: #2f7d4f; --lime: #d6ee9e; --orange: #e0873a; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--bg); overflow: hidden; }
+#stage { position: relative; width: 1920px; height: 860px; background: var(--bg); font-family: "Onest", Arial, sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; }
+svg#wires { position: absolute; inset: 0; }
+.card { position: absolute; background: #fff; border-radius: 18px; box-shadow: 0 6px 18px #16302a14; display: flex; align-items: center; gap: 16px; padding: 0 22px; border: 2px solid transparent; }
+.src { width: 400px; height: 78px; font: 600 23px "Onest"; }
+.src .ic { width: 40px; height: 40px; border-radius: 11px; background: #eef4e6; display: grid; place-items: center; flex: none; }
+.src .ic svg { width: 22px; height: 22px; stroke: var(--ink); fill: none; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+#agent { position: absolute; left: 840px; top: 340px; width: 240px; height: 180px; border-radius: 30px; background: var(--ink); color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 18px 40px #16302a33; }
+#agent b { font: 800 30px "Schibsted"; letter-spacing: -.01em; }
+#agent small { font: 600 17px "Onest"; color: var(--lime); height: 22px; }
+#agent .spark { width: 34px; height: 34px; }
+#ring { position: absolute; left: 960px; top: 430px; width: 240px; height: 240px; border-radius: 50%; border: 3px solid #16302a; transform: translate(-50%, -50%); opacity: 0; }
+.out { width: 440px; height: 150px; flex-direction: column; align-items: flex-start; justify-content: center; gap: 12px; padding: 0 26px; }
+.out .t { font: 700 25px "Schibsted"; display: flex; align-items: center; gap: 12px; }
+.out .t svg { width: 26px; height: 26px; stroke: var(--green); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.out .body { height: 44px; display: flex; align-items: center; gap: 10px; }
+.chip { font: 700 19px "Onest"; padding: 7px 14px; border-radius: 10px; background: #eef4e6; white-space: nowrap; }
+.chip s { color: #8a978d; font-weight: 600; }
+.chip.go { background: var(--ink); color: var(--lime); }
+.bars { display: flex; align-items: flex-end; gap: 9px; height: 44px; }
+.bars i { width: 26px; background: #9fc27e; border-radius: 5px 5px 2px 2px; height: 4px; }
+#bubble { position: absolute; z-index: 5; background: #fff; border-radius: 16px 16px 16px 4px; padding: 14px 18px; font: 600 21px/1.3 "Onest"; box-shadow: 0 10px 26px #16302a26; width: 300px; transform-origin: left bottom; opacity: 0; }
+#bubble small { display: block; font: 700 13px "Onest"; color: #25d366; letter-spacing: .04em; margin-bottom: 4px; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <svg id="wires" width="1920" height="860"></svg>
+  <div id="ring"></div>
+  <div id="agent">
+    <svg class="spark" viewBox="0 0 24 24" fill="none" stroke="#d6ee9e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg>
+    <b>QualiFi ajanı</b>
+    <small id="agentState"></small>
+  </div>
+  <div id="bubble"><small>WHATSAPP · MÜŞTERİ</small>“Ödemeyi iki hafta sonra yapacağız.”</div>
+</div>
+<script>
+const SRC = [
+  ["ERP", '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 21v-4h6v4M8 7h2M14 7h2M8 11h2M14 11h2"/>'],
+  ["Ön muhasebe", '<rect x="5" y="2" width="14" height="20" rx="2"/><path d="M8 6h8M8 11h2M12 11h2M16 11h0M8 15h2M12 15h2M8 18h8"/>'],
+  ["Banka", '<path d="M3 10l9-6 9 6M5 10v8M9 10v8M15 10v8M19 10v8M3 21h18"/>'],
+  ["WhatsApp Business", '<path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 21l2.1-5.2A8.5 8.5 0 1 1 21 11.5z"/>'],
+  ["Gmail", '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>'],
+  ["Sözleşme ve fatura", '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/>'],
+];
+const OUT = [
+  ["Güncel ödeme tarihleri", '<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/>'],
+  ["8 haftalık nakit tahmini", '<path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/>'],
+  ["Onaylı hatırlatmalar", '<path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10 21a2 2 0 0 0 4 0"/>'],
+];
+const stage = document.getElementById("stage"), wires = document.getElementById("wires");
+const NS = "http://www.w3.org/2000/svg";
+const srcEls = [], outEls = [], inPaths = [], outPaths = [];
+const SX = 120, SW = 400, SH = 78, SG = 22, STOP = (860 - (6 * SH + 5 * SG)) / 2;
+SRC.forEach(([name, icon], i) => {
+  const el = document.createElement("div");
+  el.className = "card src";
+  el.style.left = SX + "px"; el.style.top = STOP + i * (SH + SG) + "px";
+  el.innerHTML = `<span class="ic"><svg viewBox="0 0 24 24">${icon}</svg></span>${name}`;
+  stage.appendChild(el); srcEls.push(el);
+  const y = STOP + i * (SH + SG) + SH / 2;
+  const p = document.createElementNS(NS, "path");
+  p.setAttribute("d", `M${SX + SW} ${y} C ${SX + SW + 170} ${y}, ${840 - 170} 430, 840 430`);
+  p.setAttribute("fill", "none"); p.setAttribute("stroke", "#16302a"); p.setAttribute("stroke-opacity", ".18"); p.setAttribute("stroke-width", "2.5"); p.setAttribute("stroke-dasharray", "6 8");
+  wires.appendChild(p); inPaths.push(p);
+});
+const OX = 1400, OW = 440, OH = 150, OG = 32, OTOP = (860 - (3 * OH + 2 * OG)) / 2;
+OUT.forEach(([name, icon], j) => {
+  const el = document.createElement("div");
+  el.className = "card out";
+  el.style.left = OX + "px"; el.style.top = OTOP + j * (OH + OG) + "px";
+  const body = j === 0 ? `<span class="chip" data-a><s>27 Kas</s></span><span class="chip go" data-b>→ 4 Ara</span>`
+    : j === 1 ? `<div class="bars">${"<i></i>".repeat(8)}</div>`
+    : `<span class="chip" data-a>Taslak hazır</span><span class="chip go" data-b>Onaylandı ✓</span>`;
+  el.innerHTML = `<div class="t"><svg viewBox="0 0 24 24">${icon}</svg>${name}</div><div class="body">${body}</div>`;
+  stage.appendChild(el); outEls.push(el);
+  const y = OTOP + j * (OH + OG) + OH / 2;
+  const p = document.createElementNS(NS, "path");
+  p.setAttribute("d", `M1080 430 C ${1080 + 150} 430, ${OX - 150} ${y}, ${OX} ${y}`);
+  p.setAttribute("fill", "none"); p.setAttribute("stroke", "#16302a"); p.setAttribute("stroke-opacity", ".18"); p.setAttribute("stroke-width", "2.5"); p.setAttribute("stroke-dasharray", "6 8");
+  wires.appendChild(p); outPaths.push(p);
+});
+const dot = (r, fill) => { const c = document.createElementNS(NS, "circle"); c.setAttribute("r", r); c.setAttribute("fill", fill); c.style.opacity = 0; wires.appendChild(c); return c; };
+const inDots = inPaths.map(() => [dot(8, "#16302a"), dot(5, "#2f7d4f")]);
+const outDots = outPaths.map(() => dot(9, "#16302a"));
+const bubble = document.getElementById("bubble"), ring = document.getElementById("ring"), agentState = document.getElementById("agentState");
+const bars = outEls[1].querySelectorAll(".bars i");
+const BAR = [0.75, -0.25, 0.55, 0.7, 0.5, 0.8, 0.9, 1.0];
+
+const LOOP = 12;
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+const ease = (v) => { v = clamp(v); return v < .5 ? 2 * v * v : 1 - Math.pow(-2 * v + 2, 2) / 2; };
+const seg = (t, a, b) => clamp((t - a) / (b - a));
+const at = (path, f) => { const L = path.getTotalLength(); return path.getPointAtLength(L * clamp(f)); };
+function place(c, path, f, show) {
+  if (!show) { c.style.opacity = 0; return; }
+  const p = at(path, ease(f)); c.setAttribute("cx", p.x); c.setAttribute("cy", p.y);
+  c.style.opacity = f < .08 ? f / .08 : f > .92 ? (1 - f) / .08 : 1;
+}
+
+window.render = function (t) {
+  t = ((t % LOOP) + LOOP) % LOOP;
+  const fadeAll = 1 - seg(t, 11.1, 11.9); // everything relaxes before the loop restarts
+  // sources: two waves of data flowing into the agent
+  SRC.forEach((_, i) => {
+    const a = 0.3 + i * 0.32, b = 6.4 + i * 0.3;
+    const f1 = seg(t, a, a + 1.5), f2 = seg(t, b, b + 1.5);
+    place(inDots[i][0], inPaths[i], f1, t >= a && t <= a + 1.5);
+    place(inDots[i][1], inPaths[i], f2, t >= b && t <= b + 1.5);
+    const glow = Math.max(1 - Math.abs(t - a - .1) / .5, 0);
+    srcEls[i].style.borderColor = glow > 0 ? `rgba(22,48,42,${glow * .9})` : "transparent";
+    srcEls[i].style.transform = `translateX(${glow * 6}px)`;
+  });
+  // WhatsApp promise bubble: pops above the WhatsApp card, then flies into the agent
+  const wa = srcEls[3], waTop = parseFloat(wa.style.top);
+  const pop = ease(seg(t, 1.2, 1.6)), fly = ease(seg(t, 2.9, 3.9));
+  if (t > 1.2 && t < 3.9) {
+    const sx = SX + SW - 110, sy = waTop - 120, ex = 830, ey = 380;
+    const x = sx + (ex - sx) * fly, y = sy + (ey - sy) * fly - Math.sin(fly * Math.PI) * 90;
+    bubble.style.left = x + "px"; bubble.style.top = y + "px";
+    bubble.style.opacity = fly > .85 ? (1 - fly) / .15 : pop;
+    bubble.style.transform = `scale(${(0.7 + 0.3 * pop) * (1 - 0.65 * fly)})`;
+  } else bubble.style.opacity = 0;
+  // agent: breathing ring, strong pulse while reading
+  const reading = seg(t, 3.6, 4.1) * (1 - seg(t, 5.0, 5.3));
+  const breath = (Math.sin(t * 2 * Math.PI / 3) + 1) / 2;
+  const pr = seg(t, 3.8, 5.0);
+  ring.style.opacity = (0.08 + 0.1 * breath) + reading * (1 - pr) * 0.6;
+  ring.style.transform = `translate(-50%,-50%) scale(${1 + 0.05 * breath + reading * pr * 0.45})`;
+  document.getElementById("agent").style.transform = `scale(${1 + 0.035 * reading})`;
+  agentState.textContent = t >= 3.7 && t < 5.1 ? "Mesajı okuyor…" : t >= 5.1 && t < 11.3 ? "Plan güncellendi ✓" : "";
+  // outputs light up one by one
+  OUT.forEach((_, j) => {
+    const s = 5.0 + j * 1.0, arrive = s + 0.8;
+    place(outDots[j], outPaths[j], seg(t, s, arrive), t >= s && t <= arrive);
+    const on = ease(seg(t, arrive - 0.05, arrive + 0.35)) * fadeAll;
+    outEls[j].style.borderColor = `rgba(22,48,42,${on})`;
+    outEls[j].style.transform = `translateX(${-8 * on}px)`;
+    outEls[j].style.boxShadow = `0 ${6 + 10 * on}px ${18 + 18 * on}px rgba(22,48,42,${0.08 + 0.1 * on})`;
+    if (j === 0) {
+      const b = ease(seg(t, arrive + 0.2, arrive + 0.7)) * fadeAll;
+      outEls[0].querySelector("[data-b]").style.opacity = b;
+      outEls[0].querySelector("[data-b]").style.transform = `translateX(${(1 - b) * -14}px)`;
+      outEls[0].querySelector("s").style.textDecorationColor = `rgba(138,151,141,${b})`;
+    }
+    if (j === 1) {
+      bars.forEach((bar, k) => {
+        const g = ease(seg(t, arrive + k * 0.08, arrive + 0.5 + k * 0.08)) * fadeAll;
+        const v = BAR[k];
+        bar.style.height = 4 + Math.abs(v) * 40 * g + "px";
+        bar.style.background = v < 0 ? (g > .1 ? "#e0873a" : "#9fc27e") : "#9fc27e";
+      });
+    }
+    if (j === 2) {
+      const a = ease(seg(t, arrive, arrive + 0.3)) * fadeAll, ok = ease(seg(t, arrive + 1.3, arrive + 1.7)) * fadeAll;
+      outEls[2].querySelector("[data-a]").style.opacity = 0.35 + 0.65 * a * (1 - ok * .6);
+      outEls[2].querySelector("[data-b]").style.opacity = ok;
+      outEls[2].querySelector("[data-b]").style.transform = `scale(${0.85 + 0.15 * ok})`;
+    }
+  });
+};
+// live mode: plays in the browser; frame mode: ?frames=1 waits for render(t) calls
+if (!/frames=1/.test(location.search)) {
+  const t0 = performance.now();
+  const tick = (n) => { render(((n - t0) / 1000) % LOOP); requestAnimationFrame(tick); };
+  requestAnimationFrame(tick);
+} else render(0);
+</script>
+</body>
+</html>
