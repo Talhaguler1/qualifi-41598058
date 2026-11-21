@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>QualiFi rekabet haritası</title>
+<style>
+@font-face { font-family: "Onest"; src: url(fonts/onest-latin-wght-normal.woff2) format("woff2"); font-weight: 100 900; unicode-range: U+0000-00FF, U+0131, U+2000-206F, U+20AC, U+2122, U+2190-2193; }
+@font-face { font-family: "Onest"; src: url(fonts/onest-latin-ext-wght-normal.woff2) format("woff2"); font-weight: 100 900; unicode-range: U+0100-02AF, U+20A0-20C0; }
+@font-face { font-family: "Schibsted"; src: url(fonts/schibsted-grotesk-latin-wght-normal.woff2) format("woff2"); font-weight: 400 900; unicode-range: U+0000-00FF, U+0131, U+2000-206F, U+2190-2193; }
+@font-face { font-family: "Schibsted"; src: url(fonts/schibsted-grotesk-latin-ext-wght-normal.woff2) format("woff2"); font-weight: 400 900; unicode-range: U+0100-02AF, U+20A0-20C0; }
+:root { --ink: #16302a; --muted: #6b776f; --grey: #a9b2ab; --lime: #c9e88a; --orange: #e0873a; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: transparent; }
+body.preview { background: #ececec; }
+#map { position: relative; width: 1920px; height: 1080px; font-family: "Onest", Arial, sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; }
+.plot { position: absolute; left: 190px; top: 110px; width: 1060px; height: 800px; }
+.sweet { position: absolute; right: 0; top: 0; width: 50%; height: 50%; background: radial-gradient(circle at 100% 0%, #c9e88a66, #c9e88a14 70%); border-radius: 0 28px 0 0; }
+.axis-x { position: absolute; left: 0; right: -18px; bottom: 0; height: 3px; background: var(--ink); }
+.axis-x::after { content: ""; position: absolute; right: -2px; top: -7px; border-left: 16px solid var(--ink); border-top: 8.5px solid transparent; border-bottom: 8.5px solid transparent; }
+.axis-y { position: absolute; left: 0; top: -18px; bottom: 0; width: 3px; background: var(--ink); }
+.axis-y::after { content: ""; position: absolute; top: -2px; left: -7px; border-bottom: 16px solid var(--ink); border-left: 8.5px solid transparent; border-right: 8.5px solid transparent; }
+.mid-x { position: absolute; left: 50%; top: 0; bottom: 0; border-left: 2px dashed #16302a22; }
+.mid-y { position: absolute; top: 50%; left: 0; right: 0; border-top: 2px dashed #16302a22; }
+.lab { position: absolute; font: 600 21px "Onest"; color: var(--muted); white-space: nowrap; }
+.lab b { color: var(--ink); font-weight: 700; }
+.ttl { position: absolute; font: 700 15px "Onest"; letter-spacing: .14em; text-transform: uppercase; color: var(--ink); }
+
+.co { position: absolute; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.co i { width: 18px; height: 18px; border-radius: 50%; background: var(--grey); box-shadow: 0 0 0 5px #ffffffcc; }
+.co span { font: 600 19px "Onest"; color: #5f6b63; white-space: nowrap; }
+.co.tes i { width: 28px; height: 28px; background: var(--orange); box-shadow: 0 0 0 7px #e0873a33; }
+.co.tes span { font: 700 23px "Schibsted"; color: #b4621f; }
+.co.qf i { width: 46px; height: 46px; background: var(--ink); box-shadow: 0 0 0 12px var(--lime), 0 0 0 26px #c9e88a55; }
+.co.qf span { font: 800 32px "Schibsted"; color: var(--ink); letter-spacing: -.01em; }
+
+.panel { position: absolute; left: 1395px; top: 170px; width: 470px; }
+.panel .eb { font: 700 15px "Onest"; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 22px; }
+.item { display: grid; grid-template-columns: 48px 1fr; gap: 18px; align-items: start; padding: 22px 0; border-top: 2px solid #16302a14; }
+.item:first-of-type { border-top: 0; padding-top: 0; }
+.item em { font: 800 21px "Schibsted"; font-style: normal; width: 46px; height: 46px; border-radius: 50%; background: var(--ink); color: var(--lime); display: grid; place-items: center; }
+.item b { display: block; font: 700 27px/1.2 "Schibsted"; letter-spacing: -.01em; }
+.item small { display: block; font: 500 18px "Onest"; color: var(--muted); margin-top: 6px; }
+svg.arrow { position: absolute; left: 0; top: 0; overflow: visible; }
+</style>
+</head>
+<body class="preview">
+<div id="map">
+  <div class="plot" id="plot">
+    <div class="sweet"></div>
+    <div class="mid-x"></div><div class="mid-y"></div>
+    <div class="axis-x"></div><div class="axis-y"></div>
+  </div>
+
+  <!-- axis labels -->
+  <div class="ttl" style="left:190px; top:960px; width:1060px; text-align:center">Veri kaynağı</div>
+  <div class="lab" style="left:190px; top:922px">Kayıttan okur <span style="font-weight:500">· fatura, ERP</span></div>
+  <div class="lab" style="left:1250px; top:922px; transform:translateX(-100%)"><b>Konuşmadan okur</b> · müşterinin sözü</div>
+  <div class="ttl" style="left:62px; top:510px; transform:rotate(-90deg); transform-origin:left top; width:0; white-space:nowrap">Öngörü</div>
+  <div class="lab" style="left:110px; top:886px; transform:rotate(-90deg); transform-origin:left top">Geçmişi raporlar</div>
+  <div class="lab" style="left:110px; top:390px; transform:rotate(-90deg); transform-origin:left top"><b>Geleceği tahmin eder</b></div>
+
+  <div id="dots"></div>
+
+  <div class="panel" id="panel">
+    <div class="eb">QualiFi'yi ayıran</div>
+    <div class="item"><em>1</em><div><b>WhatsApp'taki sözü okur</b><small>Tesorio yalnız e-postadan okur</small></div></div>
+    <div class="item"><em>2</em><div><b>ERP ve finans ekibi gerekmez</b><small>İşletme sahibi telefondan kullanır</small></div></div>
+    <div class="item"><em>3</em><div><b>Bankayla izinle paylaşır</b><small>İşletmenin onayıyla erken uyarı</small></div></div>
+  </div>
+</div>
+
+<script>
+// x: 0 = kayıttan, 100 = konuşmadan · y: 0 = geçmişi raporlar, 100 = geleceği tahmin eder
+const COS = [
+  { n: "QualiFi", x: 90, y: 89, c: "qf" },
+  { n: "Tesorio", x: 70, y: 75, c: "tes" },
+  { n: "Agicap", x: 14, y: 82 },
+  { n: "HighRadius", x: 27, y: 68 },
+  { n: "Figopara", x: 37, y: 57 },
+  { n: "Paraşüt", x: 12, y: 30 },
+  { n: "Logo", x: 25, y: 17 },
+  { n: "Chaser", x: 64, y: 34 },
+  { n: "Upflow", x: 79, y: 25 },
+  { n: "Excel + telefon", x: 60, y: 12 },
+];
+const P = { left: 190, top: 110, w: 1060, h: 800 };
+const pos = (c) => ({ x: P.left + (c.x / 100) * P.w, y: P.top + (1 - c.y / 100) * P.h });
+document.getElementById("dots").innerHTML = COS.map((c) => {
+  const p = pos(c);
+  return `<div class="co ${c.c || ""}" style="left:${p.x}px; top:${p.y}px"><i></i><span>${c.n}</span></div>`;
+}).join("");
+// arrow from QualiFi to the panel
+const q = pos(COS[0]);
+const panel = document.getElementById("panel").getBoundingClientRect();
+const map = document.getElementById("map").getBoundingClientRect();
+const ex = panel.left - map.left - 24, ey = panel.top - map.top + 150;
+const sx = q.x + 46, sy = q.y;
+document.getElementById("map").insertAdjacentHTML("beforeend",
+  `<svg class="arrow" width="1920" height="1080"><defs><marker id="h" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto"><path d="M1 1 L10 6 L1 11" fill="none" stroke="#16302a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+   <path d="M${sx} ${sy} C ${sx + 90} ${sy}, ${ex - 90} ${ey}, ${ex} ${ey}" fill="none" stroke="#16302a" stroke-width="3" stroke-linecap="round" marker-end="url(#h)"/></svg>`);
+</script>
+</body>
+</html>
