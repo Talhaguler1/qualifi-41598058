@@ -234,6 +234,77 @@ export type Database = {
           },
         ]
       }
+      qualifi_whatsapp_messages: {
+        Row: {
+          ai_summary: string | null
+          body: string
+          commitment_id: string | null
+          confidence: number | null
+          contact_name: string | null
+          contact_wa_id: string
+          created_at: string
+          delivery_status: string | null
+          direction: string
+          error: string | null
+          id: string
+          intent: string | null
+          new_due_date: string | null
+          previous_due_date: string | null
+          reply_draft: string | null
+          reply_state: string
+          user_id: string
+          wa_message_id: string | null
+        }
+        Insert: {
+          ai_summary?: string | null
+          body: string
+          commitment_id?: string | null
+          confidence?: number | null
+          contact_name?: string | null
+          contact_wa_id: string
+          created_at?: string
+          delivery_status?: string | null
+          direction: string
+          error?: string | null
+          id?: string
+          intent?: string | null
+          new_due_date?: string | null
+          previous_due_date?: string | null
+          reply_draft?: string | null
+          reply_state?: string
+          user_id: string
+          wa_message_id?: string | null
+        }
+        Update: {
+          ai_summary?: string | null
+          body?: string
+          commitment_id?: string | null
+          confidence?: number | null
+          contact_name?: string | null
+          contact_wa_id?: string
+          created_at?: string
+          delivery_status?: string | null
+          direction?: string
+          error?: string | null
+          id?: string
+          intent?: string | null
+          new_due_date?: string | null
+          previous_due_date?: string | null
+          reply_draft?: string | null
+          reply_state?: string
+          user_id?: string
+          wa_message_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "qualifi_whatsapp_messages_commitment_id_fkey"
+            columns: ["commitment_id"]
+            isOneToOne: false
+            referencedRelation: "qualifi_commitments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       qualifi_workspace_files: {
         Row: {
           created_at: string
