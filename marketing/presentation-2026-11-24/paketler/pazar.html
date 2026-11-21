@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>QualiFi pazar</title>
+<style>
+@font-face { font-family: "Onest"; src: url(fonts/onest-latin-wght-normal.woff2) format("woff2"); font-weight: 100 900; unicode-range: U+0000-00FF, U+0131, U+2000-206F, U+20AC, U+20BA, U+2122, U+2190-2193; }
+@font-face { font-family: "Onest"; src: url(fonts/onest-latin-ext-wght-normal.woff2) format("woff2"); font-weight: 100 900; unicode-range: U+0100-02AF, U+20A0-20C0; }
+@font-face { font-family: "Schibsted"; src: url(fonts/schibsted-grotesk-latin-wght-normal.woff2) format("woff2"); font-weight: 400 900; unicode-range: U+0000-00FF, U+0131, U+2000-206F, U+2190-2193; }
+@font-face { font-family: "Schibsted"; src: url(fonts/schibsted-grotesk-latin-ext-wght-normal.woff2) format("woff2"); font-weight: 400 900; unicode-range: U+0100-02AF, U+20A0-20C0; }
+:root { --ink: #16302a; --muted: #5d6c61; --green: #2f7d4f; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: transparent; }
+body.preview { background: #ececec; }
+#m { position: relative; width: 1920px; height: 900px; font-family: "Onest", Arial, sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; }
+.ring { position: absolute; border-radius: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; text-align: center; }
+.ring .k { font: 800 22px "Schibsted"; letter-spacing: .12em; }
+.ring .d { font: 600 19px/1.25 "Onest"; margin-top: 4px; }
+#tam { left: 560px; top: 450px; width: 820px; height: 820px; background: #e3eedb; border: 2px solid #b9d0a8; padding-top: 46px; }
+#sam { left: 560px; top: 520px; width: 570px; height: 570px; background: #a9c98c; border: 2px solid #8db36d; padding-top: 44px; }
+#som { left: 560px; top: 590px; width: 310px; height: 310px; background: var(--ink); color: #fff; justify-content: center; }
+#som .k { color: #d6ee9e; }
+#som .n { font: 800 44px "Schibsted"; letter-spacing: -.01em; margin: 2px 0; }
+#som .d { color: #c9d8c4; }
+.lab { position: absolute; left: 1150px; width: 700px; }
+.lab .v { font: 800 50px "Schibsted"; letter-spacing: -.02em; line-height: 1; }
+.lab .v .tl { font-family: "Onest"; font-weight: 800; margin-right: 2px; }
+.lab .v span { font: 700 22px "Onest"; color: var(--muted); margin-left: 6px; letter-spacing: 0; }
+.lab .w { font: 700 22px "Onest"; margin-top: 10px; }
+.lab .f { font: 500 17px "Onest"; color: var(--muted); margin-top: 6px; }
+.lab.som .v { color: var(--ink); }
+.lab .tag { display: inline-block; font: 700 13px "Onest"; letter-spacing: .12em; text-transform: uppercase; padding: 5px 10px; border-radius: 999px; margin-bottom: 10px; }
+.lab.tam .tag { background: #e3eedb; } .lab.sam .tag { background: #a9c98c; } .lab.som .tag { background: var(--ink); color: #d6ee9e; }
+.note { position: absolute; left: 1150px; top: 840px; font: 500 15px "Onest"; color: var(--muted); }
+svg { position: absolute; inset: 0; overflow: visible; }
+</style>
+</head>
+<body class="preview">
+<div id="m">
+  <div class="ring" id="tam"><span class="k">TAM</span><span class="d">Tüm KOBİ'ler ve bankalar</span></div>
+  <div class="ring" id="sam"><span class="k">SAM</span><span class="d">Alacağı çok olan<br>küçük ve orta firmalar</span></div>
+  <div class="ring" id="som"><span class="k">SOM</span><span class="n">1.000 firma</span><span class="d">İlk hedefimiz</span></div>
+
+  <svg width="1920" height="900">
+    <defs><marker id="h" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto"><path d="M1 1 L10 6 L1 11" fill="none" stroke="#16302a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+    <!-- TAM: from the outer ring's upper right edge -->
+    <path d="M 850 160 C 950 130, 1030 130, 1120 135" fill="none" stroke="#16302a" stroke-width="2.6" marker-end="url(#h)"/>
+    <!-- SAM: from the middle ring's right edge -->
+    <path d="M 835 430 C 930 410, 1030 405, 1120 405" fill="none" stroke="#16302a" stroke-width="2.6" marker-end="url(#h)"/>
+    <!-- SOM: from the core -->
+    <path d="M 715 640 C 860 690, 1000 690, 1120 680" fill="none" stroke="#16302a" stroke-width="2.6" marker-end="url(#h)"/>
+  </svg>
+
+  <div class="lab tam" style="top:90px"><span class="tag">Toplam pazar</span><div class="v"><b class="tl">₺</b>1,6 milyar<span>/ ay</span></div><div class="w">3,9 milyon KOBİ + banka lisansları</div><div class="f">≈ ₺19,7 milyar / yıl · banka lisansları hariç</div></div>
+  <div class="lab sam" style="top:358px"><span class="tag">Hizmet verilebilir pazar</span><div class="v"><b class="tl">₺</b>205 milyon<span>/ ay</span></div><div class="w">~220 bin küçük + ~30 bin orta firma</div><div class="f">220 bin × ₺390 + 30 bin × ₺3.990 · ≈ ₺2,5 milyar / yıl</div></div>
+  <div class="lab som" style="top:625px"><span class="tag">İlk hedef</span><div class="v"><b class="tl">₺</b>390 bin<span>/ ay</span></div><div class="w">İlk 1.000 firma, KOBİ paketi</div><div class="f">1.000 × ₺390 · ≈ ₺4,7 milyon / yıl</div></div>
+
+  <div class="note">KOBİ sayısı: TÜİK 2024. Ölçek dağılımı ve paket eşleşmesi tahminidir. Fiyatlar KDV hariç.</div>
+</div>
+</body>
+</html>
