@@ -16,14 +16,24 @@ import {
   COST_LABEL,
   DEFAULT_ASSUMPTIONS,
   mergeAssumptions,
+  PACKAGE_LABEL,
+  packageCostTotal,
   SCENARIO_LABEL,
   tl,
   type CostCategory,
   type FinanceAssumptions,
+  type PackageCost,
   type Scenario,
 } from "@/lib/finance-model";
 
-const STORE_KEY = "qf-finance-model-v1";
+const STORE_KEY = "qf-finance-model-v2";
+const PACKAGE_FIELDS = { free: "costFree", sme: "costSme", growth: "costGrowth" } as const;
+const COST_PARTS: ReadonlyArray<readonly [keyof PackageCost, string]> = [
+  ["ai", "Yapay zekâ"],
+  ["messaging", "WhatsApp mesaj ücreti"],
+  ["integrations", "Entegrasyon ücretleri"],
+  ["hosting", "Barındırma"],
+];
 const CATS = Object.keys(COST_LABEL) as CostCategory[];
 const CAT_COLOR: Record<CostCategory, string> = {
   team: "#16302a",
@@ -70,32 +80,34 @@ const GROUPS: ReadonlyArray<readonly [string, ReadonlyArray<Field>]> = [
     ],
   ],
   [
-    "Değişken giderler (aylık)",
+    "Edinme ve komisyon",
     [
-      ["aiPerSme", "Yapay zekâ + altyapı / KOBİ firması", "tl"],
-      ["aiPerGrowth", "Yapay zekâ + altyapı / Büyüme firması", "tl"],
-      ["aiPerFree", "Yapay zekâ + altyapı / ücretsiz hesap", "tl"],
+      ["cacSme", "Edinme maliyeti / KOBİ firması", "tl"],
+      ["cacGrowth", "Edinme maliyeti / Büyüme firması", "tl"],
+      ["marketingFixed", "Sabit pazarlama (aylık)", "tl"],
       ["paymentCommission", "Ödeme komisyonu", "pct"],
-      ["cac", "Firma edinme maliyeti (CAC)", "tl"],
-      ["marketingFixed", "Sabit pazarlama", "tl"],
     ],
   ],
   [
-    "Sabit giderler (aylık)",
+    "Enflasyon ve beklenmedik gider",
     [
-      ["infraBase", "Sunucu ve araçlar", "tl"],
-      ["complianceMonthly", "Hukuk, KVKK, güvenlik", "tl"],
-      ["openBankingMonthly", "Açık bankacılık ortağı", "tl"],
-      ["openBankingStartMonth", "Açık bankacılık başlangıç ayı", "int"],
-      ["otherMonthly", "Ofis ve diğer", "tl"],
-      ["costInflationMonthly", "Aylık maliyet enflasyonu", "pct"],
+      ["costInflationMonthly", "Aylık maliyet artışı (maaş, kira, reklam)", "pct"],
+      [
+        "serveCostChangeMonthly",
+        "Hesap başı maliyet değişimi (kur − yapay zekâ ucuzlaması)",
+        "pct",
+      ],
+      ["contingency", "Beklenmedik gider payı", "pct"],
     ],
   ],
   [
     "Yatırım ve değerleme",
     [
       ["horizonMonths", "Plan süresi (ay)", "int"],
+      ["roundMonths", "Bu turun sağlayacağı pist (ay)", "int"],
       ["startCash", "Mevcut nakit", "tl"],
+      ["grantAmount", "Hibe (TÜBİTAK, KOSGEB; 0 = yok)", "tl"],
+      ["grantMonth", "Hibenin geldiği ay", "int"],
       ["safetyBuffer", "Güvenlik payı", "pct"],
       ["preMoneyValuation", "Yatırım öncesi değerleme", "tl"],
       ["revenueMultiple", "Değerleme çarpanı (yıllık gelir ×)", "int"],
@@ -229,19 +241,27 @@ export function FinancePlanner({ accountSlot }: { accountSlot: ReactNode }) {
           <div className="qd-kpis">
             <Kpi
               tone="accent"
-              label="Yatırım ihtiyacı"
+              label="Bu turun yatırım ihtiyacı"
               value={tl(plan.fundingNeed)}
-              sub={`En dip nokta ${plan.deepestMonth}. ay · %${num(a.safetyBuffer * 100)} güvenlik payıyla`}
+              sub={`${num(a.roundMonths)} ay pist · %${num(a.safetyBuffer * 100)} güvenlik payıyla`}
+            />
+            <Kpi
+              label={`${plan.rows.length} ayda toplam dış sermaye`}
+              value={tl(plan.totalCapitalNeed)}
+              sub={
+                plan.needsNextRound
+                  ? `Fark (${tl(plan.totalCapitalNeed - plan.fundingNeed)}) sonraki turla`
+                  : "Bu tur yetiyor"
+              }
             />
             <Kpi
               label="Aylık başabaş"
               value={monthText(plan.breakEvenMonth)}
-              sub="Gelir, gideri kalıcı olarak geçiyor"
-            />
-            <Kpi
-              label="Yatırımın geri dönüşü"
-              value={monthText(plan.paybackMonth)}
-              sub="Toplam harcanan nakit geri kazanılıyor"
+              sub={
+                plan.paybackMonth
+                  ? `Harcanan nakit ${plan.paybackMonth}. ayda geri kazanılıyor`
+                  : "Gelir, gideri kalıcı olarak geçtiği ay"
+              }
             />
             <Kpi
               label={`${plan.rows.length}. ay yıllık gelir (ARR)`}
@@ -388,9 +408,17 @@ export function FinancePlanner({ accountSlot }: { accountSlot: ReactNode }) {
           <section className="qd-card">
             <div className="qd-card__head">
               <div>
-                <span className="qd-eyebrow">Yatırım nereye gidiyor</span>
+                <span className="qd-eyebrow">Bu tur nereye gidiyor</span>
                 <h2>İlk {plan.useOfFundsMonths} ayın giderleri</h2>
-                <p>En dip noktaya kadar olan harcamalar; sonrasını gelir taşıyor.</p>
+                <p>
+                  Bu sürede{" "}
+                  {num(
+                    (plan.rows[plan.useOfFundsMonths - 1]?.smeCustomers ?? 0) +
+                      (plan.rows[plan.useOfFundsMonths - 1]?.growthCustomers ?? 0),
+                  )}{" "}
+                  ücretli firmaya ve aylık {tl(plan.rows[plan.useOfFundsMonths - 1]?.revenue ?? 0)}{" "}
+                  gelire ulaşılıyor.
+                </p>
               </div>
             </div>
             <div className="qf-fin__use">
@@ -448,6 +476,80 @@ export function FinancePlanner({ accountSlot }: { accountSlot: ReactNode }) {
                 sub="Edinme maliyeti kaç ayda çıkıyor"
               />
             </div>
+          </section>
+
+          <section className="qd-card">
+            <div className="qd-card__head">
+              <div>
+                <span className="qd-eyebrow">Paket maliyetleri</span>
+                <h2>Bir hesap bize ayda kaça mal oluyor</h2>
+                <p>
+                  1. ay fiyatlarıyla, hesap başına. Yapay zekâ ve WhatsApp ücretleri dolar bazlıdır;
+                  kur artışı aylık maliyet artışına dahildir. Hücreleri değiştirebilirsiniz.
+                </p>
+              </div>
+            </div>
+            <div className="qd-table-wrap">
+              <table className="qd-table qf-fin__pkg">
+                <thead>
+                  <tr>
+                    <th>Paket</th>
+                    <th className="qd-right">Fiyat</th>
+                    {COST_PARTS.map(([, label]) => (
+                      <th key={label} className="qd-right">
+                        {label}
+                      </th>
+                    ))}
+                    <th className="qd-right">Toplam maliyet</th>
+                    <th className="qd-right">Brüt marj</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {plan.unit.packages.map((p) => {
+                    const field = PACKAGE_FIELDS[p.key];
+                    const cost = a[field];
+                    return (
+                      <tr key={p.key}>
+                        <td>
+                          <b>{PACKAGE_LABEL[p.key]}</b>
+                        </td>
+                        <td className="qd-right qd-num">{p.price ? tl(p.price) : "Ücretsiz"}</td>
+                        {COST_PARTS.map(([part]) => (
+                          <td key={part} className="qd-right">
+                            <input
+                              className="qd-cell qd-num"
+                              type="number"
+                              min={0}
+                              value={cost[part]}
+                              aria-label={`${PACKAGE_LABEL[p.key]} ${part}`}
+                              onChange={(e) =>
+                                set({
+                                  [field]: {
+                                    ...cost,
+                                    [part]: Math.max(0, Number(e.target.value) || 0),
+                                  },
+                                } as Partial<FinanceAssumptions>)
+                              }
+                              style={{ width: 76, textAlign: "right" }}
+                            />
+                          </td>
+                        ))}
+                        <td className="qd-right qd-num">{tl(packageCostTotal(cost))}</td>
+                        <td
+                          className={`qd-right qd-num ${p.price && p.margin < 0.5 ? "qf-neg" : "qf-pos"}`}
+                        >
+                          {p.price ? pct(p.margin) : `${num(a.freePerPaid)} hesap / ücretli`}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+            <p className="qf-fin__note">
+              Ücretsiz hesapların maliyeti ücretli firmalar tarafından taşınır; birim ekonomideki
+              brüt marj bunu ve ödeme komisyonunu içerir.
+            </p>
           </section>
 
           <section className="qd-card">
@@ -575,6 +677,98 @@ export function FinancePlanner({ accountSlot }: { accountSlot: ReactNode }) {
                 }
               >
                 <Plus size={13} /> Rol ekle
+              </button>
+            </fieldset>
+
+            <fieldset className="qf-fin__group">
+              <legend>Sürekli giderler (aylık)</legend>
+              {a.recurring.map((o, i) => (
+                <div key={i} className="qf-fin__line qf-fin__line--oneoff">
+                  <input
+                    className="qd-input"
+                    value={o.name}
+                    aria-label="Kalem"
+                    onChange={(e) =>
+                      set({
+                        recurring: a.recurring.map((x, j) =>
+                          j === i ? { ...x, name: e.target.value } : x,
+                        ),
+                      })
+                    }
+                  />
+                  <input
+                    className="qd-input qd-num"
+                    type="number"
+                    min={0}
+                    step={1000}
+                    value={o.amount}
+                    aria-label="Aylık tutar"
+                    onChange={(e) =>
+                      set({
+                        recurring: a.recurring.map((x, j) =>
+                          j === i ? { ...x, amount: Number(e.target.value) || 0 } : x,
+                        ),
+                      })
+                    }
+                  />
+                  <input
+                    className="qd-input qd-num"
+                    type="number"
+                    min={1}
+                    value={o.startMonth}
+                    aria-label="Başlangıç ayı"
+                    title="Başlangıç ayı"
+                    onChange={(e) =>
+                      set({
+                        recurring: a.recurring.map((x, j) =>
+                          j === i
+                            ? { ...x, startMonth: Math.max(1, Number(e.target.value) || 1) }
+                            : x,
+                        ),
+                      })
+                    }
+                  />
+                  <select
+                    className="qd-select"
+                    value={o.category}
+                    aria-label="Kategori"
+                    onChange={(e) =>
+                      set({
+                        recurring: a.recurring.map((x, j) =>
+                          j === i ? { ...x, category: e.target.value as CostCategory } : x,
+                        ),
+                      })
+                    }
+                  >
+                    {CATS.map((c) => (
+                      <option key={c} value={c}>
+                        {COST_LABEL[c]}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    type="button"
+                    className="qd-btn qd-btn--ghost qd-btn--sm"
+                    aria-label="Kalemi sil"
+                    onClick={() => set({ recurring: a.recurring.filter((_, j) => j !== i) })}
+                  >
+                    <Trash2 size={12} />
+                  </button>
+                </div>
+              ))}
+              <button
+                type="button"
+                className="qd-btn qd-btn--sm"
+                onClick={() =>
+                  set({
+                    recurring: [
+                      ...a.recurring,
+                      { name: "Yeni gider", amount: 10_000, startMonth: 1, category: "other" },
+                    ],
+                  })
+                }
+              >
+                <Plus size={13} /> Gider ekle
               </button>
             </fieldset>
 

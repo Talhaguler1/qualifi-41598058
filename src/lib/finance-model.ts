@@ -4,7 +4,7 @@
 
 export interface TeamRole {
   name: string;
-  /** Monthly employer cost (TL) at month 1 prices. */
+  /** Monthly employer cost (TL) at month 1 prices: gross salary + employer SGK. */
   monthlyCost: number;
   /** First month this role is paid (1-based). */
   startMonth: number;
@@ -17,6 +17,29 @@ export interface OneOffCost {
   category: CostCategory;
 }
 
+export interface RecurringCost {
+  name: string;
+  /** TL per month at month 1 prices. */
+  amount: number;
+  startMonth: number;
+  category: CostCategory;
+}
+
+/** What one account on a package costs us each month (TL, month 1 prices). */
+export interface PackageCost {
+  ai: number; // reading messages and documents, answering questions
+  messaging: number; // WhatsApp template messages (reminders) billed by Meta
+  integrations: number; // open banking / e-invoice API fees per connected account
+  hosting: number; // storage, database, compute
+}
+
+export type PackageKey = "free" | "sme" | "growth";
+export const PACKAGE_LABEL: Record<PackageKey, string> = {
+  free: "Başlangıç",
+  sme: "KOBİ",
+  growth: "Büyüme",
+};
+
 export type CostCategory = "team" | "infra" | "acquisition" | "compliance" | "bank" | "other";
 
 export const COST_LABEL: Record<CostCategory, string> = {
@@ -24,7 +47,7 @@ export const COST_LABEL: Record<CostCategory, string> = {
   infra: "Altyapı ve yapay zekâ",
   acquisition: "İşletme edinimi",
   compliance: "Güvenlik ve uyum",
-  bank: "Banka entegrasyonu",
+  bank: "Banka ve veri entegrasyonları",
   other: "Diğer",
 };
 
@@ -51,27 +74,31 @@ export interface FinanceAssumptions {
   firstBankMonth: number; // 0 = no bank licence in the plan
   monthsBetweenBanks: number; // a new bank every N months after the first (0 = only one)
 
-  // Variable costs (TL per month, month 1 prices)
-  aiPerSme: number;
-  aiPerGrowth: number;
-  aiPerFree: number;
-  paymentCommission: number; // share of subscription revenue
-  cac: number; // acquisition cost per new paying firm
+  // Cost to serve, per account per month
+  costFree: PackageCost;
+  costSme: PackageCost;
+  costGrowth: PackageCost;
+  paymentCommission: number; // share of subscription revenue (card / virtual POS)
+
+  // Acquisition
+  cacSme: number; // ads, content, onboarding per new KOBİ firm
+  cacGrowth: number; // sales time and demos per new Büyüme firm
   marketingFixed: number;
 
   // Fixed costs (TL per month, month 1 prices)
   team: TeamRole[];
-  infraBase: number;
-  complianceMonthly: number;
-  openBankingMonthly: number;
-  openBankingStartMonth: number;
-  otherMonthly: number;
+  recurring: RecurringCost[];
   oneOffs: OneOffCost[];
-  costInflationMonthly: number;
+  costInflationMonthly: number; // salaries, rent, ads and fixed services in TL
+  serveCostChangeMonthly: number; // per-account cost drift: TL weakening vs falling AI prices
+  contingency: number; // share added on top of every month's costs
 
   // Funding and return
   horizonMonths: number;
+  roundMonths: number; // runway this round must buy (seed = reach milestones, not break-even)
   startCash: number;
+  grantAmount: number; // non-dilutive (TÜBİTAK BİGG, KOSGEB); 0 = none assumed
+  grantMonth: number;
   safetyBuffer: number; // extra share on top of the deepest cash need
   preMoneyValuation: number;
   revenueMultiple: number; // ARR multiple used for the end-of-plan value
@@ -108,29 +135,51 @@ export const DEFAULT_ASSUMPTIONS: FinanceAssumptions = {
   growthShare: 0.08,
   churnMonthly: 0.03,
   freePerPaid: 4,
-  firstBankMonth: 10,
+  firstBankMonth: 13,
   monthsBetweenBanks: 12,
 
-  aiPerSme: 30,
-  aiPerGrowth: 150,
-  aiPerFree: 4,
+  // 1 USD ≈ 45 TL. AI: ~₺0,02 per message, ~₺0,5 per document page.
+  // WhatsApp utility template in Türkiye ≈ $0,006 ≈ ₺0,27 per reminder.
+  costFree: { ai: 8, messaging: 0, integrations: 0, hosting: 3 },
+  costSme: { ai: 50, messaging: 11, integrations: 25, hosting: 10 },
+  costGrowth: { ai: 550, messaging: 135, integrations: 150, hosting: 60 },
   paymentCommission: 0.03,
-  cac: 1_200,
-  marketingFixed: 25_000,
+
+  cacSme: 2_000,
+  cacGrowth: 15_000,
+  marketingFixed: 15_000,
 
   team: [
     { name: "Kurucu (ürün ve satış)", monthlyCost: 60_000, startMonth: 1 },
-    { name: "Yazılım geliştirici", monthlyCost: 110_000, startMonth: 1 },
-    { name: "Yapay zekâ / veri mühendisi", monthlyCost: 130_000, startMonth: 3 },
-    { name: "Yazılım geliştirici (mobil)", monthlyCost: 110_000, startMonth: 6 },
-    { name: "Satış ve banka ilişkileri", monthlyCost: 80_000, startMonth: 6 },
-    { name: "Müşteri başarısı", monthlyCost: 50_000, startMonth: 9 },
+    { name: "Yazılım geliştirici", monthlyCost: 125_000, startMonth: 1 },
+    { name: "Yapay zekâ / veri mühendisi", monthlyCost: 160_000, startMonth: 4 },
+    { name: "Satış ve banka ilişkileri", monthlyCost: 95_000, startMonth: 7 },
+    // After this round: paid by revenue and the next round.
+    { name: "Mobil geliştirici", monthlyCost: 125_000, startMonth: 13 },
+    { name: "Müşteri başarısı", monthlyCost: 60_000, startMonth: 13 },
   ],
-  infraBase: 20_000,
-  complianceMonthly: 15_000,
-  openBankingMonthly: 25_000,
-  openBankingStartMonth: 7,
-  otherMonthly: 20_000,
+  recurring: [
+    { name: "Sunucu ve veritabanı (temel)", amount: 20_000, startMonth: 1, category: "infra" },
+    { name: "Yazılım araçları ve lisanslar", amount: 12_000, startMonth: 1, category: "infra" },
+    {
+      name: "Türkiye'de barındırma (veri yerelleştirme)",
+      amount: 20_000,
+      startMonth: 12,
+      category: "infra",
+    },
+    {
+      name: "Hukuk, KVKK ve güvenlik danışmanlığı",
+      amount: 15_000,
+      startMonth: 1,
+      category: "compliance",
+    },
+    { name: "Siber sigorta", amount: 5_000, startMonth: 9, category: "compliance" },
+    { name: "Açık bankacılık ortağı (lisanslı)", amount: 25_000, startMonth: 7, category: "bank" },
+    { name: "E-fatura entegratörü", amount: 8_000, startMonth: 6, category: "bank" },
+    { name: "Etkinlik, fuar ve seyahat", amount: 15_000, startMonth: 3, category: "acquisition" },
+    { name: "Mali müşavir ve resmi giderler", amount: 15_000, startMonth: 1, category: "other" },
+    { name: "Ofis / ortak çalışma alanı", amount: 20_000, startMonth: 1, category: "other" },
+  ],
   oneOffs: [
     {
       name: "Şirket, sözleşmeler ve KVKK kurulumu",
@@ -138,18 +187,37 @@ export const DEFAULT_ASSUMPTIONS: FinanceAssumptions = {
       month: 1,
       category: "compliance",
     },
+    { name: "Ekipman (bilgisayar, telefon)", amount: 250_000, month: 1, category: "other" },
+    { name: "Marka, video ve web", amount: 60_000, month: 2, category: "acquisition" },
+    { name: "İşe alım ve eğitim", amount: 120_000, month: 3, category: "team" },
+    { name: "Ek ekipman", amount: 180_000, month: 6, category: "other" },
+    {
+      name: "Açık bankacılık ortaklık ve hukuki inceleme",
+      amount: 100_000,
+      month: 6,
+      category: "bank",
+    },
     { name: "Sızma testi ve güvenlik denetimi", amount: 250_000, month: 8, category: "compliance" },
     { name: "Banka entegrasyonu geliştirme", amount: 300_000, month: 9, category: "bank" },
     { name: "ISO 27001 hazırlığı", amount: 400_000, month: 18, category: "compliance" },
   ],
   costInflationMonthly: 0.02,
+  serveCostChangeMonthly: 0,
+  contingency: 0.1,
 
   horizonMonths: 36,
+  roundMonths: 12,
   startCash: 0,
+  grantAmount: 0,
+  grantMonth: 6,
   safetyBuffer: 0.2,
   preMoneyValuation: 40_000_000,
   revenueMultiple: 5,
 };
+
+export function packageCostTotal(c: PackageCost): number {
+  return c.ai + c.messaging + c.integrations + c.hosting;
+}
 
 export interface MarketSize {
   tamMonthly: number;
@@ -174,35 +242,19 @@ export interface MonthRow {
   freeAccounts: number;
   banks: number;
   revenue: number;
-  mrr: number;
   costs: Record<CostCategory, number>;
   totalCost: number;
   net: number;
-  /** Cumulative net from month 1, without outside money. */
+  /** Cumulative net from month 1 including any grant, without investment. */
   cumulative: number;
 }
 
-export interface FinancePlan {
-  rows: MonthRow[];
-  market: MarketSize;
-  /** Deepest point of cumulative net (negative = money needed). */
-  deepestCumulative: number;
-  deepestMonth: number;
-  /** Rounded up to the next 250 thousand, including the safety buffer. */
-  fundingNeed: number;
-  /** First month whose own net is not negative and stays so to the end. */
-  breakEvenMonth: number | null;
-  /** First month the cumulative net is back at zero or above. */
-  paybackMonth: number | null;
-  /** Months the funding lasts from month 1 (null = through the whole horizon). */
-  runwayMonths: number | null;
-  useOfFunds: Record<CostCategory, number>;
-  useOfFundsMonths: number;
-  endArr: number;
-  endValuation: number;
-  investorStake: number;
-  investorMultiple: number;
-  unit: UnitEconomics;
+export interface PackageMargin {
+  key: PackageKey;
+  price: number;
+  cost: number;
+  commission: number;
+  margin: number; // share of price left after cost to serve and commission
 }
 
 export interface UnitEconomics {
@@ -213,6 +265,34 @@ export interface UnitEconomics {
   cac: number;
   ltvToCac: number;
   cacPaybackMonths: number;
+  packages: PackageMargin[];
+}
+
+export interface FinancePlan {
+  rows: MonthRow[];
+  market: MarketSize;
+  /** Deepest point of cumulative net (negative = money needed). */
+  deepestCumulative: number;
+  deepestMonth: number;
+  /** This round: deepest cash need within roundMonths, plus buffer, rounded up to 250 thousand. */
+  fundingNeed: number;
+  /** All outside money needed over the whole horizon, same rounding (null-safe: 0 = none). */
+  totalCapitalNeed: number;
+  /** True when the horizon ends with cash still falling (needs another round or more time). */
+  needsNextRound: boolean;
+  /** First month whose own net is not negative and stays so to the end. */
+  breakEvenMonth: number | null;
+  /** First month after the deepest point where the cumulative net is back at zero or above. */
+  paybackMonth: number | null;
+  /** Months the funding lasts from month 1 (null = through the whole horizon). */
+  runwayMonths: number | null;
+  useOfFunds: Record<CostCategory, number>;
+  useOfFundsMonths: number;
+  endArr: number;
+  endValuation: number;
+  investorStake: number;
+  investorMultiple: number;
+  unit: UnitEconomics;
 }
 
 const CATEGORIES: CostCategory[] = ["team", "infra", "acquisition", "compliance", "bank", "other"];
@@ -229,8 +309,10 @@ export function buildPlan(input: FinanceAssumptions, scenario: Scenario = "base"
   const s = SCENARIO[scenario];
   const a = input;
   const churn = Math.min(1, Math.max(0, a.churnMonthly * s.churn));
-  const cac = a.cac * s.cac;
   const horizon = Math.max(1, Math.round(a.horizonMonths));
+  const serveFree = packageCostTotal(a.costFree);
+  const serveSme = packageCostTotal(a.costSme);
+  const serveGrowth = packageCostTotal(a.costGrowth);
   const rows: MonthRow[] = [];
 
   let sme = 0;
@@ -243,9 +325,12 @@ export function buildPlan(input: FinanceAssumptions, scenario: Scenario = "base"
     if (m > 1) newPaid *= 1 + (m <= 12 ? a.growthYear1 : a.growthLater) * s.growth;
     const priceStep = Math.pow(1 + a.annualPriceIncrease, Math.floor((m - 1) / 12));
     const costStep = Math.pow(1 + a.costInflationMonthly, m - 1);
+    const serveStep = Math.pow(1 + a.serveCostChangeMonthly, m - 1);
 
-    sme = sme * (1 - churn) + newPaid * (1 - a.growthShare);
-    growth = growth * (1 - churn) + newPaid * a.growthShare;
+    const newSme = newPaid * (1 - a.growthShare);
+    const newGrowth = newPaid * a.growthShare;
+    sme = sme * (1 - churn) + newSme;
+    growth = growth * (1 - churn) + newGrowth;
     free += newPaid * a.freePerPaid;
     const banks =
       a.firstBankMonth > 0 && m >= a.firstBankMonth
@@ -254,23 +339,24 @@ export function buildPlan(input: FinanceAssumptions, scenario: Scenario = "base"
         : 0;
 
     const subscription = (sme * a.priceSme + growth * a.priceGrowth) * priceStep;
-    const bankRevenue = banks * a.bankMonthlyFee * priceStep;
-    const revenue = subscription + bankRevenue;
+    const revenue = subscription + banks * a.bankMonthlyFee * priceStep;
 
     const costs = emptyCosts();
     costs.team =
       a.team.filter((r) => m >= r.startMonth).reduce((sum, r) => sum + r.monthlyCost, 0) * costStep;
-    costs.infra =
-      (a.infraBase + sme * a.aiPerSme + growth * a.aiPerGrowth + free * a.aiPerFree) * costStep;
-    costs.acquisition = (newPaid * cac + a.marketingFixed) * costStep;
-    costs.compliance = a.complianceMonthly * costStep;
-    costs.bank = m >= a.openBankingStartMonth ? a.openBankingMonthly * costStep : 0;
-    costs.other = a.otherMonthly * costStep + subscription * a.paymentCommission;
+    costs.infra = (free * serveFree + sme * serveSme + growth * serveGrowth) * serveStep;
+    costs.acquisition =
+      (newSme * a.cacSme + newGrowth * a.cacGrowth) * s.cac * costStep +
+      a.marketingFixed * costStep;
+    costs.other = subscription * a.paymentCommission;
+    for (const r of a.recurring) if (m >= r.startMonth) costs[r.category] += r.amount * costStep;
     for (const o of a.oneOffs) if (o.month === m) costs[o.category] += o.amount * costStep;
+    const base = CATEGORIES.reduce((sum, c) => sum + costs[c], 0);
+    costs.other += base * a.contingency;
 
     const totalCost = CATEGORIES.reduce((sum, c) => sum + costs[c], 0);
     const net = revenue - totalCost;
-    cumulative += net;
+    cumulative += net + (a.grantAmount > 0 && m === a.grantMonth ? a.grantAmount : 0);
     rows.push({
       month: m,
       newPaid,
@@ -279,7 +365,6 @@ export function buildPlan(input: FinanceAssumptions, scenario: Scenario = "base"
       freeAccounts: free,
       banks,
       revenue,
-      mrr: revenue,
       costs,
       totalCost,
       net,
@@ -305,16 +390,19 @@ export function buildPlan(input: FinanceAssumptions, scenario: Scenario = "base"
   const paybackRow = rows.find((r) => r.month > deepestMonth && r.cumulative >= 0);
   const paybackMonth = deepestMonth === 0 ? 1 : paybackRow ? paybackRow.month : null;
 
-  const fundingNeed =
-    deepestCumulative < 0
-      ? roundUp(-deepestCumulative * (1 + a.safetyBuffer) - a.startCash, 250_000)
-      : 0;
-  const available = Math.max(0, fundingNeed) + a.startCash;
+  const need = (deepest: number) =>
+    deepest < 0 ? Math.max(0, roundUp(-deepest * (1 + a.safetyBuffer) - a.startCash, 250_000)) : 0;
+  const roundWindow = rows.slice(0, Math.max(1, Math.min(horizon, Math.round(a.roundMonths))));
+  const roundDeepest = Math.min(0, ...roundWindow.map((r) => r.cumulative));
+  const fundingNeed = need(roundDeepest);
+  const totalCapitalNeed = need(deepestCumulative);
+  const needsNextRound = totalCapitalNeed > fundingNeed;
+  const available = fundingNeed + a.startCash;
   const broke = rows.find((r) => available + r.cumulative < 0);
   const runwayMonths = broke ? broke.month - 1 : null;
 
-  // What the money pays for: every cost until the deepest point (after it, revenue carries the company).
-  const useOfFundsMonths = deepestMonth || horizon;
+  // What this round pays for: every cost inside the round window.
+  const useOfFundsMonths = roundWindow.length;
   const useOfFunds = emptyCosts();
   for (const r of rows.slice(0, useOfFundsMonths))
     for (const c of CATEGORIES) useOfFunds[c] += r.costs[c];
@@ -326,14 +414,14 @@ export function buildPlan(input: FinanceAssumptions, scenario: Scenario = "base"
   const investorStake = postMoney > 0 ? fundingNeed / postMoney : 0;
   const investorMultiple = fundingNeed > 0 ? (investorStake * endValuation) / fundingNeed : 0;
 
-  const unit = unitEconomics(a, cac, churn);
-
   return {
     rows,
     market: marketSize(a),
     deepestCumulative,
     deepestMonth,
     fundingNeed,
+    totalCapitalNeed,
+    needsNextRound,
     breakEvenMonth,
     paybackMonth,
     runwayMonths,
@@ -343,25 +431,38 @@ export function buildPlan(input: FinanceAssumptions, scenario: Scenario = "base"
     endValuation,
     investorStake,
     investorMultiple,
-    unit,
+    unit: unitEconomics(a, s.cac, churn),
   };
 }
 
-/** Per paying firm at month 1 prices, using the package mix of new firms. */
+/** Per paying firm at month 1 prices, using the package mix of new firms; free accounts are carried by paying ones. */
 export function unitEconomics(
   a: FinanceAssumptions,
-  cac = a.cac,
+  cacFactor = 1,
   churn = a.churnMonthly,
 ): UnitEconomics {
-  const arpa = (1 - a.growthShare) * a.priceSme + a.growthShare * a.priceGrowth;
-  const variableCost =
-    (1 - a.growthShare) * a.aiPerSme +
-    a.growthShare * a.aiPerGrowth +
-    a.freePerPaid * a.aiPerFree +
-    arpa * a.paymentCommission;
+  const g = a.growthShare;
+  const arpa = (1 - g) * a.priceSme + g * a.priceGrowth;
+  const serve =
+    (1 - g) * packageCostTotal(a.costSme) +
+    g * packageCostTotal(a.costGrowth) +
+    a.freePerPaid * packageCostTotal(a.costFree);
+  const variableCost = serve + arpa * a.paymentCommission;
   const grossMargin = arpa > 0 ? (arpa - variableCost) / arpa : 0;
-  const monthlyContribution = arpa - variableCost;
-  const ltv = churn > 0 ? monthlyContribution / churn : Infinity;
+  const contribution = arpa - variableCost;
+  const cac = ((1 - g) * a.cacSme + g * a.cacGrowth) * cacFactor;
+  const ltv = churn > 0 ? contribution / churn : Infinity;
+  const pkg = (key: PackageKey, price: number, c: PackageCost): PackageMargin => {
+    const cost = packageCostTotal(c);
+    const commission = price * a.paymentCommission;
+    return {
+      key,
+      price,
+      cost,
+      commission,
+      margin: price > 0 ? (price - cost - commission) / price : -Infinity,
+    };
+  };
   return {
     arpa,
     variableCost,
@@ -369,7 +470,12 @@ export function unitEconomics(
     ltv,
     cac,
     ltvToCac: cac > 0 ? ltv / cac : Infinity,
-    cacPaybackMonths: monthlyContribution > 0 ? cac / monthlyContribution : Infinity,
+    cacPaybackMonths: contribution > 0 ? cac / contribution : Infinity,
+    packages: [
+      pkg("free", 0, a.costFree),
+      pkg("sme", a.priceSme, a.costSme),
+      pkg("growth", a.priceGrowth, a.costGrowth),
+    ],
   };
 }
 
@@ -385,6 +491,16 @@ export function tl(value: number, digits = 1): string {
   return `${sign}₺${fmt(v, 0)}`;
 }
 
+const num = (v: unknown, fallback: number) =>
+  typeof v === "number" && Number.isFinite(v) ? v : fallback;
+const str = (v: unknown, fallback: string) => (typeof v === "string" ? v : fallback);
+const cat = (v: unknown): CostCategory =>
+  (CATEGORIES as string[]).includes(String(v)) ? (v as CostCategory) : "other";
+const rows = (v: unknown) =>
+  Array.isArray(v)
+    ? v.filter((r): r is Record<string, unknown> => !!r && typeof r === "object")
+    : null;
+
 /** Reads a saved model, keeping defaults for anything missing or malformed. */
 export function mergeAssumptions(raw: unknown): FinanceAssumptions {
   const base = DEFAULT_ASSUMPTIONS;
@@ -392,32 +508,41 @@ export function mergeAssumptions(raw: unknown): FinanceAssumptions {
   const src = raw as Record<string, unknown>;
   const out: Record<string, unknown> = { ...base };
   for (const key of Object.keys(base) as (keyof FinanceAssumptions)[]) {
+    if (typeof base[key] === "number") out[key] = num(src[key], base[key] as number);
+  }
+  for (const key of ["costFree", "costSme", "costGrowth"] as const) {
     const v = src[key];
     const d = base[key];
-    if (typeof d === "number" && typeof v === "number" && Number.isFinite(v)) out[key] = v;
+    const o = v && typeof v === "object" ? (v as Record<string, unknown>) : {};
+    out[key] = {
+      ai: num(o["ai"], d.ai),
+      messaging: num(o["messaging"], d.messaging),
+      integrations: num(o["integrations"], d.integrations),
+      hosting: num(o["hosting"], d.hosting),
+    };
   }
-  if (Array.isArray(src["team"])) {
-    out["team"] = (src["team"] as unknown[])
-      .filter((r): r is Record<string, unknown> => !!r && typeof r === "object")
-      .map((r) => ({
-        name: typeof r["name"] === "string" ? r["name"] : "Rol",
-        monthlyCost: Number.isFinite(r["monthlyCost"]) ? Number(r["monthlyCost"]) : 0,
-        startMonth: Number.isFinite(r["startMonth"])
-          ? Math.max(1, Math.round(Number(r["startMonth"])))
-          : 1,
-      }));
-  }
-  if (Array.isArray(src["oneOffs"])) {
-    out["oneOffs"] = (src["oneOffs"] as unknown[])
-      .filter((r): r is Record<string, unknown> => !!r && typeof r === "object")
-      .map((r) => ({
-        name: typeof r["name"] === "string" ? r["name"] : "Kalem",
-        amount: Number.isFinite(r["amount"]) ? Number(r["amount"]) : 0,
-        month: Number.isFinite(r["month"]) ? Math.max(1, Math.round(Number(r["month"]))) : 1,
-        category: (CATEGORIES as string[]).includes(String(r["category"]))
-          ? (r["category"] as CostCategory)
-          : "other",
-      }));
-  }
+  const team = rows(src["team"]);
+  if (team)
+    out["team"] = team.map((r) => ({
+      name: str(r["name"], "Rol"),
+      monthlyCost: num(r["monthlyCost"], 0),
+      startMonth: Math.max(1, Math.round(num(r["startMonth"], 1))),
+    }));
+  const recurring = rows(src["recurring"]);
+  if (recurring)
+    out["recurring"] = recurring.map((r) => ({
+      name: str(r["name"], "Kalem"),
+      amount: num(r["amount"], 0),
+      startMonth: Math.max(1, Math.round(num(r["startMonth"], 1))),
+      category: cat(r["category"]),
+    }));
+  const oneOffs = rows(src["oneOffs"]);
+  if (oneOffs)
+    out["oneOffs"] = oneOffs.map((r) => ({
+      name: str(r["name"], "Kalem"),
+      amount: num(r["amount"], 0),
+      month: Math.max(1, Math.round(num(r["month"], 1))),
+      category: cat(r["category"]),
+    }));
   return out as unknown as FinanceAssumptions;
 }
