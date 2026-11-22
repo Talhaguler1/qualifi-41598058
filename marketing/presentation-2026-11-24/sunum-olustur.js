@@ -49,6 +49,12 @@ function eyebrow(slide, text) {
 function img(slide, file, x, y, w, h, alt) {
   slide.addImage({ path: A(file), x, y, w, h, altText: alt, objectName: alt });
 }
+function phones(slide, back, front, altBack, altFront) {
+  const k = 4.6 / 1902; // inch per px, phone body 4.6" tall
+  const cw = 1140 * k, ch = 2082 * k, pad = 90 * k;
+  slide.addImage({ path: A(back), x: 0.75 - pad, y: 1.5 - pad, w: cw, h: ch, altText: altBack, objectName: altBack });
+  slide.addImage({ path: A(front), x: 2.85 - pad, y: 1.92 - pad, w: cw, h: ch, altText: altFront, objectName: altFront });
+}
 function note(slide, text) {
   slide.addText(text, { x: M, y: 6.62, w: W - 2 * M, h: 0.32, fontSize: 10.5, color: HEX.muted, margin: 0, italic: true, isTextBox: true });
 }
@@ -189,8 +195,7 @@ section("Ana sunum");
   const s = pres.addSlide({ masterName: "ICERIK", sectionTitle: "Ana sunum" });
   eyebrow(s, "Ürün · işletme");
   title(s, "Müşteri “cuma gönderiyoruz” yazınca nakit planı kendiliğinden güncellenir");
-  img(s, "phone_p05.png", 0.95, 1.55, 2.55, 4.95, "QualiFi ajanı günün özeti");
-  img(s, "phone_p06.png", 3.75, 1.55, 2.55, 4.95, "Sözden ödemeye akışı");
+  phones(s, "telefon_p05.png", "telefon_p06.png", "QualiFi ajanı günün özeti", "Sözden ödemeye akışı");
   const steps = [["1", "Günün özeti", "Ajan nakdin hangi hafta daraldığını ve neyin öne çekilmesi gerektiğini söyler."], ["2", "Söz faturayla eşleşir", "“Cuma” gerçek bir tarihe çevrilir; nakit takvimi o an kayar."], ["3", "Karar işletmede", "Takip mesajı taslaktır; işletme onaylamadan gitmez. İsterse bankalardan teklif ister."]];
   steps.forEach(([n, h, t], i) => {
     const y = 1.7 + i * 1.6;
@@ -207,8 +212,7 @@ section("Ana sunum");
   const s = pres.addSlide({ masterName: "ICERIK", sectionTitle: "Ana sunum" });
   eyebrow(s, "Akbank'a fayda");
   title(s, "Banka, işletmenin nakit sıkışıklığını taksit gecikmeden ve onun izniyle görür");
-  img(s, "phone_p08.png", 0.95, 1.55, 2.55, 4.95, "Bankacı asistanı öncelik listesi");
-  img(s, "phone_p10.png", 3.75, 1.55, 2.55, 4.95, "İşletmenin paylaştığı karne");
+  phones(s, "telefon_p08.png", "telefon_p10.png", "Bankacı asistanı öncelik listesi", "İşletmenin paylaştığı karne");
   const rows = [["Bugün bankanın gördüğü", "QualiFi ile, işletmenin izniyle"], ["Hesap hareketi", "Beklenen tahsilatlar ve verilen ödeme sözleri"], ["Geçmiş kredi davranışı", "Müşterilerin söz tutma oranı"], ["Dönem sonu finansal tablo", "8 haftalık nakit takvimi ve açık tahmini"], ["Temsilcinin sezgisi", "Kaynağı gösterilen, açıklanabilir erken uyarı"]];
   s.addTable(rows.map((r, i) => r.map((c, j) => ({ text: c, options: { bold: i === 0 || j === 1, fontSize: i === 0 ? 12 : 13.5, color: i === 0 ? (j === 1 ? HEX.ink : HEX.muted) : HEX.ink, fill: { color: i === 0 ? (j === 1 ? HEX.lime : HEX.soft) : (j === 1 ? "F1F8E4" : "FFFFFF") }, valign: "middle", margin: [4, 8, 4, 8] } }))), { x: 6.75, y: 1.65, w: 5.98, colW: [2.5, 3.48], rowH: 0.62, border: { type: "solid", color: HEX.line, pt: 1 } });
   s.addText([{ text: "Doğru ürün, doğru zamanda: ", options: { bold: true, color: HEX.ink } }, { text: "çek iskontosu, kısa vadeli kredi, limit artışı ya da faktoring; ihtiyaç doğmadan önce.", options: { color: HEX.ink2 } }], { x: 6.75, y: 4.95, w: 5.98, h: 0.8, fontSize: 14, margin: 0, valign: "top", isTextBox: true });
