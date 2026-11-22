@@ -63,10 +63,12 @@ section("Ana sunum");
 // 1 · Kapak
 {
   const s = pres.addSlide({ masterName: "KOYU", sectionTitle: "Ana sunum" });
-  img(s, "11a-simge-acik.png", 0.85, 1.55, 2.1, 2.1, "QualiFi maske simgesi");
-  s.addText("QualiFi", { x: 3.3, y: 1.55, w: 8.5, h: 1.2, fontFace: THEME.headFontFace, fontSize: 66, bold: true, color: "FFFFFF", margin: 0, isTextBox: true });
-  s.addText("Paranız ne zaman gelecek, önceden bilin.", { x: 3.3, y: 2.75, w: 9.2, h: 0.7, fontSize: 28, bold: true, color: HEX.lime, margin: 0, isTextBox: true });
-  s.addText("Alternatif veriden finansal öngörüye", { x: 3.3, y: 3.45, w: 9, h: 0.5, fontSize: 18, color: "C9D8C4", margin: 0, isTextBox: true });
+  // Large mask bleeding off the bottom-right corner; it flies in from that corner (animation added after build).
+  s.addShape(pres.shapes.OVAL, { x: 6.3, y: 1.7, w: 8.2, h: 6.6, fill: { color: HEX.lime, transparency: 90 }, line: { color: HEX.lime, transparency: 100 }, objectName: "Kapak isigi" });
+  s.addImage({ path: A("maske-buyuk.png"), x: 6.45, y: 1.85, w: 8.4, h: 5.63, rotate: -14, altText: "QualiFi maske logosu", objectName: "Kapak maskesi" });
+  s.addText("QualiFi", { x: 0.85, y: 1.35, w: 7, h: 1.4, fontFace: "+mj-lt", fontSize: 80, bold: true, color: "FFFFFF", margin: 0, isTextBox: true });
+  s.addText("Paranız ne zaman gelecek, önceden bilin.", { x: 0.85, y: 2.85, w: 6.3, h: 1.2, fontSize: 30, bold: true, color: HEX.lime, margin: 0, valign: "top", isTextBox: true });
+  s.addText("Alternatif veriden finansal öngörüye", { x: 0.85, y: 4.15, w: 6.3, h: 0.5, fontSize: 18, color: "C9D8C4", margin: 0, isTextBox: true });
   s.addText("Muhammed Talha Güler · Akbank Düşünce Kulübü · 24 Kasım 2026", { x: 0.85, y: 6.55, w: 11, h: 0.4, fontSize: 13, color: "A9C0A3", margin: 0, isTextBox: true });
   s.addNotes("Merhaba, ben Talha. Projem QualiFi. QualiFi, işletmenin parasının ne zaman geleceğini söyler: faturayı, sözleşmeyi, banka hareketini ve müşterinin verdiği ödeme sözünü bir araya getirir ve nakit sıkışmadan haftalar önce uyarır.");
 }
