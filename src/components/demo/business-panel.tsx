@@ -1,7 +1,7 @@
 import { track, trackCustom } from "@/lib/tracking";
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { Area, Bar, ComposedChart, Line, ReferenceDot, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis, Cell, BarChart } from "recharts";
-import { Building2, Calculator, Landmark, MessageCircle, FileText, ArrowUpRight, ArrowDownRight, TrendingUp, Handshake, BellRing, UserCheck, Target, Share2 } from "lucide-react";
+import { Building2, Calculator, Landmark, MessageCircle, FileText, ArrowUpRight, ArrowDownRight, TrendingUp, Handshake, BellRing, UserCheck, Target, Share2, Phone } from "lucide-react";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import {
   addDays,
@@ -21,6 +21,11 @@ import {
   scenarioGap,
   defaultProject,
   withProject,
+  demoDecision,
+  promiseEvent,
+  promiseTargets,
+  type DemoDecision,
+  type PromiseChannel,
   type ProjectPlan,
   scorecard,
   bankShareSummary,
@@ -87,6 +92,10 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
   const actions = useMemo(() => agentActions(snap, 8), [snap]);
   const steps = useMemo(() => agentRun(dataset, date, prevDate ?? addDays(date, -14)), [dataset, date, prevDate]);
 
+  const [rate, setRate] = useLocalState<number>("qd-demo-rate", 0.45);
+  const [promiseOpen, setPromiseOpen] = useState(false);
+  const decision = useMemo(() => demoDecision(snap, weeks, events, rate), [snap, weeks, events, rate]);
+
   const accuracy = useMemo(() => (prevDate ? forecastAccuracy(dataset, prevDate, date) : null), [dataset, prevDate, date]);
   const card = useMemo(() => (prevDate ? scorecard(dataset, prevDate, date) : null), [dataset, prevDate, date]);
   const featured = useMemo(() => featuredPromise(snap), [snap]);
@@ -139,6 +148,18 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
     log("scenario_run", "message", `${e.kind}:${e.customer.id}`);
     trackCustom("DemoTried", { kind: e.kind });
     return out;
+  };
+  const recordPromise = (receivableId: string, when: string, channel: PromiseChannel) => {
+    const label = { phone: L("Telefonda", "On the phone"), in_person: L("Yüz yüze", "In person"), whatsapp: "WhatsApp", email: L("E-postada", "By email") }[channel];
+    const e = promiseEvent(snap, receivableId, when, L(`${label} verilen söz: ${formatDateTr(when)}`, `${label}: promised ${formatDateTr(when)}`), `ev-${events.length + 1}`, label);
+    if (!e) return;
+    const out = explainEvent(snap, events, e);
+    setEvents((prev) => [...prev, e]);
+    setOutcome(out);
+    setPromiseOpen(false);
+    setLiveOpen(true);
+    log("scenario_run", "phone-promise", `${channel}:${e.customer.id}`);
+    trackCustom("DemoTried", { kind: "phone_promise" });
   };
   const onComposerSend = (text: string): string | null =>
     processMessage(text) ? null : L("Bu mesajda bir ödeme bilgisi bulamadım. Örneğin tarih, erteleme ya da \"ödedik\" içeren bir mesaj deneyin.", "I couldn't find payment information in that message. Try one with a date, a delay or \"we paid\".");
@@ -256,6 +277,8 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
           }}
         />
 
+        <DecisionStrip decision={decision} rate={rate} onRate={setRate} onPromise={() => { log("tab_open", "phone-promise"); setPromiseOpen(true); }} />
+
         <div className="qd-home__sources">
           <span>{L("Bağlı kaynaklar:", "Connected sources:")}</span>
           <SourceChip icon={<Building2 size={12} />} name={dataset.sources.erp} />
@@ -314,8 +337,11 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
             ) : null}
         </FocusSheet>
       </main>
-      <FocusSheet open={liveOpen} title={L("Canlı güncelleme", "Live update")} subtitle={L("Ajan mesajı okudu ve tahmini yeniden çizdi.", "The agent read the message and redrew the forecast.")} onClose={() => setLiveOpen(false)}>
+      <FocusSheet open={liveOpen} title={L("Canlı güncelleme", "Live update")} subtitle={outcome?.event.source ? L("Kaydedilen söz nakit planına işlendi; tahmin yeniden çizildi.", "The recorded promise moved the cash plan; the forecast was redrawn.") : L("Ajan mesajı okudu ve tahmini yeniden çizdi.", "The agent read the message and redrew the forecast.")} onClose={() => setLiveOpen(false)}>
         {outcome ? <LiveUpdate outcome={outcome} asOf={date} onAdvice={(a) => { log("agent_approve", a.id); setToast(L(`Demo: "${a.title}" onaylandı. Gerçekte hiçbir şey gönderilmedi.`, `Demo: "${a.title}" approved. Nothing was actually sent.`)); }} /> : null}
+      </FocusSheet>
+      <FocusSheet open={promiseOpen} title={L("Ödeme sözü kaydet", "Record a payment promise")} subtitle={L("Telefonda ya da yüz yüze alınan söz de nakit planına işlenir.", "A promise taken on the phone or in person moves the cash plan too.")} onClose={() => setPromiseOpen(false)}>
+        <PhonePromiseForm key={`${tenant}-${date}`} snap={snap} onSave={recordPromise} />
       </FocusSheet>
       <CustomerSheet snap={snap} customer={customer} onClose={() => setCustomer(null)} />
       <ShareSheet open={shareOpen} onClose={() => setShareOpen(false)} dataset={dataset} date={date} onShared={() => { log("tab_open", "bank-share-sent"); try { window.localStorage.setItem(SHARE_KEY, JSON.stringify({ tenant, date })); } catch { /* storage blocked: the link in the sheet still works */ } setToast(L("Demo: paylaşım bankacı paneline yansıdı. Gerçekte hiçbir veri gönderilmedi.", "Demo: the share now appears in the banker panel. No data was actually sent.")); }} />
@@ -899,5 +925,85 @@ function CustomerSheet({ snap, customer, onClose }: { snap: Snap; customer: Cust
         ) : null}
       </SheetContent>
     </Sheet>
+  );
+}
+
+function DecisionStrip({ decision, rate, onRate, onPromise }: { decision: DemoDecision; rate: number; onRate: (r: number) => void; onPromise: () => void }) {
+  const d = decision;
+  return (
+    <section className="qd-card qd-decide">
+      <div className="qd-card__head">
+        <div>
+          <span className="qd-eyebrow">{L("Karar özeti", "Decision summary")}</span>
+          <h2>{L("Gecikmenin bedeli, önümüzdeki ay ve finansman", "Cost of delay, the next month and financing")}</h2>
+        </div>
+        <button type="button" className="qd-btn qd-btn--primary qd-btn--sm" onClick={onPromise}>
+          <Phone size={13} /> {L("Telefonda söz aldım", "Promise taken on the phone")}
+        </button>
+      </div>
+      <div className="qd-decide__grid">
+        <div className="qd-decide__item">
+          <span>{L("Gecikmenin maliyeti", "Cost of delay")}</span>
+          <b className="qd-num">{money(d.delayCost)}</b>
+          <small>
+            {d.lateItems
+              ? L(`${d.lateItems} tahsilat vadesinden geç geliyor · yıllık %${Math.round(rate * 100)} faizle${d.delayPerDay > 0 ? ` · her gün +${money(d.delayPerDay)}` : ""}`, `${d.lateItems} collections arrive after their due date · at ${Math.round(rate * 100)}% a year${d.delayPerDay > 0 ? ` · +${money(d.delayPerDay)} a day` : ""}`)
+              : L("Geciken tahsilat yok.", "No late collections.")}
+          </small>
+        </div>
+        <div className="qd-decide__item">
+          <span>{L("30 günde ödemeleri karşılama", "30-day payment coverage")}</span>
+          <b className="qd-num">{d.coverage === null ? "—" : `%${Math.round(d.coverage * 100)}`}</b>
+          <small>{d.coverage === null ? L("Önümüzdeki 4 haftada planlı ödeme yok.", "No planned payments in the next 4 weeks.") : L(`Kötü senaryoda %${Math.round((d.coverageLow ?? 0) * 100)} · ${money(d.inflow30)} tahsilat / ${money(d.outflow30)} ödeme`, `Downside ${Math.round((d.coverageLow ?? 0) * 100)}% · ${money(d.inflow30)} in / ${money(d.outflow30)} out`)}</small>
+        </div>
+        <div className={`qd-decide__item${d.need ? " qd-decide__item--alert" : ""}`}>
+          <span>{L("Finansman ihtiyacı", "Financing need")}</span>
+          <b className="qd-num">{d.need ? money(d.need.amount) : L("Yok", "None")}</b>
+          <small>{d.need ? L(`${formatDateTr(d.need.weekStart)} haftasında, kötü senaryoda. Bankanızla şimdiden konuşmak daha kolay: çek iskontosu, kısa vadeli kredi ya da limit artışı.`, `Week of ${formatDateTr(d.need.weekStart)}, downside case. Talk to your bank now: cheque discounting, a short-term loan or a higher limit.`) : L("8 hafta boyunca kötü senaryoda da bakiye artıda.", "The balance stays positive for 8 weeks even in the downside case.")}</small>
+        </div>
+      </div>
+      <label className="qd-decide__rate" style={{ marginTop: 12 }}>
+        {L("Kendi kredi faiziniz (yıllık)", "Your own borrowing rate (yearly)")}
+        <span><i>%</i><input className="qd-input qd-num" type="number" min={0} max={300} step={1} value={Math.round(rate * 100)} onChange={(e) => onRate(Math.max(0, Number(e.target.value) || 0) / 100)} /></span>
+      </label>
+    </section>
+  );
+}
+
+function PhonePromiseForm({ snap, onSave }: { snap: Snap; onSave: (receivableId: string, date: string, channel: PromiseChannel) => void }) {
+  const targets = useMemo(() => promiseTargets(snap).slice(0, 40), [snap]);
+  // Default: a week after the date the money is currently expected, so the promise pushes it later.
+  const defaultDate = (id: string) => {
+    const t = targets.find((x) => x.receivable.id === id);
+    const base = t && t.expected > snap.asOf ? t.expected : snap.asOf;
+    return addDays(base, 7);
+  };
+  const [target, setTarget] = useState(targets[0]?.receivable.id ?? "");
+  const [when, setWhen] = useState(() => defaultDate(targets[0]?.receivable.id ?? ""));
+  const [channel, setChannel] = useState<PromiseChannel>("phone");
+  const chosen = targets.find((t) => t.receivable.id === target);
+  const channels: Array<[PromiseChannel, string]> = [["phone", L("Telefonda", "Phone")], ["in_person", L("Yüz yüze", "In person")], ["whatsapp", "WhatsApp"], ["email", L("E-posta", "Email")]];
+  if (!targets.length) return <p>{L("Bu tarihte söz kaydedilecek açık alacak yok.", "No open receivable to record a promise against on this date.")}</p>;
+  return (
+    <section className="qd-card qd-promise">
+      <div className="qd-promise__form">
+        <label><span>{L("Hangi alacak?", "Which receivable?")}</span>
+          <select className="qd-select" value={target} onChange={(e) => { setTarget(e.target.value); setWhen(defaultDate(e.target.value)); }}>
+            {targets.map((t) => <option key={t.receivable.id} value={t.receivable.id}>{t.customer.name} · {money(t.receivable.amount)} · {L("vade", "due")} {formatDateTr(t.receivable.dueDate)}</option>)}
+          </select>
+        </label>
+        {chosen ? <small className="qd-promise__hint">{L(`Şu an beklenen ödeme: ${formatDateTr(chosen.expected)}.`, `Currently expected: ${formatDateTr(chosen.expected)}.`)}</small> : null}
+        <label><span>{L("Söz verilen tarih", "Promised date")}</span><input className="qd-input qd-num" type="date" value={when} min={addDays(snap.asOf, 1)} onChange={(e) => setWhen(e.target.value)} /></label>
+        <div className="qd-promise__channels" role="radiogroup" aria-label={L("Söz nasıl verildi", "How the promise was given")}>
+          {channels.map(([c, label]) => (
+            <button key={c} type="button" role="radio" aria-checked={channel === c} className={`qd-promise__chip${channel === c ? " is-on" : ""}`} onClick={() => setChannel(c)}>{label}</button>
+          ))}
+        </div>
+        <button type="button" className="qd-btn qd-btn--primary" disabled={!target || !when} onClick={() => onSave(target, when, channel)}>
+          {L("Sözü kaydet ve planı güncelle", "Save the promise and update the plan")}
+        </button>
+        <small className="qd-promise__hint">{L("Demo: kayıt yalnızca bu oturumda tutulur, kimseye mesaj gitmez.", "Demo: kept in this session only; no message is sent to anyone.")}</small>
+      </div>
+    </section>
   );
 }

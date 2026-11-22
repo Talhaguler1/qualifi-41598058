@@ -12,7 +12,7 @@ R_IN = R_OUT - BEZEL
 STATUS_H = 96
 PAD = 90  # room for the shadow
 
-for name in ["p05", "p06", "p08", "p10"]:
+for name in (sys.argv[4:] or ["p05", "p06", "p08", "p10"]):
     shot = Image.open(f"{A}/phone_{name}.png").convert("RGB")
     sh = round(shot.height * SCREEN_W / shot.width)
     shot = shot.resize((SCREEN_W, sh), Image.LANCZOS)

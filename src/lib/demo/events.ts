@@ -24,6 +24,8 @@ export interface ChatEvent {
   amount: number;
   /** True when the customer was not named and the agent assumed the latest conversation. */
   assumedCustomer: boolean;
+  /** Set when the promise was recorded by hand (phone, in person …) instead of read from a message. */
+  source?: string;
 }
 
 const NUMBER_WORDS: Record<string, number> = { bir: 1, iki: 2, üç: 3, uc: 3, dört: 4, dort: 4, beş: 5, on: 10, one: 1, two: 2, three: 3, four: 4, five: 5, ten: 10, a: 1 };

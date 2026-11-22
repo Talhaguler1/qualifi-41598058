@@ -194,9 +194,9 @@ section("Ana sunum");
 {
   const s = pres.addSlide({ masterName: "ICERIK", sectionTitle: "Ana sunum" });
   eyebrow(s, "Ürün · işletme");
-  title(s, "Müşteri “cuma gönderiyoruz” yazınca nakit planı kendiliğinden güncellenir");
-  phones(s, "telefon_p05.png", "telefon_p06.png", "QualiFi ajanı günün özeti", "Sözden ödemeye akışı");
-  const steps = [["1", "Günün özeti", "Ajan nakdin hangi hafta daraldığını ve neyin öne çekilmesi gerektiğini söyler."], ["2", "Söz faturayla eşleşir", "“Cuma” gerçek bir tarihe çevrilir; nakit takvimi o an kayar."], ["3", "Karar işletmede", "Takip mesajı taslaktır; işletme onaylamadan gitmez. İsterse bankalardan teklif ister."]];
+  title(s, "Söz ister WhatsApp’tan ister telefondan gelsin, nakit planı o an güncellenir");
+  phones(s, "telefon_k01.png", "telefon_k03.png", "Karar özeti ekranı", "Telefonda alınan sözün canlı güncellemesi");
+  const steps = [["1", "Karar özeti", "Gecikmenin maliyeti, 30 günde ödemeleri karşılama ve finansman ihtiyacı tek bakışta."], ["2", "Söz kaydedilir", "WhatsApp mesajı yapay zekâyla okunur; telefonda alınan söz on saniyede girilir ve doğru faturayla eşleşir."], ["3", "Plan o an yeniden çizilir", "Beklenen tarih kayar, tahmin ve gecikmenin maliyeti güncellenir. Takip mesajı taslaktır; işletme onaylamadan gitmez."]];
   steps.forEach(([n, h, t], i) => {
     const y = 1.7 + i * 1.6;
     s.addShape(pres.shapes.OVAL, { x: 6.8, y, w: 0.55, h: 0.55, fill: { color: HEX.lime }, line: { color: HEX.lime } });
@@ -204,7 +204,7 @@ section("Ana sunum");
     s.addText([{ text: h, options: { fontSize: 18, bold: true, color: HEX.ink, breakLine: true } }, { text: t, options: { fontSize: 14, color: HEX.ink2 } }], { x: 7.55, y: y - 0.05, w: 5.2, h: 1.35, margin: 0, valign: "top", paraSpaceAfter: 4, isTextBox: true });
   });
   note(s, "Canlı demo, sentetik verili örnek işletme: qualifilab.com/demo");
-  s.addNotes("İşletme sahibi paneli açtığında ajan günün özetini verir: nakit şimdilik yeterli ama aralık sonu dar. Müşteri yazıyor: \"Onay süreci uzadı, cuma gönderiyoruz.\" QualiFi bu sözü doğru faturayla eşleştirir, cumayı gerçek bir tarihe çevirir ve nakit planını kaydırır. Ödeme gelmezse takip mesajını hazırlar ama işletme onaylamadan hiçbir şey gitmez.");
+  s.addNotes("İşletme sahibi paneli açtığında karar özetini görür: gecikmeler ona kaça mal oluyor, önümüzdeki 30 günde tahsilat ödemelerin ne kadarını karşılıyor ve finansmana ihtiyacı var mı. Müşteri telefonda \"ayın dokuzunda ödüyorum\" dediğinde işletme sahibi bunu on saniyede kaydeder; WhatsApp'tan yazdıysa yapay zekâ okur. Söz doğru faturayla eşleşir, nakit planı o an yeniden çizilir. Takip mesajı hazırlansa da işletme onaylamadan hiçbir şey gitmez.");
 }
 
 // 8 · Banka demosu + Akbank faydası

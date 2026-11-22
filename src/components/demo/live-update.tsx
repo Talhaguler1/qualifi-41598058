@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { motion, useReducedMotion } from "motion/react";
-import { ArrowRight, BellRing, CalendarClock, Check, CircleCheck, MessageCircle, PhoneCall, Send, TriangleAlert } from "lucide-react";
+import { ArrowRight, BellRing, CalendarClock, Check, CircleCheck, MessageCircle, Phone, PhoneCall, Send, TriangleAlert } from "lucide-react";
 import { addDays, diffDays, formatDateTr, L, money, sampleMessages, type Advice, type EventOutcome, type ForecastWeek } from "@/lib/demo";
 
 const EASE_OUT = [0.22, 1, 0.36, 1] as const;
@@ -114,7 +114,7 @@ export function LiveUpdate({ outcome, asOf, onAdvice }: { outcome: EventOutcome;
           transition={{ duration: 0.45, ease: EASE_OUT }}
         >
           <small>
-            <MessageCircle size={13} strokeWidth={1.75} /> WhatsApp · {event.customer.name}
+            {event.source ? <Phone size={13} strokeWidth={1.75} /> : <MessageCircle size={13} strokeWidth={1.75} />} {event.source ?? "WhatsApp"} · {event.customer.name}
           </small>
           {event.text}
         </motion.div>
@@ -131,7 +131,7 @@ export function LiveUpdate({ outcome, asOf, onAdvice }: { outcome: EventOutcome;
             </b>
           </li>
           <li>
-            <span>{L("Ajanın anladığı", "What the agent read")}</span>
+            <span>{event.source ? L("Kaydedilen söz", "Recorded promise") : L("Ajanın anladığı", "What the agent read")}</span>
             <b>
               {event.kind === "paid"
                 ? L("Ödendi", "Paid")
@@ -214,7 +214,7 @@ export function LiveUpdate({ outcome, asOf, onAdvice }: { outcome: EventOutcome;
           ))}
         </svg>
         <div className="qd-live__legend">
-          <span><i className="qd-live__key qd-live__key--before" />{L("Mesajdan önce", "Before the message")}</span>
+          <span><i className="qd-live__key qd-live__key--before" />{event.source ? L("Sözden önce", "Before the promise") : L("Mesajdan önce", "Before the message")}</span>
           <span><i className="qd-live__key qd-live__key--after" />{L("Şimdi (en olası)", "Now (most likely)")}</span>
           <span><i className="qd-live__key qd-live__key--low" />{L("Kötü senaryo", "Downside case")}</span>
         </div>
