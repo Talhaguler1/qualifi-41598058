@@ -244,14 +244,16 @@ section("Ana sunum");
   const s = pres.addSlide({ masterName: "ICERIK", sectionTitle: "Ana sunum" });
   eyebrow(s, "İş modeli");
   title(s, "Her işletme kendi ölçeğine göre öder; banka kurumsal lisansla katılır");
-  img(s, "14-segmentler.png", 0.95, 1.6, 11.43, 2.74, "Segmentler ve paketler");
+  // Package ladder from the pricing visuals (ratio 1747:859)
+  img(s, "merdiven.png", 0.6, 1.62, 8.5, 8.5 * 810 / 1747, "Paket merdiveni: Başlangıç, KOBİ, Büyüme, Banka");
   const k = [["%72", "KOBİ paketinde brüt marj", "hesap başı maliyet ₺96: yapay zekâ, WhatsApp mesajı, entegrasyon, barındırma"], ["Ücretsiz", "Başlangıç paketi", "serbest çalışanlar ve şahıs şirketleri veri havuzuna katılır, ürün engelsiz denenir"], ["Lisans", "Bankalar", "portföye göre fiyatlanan kurumsal paket (modelde varsayım: 13. aydan itibaren)"]];
   k.forEach(([v, h, t], i) => {
-    const x = M + i * 4.1;
-    card(s, x, 4.65, 3.9, 1.85, i === 0 ? HEX.ink : "FFFFFF", i === 0 ? HEX.ink : HEX.line);
-    s.addText([{ text: v, options: { fontSize: 30, bold: true, color: i === 0 ? HEX.lime : HEX.green, breakLine: true } }, { text: h, options: { fontSize: 15, bold: true, color: i === 0 ? "FFFFFF" : HEX.ink, breakLine: true } }, { text: t, options: { fontSize: 12, color: i === 0 ? "C9D8C4" : HEX.ink2 } }], { x: x + 0.25, y: 4.75, w: 3.45, h: 1.65, margin: 0, valign: "top", paraSpaceAfter: 3, isTextBox: true });
+    const y = 1.62 + i * 1.62;
+    card(s, 9.35, y, 3.38, 1.47, i === 0 ? HEX.ink : "FFFFFF", i === 0 ? HEX.ink : HEX.line);
+    s.addText([{ text: v, options: { fontSize: 24, bold: true, color: i === 0 ? HEX.lime : HEX.green, breakLine: true } }, { text: h, options: { fontSize: 13.5, bold: true, color: i === 0 ? "FFFFFF" : HEX.ink, breakLine: true } }, { text: t, options: { fontSize: 10.5, color: i === 0 ? "C9D8C4" : HEX.ink2 } }], { x: 9.55, y: y + 0.1, w: 3.0, h: 1.3, margin: 0, valign: "top", paraSpaceAfter: 2, isTextBox: true });
   });
-  s.addNotes("Gelir modelimiz ölçeğe göre. Başlangıç paketi ücretsiz: serbest çalışanları ve şahıs şirketlerini veri havuzuna katmak ve ürünü engelsiz denetmek için. KOBİ paketi ayda 390 lira, büyüme paketi 3.990 lira. Bir KOBİ hesabının bize maliyeti ayda yaklaşık 96 lira; brüt marj yüzde 72. Bankalar kurumsal lisansla katılıyor; yani iki taraftan gelir.");
+  note(s, "Fiyatlar aylık, KDV hariç. Segmentlere göre kullanım şekli yedek slaytta.");
+  s.addNotes("Gelir modelimiz bir büyüme merdiveni. Başlangıç paketi ücretsiz: serbest çalışanları ve şahıs şirketlerini veri havuzuna katmak ve ürünü engelsiz denetmek için. KOBİ paketi ayda 390 lira, büyüme paketi 3.990 lira. Bir KOBİ hesabının bize maliyeti ayda yaklaşık 96 lira; brüt marj yüzde 72. Bankalar kurumsal lisansla katılıyor; yani iki taraftan gelir.");
 }
 
 // 12 · Yapay zekâ ve inovasyon
@@ -345,6 +347,14 @@ const Y = "Yedek slaytlar";
 for (const [f, t] of [["5a-rekabet-turkiye.png", "Türkiye'deki araçlar"], ["5b-rekabet-yurtdisi.png", "Yurt dışındaki araçlar"]]) {
   const s = pres.addSlide({ masterName: "ICERIK", sectionTitle: Y });
   img(s, f, 0, 0, W, 7.5, "Rekabet ayrıntısı: " + t);
+}
+
+// Y5b · Segmentler
+{
+  const s = pres.addSlide({ masterName: "ICERIK", sectionTitle: Y });
+  eyebrow(s, "Yedek · segmentler");
+  title(s, "Her segment QualiFi'yi kendi düzenine göre kullanır");
+  img(s, "14-segmentler.png", 0.95, 1.9, 11.43, 2.74, "Segmentler ve paketler");
 }
 
 // Y6 · Birim ekonomi
