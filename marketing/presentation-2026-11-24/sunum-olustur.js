@@ -195,7 +195,7 @@ section("Ana sunum");
   const s = pres.addSlide({ masterName: "ICERIK", sectionTitle: "Ana sunum" });
   eyebrow(s, "Ürün · işletme");
   title(s, "Söz ister WhatsApp’tan ister telefondan gelsin, nakit planı o an güncellenir");
-  phones(s, "telefon_k01.png", "telefon_k03.png", "Karar özeti ekranı", "Telefonda alınan sözün canlı güncellemesi");
+  phones(s, "telefon_nh.png", "telefon_nc.png", "Karar özeti ve alt sekme çubuğu", "Telefonda alınan sözün canlı güncellemesi");
   const steps = [["1", "Karar özeti", "Gecikmenin maliyeti, 30 günde ödemeleri karşılama ve finansman ihtiyacı tek bakışta."], ["2", "Söz kaydedilir", "WhatsApp mesajı yapay zekâyla okunur; telefonda alınan söz on saniyede girilir ve doğru faturayla eşleşir."], ["3", "Plan o an yeniden çizilir", "Beklenen tarih kayar, tahmin ve gecikmenin maliyeti güncellenir. Takip mesajı taslaktır; işletme onaylamadan gitmez."]];
   steps.forEach(([n, h, t], i) => {
     const y = 1.7 + i * 1.6;
@@ -355,6 +355,31 @@ for (const [f, t] of [["5a-rekabet-turkiye.png", "Türkiye'deki araçlar"], ["5b
   eyebrow(s, "Yedek · segmentler");
   title(s, "Her segment QualiFi'yi kendi düzenine göre kullanır");
   img(s, "14-segmentler.png", 0.95, 1.9, 11.43, 2.74, "Segmentler ve paketler");
+}
+
+// Y5c · Uygulamanın yapısı
+{
+  const s = pres.addSlide({ masterName: "ICERIK", sectionTitle: Y });
+  eyebrow(s, "Yedek · uygulamanın yapısı");
+  title(s, "Tek uygulama, tek kapı: paketler ekranla değil kapasiteyle ayrışır");
+  const k = 4.45 / 1902;
+  const cw = 1140 * k, ch = 2082 * k, pad = 90 * k;
+  [["telefon_nh.png", "Bugün: karar özeti ve alt sekmeler"], ["telefon_na.png", "Ekle menüsü"], ["telefon_nm.png", "Daha fazla menüsü"]].forEach(([f, alt], i) => {
+    s.addImage({ path: A(f), x: 0.55 + i * 2.55 - pad, y: 1.6 - pad, w: cw, h: ch, altText: alt, objectName: alt });
+  });
+  const rows = [
+    ["Telefon", "5 sekme: Bugün · Nakit · Ekle · Müşteriler · Daha fazla. Ortadaki Ekle her ekranda aynı yerde."],
+    ["Ekle", "Ödeme sözü · fotoğraf · dosya · müşteri mesajı. Sıra hiç değişmez; en sık iş en üstte."],
+    ["Paketler", "Başlangıç, KOBİ ve Büyüme aynı ekranları kullanır; bağlantı, numara ve kullanıcı sayısı değişir."],
+    ["Roller", "Büyüme'de patron her şeyi, muhasebeci kontrol bekleyenleri, satışçı kendi müşterilerini görür."],
+    ["Banka", "Ayrı ürün: öncelik listesi, izinli karne, sektör analizi, teklif. Ham veri yok."],
+  ];
+  rows.forEach(([h, t], i) => {
+    const y = 1.62 + i * 0.98;
+    card(s, 8.35, y, 4.38, 0.88, i === 1 ? HEX.ink : "FFFFFF", i === 1 ? HEX.ink : HEX.line);
+    s.addText([{ text: h + "  ", options: { bold: true, fontSize: 13, color: i === 1 ? HEX.lime : HEX.green } }, { text: t, options: { fontSize: 11.5, color: i === 1 ? "E3EEDB" : HEX.ink2 } }], { x: 8.55, y: y + 0.08, w: 4.0, h: 0.72, margin: 0, valign: "middle", isTextBox: true });
+  });
+  s.addNotes("Dört paket için dört ayrı arayüz yapmadık. İşletme paketleri aynı uygulamayı kullanıyor, böylece işletme büyüdükçe hiçbir şeyi yeniden öğrenmiyor. Fark kapasitede: bağlantı, numara ve kullanıcı sayısı. Telefonda ortadaki Ekle düğmesi her ekranda aynı yerde; söz, fotoğraf, dosya ya da mesaj, hepsi tek kapıdan giriyor. Banka ise ayrı bir ürün, çünkü sorusu farklı: bugün hangi firmayı aramalıyım.");
 }
 
 // Y6 · Birim ekonomi

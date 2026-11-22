@@ -1,7 +1,7 @@
 import { track, trackCustom } from "@/lib/tracking";
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { Area, Bar, ComposedChart, Line, ReferenceDot, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis, Cell, BarChart } from "recharts";
-import { Building2, Calculator, Landmark, MessageCircle, FileText, ArrowUpRight, ArrowDownRight, TrendingUp, Handshake, BellRing, UserCheck, Target, Share2, Phone } from "lucide-react";
+import { Building2, Calculator, Landmark, MessageCircle, FileText, ArrowUpRight, ArrowDownRight, TrendingUp, Handshake, BellRing, UserCheck, Target, Share2, Phone, Plus } from "lucide-react";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import {
   addDays,
@@ -61,6 +61,7 @@ import { ShareSummaryView } from "./share-view";
 import { featuredPromise, PromisePlanCard } from "./promise-plan";
 import { LiveUpdate, MessageComposer } from "./live-update";
 import { BanksView } from "./banks-view";
+import { AddMenu, DocumentInfo, TabBar, type AddChoice, type TabKey } from "./tab-bar";
 import { AgentHero, FocusSheet, StoryGrid, useStoryFocus, type StoryCard } from "./home";
 import { AnimatedNumber, Grade, OFFERS_KEY, SHARE_KEY, SourceChip, Tabs, Toast, TopBar, useLocalState, useMounted } from "./shared";
 
@@ -94,6 +95,9 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
 
   const [rate, setRate] = useLocalState<number>("qd-demo-rate", 0.45);
   const [promiseOpen, setPromiseOpen] = useState(false);
+  const [addOpen, setAddOpen] = useState(false);
+  const [docOpen, setDocOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
   const decision = useMemo(() => demoDecision(snap, weeks, events, rate), [snap, weeks, events, rate]);
 
   const accuracy = useMemo(() => (prevDate ? forecastAccuracy(dataset, prevDate, date) : null), [dataset, prevDate, date]);
@@ -110,6 +114,46 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
     [tenant, date],
   );
   const story = useStoryFocus(null, (key) => log("tab_open", `card-${key}`));
+  const openStory = (key: Story) => {
+    setMoreOpen(false);
+    if (story.open !== key) story.toggle(key);
+  };
+  const activeTab: TabKey = moreOpen ? "more" : story.open === "cash" ? "cash" : story.open === "customers" ? "customers" : "today";
+  const onTab = (t: TabKey) => {
+    log("tab_open", `nav-${t}`);
+    if (t === "today") {
+      story.close();
+      setMoreOpen(false);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else if (t === "cash") openStory("cash");
+    else if (t === "customers") {
+      setTab("customers");
+      openStory("customers");
+    } else {
+      story.close();
+      setMoreOpen(true);
+    }
+  };
+  const openAdd = () => {
+    log("tab_open", "add-menu");
+    story.close();
+    setMoreOpen(false);
+    setAddOpen(true);
+  };
+  const onAddPick = (c: AddChoice) => {
+    log("tab_open", `add-${c}`);
+    setAddOpen(false);
+    if (c === "promise") setPromiseOpen(true);
+    else if (c === "photo" || c === "file") setDocOpen(true);
+    else {
+      // The sheet hands focus back to its opener when its close animation ends; take it after that.
+      window.setTimeout(() => {
+        const box = document.querySelector<HTMLElement>(".qd-composer");
+        box?.scrollIntoView({ behavior: "smooth", block: "center" });
+        box?.querySelector<HTMLElement>("textarea, input")?.focus({ preventScroll: true });
+      }, 650);
+    }
+  };
   useEffect(() => track("ViewContent", { content_name: "business-demo" }), []);
   const changeDate = (d: DemoDate) => {
     log("date_change", d);
@@ -243,8 +287,11 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
   const shown = story.last as Story | null;
 
   return (
-    <div className="qd">
+    <div className="qd qd--tabbar">
       <TopBar langSwitch title={dataset.company.name} subtitle={`${sectorName(dataset.company.sector)} · ${dataset.company.city} · ${dataset.customers.length} ${L("müşteri", "customers")}`} date={date} onDate={changeDate}>
+        <button type="button" className="qd-btn qd-btn--primary qd-btn--sm qd-topadd" onClick={openAdd}>
+          <Plus size={14} /> {L("Ekle", "Add")}
+        </button>
         {accountSlot}
       </TopBar>
       <main className="qd-home">
@@ -340,6 +387,40 @@ export function BusinessPanel({ tenant, date, onDate, accountSlot }: { tenant: s
       <FocusSheet open={liveOpen} title={L("Canlı güncelleme", "Live update")} subtitle={outcome?.event.source ? L("Kaydedilen söz nakit planına işlendi; tahmin yeniden çizildi.", "The recorded promise moved the cash plan; the forecast was redrawn.") : L("Ajan mesajı okudu ve tahmini yeniden çizdi.", "The agent read the message and redrew the forecast.")} onClose={() => setLiveOpen(false)}>
         {outcome ? <LiveUpdate outcome={outcome} asOf={date} onAdvice={(a) => { log("agent_approve", a.id); setToast(L(`Demo: "${a.title}" onaylandı. Gerçekte hiçbir şey gönderilmedi.`, `Demo: "${a.title}" approved. Nothing was actually sent.`)); }} /> : null}
       </FocusSheet>
+      <FocusSheet open={addOpen} title={L("Ekle", "Add")} subtitle={L("Yeni bilgi nereden gelirse gelsin, tek yerden eklenir.", "Whatever the new information is, it comes in through one door.")} onClose={() => setAddOpen(false)}>
+        <AddMenu onPick={onAddPick} />
+      </FocusSheet>
+      <FocusSheet open={docOpen} title={L("Fotoğraf ve dosya", "Photos and files")} onClose={() => setDocOpen(false)}>
+        <DocumentInfo
+          onSources={() => {
+            setDocOpen(false);
+            setTab("sources");
+            openStory("customers");
+          }}
+          onSignup={() => {
+            window.location.href = "/app/kayit";
+          }}
+        />
+      </FocusSheet>
+      <FocusSheet open={moreOpen} title={L("Daha fazla", "More")} onClose={() => setMoreOpen(false)}>
+        <ul className="qd-addmenu">
+          {(["promise", "actions", "scorecard", "banks"] as const).map((k) => {
+            const c = cards.find((x) => x.key === k);
+            return c ? (
+              <li key={k}>
+                <button type="button" onClick={() => openStory(k)}>
+                  <span className="qd-addmenu__icon">{c.icon}</span>
+                  <span className="qd-addmenu__text">
+                    <b>{titles[k]}</b>
+                    <small>{c.value}</small>
+                  </span>
+                </button>
+              </li>
+            ) : null;
+          })}
+        </ul>
+      </FocusSheet>
+      <TabBar active={activeTab} onTab={onTab} onAdd={openAdd} />
       <FocusSheet open={promiseOpen} title={L("Ödeme sözü kaydet", "Record a payment promise")} subtitle={L("Telefonda ya da yüz yüze alınan söz de nakit planına işlenir.", "A promise taken on the phone or in person moves the cash plan too.")} onClose={() => setPromiseOpen(false)}>
         <PhonePromiseForm key={`${tenant}-${date}`} snap={snap} onSave={recordPromise} />
       </FocusSheet>
