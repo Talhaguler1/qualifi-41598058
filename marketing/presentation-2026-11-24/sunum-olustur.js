@@ -36,8 +36,12 @@ pres.defineSlideMaster({
 });
 pres.defineSlideMaster({ title: "KOYU", background: { color: HEX.ink }, objects: [] });
 
+// Schibsted Grotesk draws ₺ like £, so the lira sign in titles is set in the body font (Onest).
+function liraRuns(text) {
+  return text.split(/(₺)/).filter(Boolean).map((t) => (t === "₺" ? { text: t, options: { fontFace: "+mn-lt" } } : { text: t, options: {} }));
+}
 function title(slide, text, opts = {}) {
-  slide.addText(text, { x: M, y: 0.42, w: W - 2 * M, h: 1.0, fontFace: "+mj-lt", fontSize: 28, bold: true, color: HEX.ink, margin: 0, valign: "top", isTextBox: true, objectName: "Başlık", ...opts });
+  slide.addText(text.includes("₺") ? liraRuns(text) : text, { x: M, y: 0.42, w: W - 2 * M, h: 1.0, fontFace: "+mj-lt", fontSize: 28, bold: true, color: HEX.ink, margin: 0, valign: "top", isTextBox: true, objectName: "Başlık", ...opts });
 }
 function eyebrow(slide, text) {
   slide.addText(text.toLocaleUpperCase("tr-TR"), { x: M, y: 0.18, w: 6, h: 0.25, fontSize: 11, bold: true, color: HEX.green, charSpacing: 2, margin: 0, isTextBox: true });
@@ -210,7 +214,7 @@ section("Ana sunum");
 {
   const s = pres.addSlide({ masterName: "ICERIK", sectionTitle: "Ana sunum" });
   eyebrow(s, "Pazar");
-  title(s, "İlk hedef 1.000 işletme; hizmet verilebilir pazar aylık ₺205 milyon");
+  title(s, "İlk hedef 1.000 işletme; hizmet verilebilir pazar aylık ₺205 milyon");
   img(s, "10-pazar.png", 1.2, 1.45, 10.93, 5.12, "TAM SAM SOM");
   note(s, "KOBİ sayısı TÜİK 2024. Ölçek dağılımı tahmindir. Finans modelinde 1.000 ücretli işletmeye 14. ayda ulaşılıyor (varsayım).");
   s.addNotes("Türkiye'de TÜİK'e göre 3,9 milyon KOBİ var. Odaklandığımız kesim alacağı çok olan küçük ve orta firmalar; aylık 205 milyon liralık hizmet verilebilir pazar. İlk hedefimiz bu kesimde teknolojiyi aktif kullanan 1.000 işletme; finans planımızda buna 14. ayda ulaşıyoruz.");
