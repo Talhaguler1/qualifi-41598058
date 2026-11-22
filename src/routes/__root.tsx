@@ -114,10 +114,19 @@ function RootShell({ children }: { children: ReactNode }) {
   const lang = useRouterState({
     select: (s) => (s.location.pathname.startsWith("/en") || (s.location.search as { l?: string }).l === "en" ? "en" : "tr"),
   });
+  // Two installable apps: the demo (no sign-in, opens the demo chooser) and QualiFi itself (opens the panel).
+  const demo = useRouterState({ select: (s) => s.location.pathname.startsWith("/demo") });
   return (
     <html lang={lang}>
       <head>
         <HeadContent />
+        <link rel="manifest" href={demo ? "/manifest-demo.webmanifest" : "/manifest.webmanifest"} />
+        <link rel="apple-touch-icon" href={demo ? "/pwa/apple-touch-icon-demo.png" : "/pwa/apple-touch-icon.png"} />
+        <meta name="apple-mobile-web-app-title" content={demo ? "QualiFi Demo" : "QualiFi"} />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="theme-color" content="#16302a" />
       </head>
       <body>
         {children}

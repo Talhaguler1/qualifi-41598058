@@ -1,0 +1,19 @@
+{
+  "id": "/demo",
+  "name": "QualiFi Demo",
+  "short_name": "QualiFi Demo",
+  "description": "Giriş yapmadan QualiFi'yi örnek bir işletme ve bankacı olarak deneyin.",
+  "lang": "tr",
+  "start_url": "/demo?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f7f6f1",
+  "theme_color": "#16302a",
+  "categories": ["finance", "business"],
+  "icons": [
+    { "src": "/pwa/icon-192-demo.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/pwa/icon-512-demo.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/pwa/icon-maskable-512-demo.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
