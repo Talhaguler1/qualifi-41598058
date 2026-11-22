@@ -71,7 +71,7 @@ export interface SiteCopy {
 const TR: SiteCopy = {
   meta: {
     title: "QualiFi | Müşteriniz ne zaman öder, önceden bilin",
-    description: "QualiFi ERP, muhasebe, banka ve WhatsApp'ı okur; ödeme sözlerini nakit tahminine işler ve sıkışmadan önce uyarır.",
+    description: "QualiFi fatura, sözleşme, banka hareketi ve müşterinin verdiği ödeme sözünü birleştirir; nakit sıkışmadan önce uyarır.",
   },
   nav: { product: "Ürün", how: "Nasıl çalışır", banks: "Bankalar", faq: "SSS", demo: "Canlı demo", signIn: "Giriş", signUp: "Ücretsiz hesap aç", menu: "Menü", close: "Kapat" },
   audienceLabel: "Kimin için",
@@ -79,7 +79,7 @@ const TR: SiteCopy = {
     business: {
       tab: "İşletmeler",
       title: "Müşteriniz ne zaman öder, önceden bilin.",
-      sub: "QualiFi ERP, muhasebe, banka ve WhatsApp'ı okur; ödeme sözlerini tahmine işler, nakit sıkışmadan haftalar önce uyarır.",
+      sub: "QualiFi faturayı, sözleşmeyi, banka hareketlerini ve müşterinin telefonda ya da WhatsApp'ta verdiği ödeme sözünü birleştirir; nakit sıkışmadan haftalar önce uyarır.",
       primary: { label: "Canlı demoyu dene", href: "/demo/isletme?t=017&d=2026-11-24" },
       secondary: { label: "Ücretsiz hesap aç", href: "/app/kayit" },
     },
@@ -130,11 +130,11 @@ const TR: SiteCopy = {
     masked: "Yapay zekâ yalnız maskeli veri görür",
   },
   sources: {
-    title: "Veriniz zaten var. QualiFi hepsini okur.",
-    sub: "Ön muhasebe ne kadar alacağınızı bilir; ne zaman geleceğini sohbetler bilir. İkisi ilk kez aynı yerde.",
-    items: ["ERP", "Ön muhasebe", "Banka", "WhatsApp Business", "Gmail", "Sözleşme ve fatura"],
+    title: "Veriniz zaten var. QualiFi hepsini bir araya getirir.",
+    sub: "Ön muhasebe ne kadar alacağınızı bilir; ne zaman geleceğini müşterinin sözü söyler. QualiFi ikisini ilk kez aynı yerde buluşturur.",
+    items: ["E-fatura ve ön muhasebe", "ERP", "Banka hareketleri", "Sözleşme ve fatura", "Telefonda verilen söz", "WhatsApp ve e-posta"],
     agent: "QualiFi ajanı",
-    outputs: ["Güncel ödeme tarihleri", "8 haftalık nakit tahmini", "Onaylı hatırlatmalar"],
+    outputs: ["Müşteri ödeme karnesi ve gecikme tahmini", "8 haftalık tahsilat tahmini ve 30 günlük karşılama oranı", "Gecikmenin maliyeti ve finansman ihtiyacı"],
   },
   before: {
     title: "Tek bir mesaj, dört ayrı güncelleme demekti.",
@@ -157,7 +157,7 @@ const TR: SiteCopy = {
   bento: {
     title: "Tahsilattan bankaya, tek ekran.",
     tiles: [
-      { title: "Sohbetten otomatik tarih", text: "“2 hafta sonra” yazıldığı an fatura tarihi kayar." },
+      { title: "Her söz tarihe işlenir", text: "“2 hafta sonra” WhatsApp'ta yazılınca ya da telefonda alıp kaydettiğinizde beklenen ödeme tarihi kayar." },
       { title: "Onaylı hatırlatmalar", text: "Taslağı ajan yazar, siz onaylamadan gitmez." },
       { title: "8 haftalık canlı tahmin", text: "Her söz ve gecikmeyle yeniden çizilir." },
       { title: "Müşteri ödeme karnesi", text: "Kim dakik, kim sözünü tutmuyor; A'dan D'ye." },
@@ -188,6 +188,7 @@ const TR: SiteCopy = {
     items: [
       { q: "Hesap açmak için belge gerekiyor mu?", a: "Hayır. Ücretsiz hesap açın; belgeleri dilediğiniz zaman yükleyin ya da önce demoyu deneyin." },
       { q: "Hangi sistemlerle çalışıyor?", a: "ERP, ön muhasebe, banka hesapları, WhatsApp Business ve Gmail için bağlantılar pilot sürecinde kuruluyor. Bugün belge, Excel ve sohbet dışa aktarımıyla başlayabilirsiniz." },
+      { q: "Müşterim sözü telefonda veriyor. WhatsApp şart mı?", a: "Hayır. Telefonda ya da yüz yüze alınan sözü uygulamada birkaç saniyede kaydedersiniz; beklenen ödeme tarihi, nakit tahmini ve gecikmenin maliyeti hemen güncellenir." },
       { q: "Müşterilerime kendiliğinden mesaj atar mı?", a: "Hayır. Ajan taslak hazırlar, siz onaylarsınız." },
       { q: "Tahminler ne kadar doğru?", a: "Demo örnek veriyle çalışır. Gerçek doğruluk, pilotta sizin ödeme geçmişinizle ölçülür ve size açıkça gösterilir." },
       { q: "Bankam verilerimi görür mü?", a: "Yalnız siz paylaşırsanız ve yalnız özet karneyi. Paylaşımı istediğiniz an geri çekebilirsiniz." },
@@ -210,7 +211,7 @@ const TR: SiteCopy = {
 const EN: SiteCopy = {
   meta: {
     title: "QualiFi | Know when customers will actually pay",
-    description: "QualiFi reads your ERP, accounting, bank and WhatsApp, turns payment promises into your cash forecast and warns you before cash gets tight.",
+    description: "QualiFi brings together invoices, contracts, bank movements and the payment promises customers give you, and warns you before cash gets tight.",
   },
   nav: { product: "Product", how: "How it works", banks: "Banks", faq: "FAQ", demo: "Live demo", signIn: "Sign in", signUp: "Open a free account", menu: "Menu", close: "Close" },
   audienceLabel: "Built for",
@@ -218,7 +219,7 @@ const EN: SiteCopy = {
     business: {
       tab: "Businesses",
       title: "Know when customers will actually pay.",
-      sub: "QualiFi reads your ERP, accounting, bank and WhatsApp, turns payment promises into your forecast and warns you weeks before cash gets tight.",
+      sub: "QualiFi combines invoices, contracts, bank movements and the payment promises customers give by phone or WhatsApp, and warns you weeks before cash gets tight.",
       primary: { label: "Try the live demo", href: "/demo/isletme?t=017&d=2026-11-24&l=en" },
       secondary: { label: "Open a free account", href: "/app/kayit" },
     },
@@ -269,11 +270,11 @@ const EN: SiteCopy = {
     masked: "The AI only sees masked data",
   },
   sources: {
-    title: "Your data already exists. QualiFi reads all of it.",
-    sub: "Accounting knows how much you are owed; chats know when it will arrive. For the first time, both in one place.",
-    items: ["ERP", "Accounting", "Bank", "WhatsApp Business", "Gmail", "Contracts and invoices"],
+    title: "Your data already exists. QualiFi brings it together.",
+    sub: "Accounting knows how much you are owed; the customer's promise tells you when. QualiFi brings both together for the first time.",
+    items: ["E-invoices and accounting", "ERP", "Bank movements", "Contracts and invoices", "Promises given on the phone", "WhatsApp and email"],
     agent: "QualiFi agent",
-    outputs: ["Up-to-date payment dates", "8-week cash forecast", "Approved reminders"],
+    outputs: ["Customer payment scorecard and delay forecast", "8-week collections forecast and 30-day payment coverage", "Cost of delay and financing need"],
   },
   before: {
     title: "One message used to mean four manual updates.",
@@ -296,7 +297,7 @@ const EN: SiteCopy = {
   bento: {
     title: "From collections to your bank, one screen.",
     tiles: [
-      { title: "Dates from chats", text: "The moment someone writes “in 2 weeks”, the invoice date moves." },
+      { title: "Every promise moves the date", text: "When “in 2 weeks” arrives in WhatsApp, or you log it from a call, the expected payment date moves." },
       { title: "Approved reminders", text: "The agent drafts; nothing goes out without your approval." },
       { title: "Live 8-week forecast", text: "Redrawn with every promise and delay." },
       { title: "Customer payment scorecard", text: "Who pays on time and who breaks promises, A to D." },
@@ -327,6 +328,7 @@ const EN: SiteCopy = {
     items: [
       { q: "Do I need documents to open an account?", a: "No. Open a free account and upload documents whenever you like, or try the demo first." },
       { q: "Which systems does it work with?", a: "Connections for ERP, accounting, bank accounts, WhatsApp Business and Gmail are being set up in the pilot. Today you can start with documents, spreadsheets and chat exports." },
+      { q: "My customer promises on the phone. Do I need WhatsApp?", a: "No. You record a promise given on the phone or in person in a few seconds; the expected payment date, cash forecast and cost of delay update at once." },
       { q: "Will it message my customers on its own?", a: "No. The agent drafts, you approve." },
       { q: "How accurate are the forecasts?", a: "The demo runs on sample data. Real accuracy is measured in the pilot on your own payment history and shown to you openly." },
       { q: "Will my bank see my data?", a: "Only if you share, and only the summary scorecard. You can withdraw it at any time." },

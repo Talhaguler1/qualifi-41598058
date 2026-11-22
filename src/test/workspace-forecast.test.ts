@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { possibleDuplicates, workspaceOutlook, type WorkspaceCommitment } from "@/lib/workspace-forecast";
+import { coverage, delayCost, financingNeed, possibleDuplicates, workspaceOutlook, type WorkspaceCommitment } from "@/lib/workspace-forecast";
 
 const c = (over: Partial<WorkspaceCommitment>): WorkspaceCommitment => ({
   id: Math.random().toString(36),
@@ -54,5 +54,24 @@ describe("empty-account outlook", () => {
     const other = c({ id: "x", direction: "out", amount: 90000, due_date: "2026-12-02" });
     expect([...possibleDuplicates([a, b, other])]).toEqual(["b"]);
     expect(workspaceOutlook([a, b, other], 0, "2026-11-24").openOut).toBe(180000);
+  });
+  it("prices late money at the owner's rate, including days pushed by a promise", () => {
+    const overdue = c({ id: "o", amount: 36500, due_date: "2026-11-14" });
+    const pushed = c({ id: "p", amount: 73000, due_date: "2026-12-04" });
+    const logs = [{ commitmentId: "p", channel: "phone" as const, note: "", oldDue: "2026-11-27", newDue: "2026-12-04", recordedAt: "2026-11-22" }];
+    const cost = delayCost([overdue, pushed, c({ amount: 999, due_date: "2026-12-30" })], logs, "2026-11-24", 0.365);
+    // 36.500 × 10 days × 0,1% + 73.000 × 7 days × 0,1%
+    expect(cost.total).toBeCloseTo(365 + 511, 6);
+    expect(cost.perDay).toBeCloseTo(36.5, 6);
+    expect(cost.items).toBe(2);
+  });
+
+  it("covers payments with collections and finds the deepest cautious gap", () => {
+    const o = workspaceOutlook([c({ amount: 800, due_date: "2026-11-27" }), c({ direction: "out", amount: 1000, due_date: "2026-11-28" }), c({ amount: 500, due_date: "2026-11-28", needs_review: true })], 0, "2026-11-24");
+    const cov = coverage(o);
+    expect(cov.ratio).toBeCloseTo(1.3, 6);
+    expect(cov.ratioSure).toBeCloseTo(0.8, 6);
+    expect(financingNeed(o)).toMatchObject({ amount: 200 });
+    expect(financingNeed(workspaceOutlook([c({ amount: 10 })], 0, "2026-11-24"))).toBeNull();
   });
 });

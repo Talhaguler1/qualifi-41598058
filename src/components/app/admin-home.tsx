@@ -51,6 +51,7 @@ export function AdminHome({ token, accountSlot }: { token: string; accountSlot: 
     <div className="qd">
       <TopBar title="QualiFi yönetim" subtitle="Hesaplar, davetler ve demo etkinliği" badge={null}>
         <a className="qd-btn qd-btn--sm" href="/admin/leads">Başvurular</a>
+        <a className="qd-btn qd-btn--sm" href="/admin/finans">Finans modeli</a>
         <a className="qd-btn qd-btn--sm" href="/demo">Demo paneller</a>
         {accountSlot}
       </TopBar>

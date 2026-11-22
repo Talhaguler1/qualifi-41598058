@@ -100,6 +100,85 @@ export function workspaceOutlook(items: WorkspaceCommitment[], startBalance: num
   };
 }
 
+export type PromiseChannel = "phone" | "in_person" | "whatsapp" | "email" | "other";
+export const CHANNEL_LABEL: Record<PromiseChannel, string> = {
+  phone: "Telefonda",
+  in_person: "Yüz yüze",
+  whatsapp: "WhatsApp'ta",
+  email: "E-postada",
+  other: "Başka yoldan",
+};
+
+/** A payment promise recorded by hand (kept on this device until the schema stores it). */
+export interface PromiseLog {
+  commitmentId: string;
+  channel: PromiseChannel;
+  note: string;
+  /** Due date before this promise; null when the promise created the item. */
+  oldDue: string | null;
+  newDue: string;
+  recordedAt: string;
+}
+
+export interface DelayCost {
+  /** Interest-equivalent cost of every day the money is later than first agreed. */
+  total: number;
+  /** What one more day of the current overdue amount costs. */
+  perDay: number;
+  items: number;
+}
+
+/**
+ * Cost of late money at the owner's own borrowing rate: amount × days later than first agreed
+ * × annual rate / 365. Counts overdue days and days pushed by recorded promises.
+ */
+export function delayCost(items: WorkspaceCommitment[], logs: PromiseLog[], asOf: string, annualRate: number): DelayCost {
+  const daily = Math.max(0, annualRate) / 365;
+  const duplicates = possibleDuplicates(items);
+  let total = 0;
+  let perDay = 0;
+  let count = 0;
+  for (const c of items) {
+    if (c.direction !== "in" || c.status === "paid" || !c.due_date || !isLira(c) || duplicates.has(c.id)) continue;
+    const firstDue = logs
+      .filter((l) => l.commitmentId === c.id && l.oldDue)
+      .map((l) => l.oldDue as string)
+      .reduce((min, d) => (d < min ? d : min), c.due_date);
+    const end = c.due_date < asOf ? asOf : c.due_date;
+    const days = diffDays(end, firstDue);
+    if (days <= 0) continue;
+    total += c.amount * days * daily;
+    if (c.due_date < asOf) perDay += c.amount * daily;
+    count += 1;
+  }
+  return { total, perDay, items: count };
+}
+
+export interface Coverage {
+  inflow: number;
+  inflowSure: number;
+  outflow: number;
+  /** Expected collections ÷ payments due; null when nothing is due. */
+  ratio: number | null;
+  ratioSure: number | null;
+}
+
+/** How much of the payments due in the first N weeks the expected collections cover. */
+export function coverage(outlook: WorkspaceOutlook, weeks = 4): Coverage {
+  const slice = outlook.weeks.slice(0, weeks);
+  const inflow = slice.reduce((s, w) => s + w.inflow, 0);
+  const inflowSure = slice.reduce((s, w) => s + w.inflowSure, 0);
+  const outflow = slice.reduce((s, w) => s + w.outflow, 0);
+  return { inflow, inflowSure, outflow, ratio: outflow > 0 ? inflow / outflow : null, ratioSure: outflow > 0 ? inflowSure / outflow : null };
+}
+
+/** Deepest cautious shortfall in the outlook; null when the cautious line never goes below zero. */
+export function financingNeed(outlook: WorkspaceOutlook): { amount: number; weekStart: string } | null {
+  let worst: WorkspaceWeek | null = null;
+  for (const w of outlook.weeks) if (w.balanceCautious < 0 && (!worst || w.balanceCautious < worst.balanceCautious)) worst = w;
+  return worst ? { amount: -worst.balanceCautious, weekStart: worst.weekStart } : null;
+}
+
 export function daysLate(dueDate: string, asOf: string): number {
   return diffDays(asOf, dueDate);
 }

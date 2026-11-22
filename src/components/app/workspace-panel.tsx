@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { Bar, ComposedChart, Line, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { Building2, Calculator, Check, FileText, FileUp, Landmark, Loader2, MessageCircle, Plus, ShieldAlert, Sparkles, Trash2, Undo2 } from "lucide-react";
+import { Building2, Calculator, Check, FileText, FileUp, Landmark, Loader2, MessageCircle, Phone, Plus, ShieldAlert, Sparkles, Trash2, Undo2 } from "lucide-react";
 import { trackDemo } from "@/lib/demo/track";
 import { supabase } from "@/integrations/supabase/client";
 import { formatDateTr, money } from "@/lib/demo";
-import { FILE_KIND_LABEL, isLira, KIND_BY_EXTENSION, workspaceOutlook, type WorkspaceCommitment } from "@/lib/workspace-forecast";
+import { CHANNEL_LABEL, coverage, delayCost, FILE_KIND_LABEL, financingNeed, isLira, KIND_BY_EXTENSION, workspaceOutlook, type PromiseChannel, type PromiseLog, type WorkspaceCommitment } from "@/lib/workspace-forecast";
 import { Kpi, Toast, TopBar, useLocalState, useMounted } from "@/components/demo/shared";
 import { WhatsAppInbox } from "@/components/app/whatsapp-inbox";
 
@@ -36,6 +36,8 @@ export function WorkspacePanel({ userId, title, token, readOnly, accountSlot }: 
   const [step, setStep] = useState<Step | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const [balance, setBalance] = useLocalState<number>(`qd-ws-balance-${userId}`, 0);
+  const [rate, setRate] = useLocalState<number>(`qd-ws-rate-${userId}`, 0.45);
+  const [promises, setPromises] = useLocalState<PromiseLog[]>(`qd-ws-promises-${userId}`, []);
   const clearToast = useCallback(() => setToast(null), []);
 
   const load = useCallback(async () => {
@@ -112,6 +114,26 @@ export function WorkspacePanel({ userId, title, token, readOnly, accountSlot }: 
     void load();
   };
 
+  const recordPromise = async (p: { commitmentId: string | null; counterparty: string; amount: number; newDue: string; channel: PromiseChannel; note: string }) => {
+    const log = { channel: p.channel, note: p.note, newDue: p.newDue, recordedAt: today() };
+    if (p.commitmentId) {
+      const target = items.find((x) => x.id === p.commitmentId);
+      await update(p.commitmentId, { due_date: p.newDue });
+      setPromises([...promises, { ...log, commitmentId: p.commitmentId, oldDue: target?.due_date ?? null }]);
+      setToast(`Söz kaydedildi: ${target?.counterparty ?? "alacak"} ${formatDateTr(p.newDue)} tarihine taşındı.`);
+      return;
+    }
+    const evidence = `Sözlü söz · ${CHANNEL_LABEL[p.channel]}${p.note ? ` · ${p.note}` : ""}`.slice(0, 500);
+    const { data, error } = await supabase.from("qualifi_commitments").insert({ counterparty: p.counterparty, direction: "in", amount: p.amount, due_date: p.newDue, kind: "promise", status: "open", needs_review: false, evidence }).select("id").single();
+    if (error || !data) {
+      setToast("Söz kaydedilemedi.");
+      return;
+    }
+    setPromises([...promises, { ...log, commitmentId: data.id as string, oldDue: null }]);
+    setToast("Söz kaydedildi.");
+    void load();
+  };
+
   const deleteAll = async () => {
     if (!window.confirm("Yüklediğiniz tüm dosyalar ve çıkarılan bütün taahhütler kalıcı olarak silinecek. Bu geri alınamaz. Devam edilsin mi?")) return;
     const listed = await supabase.storage.from("workspace-files").list(userId, { limit: 1000 });
@@ -125,6 +147,10 @@ export function WorkspacePanel({ userId, title, token, readOnly, accountSlot }: 
   const outlook = useMemo(() => workspaceOutlook(items, balance, today()), [items, balance]);
   const review = items.filter((c) => c.needs_review && c.status !== "paid");
   const end = outlook.weeks.at(-1);
+  const cost = useMemo(() => delayCost(items, promises, today(), rate), [items, promises, rate]);
+  const cover = useMemo(() => coverage(outlook), [outlook]);
+  const need = useMemo(() => financingNeed(outlook), [outlook]);
+  const lastPromise = useMemo(() => new Map(promises.map((p) => [p.commitmentId, p] as const)), [promises]);
   const lowest = outlook.weeks.reduce((m, w) => (w.balanceCautious < m.balanceCautious ? w : m), outlook.weeks[0] ?? { balanceCautious: 0, weekStart: today() } as never);
 
   return (
@@ -141,6 +167,38 @@ export function WorkspacePanel({ userId, title, token, readOnly, accountSlot }: 
             <Kpi label="Beklenen tahsilat (TL)" value={money(outlook.openIn)} sub={`${items.filter((c) => c.direction === "in" && c.status !== "paid" && isLira(c) && !outlook.duplicates.has(c.id)).length} kalem${outlook.foreign.some((c) => c.direction === "in") ? " · döviz ayrı" : ""}`} />
             <Kpi label="Planlı ödeme (TL)" value={money(outlook.openOut)} sub={`${items.filter((c) => c.direction === "out" && c.status !== "paid" && isLira(c) && !outlook.duplicates.has(c.id)).length} kalem${outlook.foreign.some((c) => c.direction === "out") ? " · döviz ayrı" : ""}`} />
             <Kpi {...(lowest && lowest.balanceCautious < 0 ? { tone: "alert" as const } : {})} label="En dar hafta (temkinli)" value={money(lowest?.balanceCautious ?? 0)} sub={lowest ? `${formatDateTr(lowest.weekStart)} haftası` : ""} />
+          </section>
+
+          <section className="qd-card qd-decide">
+            <div className="qd-card__head">
+              <div>
+                <span className="qd-eyebrow">Karar özeti</span>
+                <h2>Gecikmenin bedeli, önümüzdeki ay ve finansman</h2>
+              </div>
+              {!readOnly ? (
+                <label className="qd-decide__rate">
+                  Kendi kredi faiziniz (yıllık)
+                  <span><i>%</i><input className="qd-input qd-num" type="number" min={0} max={300} step={1} value={Math.round(rate * 100)} onChange={(e) => setRate(Math.max(0, Number(e.target.value) || 0) / 100)} /></span>
+                </label>
+              ) : null}
+            </div>
+            <div className="qd-decide__grid">
+              <div className="qd-decide__item">
+                <span>Gecikmenin maliyeti</span>
+                <b className="qd-num">{money(cost.total)}</b>
+                <small>{cost.items ? `${cost.items} alacak ilk vadesinden geç geliyor · yıllık %${Math.round(rate * 100)} faizle${cost.perDay > 0 ? ` · her gün +${money(cost.perDay)}` : ""}` : "Geciken ya da ertelenen alacak yok."}</small>
+              </div>
+              <div className="qd-decide__item">
+                <span>30 günde ödemeleri karşılama</span>
+                <b className="qd-num">{cover.ratio === null ? "—" : `%${Math.round(cover.ratio * 100)}`}</b>
+                <small>{cover.ratio === null ? "Önümüzdeki 4 haftada planlı ödeme yok." : `Temkinli %${Math.round((cover.ratioSure ?? 0) * 100)} · ${money(cover.inflow)} tahsilat / ${money(cover.outflow)} ödeme`}</small>
+              </div>
+              <div className={`qd-decide__item${need ? " qd-decide__item--alert" : ""}`}>
+                <span>Finansman ihtiyacı</span>
+                <b className="qd-num">{need ? money(need.amount) : "Yok"}</b>
+                <small>{need ? `${formatDateTr(need.weekStart)} haftasında, temkinli hesapla. Bankanızla şimdiden konuşmak daha kolay: kısa vadeli kredi, çek/senet iskontosu veya limit artışı.` : "8 hafta boyunca temkinli bakiye artıda kalıyor."}</small>
+              </div>
+            </div>
           </section>
 
           <WhatsAppInbox userId={userId} token={token} readOnly={Boolean(readOnly)} onChange={() => void load()} />
@@ -192,12 +250,13 @@ export function WorkspacePanel({ userId, title, token, readOnly, accountSlot }: 
               </div>
               <span className="qd-pill qd-pill--warn">{review.length} kontrol bekliyor</span>
             </div>
-            <CommitmentTable items={items} duplicates={outlook.duplicates} readOnly={Boolean(readOnly)} onUpdate={update} onRemove={remove} />
+            <CommitmentTable items={items} duplicates={outlook.duplicates} promises={lastPromise} readOnly={Boolean(readOnly)} onUpdate={update} onRemove={remove} />
             {!readOnly ? <ManualAdd onAdd={addManual} /> : null}
           </section>
         </div>
 
         <aside className="qd-side">
+          {!readOnly ? <PromiseForm receivables={items.filter((c) => c.direction === "in" && c.status !== "paid")} onSave={recordPromise} /> : null}
           {!readOnly ? (
             <section className="qd-card qd-agent" id="qd-upload">
               <div className="qd-card__head" style={{ marginBottom: 6 }}>
@@ -335,7 +394,7 @@ function Integrations({ onRequest }: { onRequest: (name: string) => void }) {
   );
 }
 
-function CommitmentTable({ items, duplicates, readOnly, onUpdate, onRemove }: { items: CommitmentRow[]; duplicates: Set<string>; readOnly: boolean; onUpdate: (id: string, p: Partial<CommitmentRow>) => void; onRemove: (id: string) => void }) {
+function CommitmentTable({ items, duplicates, promises, readOnly, onUpdate, onRemove }: { items: CommitmentRow[]; duplicates: Set<string>; promises: Map<string, PromiseLog>; readOnly: boolean; onUpdate: (id: string, p: Partial<CommitmentRow>) => void; onRemove: (id: string) => void }) {
   if (!items.length) return <p style={{ color: "var(--qd-muted)" }}>Henüz taahhüt yok. Belge yükleyin veya aşağıdan elle ekleyin.</p>;
   return (
     <div className="qd-table-wrap" style={{ maxHeight: 520, overflowY: "auto" }}>
@@ -351,6 +410,7 @@ function CommitmentTable({ items, duplicates, readOnly, onUpdate, onRemove }: { 
               <td className="qd-num">{readOnly ? (c.due_date ? formatDateTr(c.due_date) : "—") : <input className="qd-cell qd-num" type="date" defaultValue={c.due_date ?? ""} onBlur={(e) => e.target.value !== (c.due_date ?? "") && onUpdate(c.id, { due_date: e.target.value || null })} aria-label="Vade" />}</td>
               <td style={{ maxWidth: 240, color: "var(--qd-muted)", fontSize: 12 }}>{c.evidence ? `“${c.evidence}”` : "—"}{c.confidence !== null ? <div>güven %{Math.round(c.confidence * 100)}</div> : null}</td>
               <td>
+                {promises.get(c.id) ? <span className="qd-pill qd-pill--idea" title={promises.get(c.id)?.note || undefined}>{CHANNEL_LABEL[promises.get(c.id)!.channel]} söz</span> : null}
                 {duplicates.has(c.id) ? <span className="qd-pill qd-pill--bad" title="Aynı tutar, para birimi ve vadeyle başka bir satır daha var; toplamlara katılmadı.">Olası tekrar</span> : null}
                 {c.status === "paid" ? <span className="qd-pill qd-pill--good">Ödendi</span> : c.needs_review ? <span className="qd-pill qd-pill--warn">Kontrol bekliyor</span> : <span className="qd-pill qd-pill--muted">Açık</span>}
               </td>
@@ -390,5 +450,56 @@ function ManualAdd({ onAdd }: { onAdd: (row: { counterparty: string; direction: 
         <button type="button" className="qd-btn qd-btn--ghost qd-btn--sm" onClick={() => setOpen(false)}>Kapat</button>
       </div>
     </div>
+  );
+}
+
+function PromiseForm({ receivables, onSave }: { receivables: CommitmentRow[]; onSave: (p: { commitmentId: string | null; counterparty: string; amount: number; newDue: string; channel: PromiseChannel; note: string }) => Promise<void> }) {
+  const empty = { target: "", counterparty: "", amount: "", newDue: "", channel: "phone" as PromiseChannel, note: "" };
+  const [row, setRow] = useState(empty);
+  const [busy, setBusy] = useState(false);
+  const linked = receivables.find((r) => r.id === row.target) ?? null;
+  const ok = Boolean(row.newDue) && Boolean(linked || (row.counterparty.trim() && Number(row.amount) > 0));
+  return (
+    <section className="qd-card qd-promise" id="qd-promise">
+      <div className="qd-agent__title" style={{ marginBottom: 10 }}>
+        <span className="qd-agent__avatar"><Phone size={17} /></span>
+        <span><b>Ödeme sözü kaydet</b><small>Telefonda ya da yüz yüze alınan söz de sayılır</small></span>
+      </div>
+      <div className="qd-promise__form">
+        <label><span>Hangi alacak?</span>
+          <select className="qd-select" value={row.target} onChange={(e) => setRow({ ...row, target: e.target.value })}>
+            <option value="">Yeni alacak (listede yok)</option>
+            {receivables.map((r) => <option key={r.id} value={r.id}>{r.counterparty} · {money(r.amount)}{r.due_date ? ` · ${formatDateTr(r.due_date)}` : ""}</option>)}
+          </select>
+        </label>
+        {!linked ? (
+          <>
+            <label><span>Kim</span><input className="qd-input" value={row.counterparty} onChange={(e) => setRow({ ...row, counterparty: e.target.value })} placeholder="Müşteri adı" /></label>
+            <label><span>Tutar (TL)</span><input className="qd-input qd-num" type="number" min={0} value={row.amount} onChange={(e) => setRow({ ...row, amount: e.target.value })} /></label>
+          </>
+        ) : null}
+        <label><span>Söz verilen tarih</span><input className="qd-input qd-num" type="date" value={row.newDue} onChange={(e) => setRow({ ...row, newDue: e.target.value })} /></label>
+        <div className="qd-promise__channels" role="radiogroup" aria-label="Söz nasıl verildi">
+          {(Object.keys(CHANNEL_LABEL) as PromiseChannel[]).map((c) => (
+            <button key={c} type="button" role="radio" aria-checked={row.channel === c} className={`qd-promise__chip${row.channel === c ? " is-on" : ""}`} onClick={() => setRow({ ...row, channel: c })}>{CHANNEL_LABEL[c]}</button>
+          ))}
+        </div>
+        <label><span>Not (isteğe bağlı)</span><input className="qd-input" value={row.note} maxLength={200} onChange={(e) => setRow({ ...row, note: e.target.value })} placeholder="Ör. yarısını cuma, kalanı ay sonu" /></label>
+        <button
+          type="button"
+          className="qd-btn qd-btn--primary"
+          disabled={!ok || busy}
+          onClick={async () => {
+            setBusy(true);
+            await onSave({ commitmentId: linked?.id ?? null, counterparty: row.counterparty.trim(), amount: Number(row.amount), newDue: row.newDue, channel: row.channel, note: row.note.trim() });
+            setBusy(false);
+            setRow(empty);
+          }}
+        >
+          {busy ? <Loader2 size={14} className="qd-spin" /> : <Check size={14} />} Sözü kaydet
+        </button>
+        <small className="qd-promise__hint">Seçtiğiniz alacağın vadesi söz verilen tarihe taşınır; nakit takvimi ve gecikme maliyeti hemen güncellenir. Sözün nasıl verildiği bu cihazda saklanır.</small>
+      </div>
+    </section>
   );
 }

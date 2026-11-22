@@ -17,6 +17,7 @@ import {
   Mail,
   Menu,
   MessageCircle,
+  Phone,
   Plug,
   Share2,
   ShieldCheck,
@@ -240,6 +241,7 @@ function Hero({ lang, audience, onAudience }: { lang: SiteLang; audience: Audien
 }
 
 const SOURCE_ICONS = [Building2, Calculator, Landmark, MessageCircle, Mail, FileText];
+const BUSINESS_SOURCE_ICONS = [Calculator, Building2, Landmark, FileText, Phone, MessageCircle];
 
 function Sources({ lang, bank }: { lang: SiteLang; bank: boolean }) {
   const s = (bank ? BANK_COPY[lang] : COPY[lang]).sources;
@@ -255,7 +257,7 @@ function Sources({ lang, bank }: { lang: SiteLang; bank: boolean }) {
         <Reveal className="flow">
           <ul className="flow__sources">
             {s.items.map((item, i) => {
-              const Icon = SOURCE_ICONS[i] ?? Plug;
+              const Icon = (bank ? SOURCE_ICONS : BUSINESS_SOURCE_ICONS)[i] ?? Plug;
               return (
                 <li key={item} style={{ animationDelay: `${i * 0.35}s` }}>
                   <Icon {...I} size={18} /> {item}

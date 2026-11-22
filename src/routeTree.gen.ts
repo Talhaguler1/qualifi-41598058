@@ -19,6 +19,7 @@ import { Route as IsletmelerRouteImport } from './routes/isletmeler'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TrRouteImport } from './routes/tr'
+import { Route as AdminFinansRouteImport } from './routes/admin/finans'
 import { Route as AdminLeadsRouteImport } from './routes/admin/leads'
 import { Route as ApiConfigRouteImport } from './routes/api/config'
 import { Route as ApiDemoInteractionsRouteImport } from './routes/api/demo-interactions'
@@ -95,6 +96,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const TrRoute = TrRouteImport.update({
   id: '/tr',
   path: '/tr',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminFinansRoute = AdminFinansRouteImport.update({
+  id: '/admin/finans',
+  path: '/admin/finans',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminLeadsRoute = AdminLeadsRouteImport.update({
@@ -245,6 +251,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tr': typeof TrRoute
+  '/admin/finans': typeof AdminFinansRoute
   '/admin/leads': typeof AdminLeadsRoute
   '/api/config': typeof ApiConfigRoute
   '/api/demo-interactions': typeof ApiDemoInteractionsRoute
@@ -284,6 +291,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tr': typeof TrRoute
+  '/admin/finans': typeof AdminFinansRoute
   '/admin/leads': typeof AdminLeadsRoute
   '/api/config': typeof ApiConfigRoute
   '/api/demo-interactions': typeof ApiDemoInteractionsRoute
@@ -324,6 +332,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tr': typeof TrRoute
+  '/admin/finans': typeof AdminFinansRoute
   '/admin/leads': typeof AdminLeadsRoute
   '/api/config': typeof ApiConfigRoute
   '/api/demo-interactions': typeof ApiDemoInteractionsRoute
@@ -365,6 +374,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sitemap.xml'
     | '/tr'
+    | '/admin/finans'
     | '/admin/leads'
     | '/api/config'
     | '/api/demo-interactions'
@@ -404,6 +414,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sitemap.xml'
     | '/tr'
+    | '/admin/finans'
     | '/admin/leads'
     | '/api/config'
     | '/api/demo-interactions'
@@ -443,6 +454,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sitemap.xml'
     | '/tr'
+    | '/admin/finans'
     | '/admin/leads'
     | '/api/config'
     | '/api/demo-interactions'
@@ -483,6 +495,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TrRoute: typeof TrRoute
+  AdminFinansRoute: typeof AdminFinansRoute
   AdminLeadsRoute: typeof AdminLeadsRoute
   ApiConfigRoute: typeof ApiConfigRoute
   ApiDemoInteractionsRoute: typeof ApiDemoInteractionsRoute
@@ -581,6 +594,13 @@ declare module '@tanstack/react-router' {
       path: '/tr'
       fullPath: '/tr'
       preLoaderRoute: typeof TrRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/finans': {
+      id: '/admin/finans'
+      path: '/admin/finans'
+      fullPath: '/admin/finans'
+      preLoaderRoute: typeof AdminFinansRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/leads': {
@@ -798,6 +818,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TrRoute: TrRoute,
+  AdminFinansRoute: AdminFinansRoute,
   AdminLeadsRoute: AdminLeadsRoute,
   ApiConfigRoute: ApiConfigRoute,
   ApiDemoInteractionsRoute: ApiDemoInteractionsRoute,

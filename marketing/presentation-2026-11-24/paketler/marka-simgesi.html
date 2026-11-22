@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>QualiFi marka simgesi</title>
+<style>
+@font-face { font-family: "Schibsted"; src: url(fonts/schibsted-grotesk-latin-wght-normal.woff2) format("woff2"); font-weight: 400 900; unicode-range: U+0000-00FF, U+0131, U+2000-206F; }
+@font-face { font-family: "Schibsted"; src: url(fonts/schibsted-grotesk-latin-ext-wght-normal.woff2) format("woff2"); font-weight: 400 900; unicode-range: U+0100-02AF; }
+@font-face { font-family: "Onest"; src: url(fonts/onest-latin-wght-normal.woff2) format("woff2"); font-weight: 100 900; unicode-range: U+0000-00FF, U+0131, U+2000-206F; }
+@font-face { font-family: "Onest"; src: url(fonts/onest-latin-ext-wght-normal.woff2) format("woff2"); font-weight: 100 900; unicode-range: U+0100-02AF; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: transparent; }
+body.preview { background: #ececec; display: flex; flex-wrap: wrap; gap: 40px; padding: 40px; }
+.tile { position: relative; width: 1024px; height: 1024px; }
+.lockup { position: relative; width: 1800px; height: 600px; display: flex; align-items: center; gap: 70px; padding-left: 60px; }
+.lockup b { font: 800 210px/1 "Schibsted"; color: #16302a; letter-spacing: -0.035em; }
+.lockup b span { color: #8fbf4d; }
+.lockup small { display: block; font: 600 46px "Onest"; color: #4f6157; letter-spacing: 0; margin-top: 18px; }
+svg { display: block; }
+</style>
+</head>
+<body class="preview">
+
+<!-- Shared mask shape: a Venetian half-mask. The right eye is a "q": round hole + tail. -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <path id="mask-shape" d="M2,14 C34,34 72,24 110,42 C148,24 186,34 218,14 C218,66 196,106 150,108 C128,109 117,99 110,86 C103,99 92,109 70,108 C24,106 2,66 2,14 Z"/>
+    <mask id="holes" maskUnits="userSpaceOnUse" x="0" y="0" width="220" height="130">
+      <rect width="220" height="130" fill="#fff"/>
+      <!-- left eye: almond -->
+      <path d="M40,66 C52,48 80,46 94,62 C80,78 52,80 40,66 Z" fill="#000"/>
+      <!-- right eye: q -->
+      <circle cx="150" cy="64" r="16" fill="#000"/>
+      <path d="M158,73 L171,91 L179,85 L166,68 Z" fill="#000"/>
+    </mask>
+  </defs>
+</svg>
+
+<!-- A · App / slide icon: lime tile, dark mask -->
+<div class="tile" id="icon-a">
+  <svg viewBox="0 0 1024 1024" width="1024" height="1024">
+    <rect x="32" y="32" width="960" height="960" rx="230" fill="#d6ee9e"/>
+    <g transform="translate(112 330) scale(3.64)">
+      <use href="#mask-shape" fill="#16302a" mask="url(#holes)"/>
+      <!-- small spark above: the "insight" -->
+      <path d="M110,-26 C112,-14 116,-10 128,-8 C116,-6 112,-2 110,10 C108,-2 104,-6 92,-8 C104,-10 108,-14 110,-26 Z" fill="#2f7d4f"/>
+    </g>
+  </svg>
+</div>
+
+<!-- B · Dark version: dark tile, lime mask (for dark slides, WhatsApp profile) -->
+<div class="tile" id="icon-b">
+  <svg viewBox="0 0 1024 1024" width="1024" height="1024">
+    <rect x="32" y="32" width="960" height="960" rx="230" fill="#16302a"/>
+    <g transform="translate(112 330) scale(3.64)">
+      <use href="#mask-shape" fill="#d6ee9e" mask="url(#holes)"/>
+      <path d="M110,-26 C112,-14 116,-10 128,-8 C116,-6 112,-2 110,10 C108,-2 104,-6 92,-8 C104,-10 108,-14 110,-26 Z" fill="#8fbf4d"/>
+    </g>
+  </svg>
+</div>
+
+<!-- C · Mark only (no tile), on a stick like a masquerade mask: for title slide corners -->
+<div class="tile" id="icon-c">
+  <svg viewBox="0 0 1024 1024" width="1024" height="1024">
+    <g transform="translate(150 250) scale(3.3)">
+      <!-- stick -->
+      <path d="M44,104 L-6,196" stroke="#8fbf4d" stroke-width="9" stroke-linecap="round"/>
+      <use href="#mask-shape" fill="#16302a" mask="url(#holes)"/>
+      <path d="M110,-26 C112,-14 116,-10 128,-8 C116,-6 112,-2 110,10 C108,-2 104,-6 92,-8 C104,-10 108,-14 110,-26 Z" fill="#8fbf4d"/>
+    </g>
+  </svg>
+</div>
+
+<!-- D · Lockup: mark + wordmark -->
+<div class="lockup" id="lockup">
+  <svg viewBox="0 0 1024 1024" width="460" height="460">
+    <rect x="32" y="32" width="960" height="960" rx="230" fill="#16302a"/>
+    <g transform="translate(112 330) scale(3.64)">
+      <use href="#mask-shape" fill="#d6ee9e" mask="url(#holes)"/>
+      <path d="M110,-26 C112,-14 116,-10 128,-8 C116,-6 112,-2 110,10 C108,-2 104,-6 92,-8 C104,-10 108,-14 110,-26 Z" fill="#8fbf4d"/>
+    </g>
+  </svg>
+  <div><b>QualiFi<span>.</span></b><small>Kimliği gizli, hikâyesi görünür.</small></div>
+</div>
+
+</body>
+</html>
