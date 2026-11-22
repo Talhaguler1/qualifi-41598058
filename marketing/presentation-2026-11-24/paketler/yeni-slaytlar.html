@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>QualiFi yeni slayt görselleri</title>
+<style>
+@font-face { font-family: "Onest"; src: url(fonts/onest-latin-wght-normal.woff2) format("woff2"); font-weight: 100 900; unicode-range: U+0000-00FF, U+0131, U+2000-206F, U+20AC, U+2122, U+2190-2193; }
+@font-face { font-family: "Onest"; src: url(fonts/onest-latin-ext-wght-normal.woff2) format("woff2"); font-weight: 100 900; unicode-range: U+0100-02AF, U+20A0-20C0; }
+@font-face { font-family: "Schibsted"; src: url(fonts/schibsted-grotesk-latin-wght-normal.woff2) format("woff2"); font-weight: 400 900; unicode-range: U+0000-00FF, U+0131, U+2000-206F, U+2190-2193; }
+@font-face { font-family: "Schibsted"; src: url(fonts/schibsted-grotesk-latin-ext-wght-normal.woff2) format("woff2"); font-weight: 400 900; unicode-range: U+0100-02AF; }
+:root { --ink: #16302a; --ink2: #34524a; --muted: #4f6157; --green: #2f7d4f; --lime: #d6ee9e; --lime2: #8fbf4d; --soft: #ffffffd9; --line: #16302a1f; --orange: #e0873a; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: transparent; }
+html { scrollbar-width: none; } html::-webkit-scrollbar { display: none; }
+body.preview { background: #e9ece4; }
+body.preview section { margin-bottom: 40px; outline: 1px dashed #0002; }
+section { position: relative; width: 1920px; font-family: "Onest", Arial, sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; }
+.d { font-family: "Schibsted", "Onest", Arial, sans-serif; }
+.tl { font-family: "Onest"; }
+.chip { display: inline-block; font: 700 14px "Onest"; letter-spacing: .1em; text-transform: uppercase; padding: 6px 12px; border-radius: 999px; }
+svg.i { width: 30px; height: 30px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+
+/* ── A · Veri kaynakları ── */
+#kaynaklar { height: 600px; }
+#kaynaklar .src { position: absolute; left: 80px; top: 30px; width: 560px; display: flex; flex-direction: column; gap: 18px; }
+#kaynaklar .src div { display: flex; align-items: center; gap: 18px; background: var(--soft); border: 2px solid var(--line); border-radius: 22px; padding: 20px 26px; font: 700 27px "Schibsted"; }
+#kaynaklar .src div svg { color: var(--green); width: 34px; height: 34px; }
+#kaynaklar .src div.hi { background: var(--ink); color: #fff; border-color: var(--ink); }
+#kaynaklar .src div.hi svg { color: var(--lime); }
+#kaynaklar .src small { font: 500 18px "Onest"; color: var(--muted); margin-left: auto; }
+#kaynaklar .src div.hi small { color: #c9d8c4; }
+#kaynaklar .agent { position: absolute; left: 860px; top: 230px; width: 240px; text-align: center; }
+#kaynaklar .agent b { display: block; font: 800 34px "Schibsted"; margin-top: 16px; letter-spacing: -0.01em; }
+#kaynaklar .agent small { display: block; font: 600 19px "Onest"; color: var(--muted); margin-top: 6px; }
+#kaynaklar .out { position: absolute; left: 1290px; top: 60px; width: 560px; display: flex; flex-direction: column; gap: 14px; }
+#kaynaklar .out div { display: grid; grid-template-columns: 44px 1fr; gap: 16px; align-items: center; background: var(--lime); border-radius: 18px; padding: 16px 22px; font: 700 25px "Schibsted"; }
+#kaynaklar .out div i { font: 800 20px "Schibsted"; font-style: normal; width: 40px; height: 40px; border-radius: 50%; background: var(--ink); color: var(--lime); display: grid; place-items: center; }
+#kaynaklar svg.wires { position: absolute; inset: 0; width: 1920px; height: 600px; pointer-events: none; }
+
+/* ── B · Altı çıktı ── */
+#cikti { height: 740px; padding: 10px 80px 0; }
+#cikti .cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+#cikti .col h3 { font: 700 16px "Onest"; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin: 0 0 14px 6px; }
+#cikti .card { background: var(--soft); border: 2px solid var(--line); border-radius: 26px; padding: 26px 30px 26px; height: 300px; display: flex; flex-direction: column; margin-bottom: 22px; }
+#cikti .col:nth-child(3) .card { background: var(--ink); color: #eef5e6; border-color: var(--ink); }
+#cikti .card .h { display: flex; align-items: center; gap: 14px; font: 700 26px "Schibsted"; letter-spacing: -0.01em; }
+#cikti .card .h i { font: 800 20px "Schibsted"; font-style: normal; width: 42px; height: 42px; border-radius: 50%; background: var(--lime); color: var(--ink); display: grid; place-items: center; flex: none; }
+#cikti .card .v { font: 800 68px/1 "Onest"; letter-spacing: -0.03em; margin-top: auto; }
+#cikti .card .v small { font: 700 26px "Onest"; letter-spacing: 0; color: var(--muted); }
+#cikti .col:nth-child(3) .card .v small { color: #a9c0a3; }
+#cikti .card p { font: 500 21px/1.4 "Onest"; color: var(--ink2); margin-top: 14px; }
+#cikti .col:nth-child(3) .card p { color: #c9d8c4; }
+#cikti .col:nth-child(3) .card .v { color: var(--lime); }
+#cikti .note { position: absolute; right: 86px; bottom: 6px; font: 500 16px "Onest"; color: var(--muted); }
+
+/* ── C · Segmentler ── */
+#segment { height: 460px; padding: 10px 80px 0; }
+#segment table { width: 100%; border-collapse: separate; border-spacing: 14px 0; table-layout: fixed; margin-left: -14px; width: calc(100% + 28px); }
+#segment th { text-align: left; vertical-align: bottom; padding: 0 22px 16px; }
+#segment th b { display: block; font: 800 30px "Schibsted"; letter-spacing: -0.01em; }
+#segment th small { display: block; font: 600 18px "Onest"; color: var(--muted); margin-top: 6px; }
+#segment th .chip { background: var(--ink); color: var(--lime); margin-bottom: 12px; }
+#segment th .chip.ghost { background: transparent; color: transparent; }
+#segment td { background: var(--soft); padding: 18px 22px; font: 500 21px/1.38 "Onest"; color: var(--ink2); vertical-align: top; border-left: 2px solid var(--line); border-right: 2px solid var(--line); }
+#segment td.k { background: transparent; border: 0; font: 700 16px "Onest"; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding-left: 0; width: 210px; }
+#segment tr:nth-child(2) td:not(.k) { border-top: 2px solid var(--line); border-radius: 22px 22px 0 0; padding-top: 24px; }
+#segment tr:last-child td:not(.k) { border-bottom: 2px solid var(--line); border-radius: 0 0 22px 22px; padding-bottom: 24px; }
+#segment td.focus { background: #eef7dc; }
+#segment td b { color: var(--ink); }
+#segment .pkg { font: 800 26px "Onest"; color: var(--ink); }
+#segment .pkg small { font: 600 17px "Onest"; color: var(--muted); }
+#segment col.k { width: 200px; }
+
+/* ── D · Yapay zekâ ve inovasyon ── */
+#inovasyon { padding: 10px 80px 14px; display: grid; grid-template-columns: 620px 1fr; gap: 34px; }
+#inovasyon .rule { background: var(--ink); color: #eef5e6; border-radius: 30px; padding: 44px 44px 38px; display: flex; flex-direction: column; }
+#inovasyon .rule .chip { background: #ffffff14; color: var(--lime); border: 1px solid #d6ee9e55; align-self: flex-start; }
+#inovasyon .rule h2 { font: 800 50px/1.1 "Schibsted"; letter-spacing: -0.02em; margin-top: 26px; }
+#inovasyon .rule h2 em { font-style: normal; color: var(--lime); }
+#inovasyon .rule .stat { margin-top: auto; border-top: 1px solid #ffffff22; padding-top: 26px; display: grid; grid-template-columns: auto 1fr; gap: 22px; align-items: center; }
+#inovasyon .rule .stat b { font: 800 84px/1 "Onest"; color: var(--lime); letter-spacing: -0.03em; }
+#inovasyon .rule .stat p { font: 500 20px/1.4 "Onest"; color: #c9d8c4; }
+#inovasyon .rule .stat small { grid-column: 1 / -1; font: 500 15px "Onest"; color: #a9c0a3; }
+#inovasyon .list { display: flex; flex-direction: column; gap: 16px; }
+#inovasyon .row { background: var(--soft); border: 2px solid var(--line); border-radius: 24px; padding: 24px 28px; display: grid; grid-template-columns: 58px 1fr 150px; gap: 20px; align-items: center; }
+#inovasyon .row .ic { width: 58px; height: 58px; border-radius: 16px; background: var(--lime); display: grid; place-items: center; color: var(--ink); }
+#inovasyon .row .ic svg { width: 30px; height: 30px; }
+#inovasyon .row b { display: block; font: 700 27px "Schibsted"; letter-spacing: -0.01em; }
+#inovasyon .row p { font: 500 19px/1.4 "Onest"; color: var(--ink2); margin-top: 5px; }
+#inovasyon .row .chip { justify-self: end; text-align: center; }
+.st-now { background: var(--ink); color: var(--lime); }
+.st-soon { background: #e6f2d6; color: #2c4712; }
+.st-later { background: #fde9d7; color: #8a4a12; }
+
+/* ── E · Finansal plan ── */
+#finans { height: 620px; padding: 10px 80px 0; }
+#finans .kpis { display: grid; grid-template-columns: 1.25fr 1fr 1fr 1fr; gap: 20px; }
+#finans .kpi { background: var(--soft); border: 2px solid var(--line); border-radius: 26px; padding: 26px 30px; }
+#finans .kpi.main { background: var(--ink); color: #eef5e6; border-color: var(--ink); }
+#finans .kpi > span { font: 700 15px "Onest"; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+#finans .kpi.main > span { color: var(--lime); }
+#finans .kpi b { display: block; font: 800 58px/1.05 "Onest"; letter-spacing: -0.03em; margin-top: 12px; }
+#finans .kpi.main b { color: var(--lime); }
+#finans .kpi small { display: block; font: 500 19px/1.35 "Onest"; color: var(--ink2); margin-top: 8px; }
+#finans .kpi.main small { color: #c9d8c4; }
+#finans .low { display: grid; grid-template-columns: 1.25fr 1fr; gap: 20px; margin-top: 20px; }
+#finans .box { background: var(--soft); border: 2px solid var(--line); border-radius: 26px; padding: 28px 32px; }
+#finans .box h3 { font: 700 16px "Onest"; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+#finans .bar { display: flex; height: 54px; border-radius: 14px; overflow: hidden; margin-top: 22px; }
+#finans .bar div { display: grid; place-items: center; font: 800 21px "Onest"; color: #fff; }
+#finans .legend { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 26px; margin-top: 22px; }
+#finans .legend > div { display: grid; grid-template-columns: 16px 1fr; gap: 12px; align-items: start; }
+#finans .legend i { width: 16px; height: 16px; border-radius: 5px; margin-top: 6px; }
+#finans .legend b { font: 700 22px "Schibsted"; }
+#finans .legend p { font: 500 17px/1.35 "Onest"; color: var(--muted); margin-top: 2px; }
+#finans .path { display: flex; flex-direction: column; gap: 16px; margin-top: 22px; }
+#finans .path div { display: grid; grid-template-columns: 130px 1fr; gap: 16px; align-items: baseline; }
+#finans .path b { font: 800 24px "Onest"; color: var(--green); }
+#finans .path p { font: 600 21px/1.35 "Onest"; }
+#finans .path p small { display: block; font: 500 17px "Onest"; color: var(--muted); margin-top: 2px; }
+#finans .note { margin-top: 16px; font: 500 16px "Onest"; color: var(--muted); }
+</style>
+</head>
+<body class="preview">
+
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <path id="mask-shape" d="M2,14 C34,34 72,24 110,42 C148,24 186,34 218,14 C218,66 196,106 150,108 C128,109 117,99 110,86 C103,99 92,109 70,108 C24,106 2,66 2,14 Z"/>
+    <mask id="holes" maskUnits="userSpaceOnUse" x="0" y="0" width="220" height="130">
+      <rect width="220" height="130" fill="#fff"/>
+      <path d="M40,66 C52,48 80,46 94,62 C80,78 52,80 40,66 Z" fill="#000"/>
+      <circle cx="150" cy="64" r="16" fill="#000"/>
+      <path d="M158,73 L171,91 L179,85 L166,68 Z" fill="#000"/>
+    </mask>
+    <marker id="ah" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto"><path d="M1 1 L10 6 L1 11" fill="none" stroke="#16302a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></marker>
+  </defs>
+</svg>
+
+<!-- A · Veri kaynakları → QualiFi → altı çıktı -->
+<section id="kaynaklar">
+  <div class="src">
+    <div><svg class="i" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>E-fatura ve ön muhasebe</div>
+    <div><svg class="i" viewBox="0 0 24 24"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg>ERP</div>
+    <div><svg class="i" viewBox="0 0 24 24"><path d="M3 10l9-6 9 6"/><path d="M5 10v8M9 10v8M15 10v8M19 10v8M3 20h18"/></svg>Banka hareketleri</div>
+    <div><svg class="i" viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h6"/></svg>Sözleşme ve fatura</div>
+    <div class="hi"><svg class="i" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>Telefonda verilen söz<small>elle, 10 saniye</small></div>
+    <div><svg class="i" viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-12.5 7.4L3 21l2.1-5.4A8.4 8.4 0 1 1 21 11.5z"/></svg>WhatsApp ve e-posta</div>
+  </div>
+  <div class="agent">
+    <svg viewBox="0 0 1024 1024" width="240" height="240"><rect x="32" y="32" width="960" height="960" rx="230" fill="#16302a"/><g transform="translate(112 330) scale(3.64)"><use href="#mask-shape" fill="#d6ee9e" mask="url(#holes)"/><path d="M110,-26 C112,-14 116,-10 128,-8 C116,-6 112,-2 110,10 C108,-2 104,-6 92,-8 C104,-10 108,-14 110,-26 Z" fill="#8fbf4d"/></g></svg>
+    <b>QualiFi</b>
+    <small>okur, eşleştirir, hesaplar</small>
+  </div>
+  <div class="out">
+    <div><i>a</i>Müşteri ödeme karnesi</div>
+    <div><i>b</i>Gecikme tahmini</div>
+    <div><i>c</i>Gecikmenin maliyeti</div>
+    <div><i>d</i>30 günlük tahsilat</div>
+    <div><i>e</i>Ödemeleri karşılama oranı</div>
+    <div><i>f</i>Finansman ihtiyacı</div>
+  </div>
+  <svg class="wires" viewBox="0 0 1920 600">
+    <g fill="none" stroke="#16302a" stroke-width="2.4" stroke-opacity=".35">
+      <path d="M640 68 C 760 68, 760 350, 860 350"/>
+      <path d="M640 163 C 760 163, 760 350, 860 350"/>
+      <path d="M640 258 C 760 258, 760 350, 860 350"/>
+      <path d="M640 353 C 760 353, 760 350, 860 350"/>
+      <path d="M640 448 C 760 448, 760 350, 860 350"/>
+      <path d="M640 543 C 760 543, 760 350, 860 350"/>
+    </g>
+    <path d="M1110 350 C 1190 350, 1190 350, 1278 350" fill="none" stroke="#16302a" stroke-width="3" marker-end="url(#ah)"/>
+  </svg>
+</section>
+
+<!-- B · Altı çıktı -->
+<section id="cikti">
+  <div class="cols">
+    <div class="col">
+      <h3>Müşteriyi tanı</h3>
+      <div class="card"><div class="h"><i>a</i>Müşteri ödeme karnesi</div><div class="v">%60 <small>söz tutma</small></div><p>Kalinbel sözlerinin %60'ını tutuyor, ortalama 9 gün geç ödüyor.</p></div>
+      <div class="card"><div class="h"><i>b</i>Gecikme tahmini</div><div class="v">12–18 <small>gün</small></div><p>Bu fatura büyük ihtimalle 12 ile 18 gün arası gecikecek.</p></div>
+    </div>
+    <div class="col">
+      <h3>Nakdi gör</h3>
+      <div class="card"><div class="h"><i>c</i>Gecikmenin maliyeti</div><div class="v"><span class="tl">₺</span>4.250</div><p>₺150 bin, 23 gün geç geliyor. Kendi kredi faizinizle bu kadara mal oluyor.</p></div>
+      <div class="card"><div class="h"><i>d</i>30 günlük tahsilat</div><div class="v"><span class="tl">₺</span>210–260 <small>bin</small></div><p>Önümüzdeki 30 günde kasaya girmesi beklenen para.</p></div>
+    </div>
+    <div class="col">
+      <h3>Önceden davran</h3>
+      <div class="card"><div class="h"><i>e</i>Ödemeleri karşılama</div><div class="v">%78</div><p>Tahsilat, önümüzdeki 30 günün ödemelerinin %78'ini karşılıyor.</p></div>
+      <div class="card"><div class="h"><i>f</i>Finansman ihtiyacı</div><div class="v"><span class="tl">₺</span>52 <small>bin · 3 hafta sonra</small></div><p>Bankanızla şimdi konuşun: çek iskontosu, kısa vadeli kredi ya da limit.</p></div>
+    </div>
+  </div>
+  <div class="note">Rakamlar örnek veridir.</div>
+</section>
+
+<!-- C · Kimler nasıl kullanır -->
+<section id="segment">
+  <table>
+    <colgroup><col class="k"><col><col><col><col></colgroup>
+    <tr>
+      <th></th>
+      <th><span class="chip ghost">.</span><b>Serbest çalışan</b><small>1 kişi · şahıs şirketi</small></th>
+      <th><span class="chip">İlk hedef</span><b>Küçük esnaf</b><small>5–10 kişi · yarı zamanlı muhasebeci</small></th>
+      <th><span class="chip">İlk hedef</span><b>Küçük işletme</b><small>10–50 kişi · 1–2 kişilik muhasebe</small></th>
+      <th><span class="chip ghost">.</span><b>Orta işletme</b><small>50–250 kişi · muhasebe ve BT</small></th>
+    </tr>
+    <tr>
+      <td class="k">Veri nasıl girer</td>
+      <td>Sözleşme ve fatura fotoğrafı</td>
+      <td class="focus">Fotoğraf, <b>banka ekstresi (Excel)</b>; ekstreden müşteri eşleşir</td>
+      <td class="focus">Muhasebe ekibi yükler; <b>e-fatura bağlantısı</b></td>
+      <td><b>ERP ve ön muhasebe</b> entegrasyonu</td>
+    </tr>
+    <tr>
+      <td class="k">Söz nasıl kaydedilir</td>
+      <td>Elle</td>
+      <td class="focus">Patron telefonda alır, <b>10 saniyede kaydeder</b>; WhatsApp okunur</td>
+      <td class="focus">Muhasebeci arar ve kaydeder</td>
+      <td>Ekip, birden çok numara ve kullanıcıyla</td>
+    </tr>
+    <tr>
+      <td class="k">Paket</td>
+      <td><span class="pkg">Başlangıç</span><br><small>ücretsiz · veri havuzuna katılır</small></td>
+      <td class="focus"><span class="pkg"><span class="tl">₺</span>390</span> <small>/ ay · KOBİ</small></td>
+      <td class="focus"><span class="pkg"><span class="tl">₺</span>390</span> <small>/ ay · KOBİ</small></td>
+      <td><span class="pkg"><span class="tl">₺</span>3.990</span> <small>/ ay · Büyüme · 25 kullanıcı</small></td>
+    </tr>
+  </table>
+</section>
+
+<!-- D · Yapay zekâ ve inovasyon -->
+<section id="inovasyon">
+  <div class="rule">
+    <span class="chip">İlkemiz</span>
+    <h2>Yapay zekâ <em>okur ve hesaplar.</em> Kararı insan verir.</h2>
+    <div class="stat">
+      <b>%15</b>
+      <p>23 yapay zekâ modelinin 11 yıllık bir finans yöneticisi simülasyonunda denendiği güncel araştırmada, denemelerin yalnızca %15'i sonuna kadar ayakta kaldı.</p>
+      <small>Han ve ark., 2026 · EnterpriseArena, arXiv:2603.23638</small>
+    </div>
+  </div>
+  <div class="list">
+    <div class="row"><span class="ic"><svg class="i" viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-12.5 7.4L3 21l2.1-5.4A8.4 8.4 0 1 1 21 11.5z"/><path d="M8 11h8M8 14h5"/></svg></span><div><b>Sözü anlayan okuma hattı</b><p>Mesajdan ve aramadan ödeme sözünü çıkarır; emin değilse tahmin yürütmez, sorar.</p></div><span class="chip st-now">Bugün</span></div>
+    <div class="row"><span class="ic"><svg class="i" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 6-7"/></svg></span><div><b>Olasılıklı nakit ve erken uyarı</b><p>Binlerce olası gelecek hesaplanır; alarm en kötü senaryolar bozulunca çalar.</p></div><span class="chip st-soon">0–4 ay</span></div>
+    <div class="row"><span class="ic"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></span><div><b>Kaynak gösteren analist ajanlar</b><p>TCMB, TÜİK, Resmî Gazete, konkordato ilanları; her cümlenin kaynağı var.</p></div><span class="chip st-soon">2–4 ay</span></div>
+    <div class="row"><span class="ic"><svg class="i" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span><div><b>Veri cihazda, öğrenme ortak</b><p>Federe öğrenme: sistem sektörün deneyiminden öğrenir, kimsenin verisi paylaşılmaz.</p></div><span class="chip st-later">4+ ay</span></div>
+  </div>
+</section>
+
+<!-- E · Finansal plan -->
+<section id="finans">
+  <div class="kpis">
+    <div class="kpi main"><span>Bu tur</span><b><span class="tl">₺</span>12,75 milyon</b><small>12 ay pist · 4 kişilik ekip · %20 güvenlik payı dahil</small></div>
+    <div class="kpi"><span>12. ayda</span><b>~780</b><small>ücretli işletme</small></div>
+    <div class="kpi"><span>12. ayda</span><b><span class="tl">₺</span>526 bin</b><small>aylık gelir</small></div>
+    <div class="kpi"><span>KOBİ paketi</span><b>%72</b><small>brüt marj · hesap başı maliyet <span class="tl">₺</span>96</small></div>
+  </div>
+  <div class="low">
+    <div class="box">
+      <h3>Bu tur nereye gidiyor</h3>
+      <div class="bar">
+        <div style="width:47%;background:#16302a">%47</div>
+        <div style="width:26%;background:#8fbf4d">%26</div>
+        <div style="width:17%;background:#a9b2ab">%17</div>
+        <div style="width:10%;background:#e0873a">%10</div>
+      </div>
+      <div class="legend">
+        <div><i style="background:#16302a"></i><div><b>Ürün ve ekip</b><p>Yazılım, yapay zekâ ve altyapı</p></div></div>
+        <div><i style="background:#8fbf4d"></i><div><b>İşletme edinimi</b><p>Pazarlama, fuar, ilk müşteriler</p></div></div>
+        <div><i style="background:#a9b2ab"></i><div><b>İşletme giderleri</b><p>Ofis, ekipman, beklenmedik gider payı</p></div></div>
+        <div><i style="background:#e0873a"></i><div><b>Güvenlik, uyum, banka</b><p>KVKK, sızma testi, açık bankacılık</p></div></div>
+      </div>
+    </div>
+    <div class="box">
+      <h3>Sonrası</h3>
+      <div class="path">
+        <div><b>13. ay</b><p>İlk banka lisansı<small>Pilot sonrası kurumsal gelir</small></p></div>
+        <div><b>3. yıl</b><p>Aylık başabaş eşiği<small>36. ayda ~5.400 ücretli işletme</small></p></div>
+        <div><b>36 ay</b><p><span class="tl">₺</span>29,5 milyon toplam dış sermaye<small>Kalanı bir sonraki turla</small></p></div>
+      </div>
+    </div>
+  </div>
+  <div class="note">Varsayımlara dayalı plan. Fiyatlar KDV hariç. Ayrıntılı model ve varsayımlar paylaşılabilir.</div>
+</section>
+
+</body>
+</html>
