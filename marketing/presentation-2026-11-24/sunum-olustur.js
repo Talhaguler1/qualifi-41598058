@@ -78,19 +78,32 @@ section("Ana sunum");
   const s = pres.addSlide({ masterName: "ICERIK", sectionTitle: "Ana sunum" });
   eyebrow(s, "Kurucu");
   title(s, "Fikir, işletme sahiplerinden aynı cümleyi tekrar tekrar duyunca doğdu");
-  img(s, "p02_4.jpeg", M, 1.7, 3.3, 4.4, "Talha Güler");
-  img(s, "p02_1.jpeg", 4.1, 1.7, 3.0, 2.0, "Ürün geliştirirken");
-  img(s, "p02_2.jpeg", 4.1, 3.9, 3.0, 2.2, "Görüşmeden bir an");
+  // Photo grid: every photo is pre-cropped to its frame ratio (no stretching) with rounded corners.
+  img(s, "f_portre.png", 0.6, 1.6, 2.7, 4.9, "Talha Güler, karekodlu şişeyle");
+  img(s, "f_sise.png", 3.45, 1.6, 4.0, 2.85, "OzUBEX'te Beni okut karekodlu şişeler");
+  s.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: 3.6, y: 3.98, w: 3.05, h: 0.34, fill: { color: HEX.ink, transparency: 12 }, line: { color: HEX.ink, transparency: 100 }, rectRadius: 0.17, objectName: "Şişe etiketi zemini" });
+  s.addText([{ text: "OzUBEX · ", options: { bold: true, color: HEX.lime } }, { text: "“Beni okut” karekodlu şişeler", options: { color: "FFFFFF" } }], { x: 3.72, y: 3.98, w: 2.9, h: 0.34, fontSize: 11, margin: 0, valign: "middle", isTextBox: true, objectName: "Şişe etiketi" });
+  img(s, "f_calisma.png", 3.45, 4.6, 1.925, 1.9, "Ürün geliştirirken");
+  img(s, "f_gorusme.png", 5.525, 4.6, 1.925, 1.9, "Görüntülü görüşme");
+
+  // Right column: who, where from, the sentence that started it
   s.addText([
-    { text: "Muhammed Talha Güler", options: { fontSize: 24, bold: true, color: HEX.ink, breakLine: true } },
-    { text: "Özyeğin Üniversitesi · Yönetim Bilişim Sistemleri ve Bilgisayar Mühendisliği", options: { fontSize: 15, color: HEX.ink2, breakLine: true } },
-    { text: "Porsuk, Endgame Arena, Ozu Ventures", options: { fontSize: 15, color: HEX.ink2 } },
-  ], { x: 7.6, y: 1.75, w: 5.1, h: 1.6, margin: 0, valign: "top", paraSpaceAfter: 6, isTextBox: true });
-  card(s, 7.6, 3.7, 5.13, 2.4, HEX.ink, HEX.ink);
+    { text: "Muhammed Talha Güler", options: { fontSize: 26, bold: true, color: HEX.ink, breakLine: true } },
+    { text: "Özyeğin Üniversitesi", options: { fontSize: 15, bold: true, color: HEX.green, breakLine: true } },
+    { text: "Yönetim Bilişim Sistemleri ve Bilgisayar Mühendisliği", options: { fontSize: 14, color: HEX.ink2 } },
+  ], { x: 7.85, y: 1.6, w: 4.88, h: 1.3, margin: 0, valign: "top", paraSpaceAfter: 4, isTextBox: true });
+  let cx = 7.85;
+  for (const [label, w] of [["Porsuk", 1.15], ["Endgame Arena", 1.85], ["Ozu Ventures", 1.65]]) {
+    s.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: cx, y: 3.02, w, h: 0.42, fill: { color: HEX.soft }, line: { color: HEX.line, width: 1 }, rectRadius: 0.21 });
+    s.addText(label, { x: cx, y: 3.02, w, h: 0.42, fontSize: 12.5, bold: true, color: HEX.ink, align: "center", valign: "middle", margin: 0, isTextBox: true });
+    cx += w + 0.12;
+  }
+  card(s, 7.85, 3.75, 4.88, 2.75, HEX.ink, HEX.ink);
+  s.addText("“", { x: 8.1, y: 3.8, w: 0.8, h: 0.8, fontFace: "+mj-lt", fontSize: 60, bold: true, color: HEX.green, margin: 0, isTextBox: true });
   s.addText([
-    { text: "“Faturayı kestik, ama para ne zaman gelecek bilmiyoruz.”", options: { fontSize: 21, bold: true, color: HEX.lime, breakLine: true } },
-    { text: "Ozu Ventures'ta işletme sahipleriyle görüşmelerde en sık duyduğum cümle.", options: { fontSize: 14, color: "C9D8C4" } },
-  ], { x: 7.9, y: 3.9, w: 4.6, h: 2.0, margin: 0, valign: "middle", paraSpaceAfter: 10, isTextBox: true });
+    { text: "Faturayı kestik, ama para ne zaman gelecek bilmiyoruz.", options: { fontSize: 22, bold: true, color: HEX.lime, breakLine: true } },
+    { text: "Ozu Ventures'ta işletme sahipleriyle görüşmelerde en sık duyduğum cümle. QualiFi buradan doğdu.", options: { fontSize: 13.5, color: "C9D8C4" } },
+  ], { x: 8.15, y: 4.45, w: 4.3, h: 1.9, margin: 0, valign: "top", paraSpaceAfter: 10, isTextBox: true });
   s.addNotes("Özyeğin'de Yönetim Bilişim Sistemleri ve Bilgisayar Mühendisliği okuyorum. Porsuk ve Endgame Arena'da ürün geliştirdim, Ozu Ventures'ta işletme sahipleriyle görüştüm. Bu görüşmelerde hep aynı cümleyi duydum: \"Faturayı kestik, ama para ne zaman gelecek bilmiyoruz.\" QualiFi bu cümleden doğdu.");
 }
 
