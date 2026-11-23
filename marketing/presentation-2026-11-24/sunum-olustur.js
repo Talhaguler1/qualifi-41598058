@@ -139,17 +139,13 @@ section("Ana sunum");
 {
   const s = pres.addSlide({ masterName: "ICERIK", sectionTitle: "Ana sunum" });
   eyebrow(s, "Çözüm");
-  title(s, "QualiFi dağınık veriyi tek yerde birleştirip altı somut çıktıya çevirir");
+  title(s, "QualiFi, müşterinin ödeme sözünü finansal karara dönüştürür");
   img(s, "12-veri-kaynaklari.png", 0.95, 1.6, 11.43, 3.57, "Veri kaynakları, QualiFi ve altı çıktı");
-  const layers = [["Okur", "söz · tarih · tutar · güven puanı", "Bugün"], ["Hesaplar", "nakit takvimi · açık tahmini", "Bugün"], ["Önerir", "taslak · onaysız hiçbir şey gitmez", "Bugün"]];
-  layers.forEach(([h, t, st], i) => {
-    const x = M + i * 4.1;
-    card(s, x, 5.35, 3.9, 1.15, "FFFFFF");
-    s.addText([{ text: h + "  ", options: { bold: true, fontSize: 15, color: HEX.ink } }, { text: st, options: { fontSize: 10, bold: true, color: HEX.green } }], { x: x + 0.22, y: 5.43, w: 3.5, h: 0.35, margin: 0, isTextBox: true });
-    s.addText(t, { x: x + 0.22, y: 5.78, w: 3.5, h: 0.65, fontSize: 14, color: HEX.ink2, margin: 0, valign: "top", isTextBox: true });
-  });
+  // One line that says what makes it different
+  card(s, M, 5.35, W - 2 * M, 0.95, HEX.ink, HEX.ink);
+  s.addText([{ text: "FARKIMIZ   ", options: { fontSize: 13, bold: true, color: HEX.lime, charSpacing: 1.5 } }, { text: "henüz gerçekleşmemiş ödeme sözünü de finansal karara katıyoruz", options: { fontSize: 20, bold: true, color: "FFFFFF" } }], { x: M + 0.4, y: 5.35, w: W - 2 * M - 0.8, h: 0.95, margin: 0, valign: "middle", isTextBox: true });
   note(s, "Bugün: dosya ya da fotoğraf yükleme. Doğrudan bağlantılar (e-fatura, ERP, banka): 2–4 ay.");
-  s.addNotes("QualiFi işletmenin zaten sahip olduğu veriyi okur: e-fatura ve ön muhasebe, banka hareketleri, sözleşmeler ve müşterinin verdiği söz. Söz telefonda verildiyse on saniyede kaydedilir; WhatsApp'tan geldiyse yapay zekâ okur. Bunlardan altı çıktı üretir. Bu altı çıktı işletmenin altı sorusuna cevap veriyor: kim öder, ne zaman öder, gecikme kaça mal olur, önümüzdeki 30 günde ne kadar tahsil ederim, bu ödemelerimi karşılar mı ve açık varsa ne kadar finansman gerekir. Yapay zekâ okur ve hesaplar; mesaj göndermek gibi her aksiyon için işletmenin onayı gerekir.");
+  s.addNotes("Peki çözüm ne? Bir işletmenin verisi altı farklı yerde: fatura ön muhasebede, para bankada. Ama müşterinin cuma ödeyeceğim sözü ikisinin arasında kayboluyor. QualiFi bu verileri tek bir uygulamada bir araya getiriyor: sözü alıyor, faturayla eşleştiriyor ve nakit planını güncelliyor; ERP, ön muhasebe ve banka bağlantılarıyla bunu zenginleştiriyor. Farkımız, henüz gerçekleşmemiş ödeme sözünü de finansal karara katmak. Değer önerimiz altı soruda toplanıyor: kim sözünü tutuyor, para ne zaman gelecek, gecikme kaça mal olur, otuz günde ne kadar nakit gelir, ödemelerimi karşılar mıyım ve ne zaman finansman gerekir. Peki bu işletmenin günlük hayatında nasıl çalışıyor?");
 }
 
 // 7 · İşletme demosu

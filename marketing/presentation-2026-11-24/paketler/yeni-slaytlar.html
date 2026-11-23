@@ -34,6 +34,8 @@ svg.i { width: 30px; height: 30px; stroke: currentColor; fill: none; stroke-widt
 #kaynaklar .agent small { display: block; font: 600 19px "Onest"; color: var(--muted); margin-top: 6px; }
 #kaynaklar .out { position: absolute; left: 1290px; top: 60px; width: 560px; display: flex; flex-direction: column; gap: 14px; }
 #kaynaklar .out div { display: grid; grid-template-columns: 44px 1fr; gap: 16px; align-items: center; background: var(--lime); border-radius: 18px; padding: 16px 22px; font: 700 25px "Schibsted"; }
+#kaynaklar .out div.key { background: var(--ink); color: var(--lime); }
+#kaynaklar .out div.key i { background: var(--lime); color: var(--ink); }
 #kaynaklar .out div i { font: 800 20px "Schibsted"; font-style: normal; width: 40px; height: 40px; border-radius: 50%; background: var(--ink); color: var(--lime); display: grid; place-items: center; }
 #kaynaklar svg.wires { position: absolute; inset: 0; width: 1920px; height: 600px; pointer-events: none; }
 
@@ -152,12 +154,12 @@ svg.i { width: 30px; height: 30px; stroke: currentColor; fill: none; stroke-widt
     <small>okur, eşleştirir, hesaplar</small>
   </div>
   <div class="out">
-    <div><i>a</i>Müşteri ödeme karnesi</div>
-    <div><i>b</i>Gecikme tahmini</div>
-    <div><i>c</i>Gecikmenin maliyeti</div>
-    <div><i>d</i>30 günlük tahsilat</div>
-    <div><i>e</i>Ödemeleri karşılama oranı</div>
-    <div><i>f</i>Finansman ihtiyacı</div>
+    <div><i>a</i>Kim sözünü tutuyor?</div>
+    <div class="key"><i>b</i>Para ne zaman gelecek?</div>
+    <div><i>c</i>Gecikme kaça mal olur?</div>
+    <div><i>d</i>30 günde ne kadar nakit gelir?</div>
+    <div><i>e</i>Ödemelerimi karşılar mıyım?</div>
+    <div class="key"><i>f</i>Ne zaman finansman gerekir?</div>
   </div>
   <svg class="wires" viewBox="0 0 1920 600">
     <g fill="none" stroke="#16302a" stroke-width="2.4" stroke-opacity=".35">
