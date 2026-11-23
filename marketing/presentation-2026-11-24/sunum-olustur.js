@@ -124,13 +124,19 @@ section("Ana sunum");
   s.addShape(pres.shapes.RIGHT_ARROW, { x: 4.35, y: 2.65, w: 0.6, h: 0.5, fill: { color: HEX.ink } });
   card(s, 5.1, 1.75, 3.6, 2.3, "FBE9E4", "F1C9BE");
   s.addText([{ text: "NAKİT PLANI", options: { fontSize: 11, bold: true, color: "8A3A2A", charSpacing: 2, breakLine: true } }, { text: "Söz işlenmedi", options: { fontSize: 22, bold: true, color: "8A3A2A", breakLine: true } }, { text: "Beklenen tahsilat tarihi güncel değil; sıkışma ay sonunda fark ediliyor.", options: { fontSize: 13, color: "6B3A2E" } }], { x: 5.4, y: 1.95, w: 3.0, h: 1.9, margin: 0, valign: "top", paraSpaceAfter: 8, isTextBox: true });
-  s.addText("Bilgi muhasebe programında, bankada ve en önemlisi müşteriyle yapılan konuşmada dağınık duruyor. Söz hiçbir tabloya girmiyor; banka da sorunu ancak taksit gecikince görüyor.", { x: M, y: 4.35, w: 8.1, h: 1.2, fontSize: 16, color: HEX.ink2, margin: 0, valign: "top", isTextBox: true });
+  s.addText([
+    { text: "Üç hipotezle sahaya çıktık", options: { fontSize: 15, bold: true, color: HEX.ink, breakLine: true } },
+    { text: "Alacak takibi elle ve dağınık yapılıyor; söz hiçbir tabloya girmiyor.", options: { bullet: { type: "number" }, fontSize: 14, color: HEX.ink2, breakLine: true } },
+    { text: "Nakit tahmini işletmenin çok vaktini alıyor ve yine de tutmuyor.", options: { bullet: { type: "number" }, fontSize: 14, color: HEX.ink2, breakLine: true } },
+    { text: "Bu boşluk bankada kredi kararını zorlaştırıyor; sorun ancak taksit gecikince görülüyor.", options: { bullet: { type: "number" }, fontSize: 14, color: HEX.ink2, breakLine: true } },
+    { text: "14 işletme sahibi ve 7 bankacıyla (4 şubede yüz yüze, 3 çevrimiçi) yaptığımız görüşmelerde üçü de doğrulandı.", options: { fontSize: 13, bold: true, color: HEX.green } },
+  ], { x: M, y: 4.3, w: 8.1, h: 2.1, margin: 0, valign: "top", paraSpaceAfter: 5, isTextBox: true });
   // stats
   card(s, 9.1, 1.75, 3.63, 2.15, "FFFFFF");
   s.addText([{ text: "%51", options: { fontSize: 48, bold: true, color: HEX.green, breakLine: true } }, { text: "işveren KOBİ düzensiz nakit akışını finansal sorun olarak görüyor (ABD)", options: { fontSize: 13, color: HEX.ink2, breakLine: true } }, { text: "Fed Small Business Credit Survey, 2025 raporu (2024 anketi)", options: { fontSize: 10, color: HEX.muted } }], { x: 9.35, y: 1.85, w: 3.2, h: 1.95, margin: 0, valign: "top", paraSpaceAfter: 4, isTextBox: true });
   card(s, 9.1, 4.1, 3.63, 2.15, HEX.ink, HEX.ink);
-  s.addText([{ text: "200+", options: { fontSize: 48, bold: true, color: HEX.lime, breakLine: true } }, { text: "bir ilişki temsilcisinin konuştuğu KOBİ sayısı", options: { fontSize: 13, color: "E3EEDB", breakLine: true } }, { text: "Kaynak: kendi şube görüşmelerimiz", options: { fontSize: 10, color: "A9C0A3" } }], { x: 9.35, y: 4.2, w: 3.2, h: 1.95, margin: 0, valign: "top", paraSpaceAfter: 4, isTextBox: true });
-  s.addNotes("Bu cümlenin arkasında şu var: müşteri \"cuma gönderiyoruz\" diyor, ama bu söz hiçbir tabloya girmiyor. Bilgi muhasebe programında, bankada ve en önemlisi konuşmada dağınık duruyor. ABD'de Fed'in KOBİ anketinde işletmelerin yarısı düzensiz nakit akışını sorun olarak görüyor. Bankada da durum aynı: bir ilişki temsilcisi iki yüzden fazla KOBİ ile ilgileniyor; sorunu ancak taksit gecikince görüyor.");
+  s.addText([{ text: "200+", options: { fontSize: 48, bold: true, color: HEX.lime, breakLine: true } }, { text: "bir ilişki temsilcisinin konuştuğu KOBİ sayısı", options: { fontSize: 13, color: "E3EEDB", breakLine: true } }, { text: "Kaynak: KOBİ müşteri temsilcisi görüşmesi", options: { fontSize: 10, color: "A9C0A3" } }], { x: 9.35, y: 4.2, w: 3.2, h: 1.95, margin: 0, valign: "top", paraSpaceAfter: 4, isTextBox: true });
+  s.addNotes("Bu cümlenin arkasında şu var: müşteri \"cuma gönderiyoruz\" diyor, ama bu söz hiçbir tabloya girmiyor. Bilgi muhasebe programında, bankada ve en önemlisi konuşmada dağınık duruyor. ABD'de Fed'in KOBİ anketinde işletmelerin yarısı düzensiz nakit akışını sorun olarak görüyor. Üç hipotezle sahaya çıktım: takip elle yapılıyor, nakit tahmini çok vakit alıyor ve bu boşluk bankada kredi kararını zorlaştırıyor. On dört işletme sahibiyle ve yedi bankacıyla konuştum; dördünü şubesinde yerinde gördüm. Üçü de doğrulandı. Bir ilişki temsilcisi iki yüzden fazla KOBİ ile ilgileniyor; sorunu ancak taksit gecikince görüyor.");
 }
 
 // 4 · Persona ve sahadan öğrendiklerimiz
@@ -148,7 +154,7 @@ section("Ana sunum");
     { text: "Sözü telefonda ya da WhatsApp'ta alır", options: { bullet: true, fontSize: 15, color: "E3EEDB", breakLine: true } },
     { text: "Teknolojiyi aktif kullanır", options: { bullet: true, fontSize: 15, color: "E3EEDB" } },
   ], { x: M + 0.35, y: 1.95, w: 3.6, h: 4.3, margin: 0, valign: "top", paraSpaceAfter: 7, isTextBox: true });
-  s.addText("Sahadan duyduk, ürüne yansıttık", { x: 5.2, y: 1.7, w: 7.5, h: 0.45, fontSize: 18, bold: true, color: HEX.ink, margin: 0, isTextBox: true });
+  s.addText("14 işletme sahibi ve 7 bankacıdan duyduk, ürüne yansıttık", { x: 5.2, y: 1.7, w: 7.5, h: 0.45, fontSize: 18, bold: true, color: HEX.ink, margin: 0, isTextBox: true });
   const rows = [
     ["“Müşteri sözü telefonda veriyor, WhatsApp şart mı?”", "Telefonda ya da yüz yüze alınan söz on saniyede kaydediliyor."],
     ["“Mesaj kuralla değil, anlamıyla okunmalı.”", "Mesajı yapay zekâ okuyor; emin değilse tahmin yürütmüyor, işletmeye soruyor."],
@@ -161,7 +167,7 @@ section("Ana sunum");
     s.addShape(pres.shapes.RIGHT_ARROW, { x: 8.85, y: y + 0.45, w: 0.35, h: 0.3, fill: { color: HEX.green } });
     s.addText(did, { x: 9.35, y: y + 0.12, w: 3.2, h: 0.96, fontSize: 14, bold: true, color: HEX.ink, margin: 0, valign: "middle", isTextBox: true });
   });
-  s.addNotes("İlk müşterimiz vadeli satan, sürekli yüzden fazla açık alacağı olan küçük işletmeler. Görüştüğüm kişilerden üç şey öğrendim ve hepsini ürüne yansıttım. [Burada görüşme sayısını ve bir-iki gerçek cümleyi kendin söyle.] Birincisi, söz çoğu zaman telefonda veriliyor; artık on saniyede kaydediliyor. İkincisi, mesaj kuralla değil anlamıyla okunmalı. Üçüncüsü, işletme rakam istiyor: bu gecikme bana kaça mal oluyor?");
+  s.addNotes("İlk müşterimiz vadeli satan, sürekli yüzden fazla açık alacağı olan küçük işletmeler. Görüştüğüm kişilerden üç şey öğrendim ve hepsini ürüne yansıttım. On dört işletme sahibiyle ve yedi bankacıyla görüştüm, Özyeğin'de girişimcilere ilk sunumu yapıp demoyu denettim. Birincisi, söz çoğu zaman telefonda veriliyor; artık on saniyede kaydediliyor. İkincisi, mesaj kuralla değil anlamıyla okunmalı. Üçüncüsü, işletme rakam istiyor: bu gecikme bana kaça mal oluyor?");
 }
 
 // 5 · Çözüm
@@ -211,13 +217,17 @@ section("Ana sunum");
 {
   const s = pres.addSlide({ masterName: "ICERIK", sectionTitle: "Ana sunum" });
   eyebrow(s, "Akbank'a fayda");
-  title(s, "Banka, işletmenin nakit sıkışıklığını taksit gecikmeden ve onun izniyle görür");
+  title(s, "Banka, işletmenin nakit sıkışıklığını kredi taksiti gecikmeden önce, onun izniyle görür");
   phones(s, "telefon_p08.png", "telefon_p10.png", "Bankacı asistanı öncelik listesi", "İşletmenin paylaştığı karne");
   const rows = [["Bugün bankanın gördüğü", "QualiFi ile, işletmenin izniyle"], ["Hesap hareketi", "Beklenen tahsilatlar ve verilen ödeme sözleri"], ["Geçmiş kredi davranışı", "Müşterilerin söz tutma oranı"], ["Dönem sonu finansal tablo", "8 haftalık nakit takvimi ve açık tahmini"], ["Temsilcinin sezgisi", "Kaynağı gösterilen, açıklanabilir erken uyarı"]];
   s.addTable(rows.map((r, i) => r.map((c, j) => ({ text: c, options: { bold: i === 0 || j === 1, fontSize: i === 0 ? 12 : 13.5, color: i === 0 ? (j === 1 ? HEX.ink : HEX.muted) : HEX.ink, fill: { color: i === 0 ? (j === 1 ? HEX.lime : HEX.soft) : (j === 1 ? "F1F8E4" : "FFFFFF") }, valign: "middle", margin: [4, 8, 4, 8] } }))), { x: 6.75, y: 1.65, w: 5.98, colW: [2.5, 3.48], rowH: 0.62, border: { type: "solid", color: HEX.line, pt: 1 } });
-  s.addText([{ text: "Doğru ürün, doğru zamanda: ", options: { bold: true, color: HEX.ink } }, { text: "çek iskontosu, kısa vadeli kredi, limit artışı ya da faktoring; ihtiyaç doğmadan önce.", options: { color: HEX.ink2 } }], { x: 6.75, y: 4.95, w: 5.98, h: 0.8, fontSize: 14, margin: 0, valign: "top", isTextBox: true });
+  s.addText([
+    { text: "Temsilciye otomatik not: ", options: { bold: true, color: HEX.ink, bullet: true } }, { text: "bugün kimi, neden araması gerektiği.", options: { color: HEX.ink2, breakLine: true } },
+    { text: "Doğru teklif, doğru zamanda: ", options: { bold: true, color: HEX.ink, bullet: true } }, { text: "çek iskontosu, kısa vadeli kredi, limit artışı ya da faktoring.", options: { color: HEX.ink2, breakLine: true } },
+    { text: "Yeni müşteri: ", options: { bold: true, color: HEX.ink, bullet: true } }, { text: "bankayla arası olmayan KOBİ'ye, işine yarayan bir araçla ulaşılır.", options: { color: HEX.ink2 } },
+  ], { x: 6.75, y: 4.9, w: 5.98, h: 1.6, fontSize: 13, margin: 0, valign: "top", paraSpaceAfter: 4, isTextBox: true });
   note(s, "Beklenen fayda. Akbank ile bir entegrasyon ya da ölçülmüş sonuç henüz yok; banka ekranları sentetik veriyle çalışan demodur.");
-  s.addNotes("Peki banka ne kazanıyor? Bugün banka hesap hareketini ve geçmiş kredi davranışını görüyor. QualiFi ile, yalnızca işletme izin verirse, beklenen tahsilatları, müşterilerin söz tutma oranını ve sekiz haftalık nakit takvimini görür. Müşteri temsilcisi güne bir öncelik listesiyle başlar ve işletmeye doğru ürünle, taksit gecikmeden ulaşır. Müşteri isimleri ve ham mesajlar paylaşılmaz.");
+  s.addNotes("Peki banka ne kazanıyor? Bugün banka hesap hareketini ve geçmiş kredi davranışını görüyor. QualiFi ile, yalnızca işletme izin verirse, beklenen tahsilatları, müşterilerin söz tutma oranını ve sekiz haftalık nakit takvimini görür. Akbank'a üç faydası var. Birincisi, müşteri temsilcisine otomatik not düşer: bugün kimi, neden araması gerektiği. İkincisi, doğru teklif doğru zamanda gider: çek iskontosu, kısa vadeli kredi, limit artışı ya da faktoring, kredi taksiti gecikmeden önce. Üçüncüsü, bankayla arası olmayan KOBİ'lere işlerine yarayan bir araçla ulaşılır; bu Akbank için yeni müşteri demek. Müşteri isimleri ve ham mesajlar paylaşılmaz.");
 }
 
 // 9 · Rekabet
@@ -428,7 +438,7 @@ for (const [f, t] of [["5a-rekabet-turkiye.png", "Türkiye'deki araçlar"], ["5b
   const s = pres.addSlide({ masterName: "ICERIK", sectionTitle: Y });
   eyebrow(s, "Yedek · doğrulama");
   title(s, "Neyi doğruladık, neyi henüz doğrulamadık");
-  const done = ["Ürün canlıda: site, şifresiz demo ve kendi belgeleriyle çalışan hesap", "WhatsApp Business API üzerinden gerçek mesaj alınıp yapay zekâyla okundu (kendi testimiz)", "Ozu Ventures ve şube görüşmeleri: problem ve banka tarafı", "Görüşmelerden gelen üç öğrenim ürüne yansıtıldı"];
+  const done = ["Ürün canlıda: site, şifresiz demo ve kendi belgeleriyle çalışan hesap", "WhatsApp Business API üzerinden gerçek mesaj alınıp yapay zekâyla okundu (kendi testimiz)", "14 işletme sahibi ve 7 bankacı (4 şubede yüz yüze, 3 çevrimiçi; KOBİ ve veri ekipleri): üç hipotez doğrulandı", "Özyeğin Girişimcilik Merkezi müdürüyle görüşme; Özyeğin'de girişimcilere ilk sunum ve demo denemesi", "Görüşmelerden gelen üç öğrenim ürüne yansıtıldı"];
   const notyet = ["Tahmin doğruluğu gerçek veriyle", "Ödeme isteği (390 lira) ve dönüşüm oranı", "Bankanın erken uyarıdan sağladığı ölçülmüş fayda"];
   card(s, M, 1.75, 6.0, 4.7, "FFFFFF");
   s.addText([{ text: "Doğrulandı", options: { fontSize: 18, bold: true, color: HEX.green, breakLine: true } }, ...done.map((t, j) => ({ text: t, options: { bullet: true, fontSize: 14, color: HEX.ink2, breakLine: j < done.length - 1 } }))], { x: M + 0.3, y: 1.95, w: 5.4, h: 4.3, margin: 0, valign: "top", paraSpaceAfter: 9, isTextBox: true });
