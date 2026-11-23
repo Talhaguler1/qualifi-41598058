@@ -252,7 +252,7 @@ section("Ana sunum");
   title(s, "Her işletme kendi ölçeğine göre öder; banka kurumsal lisansla katılır");
   // Package ladder from the pricing visuals (ratio 1747:859)
   img(s, "merdiven.png", 0.6, 1.62, 8.5, 8.5 * 810 / 1747, "Paket merdiveni: Başlangıç, KOBİ, Büyüme, Banka");
-  const k = [["%72", "KOBİ paketinde brüt marj", "hesap başı maliyet ₺96: yapay zekâ, WhatsApp mesajı, entegrasyon, barındırma"], ["Ücretsiz", "Başlangıç paketi", "serbest çalışanlar ve şahıs şirketleri veri havuzuna katılır, ürün engelsiz denenir"], ["Lisans", "Bankalar", "portföye göre fiyatlanan kurumsal paket (modelde varsayım: 13. aydan itibaren)"]];
+  const k = [["%72", "KOBİ paketinde brüt marj", "hesap başı maliyet ₺96 (yapay zekâ, WhatsApp mesajı, entegrasyon, barındırma) ve %3 ödeme komisyonu düşülünce"], ["Ücretsiz", "Başlangıç paketi", "serbest çalışanlar ve şahıs şirketleri ürünü ücretsiz kullanır; büyüdükçe KOBİ paketine geçer"], ["Lisans", "Bankalar", "portföye göre fiyatlanan kurumsal paket (modelde varsayım: 13. aydan itibaren)"]];
   k.forEach(([v, h, t], i) => {
     const y = 1.62 + i * 1.62;
     card(s, 9.35, y, 3.38, 1.47, i === 0 ? HEX.ink : "FFFFFF", i === 0 ? HEX.ink : HEX.line);
@@ -276,7 +276,7 @@ section("Ana sunum");
 {
   const s = pres.addSlide({ masterName: "ICERIK", sectionTitle: "Ana sunum" });
   eyebrow(s, "Yol haritası");
-  title(s, "Son iki ayda çalışan ürüne ulaştık; sırada banka pilotu var");
+  title(s, "Son iki ayda çalışan ürüne ulaştık; sıradaki hedef bir banka pilotu");
   img(s, "9-yol-haritasi.png", 0.65, 2.1, 12.0, 3.0, "Yol haritası");
   note(s, "Bugün çalışanlar: canlı site ve demo, belge okuma, WhatsApp'tan gelen mesajı yapay zekâyla okuma, sözlü söz kaydı.");
   s.addNotes("Son iki ayda saha görüşmeleri yaptım, canlı demoyu yayına aldım, belge okumayı ve WhatsApp'tan gelen mesajı anlık okumayı çalıştırdım. Bugün ürün çalışıyor. İlk iki ayda banka pilotu ve işletmelerin kendi numaralarını bağlaması, sonra e-fatura ve açık bankacılık, dört aydan sonra da bankaların yapay zekâ ajanlarıyla finansman.");
@@ -289,7 +289,7 @@ section("Ana sunum");
   title(s, "₺12,75 milyonla 12 ayda banka pilotu ve ~780 ücretli işletme");
   img(s, "16-finansal-plan.png", 0.95, 1.6, 11.43, 3.69, "Finansal plan");
   s.addText([{ text: "Neden şimdi: ", options: { bold: true, color: HEX.ink } }, { text: "Ürün çalışıyor; tahmini gerçek ve izinli işletme verisiyle bir banka pilotunda kanıtlamamız gerekiyor.", options: { color: HEX.ink2 } }], { x: M, y: 5.55, w: W - 2 * M, h: 0.6, fontSize: 15, margin: 0, isTextBox: true });
-  note(s, "Varsayımlara dayalı plan (12 ay pist, 4 kişilik ekip, %20 güvenlik payı). Varsayımlar yedek slaytlarda.");
+  note(s, "Varsayımlara dayalı plan (12 ay pist, 4 kişilik ekip, %20 güvenlik payı). 36 aylık toplam ₺29,5 milyon bu turu da içerir; kalan ~₺16,75 milyon sonraki turla. Banka pilotu henüz kesinleşmedi.");
   s.addNotes("Talebimiz 12,75 milyon lira tohum yatırımı ve bir bankayla pilot ortaklığı. Bu tutar finans modelimizden geliyor: on iki aylık pist ve dört kişilik ekip. Paranın yarısına yakını ürün ve ekibe, dörtte biri işletme edinimine gidiyor. On iki ayın sonunda hedefimiz yaklaşık 780 ücretli işletme ve aylık 526 bin lira gelir; 13. ayda ilk banka lisansı.");
 }
 
