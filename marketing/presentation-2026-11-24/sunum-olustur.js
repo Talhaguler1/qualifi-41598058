@@ -425,7 +425,7 @@ for (const [f, t] of [["5a-rekabet-turkiye.png", "Türkiye'deki araçlar"], ["5b
     card(s, x, y, 5.95, 1.8, "FFFFFF");
     s.addText([{ text: h, options: { fontSize: 18, bold: true, color: HEX.ink, breakLine: true } }, { text: t, options: { fontSize: 14, color: HEX.ink2 } }], { x: x + 0.3, y: y + 0.2, w: 5.35, h: 1.45, margin: 0, valign: "top", paraSpaceAfter: 6, isTextBox: true });
   });
-  note(s, "Plan, ölçülmüş sonuç değil. Modelde ilk ay 30 yeni ücretli işletme, ilk 12 ay aylık %15 büyüme varsayılıyor: 12. ayda ~780, 14. ayda 1.000.");
+  note(s, "Plan, ölçülmüş sonuç değil. Modelde ilk ay 30 yeni ücretli işletme kazanılıyor; her ay kazanılan yeni işletme sayısı %15 artıyor, aylık %3 kayıp düşülüyor: 12. ayda ~780, 14. ayda 1.000.");
 }
 
 // Y8 · Finans modeli varsayımları
@@ -433,7 +433,7 @@ for (const [f, t] of [["5a-rekabet-turkiye.png", "Türkiye'deki araçlar"], ["5b
   const s = pres.addSlide({ masterName: "ICERIK", sectionTitle: Y });
   eyebrow(s, "Yedek · finans modeli");
   title(s, "₺12,75 milyon şu varsayımlardan çıkıyor");
-  const rows = [["Varsayım", "Değer"], ["Fiyatlar (KDV hariç)", "KOBİ ₺390 · Büyüme ₺3.990 · yıllık %25 artış"], ["Büyüme", "1. ay 30 yeni ücretli işletme · ilk 12 ay aylık %15, sonra %5"], ["Paket karışımı ve kayıp", "Yeni işletmelerin %8'i Büyüme · aylık %3 kayıp"], ["Ekip (işveren maliyeti)", "Kurucu ₺60 bin · 2 mühendis ₺125–160 bin · satış ₺95 bin · 4 kişi"], ["Maliyet artışı", "Aylık %2 (maaş, kira, reklam) · %10 beklenmedik gider payı"], ["Banka lisansı", "Aylık ₺150 bin, ilk banka 13. ayda (varsayım)"], ["Pist ve güvenlik payı", "12 ay · en derin nakit ihtiyacının %20 fazlası"], ["36 ayda toplam dış sermaye", "₺29,5 milyon; kalanı bir sonraki turla"]];
+  const rows = [["Varsayım", "Değer"], ["Fiyatlar (KDV hariç)", "KOBİ ₺390 · Büyüme ₺3.990 · yıllık %25 artış"], ["Yeni müşteri", "1. ay 30 yeni ücretli işletme · her ay kazanılan yeni sayısı %15 artar (13. aydan %5)"], ["Paket karışımı ve kayıp", "Yeni işletmelerin %8'i Büyüme · aylık %3 kayıp"], ["Ekip (işveren maliyeti)", "Kurucu ₺60 bin · 2 mühendis ₺125–160 bin · satış ₺95 bin · 4 kişi"], ["Maliyet artışı", "Aylık %2 (maaş, kira, reklam) · %10 beklenmedik gider payı"], ["Banka lisansı", "Aylık ₺150 bin, ilk banka 13. ayda (varsayım)"], ["Pist ve güvenlik payı", "12 ay · en derin nakit ihtiyacının %20 fazlası"], ["36 ayda toplam dış sermaye", "₺29,5 milyon; kalanı bir sonraki turla"]];
   s.addTable(rows.map((r, i) => r.map((c, j) => ({ text: c, options: { bold: i === 0 || j === 0, fontSize: 13.5, color: HEX.ink, fill: { color: i === 0 ? HEX.lime : "FFFFFF" }, margin: [5, 10, 5, 10], valign: "middle" } }))), { x: M, y: 1.65, w: W - 2 * M, colW: [3.6, W - 2 * M - 3.6], rowH: 0.52, border: { type: "solid", color: HEX.line, pt: 1 } });
   note(s, "Model qualifilab.com/admin/finans sayfasında; her varsayım değiştirilebilir.");
 }
