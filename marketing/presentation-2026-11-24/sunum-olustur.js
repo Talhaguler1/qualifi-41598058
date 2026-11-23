@@ -183,17 +183,7 @@ section("Ana sunum");
     s.addText([{ text: h + "  ", options: { bold: true, fontSize: 15, color: HEX.ink } }, { text: st, options: { fontSize: 10, bold: true, color: HEX.green } }], { x: x + 0.22, y: 5.43, w: 3.5, h: 0.35, margin: 0, isTextBox: true });
     s.addText(t, { x: x + 0.22, y: 5.78, w: 3.5, h: 0.65, fontSize: 12.5, color: HEX.ink2, margin: 0, valign: "top", isTextBox: true });
   });
-  s.addNotes("QualiFi işletmenin zaten sahip olduğu veriyi okur: e-fatura ve ön muhasebe, banka hareketleri, sözleşmeler ve müşterinin verdiği söz. Söz telefonda verildiyse on saniyede kaydedilir; WhatsApp'tan geldiyse yapay zekâ okur. Bunlardan altı çıktı üretir. Yapay zekâ okur ve hesaplar; mesaj göndermek gibi her aksiyon için işletmenin onayı gerekir.");
-}
-
-// 6 · Altı çıktı
-{
-  const s = pres.addSlide({ masterName: "ICERIK", sectionTitle: "Ana sunum" });
-  eyebrow(s, "Değer önerisi");
-  title(s, "Altı soruya cevap: kim öder, ne zaman, kaça mal olur, ne kadar finansman gerekir");
-  img(s, "13-alti-cikti.png", 0.95, 1.55, 11.43, 4.41, "Altı çıktı ve örnekleri");
-  note(s, "Örnek veriyle; gecikmenin maliyeti işletmenin kendi kredi faiziyle hesaplanır (tutar × gün × yıllık faiz ÷ 365).");
-  s.addNotes("Bu altı çıktı işletmenin günlük sorularına cevap veriyor. Hangi müşteri sözünü tutuyor? Bu fatura kaç gün gecikecek? Bu gecikme bana kaça mal oluyor? Önümüzdeki 30 günde ne kadar tahsil edeceğim, bu ödemelerimin ne kadarını karşılıyor? Ve açık varsa ne kadar finansmana ihtiyacım var? Ekrandaki rakamlar örnek veri.");
+  s.addNotes("QualiFi işletmenin zaten sahip olduğu veriyi okur: e-fatura ve ön muhasebe, banka hareketleri, sözleşmeler ve müşterinin verdiği söz. Söz telefonda verildiyse on saniyede kaydedilir; WhatsApp'tan geldiyse yapay zekâ okur. Bunlardan altı çıktı üretir. Bu altı çıktı işletmenin altı sorusuna cevap veriyor: kim öder, ne zaman öder, gecikme kaça mal olur, önümüzdeki 30 günde ne kadar tahsil ederim, bu ödemelerimi karşılar mı ve açık varsa ne kadar finansman gerekir. Yapay zekâ okur ve hesaplar; mesaj göndermek gibi her aksiyon için işletmenin onayı gerekir.");
 }
 
 // 7 · İşletme demosu
@@ -317,6 +307,16 @@ section("Ana sunum");
 /* ───────────── YEDEK SLAYTLAR ───────────── */
 section("Yedek slaytlar");
 const Y = "Yedek slaytlar";
+
+// Y0 · Örnek işletmede altı çıktı (moved from the main deck: too many numbers to read live)
+{
+  const s = pres.addSlide({ masterName: "ICERIK", sectionTitle: Y });
+  eyebrow(s, "Yedek · örnek işletme");
+  title(s, "Altı soruya cevap: kim öder, ne zaman, kaça mal olur, ne kadar finansman gerekir");
+  img(s, "13-alti-cikti.png", 0.95, 1.55, 11.43, 4.41, "Altı çıktı ve örnekleri");
+  note(s, "Örnek veriyle; gecikmenin maliyeti işletmenin kendi kredi faiziyle hesaplanır (tutar × gün × yıllık faiz ÷ 365).");
+  s.addNotes("Bu altı çıktı işletmenin günlük sorularına cevap veriyor. Hangi müşteri sözünü tutuyor? Bu fatura kaç gün gecikecek? Bu gecikme bana kaça mal oluyor? Önümüzdeki 30 günde ne kadar tahsil edeceğim, bu ödemelerimin ne kadarını karşılıyor? Ve açık varsa ne kadar finansmana ihtiyacım var? Ekrandaki rakamlar örnek veri.");
+}
 
 // Y1 · Teknik mimari
 {
