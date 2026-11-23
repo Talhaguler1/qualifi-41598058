@@ -30,6 +30,9 @@ pres.defineSlideMaster({
   background: { color: HEX.paper },
   objects: [
     { text: { text: "QualiFi · Akbank Düşünce Kulübü · 24 Kasım 2026", options: { x: M, y: 7.05, w: 7, h: 0.3, fontSize: 10, color: HEX.muted, margin: 0 } } },
+    // Brand lock-up top right, as in the website header: mask tile + wordmark in ink
+    { image: { x: W - M - 1.36, y: 0.11, w: 0.32, h: 0.32, path: A("logo-simge.png") } },
+    { text: { text: "QualiFi", options: { x: W - M - 0.98, y: 0.11, w: 0.98, h: 0.32, fontFace: "+mj-lt", fontSize: 15, bold: true, color: HEX.ink, margin: 0, valign: "middle" } } },
   ],
   slideNumber: { x: W - M - 0.6, y: 7.05, w: 0.6, h: 0.3, fontSize: 10, color: HEX.muted, align: "right" },
   placeholders: [],
