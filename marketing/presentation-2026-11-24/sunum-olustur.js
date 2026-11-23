@@ -156,7 +156,7 @@ section("Ana sunum");
   // Three phones fanned: landing page (where people arrive), decision summary, live update.
   {
     const k = 4.3 / 1902, cw = 1140 * k, ch = 2082 * k, pad = 90 * k;
-    [["telefon_landing.png", 0.5, 1.95, "Tanıtım sayfası, qualifilab.com"], ["telefon_nh.png", 2.3, 1.5, "Karar özeti ve alt sekme çubuğu"], ["telefon_nc.png", 4.1, 1.95, "Telefonda alınan sözün canlı güncellemesi"]]
+    [["telefon_landing.png", 0.5, 1.95, "Tanıtım sayfası, qualifilab.com"], ["telefon_sk.png", 2.3, 1.5, "Ödeme sözü kaydetme ekranı"], ["telefon_nc2.png", 4.1, 1.95, "Sözün nakit planına işlendiği canlı güncelleme"]]
       .forEach(([f, x, y, alt]) => s.addImage({ path: A(f), x: x - pad, y: y - pad, w: cw, h: ch, altText: alt, objectName: alt }));
   }
   const steps = [["1", "Söz kaydedilir", "elle 10 saniyede ya da mesajdan"], ["2", "Alacak ve nakit planı güncellenir", "yapay zekâ tarih ve tutarı eşleştirir"], ["3", "Takip, onayınızla", "hatırlatma taslağı · onaysız gitmez"]];
@@ -166,7 +166,7 @@ section("Ana sunum");
     s.addText(n, { x: 6.8, y, w: 0.55, h: 0.55, fontSize: 16, bold: true, color: HEX.ink, align: "center", valign: "middle", margin: 0, isTextBox: true });
     s.addText([{ text: h, options: { fontSize: 18, bold: true, color: HEX.ink, breakLine: true } }, { text: t, options: { fontSize: 15, color: HEX.ink2 } }], { x: 7.55, y: y - 0.05, w: 5.2, h: 1.35, margin: 0, valign: "top", paraSpaceAfter: 4, isTextBox: true });
   });
-  note(s, "Soldan: tanıtım sayfası · karar özeti · canlı güncelleme. Demo sentetik veriyle: qualifilab.com/demo");
+  note(s, "Soldan: tanıtım sayfası · söz kaydı · canlı güncelleme. Demo sentetik veriyle: qualifilab.com/demo");
   s.addNotes("Peki uygulamamız nasıl çalışıyor? Karekodla demoya girdiğinizde hem işletme hem banka panelini görebiliyorsunuz. İşletmeden başlayalım. QualiFi'de her şey bir ödeme sözüyle başlıyor. İşletme sözü ister elle on saniyede kaydediyor, ister bağlı mesaj kanalından aktarıyor. Yapay zekâ sözden tarihi ve tutarı çıkarıp ilgili alacakla eşleştiriyor; alacak takibi ve nakit akış planı kendiliğinden güncelleniyor. İşletme kimi takip etmesi gerektiğini görüyor; yapay zekânın hazırladığı hatırlatma taslağını kendi onayıyla gönderiyor. Buraya kadar işletmenin parasını ne zaman alacağını öngördük. Peki aynı bilgiyi, işletmenin izniyle bankaya taşırsak ne değişir?");
 }
 
@@ -175,7 +175,7 @@ section("Ana sunum");
   const s = pres.addSlide({ masterName: "ICERIK", sectionTitle: "Ana sunum" });
   eyebrow(s, "Akbank'a fayda");
   title(s, "Banka sıkışmayı taksit gecikmeden görür, işletmenin izniyle");
-  phones(s, "telefon_p08.png", "telefon_p10.png", "Bankacı asistanı öncelik listesi", "İşletmenin paylaştığı karne");
+  phones(s, "telefon_b1.png", "telefon_b2.png", "Bankacı asistanı öncelik listesi", "İşletmenin paylaştığı karne");
   const rows = [["Bugün bankanın gördüğü", "QualiFi ile, işletmenin izniyle"], ["Hesap hareketi", "Beklenen tahsilatlar ve verilen ödeme sözleri"], ["Geçmiş kredi davranışı", "Müşterilerin söz tutma oranı"], ["Dönem sonu finansal tablo", "8 haftalık nakit takvimi ve açık tahmini"], ["Temsilcinin sezgisi", "Kaynağı gösterilen, açıklanabilir erken uyarı"]];
   s.addTable(rows.map((r, i) => r.map((c, j) => ({ text: c, options: { bold: i === 0 || j === 1, fontSize: i === 0 ? 12 : 13.5, color: i === 0 ? (j === 1 ? HEX.ink : HEX.muted) : HEX.ink, fill: { color: i === 0 ? (j === 1 ? HEX.lime : HEX.soft) : (j === 1 ? "F1F8E4" : "FFFFFF") }, valign: "middle", margin: [4, 8, 4, 8] } }))), { x: 6.75, y: 1.65, w: 5.98, colW: [2.5, 3.48], rowH: 0.62, border: { type: "solid", color: HEX.line, pt: 1 } });
   [["Otomatik not", "temsilciye"], ["Doğru teklif", "doğru zamanda"], ["Yeni müşteri", "bankasız KOBİ"]].forEach(([h, t], i) => {
