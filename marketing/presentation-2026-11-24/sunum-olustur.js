@@ -295,7 +295,7 @@ section("Ana sunum");
 // 15 · Kapanış + QR
 {
   const s = pres.addSlide({ masterName: "KOYU", sectionTitle: "Ana sunum" });
-  s.addText("Paranın ne zaman geleceği artık bir tahmin değil, bir kayıt olsun.", { x: 0.85, y: 1.5, w: 7.6, h: 2.6, fontFace: THEME.headFontFace, fontSize: 38, bold: true, color: "FFFFFF", margin: 0, valign: "top", isTextBox: true });
+  s.addText("Paranın ne zaman geleceği artık bir tahmin değil, bir kayıt olsun.", { x: 0.85, y: 1.5, w: 7.6, h: 2.6, fontFace: "+mj-lt", fontSize: 38, bold: true, color: "FFFFFF", margin: 0, valign: "top", isTextBox: true });
   s.addText("Gelin, dağınık veriyi birlikte finansal öngörüye dönüştürelim.", { x: 0.85, y: 4.2, w: 7.6, h: 0.9, fontSize: 20, color: HEX.lime, margin: 0, isTextBox: true });
   s.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: 9.05, y: 1.5, w: 3.45, h: 4.25, fill: { color: "FFFFFF" }, line: { color: "FFFFFF" }, rectRadius: 0.2 });
   img(s, "p21_0.png", 9.35, 1.8, 2.85, 2.85, "Şifresiz demo karekodu: qualifilab.com/demo");
