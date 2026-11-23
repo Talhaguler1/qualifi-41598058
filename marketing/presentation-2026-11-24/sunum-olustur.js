@@ -113,59 +113,26 @@ section("Ana sunum");
   s.addNotes("Özyeğin'de Yönetim Bilişim Sistemleri ve Bilgisayar Mühendisliği okuyorum. Porsuk ve Endgame Arena'da ürün geliştirdim, Ozu Ventures'ta işletme sahipleriyle görüştüm. Bu görüşmelerde hep aynı cümleyi duydum: \"Faturayı kestik, ama para ne zaman gelecek bilmiyoruz.\" QualiFi bu cümleden doğdu.");
 }
 
-// 3 · Problem
+// 3 · Problem: three numbers in the order the founder tells them
 {
   const s = pres.addSlide({ masterName: "ICERIK", sectionTitle: "Ana sunum" });
   eyebrow(s, "Problem");
   title(s, "Ödeme sözü veriliyor, ama nakit planına girmiyor");
-  card(s, M, 1.75, 3.6, 2.3, "FFFFFF");
-  s.addText([{ text: "MÜŞTERİ", options: { fontSize: 11, bold: true, color: HEX.muted, charSpacing: 2, breakLine: true } }, { text: "“Cuma gönderiyoruz.”", options: { fontSize: 26, bold: true, color: HEX.ink, breakLine: true } }, { text: "telefon · WhatsApp · yüz yüze", options: { fontSize: 14, color: HEX.muted } }], { x: M + 0.3, y: 1.95, w: 3.0, h: 1.9, margin: 0, valign: "top", paraSpaceAfter: 8, isTextBox: true });
-  s.addShape(pres.shapes.RIGHT_ARROW, { x: 4.35, y: 2.65, w: 0.6, h: 0.5, fill: { color: HEX.ink } });
-  card(s, 5.1, 1.75, 3.6, 2.3, "FBE9E4", "F1C9BE");
-  s.addText([{ text: "NAKİT PLANI", options: { fontSize: 11, bold: true, color: "8A3A2A", charSpacing: 2, breakLine: true } }, { text: "Söz yok", options: { fontSize: 26, bold: true, color: "8A3A2A", breakLine: true } }, { text: "sıkışma ay sonunda fark edilir", options: { fontSize: 14, color: "6B3A2E" } }], { x: 5.4, y: 1.95, w: 3.0, h: 1.9, margin: 0, valign: "top", paraSpaceAfter: 8, isTextBox: true });
-  s.addText("SAHADA DOĞRULANAN 3 HİPOTEZ", { x: M, y: 4.4, w: 8.1, h: 0.3, fontSize: 11, bold: true, color: HEX.muted, charSpacing: 2, margin: 0, isTextBox: true });
-  [["1", "Takip elle"], ["2", "Nakit akışı hesaplanamıyor"], ["3", "Banka geç görüyor"]].forEach(([n, t], i) => {
-    const x = M + i * 2.75;
-    card(s, x, 4.8, 2.6, 1.25, HEX.soft, HEX.line);
-    s.addText([{ text: n + "  ", options: { fontSize: 20, bold: true, color: HEX.green } }, { text: t, options: { fontSize: 16, bold: true, color: HEX.ink } }], { x: x + 0.2, y: 4.8, w: 2.25, h: 1.25, margin: 0, valign: "middle", isTextBox: true });
-  });
-  card(s, 9.1, 1.75, 3.63, 2.15, HEX.ink, HEX.ink);
-  s.addText([{ text: "14 + 7", options: { fontSize: 46, bold: true, color: HEX.lime, breakLine: true } }, { text: "işletme sahibi + bankacı", options: { fontSize: 15, bold: true, color: "FFFFFF", breakLine: true } }, { text: "görüşme · demo · geri bildirim", options: { fontSize: 12, color: "C9D8C4" } }], { x: 9.35, y: 1.88, w: 3.2, h: 1.95, margin: 0, valign: "top", paraSpaceAfter: 4, isTextBox: true });
-  card(s, 9.1, 4.1, 3.63, 1.95, "FFFFFF");
-  s.addText([{ text: "%51", options: { fontSize: 40, bold: true, color: HEX.green, breakLine: true } }, { text: "KOBİ düzensiz nakit akışını sorun görüyor", options: { fontSize: 13, color: HEX.ink2, breakLine: true } }, { text: "ABD · Fed SBCS 2025 raporu", options: { fontSize: 10, color: HEX.muted } }], { x: 9.35, y: 4.2, w: 3.2, h: 1.8, margin: 0, valign: "top", paraSpaceAfter: 3, isTextBox: true });
-  s.addNotes("Müşteri işletmeye \"cuma gönderiyoruz\" diyor, ama bu söz hiçbir tabloya girmiyor; sıkışma ancak ay sonunda fark ediliyor. Sahaya üç hipotezle çıktım: takip elle yapılıyor, nakit akışı hesaplanamıyor ve banka sorunu ancak taksit gecikince görüyor. On dört işletme sahibi ve yedi bankacıyla görüştüm, dördünü şubesinde yerinde gördüm; üçü de doğrulandı. Görüştüğüm bir KOBİ müşteri temsilcisi iki yüzden fazla KOBİ'ye baktığını söyledi. ABD'de Fed'in KOBİ anketinde işletmelerin yarısı düzensiz nakit akışını sorun olarak görüyor.");
-}
-
-// 4 · Persona ve sahadan öğrendiklerimiz
-{
-  const s = pres.addSlide({ masterName: "ICERIK", sectionTitle: "Ana sunum" });
-  eyebrow(s, "Kimin için · sahadan öğrendiklerimiz");
-  title(s, "İlk müşteri: vadeli satan, teknolojiyi aktif kullanan KOBİ");
-  card(s, M, 1.7, 4.0, 4.75, HEX.ink, HEX.ink);
-  s.addText([
-    { text: "PERSONA", options: { fontSize: 11, bold: true, color: HEX.lime, charSpacing: 2, breakLine: true } },
-    { text: "Küçük ve orta ölçekli işletme", options: { fontSize: 22, bold: true, color: "FFFFFF", breakLine: true } },
-    { text: "Vadeli satış", options: { bullet: true, fontSize: 16, color: "E3EEDB", breakLine: true } },
-    { text: "100+ açık alacak", options: { bullet: true, fontSize: 16, color: "E3EEDB", breakLine: true } },
-    { text: "1–2 kişilik muhasebe", options: { bullet: true, fontSize: 16, color: "E3EEDB", breakLine: true } },
-    { text: "Teknolojiyi aktif kullanır", options: { bullet: true, fontSize: 16, color: "E3EEDB" } },
-  ], { x: M + 0.35, y: 1.95, w: 3.4, h: 4.3, margin: 0, valign: "top", paraSpaceAfter: 9, isTextBox: true });
-  s.addText("Sahadan 5 öğrenim → ürüne yansıdı", { x: 5.0, y: 1.7, w: 7.7, h: 0.45, fontSize: 18, bold: true, color: HEX.ink, margin: 0, isTextBox: true });
-  const rows = [
-    ["Herkesin bekleyen alacağı var", "Alacak takibi"],
-    ["Nakit akışını kimse hesaplayamıyor", "Karar özeti"],
-    ["WhatsApp bağlamak yerine elle girmek", "Ekle · 10 sn"],
-    ["Sektör verisiyle kıyas istiyorlar", "Federe öğrenme · plan"],
-    ["Bankacı: hızlı veri, doğru teklif", "Banka paneli"],
+  const cards = [
+    { n: "14", h: "küçük ve orta ölçekli işletme", t: "hepsinde bekleyen alacak · nakit akışı doğru kurulamıyor", fill: "FFFFFF", line: HEX.line, num: HEX.green, head: HEX.ink, sub: HEX.ink2, src: "Saha görüşmeleri" },
+    { n: "%51", h: "KOBİ nakit akışını finansal sorun görüyor", t: "düzensiz nakit akışı", fill: HEX.soft, line: HEX.line, num: HEX.green, head: HEX.ink, sub: HEX.ink2, src: "ABD · Fed Small Business Credit Survey 2025" },
+    { n: "7", h: "bankacı", t: "KOBİ segment · veri · yapay zekâ yönetişimi", fill: HEX.ink, line: HEX.ink, num: HEX.lime, head: "FFFFFF", sub: "C9D8C4", src: "Banka görüşmeleri" },
   ];
-  rows.forEach(([heard, did], i) => {
-    const y = 2.28 + i * 0.84;
-    card(s, 5.0, y, 7.73, 0.72, "FFFFFF");
-    s.addText(heard, { x: 5.25, y, w: 4.3, h: 0.72, fontSize: 14, italic: true, color: HEX.ink2, margin: 0, valign: "middle", isTextBox: true });
-    s.addShape(pres.shapes.RIGHT_ARROW, { x: 9.65, y: y + 0.22, w: 0.32, h: 0.28, fill: { color: HEX.green } });
-    s.addText(did, { x: 10.1, y, w: 2.55, h: 0.72, fontSize: 14.5, bold: true, color: HEX.ink, margin: 0, valign: "middle", isTextBox: true });
+  const cw = 3.82, gap = 0.39, top = 1.95, ch = 4.0;
+  cards.forEach((k, i) => {
+    const x = M + i * (cw + gap);
+    card(s, x, top, cw, ch, k.fill, k.line);
+    s.addText(k.n, { x: x + 0.35, y: top + 0.35, w: cw - 0.7, h: 1.35, fontFace: "+mj-lt", fontSize: 72, bold: true, color: k.num, margin: 0, valign: "bottom", isTextBox: true });
+    s.addText([{ text: k.h, options: { fontSize: 19, bold: true, color: k.head, breakLine: true } }, { text: k.t, options: { fontSize: 14, color: k.sub } }], { x: x + 0.35, y: top + 1.85, w: cw - 0.7, h: 1.4, margin: 0, valign: "top", paraSpaceAfter: 6, isTextBox: true });
+    s.addText(k.src, { x: x + 0.35, y: top + ch - 0.55, w: cw - 0.7, h: 0.3, fontSize: 10, color: i === 2 ? "A9C0A3" : HEX.muted, margin: 0, isTextBox: true });
+    if (i < 2) s.addShape(pres.shapes.RIGHT_ARROW, { x: x + cw + 0.07, y: top + ch / 2 - 0.13, w: 0.25, h: 0.26, fill: { color: HEX.green }, line: { color: HEX.green } });
   });
-  s.addNotes("İlk müşterimiz vadeli satan, teknolojiyi aktif kullanan küçük ve orta ölçekli işletmeler; görüştüğüm on dört kişi de bu profildeydi. Demoyu hem işletme sahiplerine hem bankacılara tek tek gösterdim ve geri bildirimle ürünü değiştirdim. Beş şey öğrendim. Bir: herkesin bekleyen alacağı var. İki: nakit akışını kimse hesaplayamıyor; karar özeti bunun için. Üç: insanlar WhatsApp'ı bağlamak yerine sözü elle girmeyi daha güvenli buluyor; bu yüzden Ekle ile söz on saniyede kaydediliyor. Dört: teknoloji firmaları modelin sektördeki diğer verilerden de öğrenmesini istiyor; bu yüzden federe öğrenmeyi mimariye ekledik, yol haritasında. Beş: bankacılar hem şubenin veriyi daha hızlı iletmesini hem de verinin yapılandırma ve tekliflerde kullanılmasını değerli buluyor.");
+  s.addNotes("Problemi derinlemesine incelemek için on dört küçük ve orta ölçekli işletme sahibiyle görüştüm. Hepsinin sürekli en az bir bekleyen alacağı vardı ve bu yüzden nakit akışlarını doğru kuramadıklarını fark ettim. Görüşmelerimi bir araştırmayla destekledim: ABD'de Fed'in KOBİ anketine göre işletmelerin yüzde 51'i düzensiz nakit akışını finansal sorun olarak görüyor. Banka tarafını görmek için KOBİ segment bankacıları, veri ve yapay zekâ yönetişimi ekiplerinden yedi kişiyle görüştüm. Bu görüşmelerden aldığım sonuçla çözümümü kurdum.");
 }
 
 // 5 · Çözüm
@@ -322,6 +289,38 @@ section("Ana sunum");
 /* ───────────── YEDEK SLAYTLAR ───────────── */
 section("Yedek slaytlar");
 const Y = "Yedek slaytlar";
+
+// Y00 · Persona ve beş saha öğrenimi (moved from the main deck)
+{
+  const s = pres.addSlide({ masterName: "ICERIK", sectionTitle: Y });
+  eyebrow(s, "Yedek · persona ve saha öğrenimleri");
+  title(s, "İlk müşteri: vadeli satan, teknolojiyi aktif kullanan KOBİ");
+  card(s, M, 1.7, 4.0, 4.75, HEX.ink, HEX.ink);
+  s.addText([
+    { text: "PERSONA", options: { fontSize: 11, bold: true, color: HEX.lime, charSpacing: 2, breakLine: true } },
+    { text: "Küçük ve orta ölçekli işletme", options: { fontSize: 22, bold: true, color: "FFFFFF", breakLine: true } },
+    { text: "Vadeli satış", options: { bullet: true, fontSize: 16, color: "E3EEDB", breakLine: true } },
+    { text: "100+ açık alacak", options: { bullet: true, fontSize: 16, color: "E3EEDB", breakLine: true } },
+    { text: "1–2 kişilik muhasebe", options: { bullet: true, fontSize: 16, color: "E3EEDB", breakLine: true } },
+    { text: "Teknolojiyi aktif kullanır", options: { bullet: true, fontSize: 16, color: "E3EEDB" } },
+  ], { x: M + 0.35, y: 1.95, w: 3.4, h: 4.3, margin: 0, valign: "top", paraSpaceAfter: 9, isTextBox: true });
+  s.addText("Sahadan 5 öğrenim → ürüne yansıdı", { x: 5.0, y: 1.7, w: 7.7, h: 0.45, fontSize: 18, bold: true, color: HEX.ink, margin: 0, isTextBox: true });
+  const rows = [
+    ["Herkesin bekleyen alacağı var", "Alacak takibi"],
+    ["Nakit akışını kimse hesaplayamıyor", "Karar özeti"],
+    ["WhatsApp bağlamak yerine elle girmek", "Ekle · 10 sn"],
+    ["Sektör verisiyle kıyas istiyorlar", "Federe öğrenme · plan"],
+    ["Bankacı: hızlı veri, doğru teklif", "Banka paneli"],
+  ];
+  rows.forEach(([heard, did], i) => {
+    const y = 2.28 + i * 0.84;
+    card(s, 5.0, y, 7.73, 0.72, "FFFFFF");
+    s.addText(heard, { x: 5.25, y, w: 4.3, h: 0.72, fontSize: 14, italic: true, color: HEX.ink2, margin: 0, valign: "middle", isTextBox: true });
+    s.addShape(pres.shapes.RIGHT_ARROW, { x: 9.65, y: y + 0.22, w: 0.32, h: 0.28, fill: { color: HEX.green } });
+    s.addText(did, { x: 10.1, y, w: 2.55, h: 0.72, fontSize: 14.5, bold: true, color: HEX.ink, margin: 0, valign: "middle", isTextBox: true });
+  });
+  s.addNotes("İlk müşterimiz vadeli satan, teknolojiyi aktif kullanan küçük ve orta ölçekli işletmeler; görüştüğüm on dört kişi de bu profildeydi. Demoyu hem işletme sahiplerine hem bankacılara tek tek gösterdim ve geri bildirimle ürünü değiştirdim. Beş şey öğrendim. Bir: herkesin bekleyen alacağı var. İki: nakit akışını kimse hesaplayamıyor; karar özeti bunun için. Üç: insanlar WhatsApp'ı bağlamak yerine sözü elle girmeyi daha güvenli buluyor; bu yüzden Ekle ile söz on saniyede kaydediliyor. Dört: teknoloji firmaları modelin sektördeki diğer verilerden de öğrenmesini istiyor; bu yüzden federe öğrenmeyi mimariye ekledik, yol haritasında. Beş: bankacılar hem şubenin veriyi daha hızlı iletmesini hem de verinin yapılandırma ve tekliflerde kullanılmasını değerli buluyor.");
+}
 
 // Y0 · Örnek işletmede altı çıktı (moved from the main deck: too many numbers to read live)
 {
