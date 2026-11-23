@@ -141,6 +141,13 @@ function RootComponent() {
   // The demo language lives in a module variable; on the server reset it for every request
   // so one visitor's English page never leaks into the next page rendered (demo routes set it again).
   if (typeof window === "undefined") setDemoLang("tr");
+  // No automatic "install the app" banner: visitors (and jury members scanning the QR) should never
+  // find an app on their phone they did not ask for. Installing stays possible from the browser menu.
+  useEffect(() => {
+    const block = (e: Event) => e.preventDefault();
+    window.addEventListener("beforeinstallprompt", block);
+    return () => window.removeEventListener("beforeinstallprompt", block);
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
