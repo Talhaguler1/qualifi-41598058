@@ -183,6 +183,7 @@ section("Ana sunum");
     s.addText([{ text: h + "  ", options: { bold: true, fontSize: 15, color: HEX.ink } }, { text: st, options: { fontSize: 10, bold: true, color: HEX.green } }], { x: x + 0.22, y: 5.43, w: 3.5, h: 0.35, margin: 0, isTextBox: true });
     s.addText(t, { x: x + 0.22, y: 5.78, w: 3.5, h: 0.65, fontSize: 12.5, color: HEX.ink2, margin: 0, valign: "top", isTextBox: true });
   });
+  note(s, "Bugün e-fatura, ERP çıktısı, sözleşme ve banka ekstresi dosya ya da fotoğraf olarak yüklenir; doğrudan bağlantılar yol haritasında (2–4 ay).");
   s.addNotes("QualiFi işletmenin zaten sahip olduğu veriyi okur: e-fatura ve ön muhasebe, banka hareketleri, sözleşmeler ve müşterinin verdiği söz. Söz telefonda verildiyse on saniyede kaydedilir; WhatsApp'tan geldiyse yapay zekâ okur. Bunlardan altı çıktı üretir. Bu altı çıktı işletmenin altı sorusuna cevap veriyor: kim öder, ne zaman öder, gecikme kaça mal olur, önümüzdeki 30 günde ne kadar tahsil ederim, bu ödemelerimi karşılar mı ve açık varsa ne kadar finansman gerekir. Yapay zekâ okur ve hesaplar; mesaj göndermek gibi her aksiyon için işletmenin onayı gerekir.");
 }
 
