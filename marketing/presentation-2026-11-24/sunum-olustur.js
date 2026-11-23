@@ -140,11 +140,7 @@ section("Ana sunum");
   const s = pres.addSlide({ masterName: "ICERIK", sectionTitle: "Ana sunum" });
   eyebrow(s, "Çözüm");
   title(s, "QualiFi, müşterinin ödeme sözünü finansal karara dönüştürür");
-  img(s, "12-veri-kaynaklari.png", 0.95, 1.6, 11.43, 3.57, "Veri kaynakları, QualiFi ve altı çıktı");
-  // One line that says what makes it different
-  card(s, M, 5.35, W - 2 * M, 0.95, HEX.ink, HEX.ink);
-  s.addText([{ text: "FARKIMIZ   ", options: { fontSize: 13, bold: true, color: HEX.lime, charSpacing: 1.5 } }, { text: "henüz gerçekleşmemiş ödeme sözünü de finansal karara katıyoruz", options: { fontSize: 20, bold: true, color: "FFFFFF" } }], { x: M + 0.4, y: 5.35, w: W - 2 * M - 0.8, h: 0.95, margin: 0, valign: "middle", isTextBox: true });
-  note(s, "Bugün: dosya ya da fotoğraf yükleme. Doğrudan bağlantılar (e-fatura, ERP, banka): 2–4 ay.");
+  img(s, "12-veri-kaynaklari.png", 0.6, 2.05, 12.13, 3.79, "Veri kaynakları, QualiFi ve altı soru");
   s.addNotes("Peki çözüm ne? Bir işletmenin verisi altı farklı yerde: fatura ön muhasebede, para bankada. Ama müşterinin cuma ödeyeceğim sözü ikisinin arasında kayboluyor. QualiFi bu verileri tek bir uygulamada bir araya getiriyor: sözü alıyor, faturayla eşleştiriyor ve nakit planını güncelliyor; ERP, ön muhasebe ve banka bağlantılarıyla bunu zenginleştiriyor. Farkımız, henüz gerçekleşmemiş ödeme sözünü de finansal karara katmak. Değer önerimiz altı soruda toplanıyor: kim sözünü tutuyor, para ne zaman gelecek, gecikme kaça mal olur, otuz günde ne kadar nakit gelir, ödemelerimi karşılar mıyım ve ne zaman finansman gerekir. Peki bu işletmenin günlük hayatında nasıl çalışıyor?");
 }
 
