@@ -152,14 +152,14 @@ section("Ana sunum");
 {
   const s = pres.addSlide({ masterName: "ICERIK", sectionTitle: "Ana sunum" });
   eyebrow(s, "Ürün · işletme");
-  title(s, "Söz geldiği an nakit planı güncellenir");
+  title(s, "Her şey bir ödeme sözüyle başlar");
   // Three phones fanned: landing page (where people arrive), decision summary, live update.
   {
     const k = 4.3 / 1902, cw = 1140 * k, ch = 2082 * k, pad = 90 * k;
     [["telefon_landing.png", 0.5, 1.95, "Tanıtım sayfası, qualifilab.com"], ["telefon_nh.png", 2.3, 1.5, "Karar özeti ve alt sekme çubuğu"], ["telefon_nc.png", 4.1, 1.95, "Telefonda alınan sözün canlı güncellemesi"]]
       .forEach(([f, x, y, alt]) => s.addImage({ path: A(f), x: x - pad, y: y - pad, w: cw, h: ch, altText: alt, objectName: alt }));
   }
-  const steps = [["1", "Karar özeti", "maliyet · karşılama · finansman"], ["2", "Sözü kaydet", "WhatsApp'tan okunur ya da 10 sn'de elle"], ["3", "Plan yeniden çizilir", "takip mesajı onaysız gitmez"]];
+  const steps = [["1", "Söz kaydedilir", "elle 10 saniyede ya da mesajdan"], ["2", "Alacak ve nakit planı güncellenir", "yapay zekâ tarih ve tutarı eşleştirir"], ["3", "Takip, onayınızla", "hatırlatma taslağı · onaysız gitmez"]];
   steps.forEach(([n, h, t], i) => {
     const y = 1.7 + i * 1.6;
     s.addShape(pres.shapes.OVAL, { x: 6.8, y, w: 0.55, h: 0.55, fill: { color: HEX.lime }, line: { color: HEX.lime } });
@@ -167,7 +167,7 @@ section("Ana sunum");
     s.addText([{ text: h, options: { fontSize: 18, bold: true, color: HEX.ink, breakLine: true } }, { text: t, options: { fontSize: 15, color: HEX.ink2 } }], { x: 7.55, y: y - 0.05, w: 5.2, h: 1.35, margin: 0, valign: "top", paraSpaceAfter: 4, isTextBox: true });
   });
   note(s, "Soldan: tanıtım sayfası · karar özeti · canlı güncelleme. Demo sentetik veriyle: qualifilab.com/demo");
-  s.addNotes("İşletme sahibi bizi önce tanıtım sayfasında görüyor; tek adımla e-postasını bırakıyor ya da demoyu açıyor. İşletme sahibi paneli açtığında karar özetini görür: gecikmeler ona kaça mal oluyor, önümüzdeki 30 günde tahsilat ödemelerin ne kadarını karşılıyor ve finansmana ihtiyacı var mı. Müşteri telefonda \"ayın dokuzunda ödüyorum\" dediğinde işletme sahibi bunu on saniyede kaydeder; WhatsApp'tan yazdıysa yapay zekâ okur. Söz doğru faturayla eşleşir, nakit planı o an yeniden çizilir. Takip mesajı hazırlansa da işletme onaylamadan hiçbir şey gitmez.");
+  s.addNotes("Peki uygulamamız nasıl çalışıyor? Karekodla demoya girdiğinizde hem işletme hem banka panelini görebiliyorsunuz. İşletmeden başlayalım. QualiFi'de her şey bir ödeme sözüyle başlıyor. İşletme sözü ister elle on saniyede kaydediyor, ister bağlı mesaj kanalından aktarıyor. Yapay zekâ sözden tarihi ve tutarı çıkarıp ilgili alacakla eşleştiriyor; alacak takibi ve nakit akış planı kendiliğinden güncelleniyor. İşletme kimi takip etmesi gerektiğini görüyor; yapay zekânın hazırladığı hatırlatma taslağını kendi onayıyla gönderiyor. Buraya kadar işletmenin parasını ne zaman alacağını öngördük. Peki aynı bilgiyi, işletmenin izniyle bankaya taşırsak ne değişir?");
 }
 
 // 8 · Banka demosu + Akbank faydası
@@ -184,7 +184,7 @@ section("Ana sunum");
     s.addText([{ text: h, options: { fontSize: 15, bold: true, color: HEX.ink, breakLine: true } }, { text: t, options: { fontSize: 12, color: HEX.ink2 } }], { x: x + 0.15, y: 5.0, w: 1.7, h: 1.2, margin: 0, valign: "middle", paraSpaceAfter: 2, isTextBox: true });
   });
   note(s, "Beklenen fayda · Akbank entegrasyonu ya da ölçülmüş sonuç henüz yok · banka ekranları sentetik demo.");
-  s.addNotes("Peki banka ne kazanıyor? Bugün banka hesap hareketini ve geçmiş kredi davranışını görüyor. QualiFi ile, yalnızca işletme izin verirse, beklenen tahsilatları, müşterilerin söz tutma oranını ve sekiz haftalık nakit takvimini görür. Akbank'a üç faydası var. Birincisi, müşteri temsilcisine otomatik not düşer: bugün kimi, neden araması gerektiği. İkincisi, doğru teklif doğru zamanda gider: çek iskontosu, kısa vadeli kredi, limit artışı ya da faktoring, kredi taksiti gecikmeden önce. Üçüncüsü, bankayla arası olmayan KOBİ'lere işlerine yarayan bir araçla ulaşılır; bu Akbank için yeni müşteri demek. Müşteri isimleri ve ham mesajlar paylaşılmaz.");
+  s.addNotes("Bugün banka bir işletmenin hesap hareketini, geçmiş kredi davranışını ve dönem sonu tablolarını görüyor; ama işletmenin müşterilerinden aldığı, henüz gerçekleşmemiş ödeme sözleri bu analizin dışında kalıyor. QualiFi bankaya yeni bir veri katmanı getiriyor: işletmenin açık izniyle beklenen tahsilatlar, müşterilerin söz tutma oranı ve önümüzdeki haftalarda oluşabilecek nakit açığı. Akbank'a üç faydası var: temsilciye bugün kimi neden araması gerektiğini söyleyen otomatik not; çek iskontosu, kısa vadeli kredi ya da limit artışı gibi doğru teklifin doğru zamanda gitmesi; ve bankayla arası olmayan KOBİ'ye işine yarayan bir araçla ulaşmak. Yani hedefimiz bankacılığı geçmişe bakan bir yapıdan, gelecekteki ihtiyacı öngörüp harekete geçen bir yapıya taşımak. Müşteri isimleri ve ham mesajlar paylaşılmaz.");
 }
 
 // 9 · Rekabet
