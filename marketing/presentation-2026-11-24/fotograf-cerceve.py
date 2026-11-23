@@ -10,10 +10,10 @@ RADIUS_IN = 0.16
 
 # name: (source, frame width in, frame height in, horizontal focus 0..1, vertical focus 0..1, optional pre-crop box)
 FRAMES = {
-    "f_portre.png": ("p02_4.jpeg", 2.7, 4.9, 0.55, 0.5, None),
-    "f_sise.png": ("sise-qr.jpg", 4.0, 2.85, 0.5, 0.5, (290, 360, 1460, 1200)),
-    "f_calisma.png": ("p02_1.jpeg", 1.925, 1.9, 0.42, 0.5, None),
-    "f_gorusme.png": ("p02_2.jpeg", 1.925, 1.9, 0.5, 0.5, None),
+    # three-photo grid: tall portrait left, two equal photos stacked right (0.15" gutters)
+    "f_portre.png": ("p02_4.jpeg", 3.0, 4.9, 0.55, 0.5, None),
+    "f_aiesec.png": ("aiesec.jpeg", 3.6, 2.375, 0.45, 0.32, None),
+    "f_calisma.png": ("p02_1.jpeg", 3.6, 2.375, 0.42, 0.5, None),
 }
 
 for out, (src, w_in, h_in, fx, fy, box) in FRAMES.items():

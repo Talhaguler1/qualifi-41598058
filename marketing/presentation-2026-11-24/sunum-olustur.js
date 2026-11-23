@@ -86,14 +86,11 @@ section("Ana sunum");
 {
   const s = pres.addSlide({ masterName: "ICERIK", sectionTitle: "Ana sunum" });
   eyebrow(s, "Kurucu");
-  title(s, "Fikir, işletme sahiplerinden aynı cümleyi tekrar tekrar duyunca doğdu");
-  // Photo grid: every photo is pre-cropped to its frame ratio (no stretching) with rounded corners.
-  img(s, "f_portre.png", 0.6, 1.6, 2.7, 4.9, "Talha Güler, karekodlu şişeyle");
-  img(s, "f_sise.png", 3.45, 1.6, 4.0, 2.85, "OzUBEX'te Beni okut karekodlu şişeler");
-  s.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: 3.6, y: 3.98, w: 3.05, h: 0.34, fill: { color: HEX.ink, transparency: 12 }, line: { color: HEX.ink, transparency: 100 }, rectRadius: 0.17, objectName: "Şişe etiketi zemini" });
-  s.addText([{ text: "OzUBEX · ", options: { bold: true, color: HEX.lime } }, { text: "“Beni okut” karekodlu şişeler", options: { color: "FFFFFF" } }], { x: 3.72, y: 3.98, w: 2.9, h: 0.34, fontSize: 11, margin: 0, valign: "middle", isTextBox: true, objectName: "Şişe etiketi" });
-  img(s, "f_calisma.png", 3.45, 4.6, 1.925, 1.9, "Ürün geliştirirken");
-  img(s, "f_gorusme.png", 5.525, 4.6, 1.925, 1.9, "Görüntülü görüşme");
+  title(s, "Sahada gözlemlediğim bir cümleden doğdu");
+  // Three-photo grid: one shared top and bottom line, equal 0.15" gutters, same corner radius.
+  img(s, "f_portre.png", 0.6, 1.6, 3.0, 4.9, "Talha Güler, karekodlu şişeyle");
+  img(s, "f_aiesec.png", 3.75, 1.6, 3.6, 2.375, "Talha Güler bir etkinlikte");
+  img(s, "f_calisma.png", 3.75, 4.125, 3.6, 2.375, "Ürün geliştirirken");
 
   // Right column: who, where from, the sentence that started it
   s.addText([
