@@ -308,9 +308,12 @@ section("Ana sunum");
 // 15 · Kapanış + QR
 {
   const s = pres.addSlide({ masterName: "KOYU", sectionTitle: "Ana sunum" });
-  s.addText("Verilen söz, nakit planına yazılsın.", { x: 0.85, y: 1.5, w: 7.6, h: 2.0, fontFace: "+mj-lt", fontSize: 44, bold: true, color: "FFFFFF", margin: 0, valign: "top", isTextBox: true });
-  s.addText("Paranız ne zaman gelecek, önceden bilin.", { x: 0.85, y: 3.6, w: 7.6, h: 0.6, fontSize: 22, color: HEX.lime, margin: 0, isTextBox: true });
-  s.addText([{ text: "Sonraki adım: ", options: { bold: true, color: "FFFFFF" } }, { text: "Akbank ekibiyle bir pilot senaryosu çalıştayı", options: { color: "C9D8C4" } }], { x: 0.85, y: 4.55, w: 7.6, h: 0.6, fontSize: 17, margin: 0, isTextBox: true });
+  // Brand lock-up: the mask icon and the word side by side
+  img(s, "logo-simge.png", 0.72, 0.55, 0.95, 0.95, "QualiFi maske logosu");
+  s.addText("QualiFi", { x: 1.75, y: 0.62, w: 4, h: 0.8, fontFace: "+mj-lt", fontSize: 34, bold: true, color: "FFFFFF", margin: 0, valign: "middle", isTextBox: true });
+  s.addText("Verilen söz, nakit planına yazılsın.", { x: 0.85, y: 1.85, w: 7.6, h: 2.0, fontFace: "+mj-lt", fontSize: 44, bold: true, color: "FFFFFF", margin: 0, valign: "top", isTextBox: true });
+  s.addText("Paranız ne zaman gelecek, önceden bilin.", { x: 0.85, y: 3.95, w: 7.6, h: 0.6, fontSize: 22, color: HEX.lime, margin: 0, isTextBox: true });
+  s.addText([{ text: "Sonraki adım: ", options: { bold: true, color: "FFFFFF" } }, { text: "Akbank ekibiyle bir pilot senaryosu çalıştayı", options: { color: "C9D8C4" } }], { x: 0.85, y: 4.85, w: 7.6, h: 0.6, fontSize: 17, margin: 0, isTextBox: true });
   s.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: 9.05, y: 1.5, w: 3.45, h: 4.25, fill: { color: "FFFFFF" }, line: { color: "FFFFFF" }, rectRadius: 0.2 });
   img(s, "p21_0.png", 9.35, 1.8, 2.85, 2.85, "Şifresiz demo karekodu: qualifilab.com/demo");
   s.addText([{ text: "Şifresiz demo", options: { fontSize: 16, bold: true, color: HEX.ink, breakLine: true } }, { text: "qualifilab.com/demo", options: { fontSize: 14, color: HEX.green } }], { x: 9.35, y: 4.75, w: 2.85, h: 0.8, align: "center", margin: 0, isTextBox: true });
