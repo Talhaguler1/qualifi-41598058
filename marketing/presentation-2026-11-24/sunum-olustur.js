@@ -201,7 +201,12 @@ section("Ana sunum");
   const s = pres.addSlide({ masterName: "ICERIK", sectionTitle: "Ana sunum" });
   eyebrow(s, "Ürün · işletme");
   title(s, "Söz ister WhatsApp’tan ister telefondan gelsin, nakit planı o an güncellenir");
-  phones(s, "telefon_nh.png", "telefon_nc.png", "Karar özeti ve alt sekme çubuğu", "Telefonda alınan sözün canlı güncellemesi");
+  // Three phones fanned: landing page (where people arrive), decision summary, live update.
+  {
+    const k = 4.3 / 1902, cw = 1140 * k, ch = 2082 * k, pad = 90 * k;
+    [["telefon_landing.png", 0.5, 1.95, "Tanıtım sayfası, qualifilab.com"], ["telefon_nh.png", 2.3, 1.5, "Karar özeti ve alt sekme çubuğu"], ["telefon_nc.png", 4.1, 1.95, "Telefonda alınan sözün canlı güncellemesi"]]
+      .forEach(([f, x, y, alt]) => s.addImage({ path: A(f), x: x - pad, y: y - pad, w: cw, h: ch, altText: alt, objectName: alt }));
+  }
   const steps = [["1", "Karar özeti", "Gecikmenin maliyeti, 30 günde ödemeleri karşılama ve finansman ihtiyacı tek bakışta."], ["2", "Söz kaydedilir", "WhatsApp mesajı yapay zekâyla okunur; telefonda alınan söz on saniyede girilir ve doğru faturayla eşleşir."], ["3", "Plan o an yeniden çizilir", "Beklenen tarih kayar, tahmin ve gecikmenin maliyeti güncellenir. Takip mesajı taslaktır; işletme onaylamadan gitmez."]];
   steps.forEach(([n, h, t], i) => {
     const y = 1.7 + i * 1.6;
@@ -209,8 +214,8 @@ section("Ana sunum");
     s.addText(n, { x: 6.8, y, w: 0.55, h: 0.55, fontSize: 16, bold: true, color: HEX.ink, align: "center", valign: "middle", margin: 0, isTextBox: true });
     s.addText([{ text: h, options: { fontSize: 18, bold: true, color: HEX.ink, breakLine: true } }, { text: t, options: { fontSize: 14, color: HEX.ink2 } }], { x: 7.55, y: y - 0.05, w: 5.2, h: 1.35, margin: 0, valign: "top", paraSpaceAfter: 4, isTextBox: true });
   });
-  note(s, "Canlı demo, sentetik verili örnek işletme: qualifilab.com/demo");
-  s.addNotes("İşletme sahibi paneli açtığında karar özetini görür: gecikmeler ona kaça mal oluyor, önümüzdeki 30 günde tahsilat ödemelerin ne kadarını karşılıyor ve finansmana ihtiyacı var mı. Müşteri telefonda \"ayın dokuzunda ödüyorum\" dediğinde işletme sahibi bunu on saniyede kaydeder; WhatsApp'tan yazdıysa yapay zekâ okur. Söz doğru faturayla eşleşir, nakit planı o an yeniden çizilir. Takip mesajı hazırlansa da işletme onaylamadan hiçbir şey gitmez.");
+  note(s, "Soldan: tanıtım sayfası (qualifilab.com), karar özeti, canlı güncelleme. Demo sentetik verili örnek işletmedir: qualifilab.com/demo");
+  s.addNotes("İşletme sahibi bizi önce tanıtım sayfasında görüyor. Önce tanıtım sayfası ve reklamla soğuk kitleyi denedik; dönüş zayıftı. Buradan şunu öğrendik: bu ürünü esnafa reklam değil, güvendiği biri anlatmalı. Bu yüzden doğrudan görüşmeye geçtik ve on dört işletme sahibine ürünü elden denettik. İşletme sahibi paneli açtığında karar özetini görür: gecikmeler ona kaça mal oluyor, önümüzdeki 30 günde tahsilat ödemelerin ne kadarını karşılıyor ve finansmana ihtiyacı var mı. Müşteri telefonda \"ayın dokuzunda ödüyorum\" dediğinde işletme sahibi bunu on saniyede kaydeder; WhatsApp'tan yazdıysa yapay zekâ okur. Söz doğru faturayla eşleşir, nakit planı o an yeniden çizilir. Takip mesajı hazırlansa da işletme onaylamadan hiçbir şey gitmez.");
 }
 
 // 8 · Banka demosu + Akbank faydası
