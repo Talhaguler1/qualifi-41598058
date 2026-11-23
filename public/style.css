@@ -13,3 +13,6 @@ dialog{width:min(580px,calc(100% - 28px));max-height:calc(100dvh - 32px);border:
 .footer-links{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px}.footer-links a{color:var(--muted);text-decoration:none}.footer-links a:hover{color:var(--ink);text-decoration:underline}
 a.radio-card{text-decoration:none;color:inherit}
 @media(max-width:800px){.nav-login{display:none}}
+
+/* Mask logo replaces the old "q" mark on the static campaign pages */
+.brand-symbol{font-size:0!important;width:36px;height:36px;margin-right:6px;background:url(/favicon.svg) center/contain no-repeat;flex:none}.brand-symbol span{display:none}
