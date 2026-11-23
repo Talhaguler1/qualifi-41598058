@@ -30,6 +30,8 @@ import { Logo } from "@/components/brand/logo";
 import { AUDIENCE_PATH, AUDIENCES, COPY, HOME_PATH, type Audience, type SiteLang } from "@/lib/site/copy";
 import { BANK_COPY } from "@/lib/site/bank-copy";
 import { PilotForm } from "./pilot-form";
+import { EmailCapture } from "./email-capture";
+import { Pricing } from "./pricing";
 import { HeroVisual } from "./visuals";
 
 const EASE_OUT = [0.22, 1, 0.36, 1] as const;
@@ -222,14 +224,21 @@ function Hero({ lang, audience, onAudience }: { lang: SiteLang; audience: Audien
               <motion.div key={audience} initial={reduce ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={reduce ? { opacity: 0 } : { opacity: 0, y: -6 }} transition={{ duration: 0.28, ease: EASE_OUT }}>
                 <h1>{h.title}</h1>
                 <p className="hero__sub">{h.sub}</p>
-                <div className="hero__ctas">
-                  <a className="btn btn--primary btn--lg" href={h.primary.href}>
-                    {h.primary.label} <ArrowRight size={18} strokeWidth={1.75} className="btn__arrow" aria-hidden="true" />
-                  </a>
-                  <a className="btn btn--secondary btn--lg" href={h.secondary.href}>
-                    {h.secondary.label}
-                  </a>
-                </div>
+                {audience === "bank" ? (
+                  <div className="hero__ctas">
+                    <a className="btn btn--primary btn--lg" href={h.primary.href}>
+                      {h.primary.label} <ArrowRight size={18} strokeWidth={1.75} className="btn__arrow" aria-hidden="true" />
+                    </a>
+                    <a className="btn btn--secondary btn--lg" href={h.secondary.href}>
+                      {h.secondary.label}
+                    </a>
+                  </div>
+                ) : (
+                  // One field is the whole ask; the demo stays one tap away for the curious.
+                  <div className="hero__capture">
+                    <EmailCapture lang={lang} audience={audience} demoHref={h.primary.href} position="hero" />
+                  </div>
+                )}
               </motion.div>
             </AnimatePresence>
           </div>
@@ -669,14 +678,7 @@ function Final({ lang, audience }: { lang: SiteLang; audience: Audience }) {
         <Reveal className="final">
           <h2>{c.final.title}</h2>
           <p>{c.final.sub}</p>
-          <div className="hero__ctas">
-            <a className="btn btn--accent btn--lg" href={c.hero[audience].primary.href}>
-              {c.hero[audience].primary.label} <ArrowRight size={18} strokeWidth={1.75} className="btn__arrow" aria-hidden="true" />
-            </a>
-            <a className="btn btn--on-dark btn--lg" href="/app/kayit">
-              {c.nav.signUp}
-            </a>
-          </div>
+          <EmailCapture lang={lang} audience={audience} demoHref={c.hero[audience].primary.href} position="bottom" dark />
         </Reveal>
       </div>
     </section>
@@ -736,6 +738,7 @@ export function Landing({ lang, initialAudience }: { lang: SiteLang; initialAudi
         <Bento lang={lang} bank={bank} />
         {bank ? null : <Banks lang={lang} />}
         <Trust lang={lang} bank={bank} />
+        {bank ? null : <Pricing lang={lang} />}
         <Faq lang={lang} bank={bank} />
         {bank ? <PilotForm lang={lang} /> : <Final lang={lang} audience={audience} />}
       </main>

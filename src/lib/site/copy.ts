@@ -194,7 +194,7 @@ const TR: SiteCopy = {
       { q: "Bankam verilerimi görür mü?", a: "Yalnız siz paylaşırsanız ve yalnız özet karneyi. Paylaşımı istediğiniz an geri çekebilirsiniz." },
     ],
   },
-  final: { title: "Paranızın ne zaman geleceğini bilin.", sub: "Demoyu bir dakikada deneyin; hazır olduğunuzda kendi verinizle başlayın." },
+  final: { title: "Paranızın ne zaman geleceğini bilin.", sub: "E-postanızı bırakın, size yazalım ve QualiFi'yi birlikte inceleyelim." },
   footer: {
     tagline: "İşinizi siz büyütün, finansal takibi biz halledelim.",
     disclaimer: "Demo örnek veri kullanır. Şirketler, sohbetler ve bankalar gerçek değildir.",
@@ -334,7 +334,7 @@ const EN: SiteCopy = {
       { q: "Will my bank see my data?", a: "Only if you share, and only the summary scorecard. You can withdraw it at any time." },
     ],
   },
-  final: { title: "Know when your money arrives.", sub: "Try the demo in a minute; start with your own data when you're ready." },
+  final: { title: "Know when your money arrives.", sub: "Leave your email; we'll write and walk you through QualiFi together." },
   footer: {
     tagline: "You grow the business. We handle the financial follow-up.",
     disclaimer: "The demo uses sample data. Companies, chats and banks are not real.",
